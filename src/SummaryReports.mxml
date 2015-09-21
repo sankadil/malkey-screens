@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="244" height="84"
+			   title="Reservation Diary"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			   >
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.data.events.DataConflictEvent;
+			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			public var gsJspFileName:String;
+			public var gsTitle:String;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					this.title=gsTitle;
+					setPermission();
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}catch(error:Error){
+					Message.displayAlert(1,"closeForm: " + error.message,"Error",errorCloseHandler);	
+				}
+			}
+
+			protected function btnView_clickHandler(event:MouseEvent):void{
+				try{
+					var request:URLRequest=request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+gsJspFileName+".jsp");
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:Button
+		enabled="false"
+		id="btnView"
+		click="btnView_clickHandler(event)"
+		x="149" y="9" label="View" height="29" width="78"/>
+	<s:Label text="Press View Button"  fontSize="13" fontWeight="bold" x="12" y="17"/>
+</s:TitleWindow>

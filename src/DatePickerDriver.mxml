@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   width="564" height="186" 
+			   xmlns:valueObjects="com.dspl.malkey.valueObjects.*" 
+			   title="Please Fix the Date Range &amp; Get the available Vehicles"
+			   close="titlewindow1_closeHandler(event)"
+			   >
+	
+	<!--METADATA here-->
+	<fx:Metadata>
+		[Event(name="select",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<!--STATES here-->
+	
+	<!--Bindings Here-->
+	
+	<!--Controller-->
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<!--<valueObjects:Com_dspl_malkey_domain_Freservation id="com_dspl_malkey_domain_Freservation"/>-->
+		<mx:ArrayCollection id="acTime"/>
+		
+		<!--Validators-->
+		<mx:DateValidator  id="dvOut"
+						   source="{dtDateOut}"
+						   property="selectedDate"
+						   required="true"
+						   />
+		
+		<mx:DateValidator  id="dvIn"
+						   source="{dtDateIn}"
+						   property="selectedDate"
+						   required="true"
+						   />
+		
+	</fx:Declarations>
+	
+	
+	<!--Model:Bussiness Logic Here/ActionScript Here-->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.util.DateOperation;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]	private var genericFunctions:GenericFunctions=new GenericFunctions();
+			[Bindable]public var startDate:Date=new Date();
+			[Bindable]public var endDate:Date=new Date();
+			[Bindable]public var startTime:String=new String();
+			[Bindable]public var endTime:String=new String();
+			
+			protected function btnNext_clickHandler(event:MouseEvent):void
+			{
+/* 				if( ((cmbTimeIn.selectedIndex>cmbTimeOut.selectedIndex) && nsNumDays.value==1) || nsNumDays.value >1)
+				{
+					//com_dspl_malkey_domain_Freservation.dout=dtDateOut.selectedDate;
+					//com_dspl_malkey_domain_Freservation.din=dtDateIn.selectedDate;
+					dispatchEvent(new Event("select"));
+				}
+				else
+				{
+					Alert.show("Invalied Time.\nCheck-In Time Should be \nGrather Than Check-Out Time.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				} */
+				//PopUpManager.removePopUp(this);
+				
+				
+				
+				
+				if(DateOperation.getDaysDifference(dtDateIn.selectedDate,dtDateOut.selectedDate) == nsNumDays.value)
+				{
+					if(cmbTimeIn.selectedIndex>-1 && cmbTimeOut.selectedIndex>-1)
+					{
+						if( ((cmbTimeIn.selectedIndex>cmbTimeOut.selectedIndex) && nsNumDays.value==1) || nsNumDays.value >1)
+						{
+							dispatchEvent(new Event("select"));
+						}
+						else
+						{
+							Alert.show("Invalid time.\nCheck-in time should be \ngreater-than check-out time.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						}
+					}
+					else
+					{
+						Alert.show("Invalid time format,Please enter out/in time in correct format","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					}
+				}
+				else
+				{
+					Alert.show("Invalid number of days,\nPlease correct the date or number of days","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				
+				
+			}
+
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function and(b1:Boolean,b2:Boolean,b3:Boolean,b4:Boolean,b5:Boolean):Boolean
+			{
+			return (b1 && b2 && b3&& b4 && b5);
+			}
+
+		]]>
+	</fx:Script>
+	
+	<!--Start:View Tier-->
+	<mx:Form 
+		x="12" y="9"
+		borderVisible="true"
+		>
+	<mx:FormItem label="Date Out" direction="horizontal" width="100%"  styleName="formItem" labelStyleName="formItemLabel"  required="true">
+		<mx:DateField width="150" id="dtDateOut" 
+					  selectedDate="{startDate}"
+					  selectableRange="{{rangeStart : startDate,rangeEnd :endDate}}"
+					  formatString="@Resource(key='dateFormat',bundle='resource')"
+					  />
+		<!--<mx:Label  text="  Time :"/>-->
+		<mx:FormItem label="  Time :" styleName="formItems" labelStyleName="formItemLabel"  required="true" direction="horizontal">
+		<s:ComboBox 
+			id="cmbTimeOut" 
+			dataProvider="{acTime}" 
+			selectedIndex="{acTime.getItemIndex(startTime)}" 
+			width="100"
+			restrict="0-9,:"
+			/>
+		<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+	</mx:FormItem>
+	</mx:FormItem>
+	
+	<mx:FormItem label="Num. Days" styleName="formItem" labelStyleName="formItemLabel"  required="true">
+		<s:NumericStepper 
+			id="nsNumDays" 
+			maximum="{DateOperation.getDaysDifference(endDate,dtDateOut.selectedDate)}"
+			minimum="0" 
+			width="150"
+			value="{DateOperation.getDaysDifference(dtDateIn.selectedDate,dtDateOut.selectedDate)}"
+			/>
+	</mx:FormItem>
+	
+	<mx:FormItem label="Date In" direction="horizontal"  styleName="formItem" labelStyleName="formItemLabel"  required="true">
+		<mx:DateField width="150" id="dtDateIn" 
+					  selectedDate="{(dtDateOut.selectedDate!=null) ? DateOperation.dateAdd('d', nsNumDays.value,dtDateOut.selectedDate) : null}"
+					  selectableRange="{{rangeStart : dtDateOut.selectedDate,rangeEnd :endDate}}"
+					  formatString="@Resource(key='dateFormat',bundle='resource')"
+					  />
+	<!--	<mx:Label  text="  Time :"/>-->
+		<mx:FormItem label="  Time :" styleName="formItems" labelStyleName="formItemLabel"  required="true" direction="horizontal">
+		<s:ComboBox 
+			id="cmbTimeIn" 
+			dataProvider="{acTime}" 
+			selectedIndex="{acTime.getItemIndex(startTime)}"  
+			width="100"
+			restrict="0-9,:"
+			/>
+		<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+	</mx:FormItem>
+	</mx:FormItem>
+	</mx:Form>
+	<s:Button id="btnNext" label="Next" x="443" y="121" click="btnNext_clickHandler(event)" enabled="{and(dtDateOut.selectedDate!=null,dtDateIn.selectedDate!=null,nsNumDays.value!= 0,cmbTimeIn.selectedIndex!=-1,cmbTimeOut.selectedIndex!=-1)}"/>
+	<!--End:View Tier-->
+	
+	
+	
+	
+</s:TitleWindow>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<renderers:AbstractSolidScheduleEntryRenderer 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:renderers="flexlib.scheduling.scheduleClasses.renderers.*" 
+	paddingTop="0" 
+	paddingLeft="0">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.formatters.DateFormatter;
+			import flexlib.scheduling.scheduleClasses.IScheduleEntry;
+			import flexlib.scheduling.scheduleClasses.ColoredScheduleEntry;
+			
+			private var formatter:DateFormatter;
+			
+			override public function set data ( value : Object ) : void
+			{
+				formatter = new DateFormatter();
+				formatter.formatString = "MM/DD";
+				
+				super.data = value;
+				
+				entry = value as IScheduleEntry;
+				var content : ColoredScheduleEntry = ColoredScheduleEntry( entry );
+				
+				setStyle("backgroundColor", content.backgroundColor);
+				
+				drawTextContent(content);
+			}
+			
+			protected function drawTextContent(content : ColoredScheduleEntry) : void
+			{   
+				formatter.error = "";
+				
+				var time : String = formatter.format( content.startDate ) 
+					+ " - " + formatter.format( content.endDate );
+				
+				//toolTip = time + "\n" + content.label;
+				toolTip = content.label;
+				//contentLabel.text = time;
+				//contentLabel.styleName = getStyle( "timeStyleName" );
+				contentText.text = content.label;       
+			}
+		]]>
+	</mx:Script>
+	
+	<!--<mx:Label id="contentLabel" />-->
+	<mx:Text id="contentText" y="-5" x="5" paddingLeft="5" />
+	
+</renderers:AbstractSolidScheduleEntryRenderer>

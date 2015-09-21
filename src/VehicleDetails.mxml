@@ -1,0 +1,1511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.dspl.efinac.components.common.controls.*" 
+		 xmlns:valueObjects="com.dspl.malkey.valueObjects.*"
+		 xmlns:services="com.dspl.malkey.services.*"
+		 width="100%" height="100%" 
+		 enabled="{isEnable}"
+		 disabledAlpha="1"
+		 creationComplete="group1_creationCompleteHandler(event)"
+		  >
+	  
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<!--View Tier-->
+	
+	<mx:VBox width="100%" height="100%" paddingLeft="20" paddingTop="20">
+		
+		<mx:HBox width="98%"  height="225">
+			<mx:Form 
+				borderAlpha="0.10"
+				paddingTop="5"
+				paddingLeft="5"
+				paddingRight="5"
+				paddingBottom="2"
+				borderColor="black"
+				borderStyle="solid"
+				borderVisible="true"
+				height="50%"
+				width="591"
+				label="Vehicle Details"
+				>
+				<s:Label text="Vehicle Details" fontWeight="bold"/>
+			<!--	v.regno,c.description [vehiclassid],y.description [vehitypeid],k.description [vehimakeid],m.description [vehimodelid],t.description [vehitransid],f.description [fueltypeid],o.description [colourid]-->
+				<mx:FormItem label="Vehicle" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  required="true" horizontalGap="0">
+					<controls:_tiMasterFile id="txtVehicle"											
+											_acDataProvider="{acVehicleAvailableAll}"
+											text="@{com_dspl_malkey_domain_FresvehiclePK.regno}"
+											_strKeyColumn="regno"
+											_strKeyColCaption="Reg: No" 
+											_strDetailColumn="vehimodelid" 
+											_strDetailColCaption="model"
+											_strWindowTitle="Select Vehicle"
+											otherColumns="vehimakeid,vehiclassid,fueltypeid,vehitypeid,colourid"
+											otherColumnHeaderText="Make,Class,Fuel,Type,Colour"
+											dgColWidth="100"
+											editable="false"
+											width="100"
+											/>
+
+					<mx:TextInput id="lblVehicleDescription" text="{genericfunctions.getArrayCollection(acVehicleAll,'regno',txtVehicle.text).description}" width="150"  editable="false"/>
+					<mx:LinkButton 
+						id="lnkVehicle" 
+						label="Search" 
+						toolTip="Show All Available Vehicles"
+						width="60" 
+						color="#0A33BB" 
+						textDecoration="underline" 
+						click="lnkVehicle_clickHandler(event)"
+						/>
+					<mx:LinkButton 
+						id="lnkVehicleAvailability" 
+						label="Advanced Search" 
+						toolTip="Show All Available Vehicles With Advanced Search"
+						width="130" 
+						color="#0A33BB" 
+						textDecoration="underline" 
+						click="lnkVehicleAvailability_clickHandler(event)" label.State1="Vehicle Details"/>
+
+					<!---->
+				</mx:FormItem>
+				<mx:FormItem 
+					direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"
+					label="Class"
+					width="537">
+					<s:TextInput 
+						id="txtClass"
+						text="{com_dspl_malkey_domain_Fvehicleclass.description}"
+						width="250"
+						editable="false"/>
+					<controls:_tiMasterFile id="txtVehicleRates"											
+											_acDataProvider="{advancedSearchVehiclesResult.lastResult}"
+											text="@{com_dspl_malkey_domain_FresvehiclePK.regno}"
+											_strKeyColumn="regno"
+											_strKeyColCaption="Reg: No" 
+											_strDetailColumn="vehimodelid" 
+											_strDetailColCaption="model"
+											_strWindowTitle="Select Vehicle"
+											otherColumns="vehimakeid,vehiclassid,fueltypeid,vehitypeid,colourid"
+											otherColumnHeaderText="Make,Class,Fuel,Type,Colour"
+											dgColWidth="75"
+											editable="false"
+											width="0"
+											visible="false"
+											includeInLayout="false"
+											/>
+					
+					<mx:LinkButton 
+						id="lnkVehicleRated" 
+						label="Rated Vehicles" 
+						toolTip="Show Rates Available Vehicles According to Given Hire,Rate,Client Type"
+						width="150" 
+						color="#0A33BB" 
+						textDecoration="underline" 
+						click="lnkVehicleRated_clickHandler(event)"/>
+					
+				</mx:FormItem>
+				<mx:FormItem label="Transmission">
+					<s:TextInput 
+						id="txtTransmission"
+						text="{com_dspl_malkey_domain_Fvehicletrans.description}"
+						width="250"
+						editable="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Type" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel" >
+					<s:TextInput id="txtVehicleType" text="{com_dspl_malkey_domain_Fvehicletype.description}" width="250" editable="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Model" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel" >
+					<s:TextInput id="txtVehicleModel" 
+								 text="{getArrayCollection(acVehicleModelAll, 'vehimodelid','vehimakeid', com_dspl_malkey_domain_Fvehicle.vehimodelid, com_dspl_malkey_domain_Fvehicle.vehimakeid).description}" 
+								 width="250" editable="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Priority" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel" visible="false" includeInLayout="false">
+					<s:NumericStepper 
+						id="nsPriority" 
+						maximum="10" 
+						minimum="1"
+						width="100"
+						value="@{com_dspl_malkey_domain_Fresvehicle.priority}"
+						enabled="false"
+						/>
+					<mx:Label id="lblPriority" text="{dgVehicle.dataProvider.length == 0 ? ' First chioce' : ' Alternatives'}" width="200"/>				
+				</mx:FormItem>
+				<mx:FormItem >
+					<mx:HBox horizontalAlign="center">
+						<s:Button id="btnAddVehicle" 	label="Add" 	 			click="btnAdd_clickHandler(event)" 					enabled="{!btnCancleVehicle.enabled}"/>
+						<s:Button id="btnSetPriorityVehicle" label="Set to Top" 	click="btnSetPriorityVehicle_clickHandler(event)" 	enabled="{dgVehicle.selectedIndex !=-1 ? true : false}" visible="false" includeInLayout="false"/>
+					<!--	<s:Button id="btnUpdateVehicle" label="Edit" 	 		click="btnUpdateVehicle_clickHandler(event)"		enabled="{dgVehicle.selectedIndex !=-1 ? true : false}"/>-->
+						<s:Button id="btnDeleteVehicle" label="Delete" 	 			click="btnDeleteVehicle_clickHandler(event)"		enabled="{dgVehicle.selectedIndex !=-1 ? true : false}"/>
+						<s:Button id="btnCancleVehicle" label="Reset" 	 			click="btnCancleVehicle_clickHandler(event)"		enabled="{dgVehicle.selectedIndex !=-1 ? true : false}"/>
+						<s:Button id="btnPhotoVehicle" label="Photo" 	 			click="btnPhotoVehicle_clickHandler(event)"			enabled="{dgVehicle.selectedIndex !=-1 ? true : false}"/>
+						<!--<s:Button id="btnDetails" label="Details" click="btnDetails_clickHandler(event)"/>-->
+					</mx:HBox>
+				</mx:FormItem>
+			</mx:Form>
+			<mx:Form 
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 >
+				<s:Label text="Rate Details" fontWeight="bold"/>
+				<mx:FormItem label="Model" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+					<s:TextInput text="{com_dspl_malkey_domain_Fresvehiclerate.vehimodelid}" editable="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Client Type"  direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+					<s:TextInput text="{com_dspl_malkey_domain_Fresvehiclerate.clienttype}" editable="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Hire Type" styleName="formItemL" labelStyleName="formItemLabel">
+					<s:TextInput text="{com_dspl_malkey_domain_Fresvehiclerate.hiretypeid}" editable="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Rate Type" styleName="formItemL" labelStyleName="formItemLabel">
+					<s:TextInput text="{com_dspl_malkey_domain_Fresvehiclerate.ratetype}" editable="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Rate" styleName="formItemL" labelStyleName="formItemLabel">
+					<s:TextInput text="{com_dspl_malkey_domain_Fresvehiclerate.rate}" editable="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Extra Mile Rate" styleName="formItemL" labelStyleName="formItemLabel">
+					<s:TextInput text="{new Number(com_dspl_malkey_domain_Fresvehiclerate.xsmilerate).toFixed(8)}" editable="false"/>
+				</mx:FormItem>
+			</mx:Form>
+			<mx:Form 
+				borderColor="black"
+				borderStyle="solid"
+				borderVisible="true"
+				borderAlpha="0.10"
+				paddingTop="5"
+				paddingLeft="5"
+				paddingRight="5"
+				paddingBottom="2"
+				>
+				<s:Label 
+					text="When you change the vehicle,System automatically apply current rate to selected vehicle.If you want apply old rate or different vehicle model rate use following options." 
+					width="250"
+					/>
+				<mx:LinkButton id="lnkModel" label="Click Here To Change Current Rate" width="250" color="#0A33BB" textDecoration="underline" click="lnkModel_clickHandler(event)"/>
+				<mx:LinkButton 
+					id="lnkOldRate" 
+					label="Click Here To Apply Old Rate" 
+					width="250" 
+					color="#0A33BB" 
+					textDecoration="underline" 
+					click="lnkOldRate_clickHandler(event)" 
+					/>
+			</mx:Form>
+		</mx:HBox>	
+		<mx:DataGrid 
+			id="dgVehicle"
+			dataProvider="{acResVehicle}"
+			width="98%" height="150" 
+			dropShadowVisible="false" 
+			borderAlpha="0.28" 
+			borderVisible="true" 
+			verticalScrollPolicy="auto"
+			keyUp="dgVehicle_keyUpHandler(event)"
+			itemClick="dgVehicle_itemClickHandler(event)"
+			dragEnabled="true"
+			>
+			<mx:columns>
+				<mx:DataGridColumn dataField="priority" 	headerText="PRIORITY"/>
+				<mx:DataGridColumn dataField="id.regno" 	headerText="REGNO"/>
+				<mx:DataGridColumn dataField="id"  			headerText="DESCRIPTION"	labelFunction="vehicleDescription"/>
+				<mx:DataGridColumn dataField="id"  			headerText="Class"			labelFunction="vehicleClass"/>
+				<mx:DataGridColumn dataField="id"  			headerText="Type"			labelFunction="vehicleType"/>
+				<mx:DataGridColumn dataField="id"  			headerText="Made By"		labelFunction="vehicleMade"/>
+				<!--<mx:DataGridColumn dataField="fresvehiclerate.rate"  			headerText="Rate"		/>-->
+				<mx:DataGridColumn dataField="id"  			headerText="Model"			labelFunction="vehicleModel"/>
+			</mx:columns>
+		</mx:DataGrid>
+		
+
+		
+	</mx:VBox>
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Bindings here-->
+	<fx:Binding destination="com_dspl_malkey_domain_Fresvehiclerate" source="acResVehicle.getItemAt(0).fresvehiclerate" />
+	<fx:Binding destination="dgVehicle.dataProvider" source="acResVehicle" />
+	<fx:Binding source="{genericfunctions.getArrayCollection(acVehicleAll,'regno',com_dspl_malkey_domain_FresvehiclePK.regno) as Com_dspl_malkey_domain_Fvehicle}" 					destination="com_dspl_malkey_domain_Fvehicle"/>
+	<fx:Binding source="{genericfunctions.getArrayCollection(acVehicleClassAll,'vehiclassid',com_dspl_malkey_domain_Fvehicle.vehiclassid) as Com_dspl_malkey_domain_Fvehicleclass}" destination="com_dspl_malkey_domain_Fvehicleclass"/>
+	<fx:Binding source="{genericfunctions.getArrayCollection(acVehicleTransAll,'vehitransid',com_dspl_malkey_domain_Fvehicle.vehitransid) as Com_dspl_malkey_domain_Fvehicletrans}" destination="com_dspl_malkey_domain_Fvehicletrans"/>
+	<fx:Binding source="{genericfunctions.getArrayCollection(acVehicleTypeAll,'vehitypeid',com_dspl_malkey_domain_Fvehicle.vehitypeid) as Com_dspl_malkey_domain_Fvehicletype}" 	destination="com_dspl_malkey_domain_Fvehicletype"/>
+	<fx:Binding destination="com_dspl_malkey_domain_Fresvehicle.id" source="com_dspl_malkey_domain_FresvehiclePK" />
+	<fx:Binding source="{stCurrent}" destination="currentState"/>
+	<s:states>
+		<s:State name="State1"   id="State1"/>
+		<s:State name="stDelete" id="stDelete"/>
+		<s:State name="stEdit" id="stEdit"/>
+		<s:State name="stNew"    id="stNew"/>
+		<s:State name="stView"  id="stView"/>
+		<s:State name="stUndo"  id="stUndo"/>
+	</s:states>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Declarations here-->
+	<fx:Declarations>
+		<!--Effect-->
+
+		
+		<!--Validators-->
+		<mx:StringValidator id="svVehicleId"
+							source="{txtVehicle}"
+							property="text"
+							/>
+		<!--Formatters here-->
+		
+		<!--valueObjects/domains here-->
+		<valueObjects:Com_dspl_malkey_domain_Fresvehicle 	id="com_dspl_malkey_domain_Fresvehicle"/>
+		<valueObjects:Com_dspl_malkey_domain_FresvehiclePK 	id="com_dspl_malkey_domain_FresvehiclePK"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicle 		id="com_dspl_malkey_domain_Fvehicle"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicleclass 	id="com_dspl_malkey_domain_Fvehicleclass"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicletrans 	id="com_dspl_malkey_domain_Fvehicletrans"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicletype 	id="com_dspl_malkey_domain_Fvehicletype"/>
+		<valueObjects:Com_dspl_malkey_domain_Freservation	id="com_dspl_malkey_domain_Freservation"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresvehiclerate	id="com_dspl_malkey_domain_Fresvehiclerate"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresvehiclerate	id="oldrate"/>
+		
+		<!--CallResponder Here-->
+		<s:CallResponder 			id="crFvehiclerateSRVFindByID_ChangeMode" 		result="crFvehiclerateSRVFindByID_ChangeMode_resultHandler(event)"/>
+		<s:CallResponder 			id="crFvehiclerateSRVFindByID" 					result="crFvehiclerateSRVFindByID_resultHandler(event)"/>
+		<s:CallResponder 			id="crFvehiclerateSRVFindByID_ForChange" 		result="crFvehiclerateSRVFindByID_Change_resultHandler(event)"/>
+		<s:CallResponder 			id="crFvehiclerateSRVFindByIDList" 				result="crFvehiclerateSRVFindByIDList_resultHandler(event)"/>
+		<s:CallResponder 			id="advancedSearchVehiclesResult"				result="advancedSearchVehiclesResult_resultHandler(event)"/>
+		<s:CallResponder 			id="crfvehiclepicSRVlistByRegNo"				result="crfvehiclepicSRVlistByRegNo_resultHandler(event)"/>
+		<!--Services here-->
+		<services:FvehiclerateSRV 	id="fvehiclerateSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:VehiclesearchSRV id="vehiclesearchSRV" endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FvehiclepicSRV id="fvehiclepicSRV" endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		
+	</fx:Declarations>
+	
+	
+	
+	
+	
+	
+	<!--Metadata Here-->
+	
+	<fx:Metadata>
+		[Event(name="change",type="flash.events.Event")]
+		[Event(name="applyOldRate",type="flash.events.Event")]
+		[Event(name="setRateType",type="flash.events.DataEvent")]
+	</fx:Metadata>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--ActionScripts here-->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.events.VehicleSelectionEvent;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_AuditTrail;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fanalysis;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fcontrol;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehiclerate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehiclemodel;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehiclepic;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehiclerate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FvehicleratePK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_view_HireDetailsView;
+			
+			import flash.utils.flash_proxy;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			
+			[Bindable]	public var acVehicleAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleAvailableAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleClassAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleTransAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleTypeAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acResVehicle:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleModelAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleMake:ArrayCollection = new ArrayCollection();
+			[Bindable]  private var genericfunctions:GenericFunctions = new GenericFunctions();
+			[Bindable] 	private var session:Session = Session.getInstance(); 
+		//	[Bindable]	public var singletonRateType:RateType;
+			[Bindable]	public var clientType:String ="INDIVIDUAL";
+			[Bindable]	public var rateType:String ="DAILY";
+			[Bindable]	public var stCurrent:String;
+			[Bindable]	public var isEnable:Boolean=false;
+			[Bindable]	private var acSelectedVehicle:ArrayCollection=new ArrayCollection();
+			[Bindable]	private var myValidators:Array;
+			[Bindable]  private var tempSelectedRate:Com_dspl_malkey_domain_Fresvehiclerate=null;//tempary variable for delete vehicle and apply old rates
+			/***
+			 * Reset Form  is following</br>
+			 * Author:sanka
+			 */
+			public function resetAll():void
+			{
+				resetVehicleForm();
+				(dgVehicle.dataProvider as ArrayCollection).removeAll();
+				nsPriority.value=1;
+				dispatchEvent(new Event("change")); 
+			}
+			
+			/***
+			 * set Rate Type
+			 * 
+			 * Author:sanka
+			 */
+			public function setRateType(param:String):void
+			{			
+			var dataEvent:DataEvent=new  DataEvent("setRateType");
+			dataEvent.data=param;
+			dispatchEvent(dataEvent);
+			}
+			
+			/***
+			 * Reset Form  is following</br>
+			 * Author:sanka
+			 */
+			private function resetVehicleForm():void
+			{
+				try
+				{
+				com_dspl_malkey_domain_Fresvehicle=new Com_dspl_malkey_domain_Fresvehicle();
+				com_dspl_malkey_domain_FresvehiclePK=new Com_dspl_malkey_domain_FresvehiclePK();
+				com_dspl_malkey_domain_Fvehicle=new Com_dspl_malkey_domain_Fvehicle();
+				com_dspl_malkey_domain_Fvehicleclass=new Com_dspl_malkey_domain_Fvehicleclass();
+				com_dspl_malkey_domain_Fvehicletrans=new Com_dspl_malkey_domain_Fvehicletrans();
+				com_dspl_malkey_domain_Fvehicletype=new Com_dspl_malkey_domain_Fvehicletype();
+				com_dspl_malkey_domain_Fresvehicle.priority=acResVehicle.length+1;
+				dgVehicle.selectedIndex=-1;
+				dgVehicle.selectable=true;
+				lblVehicleDescription.text="";
+				lnkVehicle.enabled=true;
+				txtVehicle.enabled=true;
+				txtVehicle.errorString="";
+				}
+				catch(e:Error)
+				{
+				trace("eror"+e.message);
+				}
+			}
+			
+			
+			
+			
+			
+			/***
+			 * This method perform setting the prority of vehicle reservation acording to the index order of datagrid
+			 * 	Following steps perform the function of reset the prority of each an every item.
+			 *	assumpson priority=index of datagrid
+			 * </br>
+			 * Author:sanka
+			 * */
+			private function setPriority():void
+			{
+				var index:int=1;
+				for each(var tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle in acResVehicle)
+				{
+					tempFresvehicle.priority=index;
+					index++;
+				}
+				acResVehicle.refresh();
+				dispatchEvent(new Event("change")); 
+			}
+
+
+
+			
+			
+			/***
+			 * Buttons event-handlers are following</br>
+			 * Author:sanka
+			*/
+			protected function btnAdd_clickHandler(event:MouseEvent):void
+			{
+				if(isValidateAll() && isValidateReservation())
+				{
+					//findByIDFvehiclerateSRV();
+					findByIDFvehiclerateSRV();
+				}
+			}
+			
+
+			
+			private function alertListener(eventObj:CloseEvent):void {
+				if (eventObj.detail==Alert.OK) {
+					//findByIDFvehiclerateSRV(com_dspl_malkey_domain_Fvehicle.vehimodelid);
+					findByIDFvehiclerateSRV();
+				}
+			}
+			
+						
+			protected function btnSetPriorityVehicle_clickHandler(event:MouseEvent):void
+			{
+				if(dgVehicle.selectedIndex==0)//if frist then no point of doing this
+					return;
+				
+				var tempRemoveItemIndex:int=dgVehicle.selectedIndex;//get the selected index
+				var tempRemoveItem:Object=acResVehicle.removeItemAt(dgVehicle.selectedIndex);//get the removed item to tempary variable
+				acResVehicle.addItemAt(tempRemoveItem,0);//add the removed item into frist lement of arrayCollection
+				setPriority();
+			}
+			
+			
+			
+			protected function btnDeleteVehicle_clickHandler(event:MouseEvent):void
+			{
+				Alert.show("Are you sure,you want to delete vehicle ?","Warning",Alert.YES|Alert.NO,this,confirmAlert,genericfunctions.IconQuestion,Alert.OK);
+
+			}
+
+			
+			
+			protected function btnCancleVehicle_clickHandler(event:MouseEvent):void
+			{
+				resetVehicleForm();
+			}
+			/***
+			 * Buttons event-handlers are above</br>
+			 * 
+			 */
+			
+
+			
+			/***
+			 * this method fire when user select confirm state for hire status in new state.then system will ask user 
+			 * "do you  want to set confirm state with out deposite or adavace from client ..something like that.
+			 * 
+			 * */
+			public function confirmAlert(eventObj:CloseEvent):void
+				
+			{
+				
+				if(eventObj.detail==Alert.YES)
+				{
+					var tempSelectedIndex:int=dgVehicle.selectedIndex;
+					tempSelectedRate=null;
+					var tempPriority:int=acResVehicle.length;//maintain the priority
+ 					var tempRateType:String="";
+					if(tempPriority==1)
+					{
+						tempRateType=(((acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).fresvehiclerate) as Com_dspl_malkey_domain_Fresvehiclerate).ratetype;
+					} 
+					
+					if(tempSelectedIndex==0)
+					{
+						tempSelectedRate=(acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).fresvehiclerate;
+					}
+					
+					acResVehicle.removeItemAt(dgVehicle.selectedIndex);
+					if(session.getAttribute("hirestatus")=="BOOKED" && acResVehicle.length>0)
+					{
+	 					if(tempSelectedIndex==0)
+						{
+							//popup alert for ask rate change
+							Alert.show("Do you want to apply new rates (press YES)\n or old vehicle rates?(press NO)","Warning",Alert.YES|Alert.NO,this,confirmAlertRateChangeApplyNewRates,genericfunctions.IconQuestion,Alert.OK);
+							
+						} 
+					}
+					acResVehicle.refresh();
+					resetVehicleForm();
+					nsPriority.value=tempPriority;//maintain the priority
+					setPriority();
+ 					if(tempPriority==1)
+					{
+						setRateType(tempRateType);
+					}
+					
+				}
+					
+				else if(eventObj.detail==Alert.NO)
+					
+				{
+					
+				}
+				
+			}
+			
+			
+			public function confirmAlertRateChangeApplyNewRates(eventObj:CloseEvent):void
+			{
+				if(eventObj.detail==Alert.YES)
+				{
+					applyNewRatesVehicle();
+				}
+				else if(eventObj.detail==Alert.NO)
+				{
+					acResVehicle.getItemAt(0).fresvehiclerate=tempSelectedRate;
+				}
+			}
+			
+			
+			/*Lable Functions here  */
+			private function vehicleDescription(item:Object, column:DataGridColumn):String
+			{
+				return genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).description;
+			}
+			private function vehicleClass(item:Object, column:DataGridColumn):String
+			{
+				var temp:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehiclassid;
+				return genericfunctions.getArrayCollection(acVehicleClassAll,"vehiclassid",temp).description;
+			}
+			
+			private function vehicleType(item:Object, column:DataGridColumn):String
+			{
+				var temp:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehitypeid;
+				return genericfunctions.getArrayCollection(acVehicleTypeAll,"vehitypeid",temp).description;
+			}
+			
+			private function vehicleModel(item:Object, column:DataGridColumn):String
+			{
+				var temp:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehimodelid;
+				var tempvehimakeid:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehimakeid;
+				var model:Object= getArrayCollection(acVehicleModelAll, "vehimodelid","vehimakeid", temp, tempvehimakeid);
+				return model.description;
+			}
+			
+			private function vehicleMade(item:Object, column:DataGridColumn):String
+			{
+				var temp:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehimakeid;
+				return genericfunctions.getArrayCollection(acVehicleMake,"vehimakeid",temp).description;
+			}
+			/*End :Lable Functions here  */
+			
+			 
+			
+			
+
+			
+			
+			
+			
+			//test method
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				resetVehicleForm();
+				myValidators = [svVehicleId];
+				//singletonRateType=session.getAttribute("RateType");
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+
+			/***
+			 * 
+			 * This method execute service call for get rate for selected vehicle ratetype hiretype combination
+			 *   */
+/* 			protected function findByIDFvehiclerateSRV():void
+			{
+				
+				var vehicleratePK:Com_dspl_malkey_domain_FvehicleratePK=new Com_dspl_malkey_domain_FvehicleratePK();
+				vehicleratePK.clienttype=clientType;
+				vehicleratePK.hiretypeid=com_dspl_malkey_domain_Freservation.hiretypeid;
+				vehicleratePK.ratetype=rateType;//session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+				vehicleratePK.vehimodelid=com_dspl_malkey_domain_Fvehicle.vehimodelid;
+				crFvehiclerateSRVFindByID.token = fvehiclerateSRV.findByID(vehicleratePK);
+				
+			}
+			 */
+			/***
+			 * 
+			 * This method execute service call for get rate for selected vehicle ratetype hiretype combination
+			 *   */
+			protected function findByIDFvehiclerateSRV_ApplyNewRates(vehimodelid:String):void
+			{
+				
+				var vehicleratePK:Com_dspl_malkey_domain_FvehicleratePK=new Com_dspl_malkey_domain_FvehicleratePK();
+				vehicleratePK.clienttype=clientType;
+				vehicleratePK.hiretypeid=com_dspl_malkey_domain_Freservation.hiretypeid;
+				vehicleratePK.ratetype=rateType;//session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+				vehicleratePK.vehimodelid=vehimodelid;
+				crFvehiclerateSRVFindByID_ForChange.token = fvehiclerateSRV.findByID(vehicleratePK);
+				
+			}
+			
+			/***
+			 * 
+			 * This method execute service call for get rate for selected vehicle ratetype hiretype combination
+			 *   */
+			protected function findByIDFvehiclerateSRV():void
+			{
+				
+				var vehicleratePK:Com_dspl_malkey_domain_FvehicleratePK=new Com_dspl_malkey_domain_FvehicleratePK();
+				vehicleratePK.clienttype=clientType;
+				vehicleratePK.hiretypeid=com_dspl_malkey_domain_Freservation.hiretypeid;
+				vehicleratePK.ratetype=rateType;//session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+				vehicleratePK.vehimodelid=com_dspl_malkey_domain_Fvehicle.vehimodelid;
+				crFvehiclerateSRVFindByID.token = fvehiclerateSRV.findByID(vehicleratePK);
+				
+			}
+			
+			
+			
+			/***
+			 * This method desgin for apply Rates for given vehicle
+			 * design for apply old rates for newly changes vehicle
+			 * */
+			public function applyRates(tempFresvehiclerate:Com_dspl_malkey_domain_Fresvehiclerate,tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle):Com_dspl_malkey_domain_Fresvehicle
+			{
+				tempFresvehicle.fresvehiclerate=tempFresvehiclerate;
+				return tempFresvehicle;
+			}
+			//com_dspl_malkey_domain_Fresvehiclerate
+			
+			
+			/***
+			 * service call will fire when the user add each an every vehicle into datagrid
+			 * 
+			 * */
+			/*Set the rate for domain  */
+			protected function crFvehiclerateSRVFindByID_resultHandler(event:ResultEvent):void
+			{
+				setRatesToVehicle(crFvehiclerateSRVFindByID.lastResult  as Com_dspl_malkey_domain_Fvehiclerate);
+			}
+			
+			/***
+			 * service call will fire when the user add each an every vehicle into datagrid
+			 * 
+			 * */
+			/*Set the rate for domain  */
+			protected function crFvehiclerateSRVFindByID_Change_resultHandler(event:ResultEvent):void
+			{
+				if(crFvehiclerateSRVFindByID_ForChange.lastResult!=null)
+				{
+					if(acResVehicle.length>0){
+					var tempFresvehiclerate:Com_dspl_malkey_domain_Fresvehiclerate=ratesConverter(crFvehiclerateSRVFindByID_ForChange.lastResult);
+					com_dspl_malkey_domain_Fresvehicle=acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle;
+					applyRateToVehicle(com_dspl_malkey_domain_Fresvehicle,tempFresvehiclerate);
+					dispatchEvent(new Event("change")); 
+					}
+				}
+				else
+				{
+					Alert.show("Sorry,\nunable to find rates selected model and \nold rates applied.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+				}
+			}
+			
+			
+			
+			/***
+			 * 
+			 * This method execute service call for get rate for selected vehicle ratetype hiretype combination
+			 *   */
+			protected function setRatesToMultipleVehicles(acSelectedVehicle:ArrayCollection):void
+			{
+				var acVehicleRatePK:ArrayCollection=new ArrayCollection();
+				for(var a:int=0;a<acSelectedVehicle.length;a++)
+				{
+					txtVehicle.text=acSelectedVehicle.getItemAt(a).regno;
+					com_dspl_malkey_domain_Fvehicle=genericfunctions.getArrayCollection(acVehicleAll,'regno',acSelectedVehicle.getItemAt(a).regno) as Com_dspl_malkey_domain_Fvehicle;
+					var vehicleratePK:Com_dspl_malkey_domain_FvehicleratePK=new Com_dspl_malkey_domain_FvehicleratePK();
+					vehicleratePK.clienttype=clientType;
+					vehicleratePK.hiretypeid=com_dspl_malkey_domain_Freservation.hiretypeid;
+					vehicleratePK.ratetype=rateType;//session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+					vehicleratePK.vehimodelid=com_dspl_malkey_domain_Fvehicle.vehimodelid;
+					acVehicleRatePK.addItem(vehicleratePK);
+				}
+				if(isValidateAll() && isValidateReservation())
+				{
+					findByIDList(acVehicleRatePK);
+				}
+				
+			}
+			
+
+			
+			private function ratesConverter(tempVehiclerate:Com_dspl_malkey_domain_Fvehiclerate):Com_dspl_malkey_domain_Fresvehiclerate
+			{
+				//var tempVehiclerate:Com_dspl_malkey_domain_Fvehiclerate=crFvehiclerateSRVFindByID.lastResult as Com_dspl_malkey_domain_Fvehiclerate;
+				var tempFresvehiclerate:Com_dspl_malkey_domain_Fresvehiclerate=new Com_dspl_malkey_domain_Fresvehiclerate();
+				tempFresvehiclerate.rate=new Number(tempVehiclerate.rate).toFixed(8);
+				tempFresvehiclerate.standardrate=tempVehiclerate.standardrate;
+				tempFresvehiclerate.xsmilerate=tempVehiclerate.xsmilerate;
+				tempFresvehiclerate.allotedkms=new Number(tempVehiclerate.allotedkms);
+				tempFresvehiclerate.xhourrate=new Number(tempVehiclerate.xhourrate).toString();//tempVehiclerate.xhourrate;
+				tempFresvehiclerate.allotedhours=new Number(tempVehiclerate.allotedhours);
+				tempFresvehiclerate.discountxhourrate="0.00";
+				//tempFresvehiclerate.allotedkms=new Number(tempVehiclerate.allotedkms); 
+				tempFresvehiclerate.clienttype=tempVehiclerate.id.clienttype;//clientType;
+				tempFresvehiclerate.hiretypeid=tempVehiclerate.id.hiretypeid;//com_dspl_malkey_domain_Freservation.hiretypeid;
+				tempFresvehiclerate.ratetype=tempVehiclerate.id.ratetype;//rateType;//session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+				tempFresvehiclerate.vehimodelid=tempVehiclerate.id.vehimodelid;//com_dspl_malkey_domain_Fvehicle.vehimodelid;//null file here
+				tempFresvehiclerate.addmach="";
+				tempFresvehiclerate.adduser="";
+				tempFresvehiclerate.adddate=new Date();
+				tempFresvehiclerate.discount="0.00";
+				return tempFresvehiclerate;
+			} 
+			
+			private function applyRateToVehicle(resvehicle:Com_dspl_malkey_domain_Fresvehicle,tempFresvehiclerate:Com_dspl_malkey_domain_Fresvehiclerate):void
+			{
+				resvehicle.fresvehiclerate=tempFresvehiclerate;
+			}
+			
+			/***
+			 * Apply Rates to current selected Vehicle
+			 * 
+			 * */
+			protected function setRatesToVehicle(tempVehiclerate:Com_dspl_malkey_domain_Fvehiclerate):void
+			{
+					if(tempVehiclerate !=null)
+					{
+						var tempFresvehiclerate:Com_dspl_malkey_domain_Fresvehiclerate=ratesConverter(tempVehiclerate);
+						applyRateToVehicle(com_dspl_malkey_domain_Fresvehicle,tempFresvehiclerate);
+						addVehicle();
+						setPriority();
+					}
+					else
+					{
+						//selected vehicle is not allowed for hiretype
+						Alert.show("Sorry,\nSelected vehicle is not allowed for given \n\nhire-type :"+com_dspl_malkey_domain_Freservation.hiretypeid
+							+",\nrate-type :"+rateType+",\nclient-type :"+clientType+" \n\ncombination."
+							,"Warning",Alert.OK,null,okCommandRateNotFound,genericfunctions.IconWarning,Alert.OK,null);
+						/* resetVehicleForm(); */
+					}
+			}
+			
+/* Alert.show("Deposit or Advance has not been allocated.Are you sure you want to set hire status as 'CONFIRMED'?"
+	,"Warning",Alert.OK|Alert.CANCEL,this,confirmAlert,genericFunctions.IconQuestion,Alert.OK); */
+			
+
+			public function okCommandRateNotFound(eventObj:CloseEvent):void
+			{
+				resetVehicleForm();
+			}
+			protected function findByIDList(arg0:ArrayCollection):void
+			{
+				crFvehiclerateSRVFindByIDList.token = fvehiclerateSRV.findByIDList(arg0);
+			}
+			
+			
+			/**
+			 * This mehtod Fire on:Rate list received
+			 * */
+			protected function crFvehiclerateSRVFindByIDList_resultHandler(event:ResultEvent):void
+			{
+				for(var j:int=0 ; j<acSelectedVehicle.length;j++)
+				{
+					txtVehicle.text=acSelectedVehicle.getItemAt(j).regno;
+					com_dspl_malkey_domain_Fvehicle=genericfunctions.getArrayCollection(acVehicleAll,'regno',acSelectedVehicle.getItemAt(j).regno) as Com_dspl_malkey_domain_Fvehicle;
+					var tempVehiclerate:Com_dspl_malkey_domain_Fvehiclerate=crFvehiclerateSRVFindByIDList.lastResult.getItemAt(j);
+					setRatesToVehicle(tempVehiclerate);
+				}
+				
+			}
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			
+			
+			/***
+			 * Following method validate the entier form of freservation file.
+			 * validated & required fields are company & client codes.
+			 * 
+			 * 
+			 * */
+			private function isValidateAll():Boolean {
+				var errors:Array = Validator.validateAll(myValidators);
+				if (errors.length == 0) {
+					return true;
+				}
+				else
+				{
+					Alert.show("Invalid data.\nPlease select a vehicle and submit again.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+					return false;
+				}
+			}
+			
+			private function isValidateReservation():Boolean
+			{
+				var isValRateType:Boolean=false;
+				var isValHireType:Boolean=false;
+				if(rateType!=null )
+				{
+					if(StringUtil.trim(rateType).length!=0)
+					{
+						isValRateType=true;
+					}
+					else
+					{
+						isValRateType=false;
+						Alert.show("Invalid data.\nPlease select a rate type and try again.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+					}
+				}
+				else
+				{
+					isValRateType=false;
+					Alert.show("Invalid data.\nPlease select a rate type and try again.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+				}
+				
+				if( com_dspl_malkey_domain_Freservation.hiretypeid!=null)
+				{	
+					if(StringUtil.trim(com_dspl_malkey_domain_Freservation.hiretypeid).length!=0)
+					{
+						isValHireType=true;
+					}
+				}
+				 else
+				 {
+					 isValHireType=false;
+					 Alert.show("Invalid data.\nPlease select a hire type and try again.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+				 }
+				 return (isValRateType && isValHireType);
+			}
+			
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * Add vehicle Item to datagrid
+			 * validation:avoid duplicate</br>
+			 * Author:sanka
+			 * */
+			private function addVehicle():void
+			{
+				/***
+				 * initially zero for some othe cercumstanceses
+				 * */
+				if(com_dspl_malkey_domain_Fresvehicle.priority==0)
+				{
+					com_dspl_malkey_domain_Fresvehicle.priority=1;
+					Alert.show("issue tester");
+				}
+				
+				/*var hasElement:Boolean=false;
+				for each(var tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle in acResVehicle)
+				{
+					if(tempFresvehicle.id.regno==txtVehicle.text && StringUtil.trim(txtVehicle.text).length>0)
+					{
+						Alert.show("Vehicle already reserved","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return;
+					}
+				}*/
+				if(!validate_Before_Add_Vehicle()/*hasElement*/)
+				{
+					var tempPriority:int=com_dspl_malkey_domain_Fresvehicle.priority;//maintain the priority
+					acResVehicle.addItem(com_dspl_malkey_domain_Fresvehicle);
+					acResVehicle.refresh();
+					resetVehicleForm(); 
+					dispatchEvent(new Event("change")); 
+				} 
+				
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			private function validate_Before_Add_Vehicle():Boolean
+			{
+				var hasElement:Boolean=false;
+				for each(var tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle in acResVehicle)
+				{
+					if(tempFresvehicle.id.regno==txtVehicle.text && StringUtil.trim(txtVehicle.text).length>0)
+					{
+						Alert.show("Vehicle already reserved","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return hasElement;
+					}
+				}
+				return hasElement;
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			//---------------------------------------------------------------------------------------
+			public function setStatus():void
+			{
+				com_dspl_malkey_domain_Freservation.cofuellevel=com_dspl_malkey_domain_Fvehicle.fuellevel;
+				com_dspl_malkey_domain_Freservation.comileage=com_dspl_malkey_domain_Fvehicle.curmileage;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			//---------------------------------------------------------------------------------------
+			/***
+			 * This method dispatch the ratechnage event &
+			 *  wakeup for calculate rates
+			 * 
+			 * */
+			public function wakeup():void
+			{
+				dispatchEvent(new Event("change")); 
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * This method perform delete items on datagrid by using keyboard delete key
+			 * 	
+			 *	
+			 * </br>
+			 * Author:sanka
+			 * */
+			protected function dgVehicle_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode==Keyboard.DELETE && btnDeleteVehicle.enabled)
+				{
+					btnDeleteVehicle_clickHandler(new MouseEvent(MouseEvent.CLICK));
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			
+
+			
+
+
+			//---------------------------------------------------------------------------------------
+			protected function dgVehicle_itemClickHandler(event:ListEvent):void
+			{
+				com_dspl_malkey_domain_FresvehiclePK.regno=(acResVehicle.getItemAt(event.rowIndex) as Com_dspl_malkey_domain_Fresvehicle).id.regno;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			protected function lnkVehicleAvailability_clickHandler(event:MouseEvent):void
+			{
+				if(clientType!=null && com_dspl_malkey_domain_Freservation.hiretypeid!=null && rateType!=null)
+				{
+					if(clientType.length>0 && com_dspl_malkey_domain_Freservation.hiretypeid.length>0 && rateType.length>0)
+					{
+						vehicleAvailabilityPopup(selection,((FlexGlobals.topLevelApplication) as DisplayObject));
+					}
+					else
+					{
+						Alert.show("Hire type,Rate type required for vehicle selection.","Oops!");
+					}
+				}
+				else
+				{
+					Alert.show("Hire type,Rate type required for vehicle selection.","Oops!");
+				}
+				
+				
+			}
+			
+			public function vehicleAvailabilityPopup_VehicleChange(parent:DisplayObject):void
+			{
+				vehicleAvailabilityPopup(listener_selection,parent);
+			}
+			
+			protected function vehicleAvailabilityPopup(listener:Function,parent:DisplayObject):void
+			{
+				try{
+					var avb:VehicleAvailability=new VehicleAvailability();
+					avb.gbInitProc=false;
+					avb.dFSDate=com_dspl_malkey_domain_Freservation.dout;
+					avb.dTSDate=com_dspl_malkey_domain_Freservation.din;
+					avb.giNoOfDays=com_dspl_malkey_domain_Freservation.noofday;
+					avb.addEventListener("vehicleSelectionEvent",listener,false,0,false);
+					PopUpManager.addPopUp(avb,parent,true,null,null);
+					PopUpManager.centerPopUp(avb);
+					avb.dfDateFrom.enabled=false;
+					avb.dfDateTo.enabled=false;
+					avb.nsNoOfDays.enabled=false;
+				}
+				catch(e:Error)
+				{
+					trace("Error Message :"+e.message);
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * This method fire on vehicle selection in advanced search
+			 * 
+			 * 
+			 * */
+			private function selection(event:VehicleSelectionEvent):void
+			{
+				if(event.availability=="available")
+				{
+					acSelectedVehicle=event.vehicleList;
+					setRatesToMultipleVehicles(event.vehicleList);
+				}
+				else
+				{
+					Alert.show("Please select available vehicle,to proceed hire.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+				}
+			}
+			/***
+			 * Following method fire when user select rates
+			 * 
+			 * 
+			 * */
+			private function listener_selection(event:VehicleSelectionEvent):void
+			{
+				if(event.availability=="available")
+				{
+					try{
+					var tmprateType:String="";
+					if(acResVehicle.length>0){
+						tmprateType=(acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).fresvehiclerate.ratetype;
+					}
+					removeVehicles();
+					setRateType(tmprateType);
+					acSelectedVehicle=event.vehicleList;
+					setRatesToMultipleVehicles(event.vehicleList);
+					}
+					catch(e:Error)
+					{
+					
+					}
+
+				}
+				else
+				{
+					Alert.show("Please select available vehicle,to proceed hire.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+
+		public function removeVehicles():void
+		{
+			acResVehicle.removeAll();
+			acResVehicle.refresh();
+		}
+			
+			
+
+			
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//folowing codes perform the change rate type
+			//--------------------------------------------------------------------------------------------------------------------------------------------
+
+			/***
+			 * 
+			 * This method execute service call for get rate for first vehicle ratetype hiretype combination
+			 *   */
+			public function applyNewRatesVehicle():void
+			{
+				
+				var vehicleratePK:Com_dspl_malkey_domain_FvehicleratePK=new Com_dspl_malkey_domain_FvehicleratePK();
+				vehicleratePK.clienttype=clientType;
+				vehicleratePK.hiretypeid=com_dspl_malkey_domain_Freservation.hiretypeid;
+				vehicleratePK.ratetype=rateType;//session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+				
+				if(acResVehicle!=null)
+				{
+					if(acResVehicle.length!=0)
+					{
+						var regno:String=(acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).id.regno;
+						vehicleratePK.vehimodelid=(genericfunctions.getArrayCollection(acVehicleAll,'regno',regno) as Com_dspl_malkey_domain_Fvehicle).vehimodelid;//com_dspl_malkey_domain_Fvehicle.vehimodelid;
+						crFvehiclerateSRVFindByID_ChangeMode.token = fvehiclerateSRV.findByID(vehicleratePK);
+					}
+				}
+				
+			}
+			
+			
+
+			protected function crFvehiclerateSRVFindByID_ChangeMode_resultHandler(event:ResultEvent):void
+			{
+				// crFvehiclerateSRVFindByID_ChangeMode
+				if(crFvehiclerateSRVFindByID_ChangeMode.lastResult !=null)
+				{	
+					rateChange_ApplyCurrentRate(crFvehiclerateSRVFindByID_ChangeMode.lastResult as Com_dspl_malkey_domain_Fvehiclerate);
+				}
+				else
+				{
+					//selected vehicle is not allowed for hiretype
+					Alert.show("Sorry,\nselected vehicle is not allowed for given hire-type.\nAll the selected vehicles will be discarded.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+					//resetVehicleForm();
+					removeVehicles();
+					setPriority();
+				}
+			}
+			//--------------------------------------------------------------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			//--------------------------------------------------------------------------------------------------------------------------------------------
+			public function rateChange_ApplyCurrentRate(tempVehiclerate:Com_dspl_malkey_domain_Fvehiclerate):void
+			{
+				if(acResVehicle!=null)
+				{
+					if(acResVehicle.length!=0)
+					{
+						var temp:Com_dspl_malkey_domain_Fresvehiclerate=ratesFactory(tempVehiclerate);
+						var tmpFresvehicle:Com_dspl_malkey_domain_Fresvehicle = acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle;
+						var tempOldRate:Com_dspl_malkey_domain_Fresvehiclerate=tmpFresvehicle.fresvehiclerate;
+						temp.resno=tempOldRate.resno;//apply old resno to new rates
+						temp.discount=tempOldRate.discount;//apply old discount to new rates
+						tmpFresvehicle.fresvehiclerate=temp;
+					}
+				}
+				
+			}
+			
+			/***
+			 * Apply Rates to current selected Vehicle
+			 * 
+			 * */
+			private  function ratesFactory(tempVehiclerate:Com_dspl_malkey_domain_Fvehiclerate):Com_dspl_malkey_domain_Fresvehiclerate
+			{
+				var tempFresvehiclerate:Com_dspl_malkey_domain_Fresvehiclerate=new Com_dspl_malkey_domain_Fresvehiclerate();
+				if(tempVehiclerate !=null)
+				{
+					tempFresvehiclerate.rate=/*tempVehiclerate.rate;*/new Number(tempVehiclerate.rate).toFixed(8);
+					tempFresvehiclerate.standardrate=tempVehiclerate.standardrate;
+					tempFresvehiclerate.xsmilerate=tempVehiclerate.xsmilerate;
+					tempFresvehiclerate.allotedkms=new Number(tempVehiclerate.allotedkms);
+					tempFresvehiclerate.xhourrate=new Number(tempVehiclerate.xhourrate).toString();
+					tempFresvehiclerate.allotedhours=new Number(tempVehiclerate.allotedhours);
+					tempFresvehiclerate.discountxhourrate="0.00";
+					tempFresvehiclerate.clienttype=tempVehiclerate.id.clienttype;//clientType;
+					tempFresvehiclerate.hiretypeid=tempVehiclerate.id.hiretypeid;//com_dspl_malkey_domain_Freservation.hiretypeid;
+					tempFresvehiclerate.ratetype=tempVehiclerate.id.ratetype;//rateType;//session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+					tempFresvehiclerate.vehimodelid=tempVehiclerate.id.vehimodelid;//com_dspl_malkey_domain_Fvehicle.vehimodelid;//null file here
+					tempFresvehiclerate.addmach="";
+					tempFresvehiclerate.adduser="";
+					tempFresvehiclerate.adddate=new Date();
+					tempFresvehiclerate.discount="0.00";
+					return tempFresvehiclerate;
+				}
+				return null;
+			}
+			//--------------------------------------------------------------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			private function getVehicleModel():String
+			{
+				return getArrayCollection(acVehicleModelAll, "vehimodelid","vehimakeid", com_dspl_malkey_domain_Fvehicle.vehimodelid, com_dspl_malkey_domain_Fvehicle.vehimakeid).description;
+			}
+			
+			
+			
+			
+			
+			
+			
+			/***
+			 * Following method scan and return record for given composite key 
+			 * 
+			 * */
+			public function getArrayCollection(acSourceArrayCollection:ArrayCollection, sColumnName:String,sColumnName2:String, sSearchCode:*, sSearchCode2:*):Object
+			{
+				var nIndex:int = -1;
+				var oArrayElement:Object;
+				/*var aOutArrCol:ArrayCollection = new ArrayCollection();*/
+				if(sSearchCode==null || sSearchCode=="" || StringUtil.trim(sSearchCode).length==0 || sSearchCode2==null || sSearchCode2=="" || StringUtil.trim(sSearchCode2).length==0)
+				{
+					return null;
+				}
+				else
+				{			
+					if (acSourceArrayCollection!=null)
+					{
+						for(var i:int = 0; i < acSourceArrayCollection.length; i++)
+						{
+							oArrayElement = acSourceArrayCollection.getItemAt(i);
+							if(oArrayElement['id'][sColumnName] == sSearchCode && oArrayElement['id'][sColumnName2] == sSearchCode2){
+								oArrayElement;
+								break;
+							}
+						}
+					}
+				}
+				return oArrayElement	
+			}	
+			
+			
+			private function hasOldRate():Boolean
+			{
+				var flag:Boolean=false;
+				if(oldrate!=null)
+				{
+					if(oldrate.ratetype!=null)
+					{
+						if(oldrate.ratetype.length>0)
+						{
+							flag=true;
+						}
+					}
+				}
+				else
+				{flag=false;}
+					
+					return flag;
+					
+			}
+				
+			
+			protected function lnkOldRate_clickHandler(event:MouseEvent):void
+			{
+				if(acResVehicle.length>0)
+				{
+					if(hasOldRate())
+					{
+						dispatchEvent(new Event("applyOldRate")); 
+					}
+					else
+					{
+						Alert.show("No old rates found","Information",Alert.OK,null,null,genericfunctions.IconInformation,Alert.OK,null);
+					}
+				}
+				else
+				{
+					Alert.show("No vehicles found","Information",Alert.OK,null,null,genericfunctions.IconInformation,Alert.OK,null);
+				}
+			}
+
+			protected function lnkModel_clickHandler(event:MouseEvent):void
+			{
+				if(acResVehicle.length>0){
+				changeRatePopup();}
+				else
+					Alert.show("No vehicles found","Oops!.");
+			}
+			
+			/***
+			 * Common popup TextBox method
+			 * 
+			 */
+			protected function changeRatePopup():void
+			{
+				var changeRate:ChangeRate=new ChangeRate();
+				changeRate.selectedModel=com_dspl_malkey_domain_Fresvehiclerate.vehimodelid;
+				changeRate.addEventListener("selectModel",listener_selectModel);
+				PopUpManager.addPopUp(changeRate,this,true);
+				PopUpManager.centerPopUp(changeRate);
+			}
+			
+			protected function listener_selectModel(event:DataEvent):void
+			{
+				findByIDFvehiclerateSRV_ApplyNewRates(event.data);
+			}
+			
+			
+
+
+
+
+
+			protected function lnkVehicleRated_clickHandler(event:MouseEvent):void
+			{
+				if(clientType!=null && com_dspl_malkey_domain_Freservation.hiretypeid!=null && rateType!=null)
+				{
+					if(clientType.length>0 && com_dspl_malkey_domain_Freservation.hiretypeid.length>0 && rateType.length>0)
+					{
+						var df:DateFormatter=new DateFormatter();
+						var dfnew:DateFormatter=new DateFormatter();
+						df.formatString="YYYY.MM.DD";
+						dfnew.formatString="MM-DD-YYYY";
+						var hireDetailsView:Com_dspl_malkey_view_HireDetailsView=new Com_dspl_malkey_view_HireDetailsView();
+						hireDetailsView.clientType=clientType;
+						hireDetailsView.hireType=com_dspl_malkey_domain_Freservation.hiretypeid;
+						hireDetailsView.rateType=rateType;
+						advancedSearchVehicles(df.format(com_dspl_malkey_domain_Freservation.dout), df.format(com_dspl_malkey_domain_Freservation.din), hireDetailsView, true);
+					}
+					else
+					{
+						Alert.show("Hire type,Rate type required for vehicle selection.","Oops!");
+					}
+				}
+				else
+				{
+					Alert.show("Hire type,Rate type required for vehicle selection.","Oops!");
+				}
+			}
+
+			
+			protected function advancedSearchVehicles(arg0:String, arg1:String, arg2:Com_dspl_malkey_view_HireDetailsView, arg3:Boolean):void
+			{
+				advancedSearchVehiclesResult.token = vehiclesearchSRV.advancedSearchVehicles(arg0, arg1, arg2, arg3);
+			}
+			
+
+			protected function advancedSearchVehiclesResult_resultHandler(event:ResultEvent):void
+			{
+				txtVehicleRates._acDataProvider=advancedSearchVehiclesResult.lastResult;
+				txtVehicleRates.launchSearchGrid();
+			}
+
+
+			protected function btnPhotoVehicle_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				fvehiclepicSRVListByRegNo(txtVehicle.text);
+			}
+
+			
+			protected function fvehiclepicSRVListByRegNo(arg0:String):void
+			{
+				crfvehiclepicSRVlistByRegNo.token = fvehiclepicSRV.listByRegNo(arg0);
+			}
+			
+
+			protected function crfvehiclepicSRVlistByRegNo_resultHandler(event:ResultEvent):void
+			{
+				var acComplexObject:ArrayCollection=(event.result as ArrayCollection);
+				var acPic:ArrayCollection=new ArrayCollection();
+				for each(var temp:Com_dspl_malkey_domain_Fvehiclepic in acComplexObject)
+				{
+					acPic.addItem(temp.imageurl);
+				}
+				if(acPic.length>0)
+				{
+					var p:ImagePopup =new ImagePopup();
+					p.imageList=acPic;
+					p.titleText="Vehicle Viewer - "+txtVehicle.text;
+					PopUpManager.addPopUp(p,FlexGlobals.topLevelApplication as DisplayObject,true);
+					PopUpManager.centerPopUp(p);
+				}
+			}
+
+
+			protected function lnkVehicle_clickHandler(event:MouseEvent):void
+			{
+				if(clientType!=null && com_dspl_malkey_domain_Freservation.hiretypeid!=null && rateType!=null)
+				{
+					if(clientType.length>0 && com_dspl_malkey_domain_Freservation.hiretypeid.length>0 && rateType.length>0)
+					{
+						txtVehicle.launchSearchGrid();
+					}
+					else
+					{
+						Alert.show("Hire type,Rate type required for vehicle selection.","Oops!");
+					}
+				}
+				else
+				{
+					Alert.show("Hire type,Rate type required for vehicle selection.","Oops!");
+				}
+				
+			}
+
+		]]>
+	</fx:Script>
+</s:Group>

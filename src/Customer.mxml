@@ -1,0 +1,3378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="900" height="578" currentState="Default"
+			   title="Customer"
+			   creationComplete="initApp(event)"
+			   close="closeForm()" xmlns:controls="com.adobe.flex.extras.controls.*" xmlns:components="com.adobe.flex.extras.components.*" xmlns:services="com.dspl.malkey.services.*"
+			    xmlns:components2="com.dspl.malkey.components.*">
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="Add"/>
+		<s:State name="Edit"/>
+		<s:State name="Find"/>
+		<s:State name="Delete"/>
+	</s:states>
+	<fx:Declarations>		
+		<!--Validators [Start]-->
+		
+		<!--General Validations [Start]-->
+		<mx:StringValidator id="svCusCode"
+							source="{txtCusCode}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svCusType"
+							source="{ddCusType}"							
+							property="selectedItem"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svCusName"
+							source="{txtCusName}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svCountry"
+							source="{txtCountry}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svStatus"
+							source="{ddStatus}"							
+							property="selectedItem"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svBillName"
+							source="{txtBillName}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svBillAddress"
+							source="{txtBillAddress}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svCusNIC"
+							source="{txtCusNIC}"							
+							property="text"							
+							triggerEvent=""
+							requiredFieldError="NIC or Passport Number is Required"
+							minLength="9"
+							tooShortError="Invalid NIC Number"
+							/>
+		<mx:StringValidator id="svCusPassNo"
+							source="{txtCusPassNo}"							
+							property="text"							
+							triggerEvent=""
+							requiredFieldError="NIC or Passport Number is Required"
+							/>
+		
+		<mx:StringValidator id="svCompany"
+							source="{txtCompany}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svVatRegNo"
+							source="{txtVatRegNo}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svSVatRegNo"
+							source="{txtSVatRegNo}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<!--General Validations [End]-->
+				
+		<!--Guarantor Validations [Start]-->
+		<mx:StringValidator id="svGId"
+							source="{txtGId}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<!--Guarantor Validations [End]-->
+		
+		<!--Driver Validations [Start]-->
+		<mx:StringValidator id="svDriName"
+							source="{txtDriName}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svDriLicNo"
+							source="{txtDriLicNo}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svDriLicDIssued"
+							source="{txtDriLicDIssued}"		
+							property="text"		
+							triggerEvent=""
+							minLength="8"
+							tooShortError="Invalid Date"
+							/>
+		<mx:StringValidator id="svDriLicDExpiry"
+							source="{txtDriLicDExpiry}"							
+							property="text"							
+							triggerEvent=""
+							minLength="8"
+							tooShortError="Invalid Date"
+							/>
+		<!--Driver Validations [End]-->
+		
+		<!--Validators [End]-->
+		
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<mx:DateFormatter 
+			id="dfFormatter2" 
+			formatString="@Resource(key='dateFormat2',bundle='resource')"
+			/>
+		
+		<!--Formatters [End]-->
+	
+		<!--Service-->
+		<services:FclienttypeSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFclienttype"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crListAllFclienttype"
+			result="crListAllFclienttype_resultHandler(event)"
+			fault="crListAllFclienttype_faultHandler(event)"
+			/>
+		
+		<!--Service-->
+		<services:FdebtorstatusSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFdebtorstatus"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crListAllFdebtorstatus"
+			result="crListAllFdebtorstatus_resultHandler(event)"
+			fault="crListAllFdebtorstatus_faultHandler(event)"
+			/>
+		
+		<!--Service-->
+		<services:FguarantorSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFguarantor"
+			/>
+		<!--Call Responder-->	
+		<s:CallResponder
+			id="crListApprovedGuarantors"
+			result="crListApprovedGuarantors_resultHandler(event)"
+			fault="crListApprovedGuarantors_faultHandler(event)"
+			/>
+		
+		<!--Service-->
+		<services:FdebtorSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFdebtor"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crCreateFdebtor"
+			result="crCreateFdebtor_resultHandler(event)"
+			fault="crCreateFdebtor_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crGetDebList"
+			result="crGetDebList_resultHandler(event)"
+			fault="crGetDebList_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crDebtorFindById"
+			result="crFindById_resultHandler(event)"
+			fault="crFindById_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crUpdateFdebtor"
+			result="crUpdateFdebtor_resultHandler(event)"
+			fault="crUpdateFdebtor_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crRemoveByID"
+			result="crRemoveByID_resultHandler(event)"
+			fault="crRemoveByID_faultHandler(event)"
+			/>
+		
+		<!--Service-->
+		<services:FclientdriverSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFclientdriver"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crClientDriverFindByDebcode"
+			result="crClientDriverFindByDebcode_resultHandler(event)"
+			fault="crClientDriverFindByDebcode_faultHandler(event)"
+			/>
+		<s:CallResponder id="listAllOptimizedPageResult"/>
+		<s:CallResponder id="listLikeNameResult" result="listLikeNameResult_resultHandler(event)"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.ErrorTipManager;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.components.CountryList;
+			import com.dspl.malkey.util.ImageBrowser;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fclientdriver;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdebtor;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdebtorstatus;
+			
+			import flash.profiler.showRedrawRegions;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.controls.ToolTip;
+			import mx.core.Application;
+			import mx.core.FlexGlobals;
+			import mx.core.IToolTip;
+			import mx.core.UIComponent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.IndexChangedEvent;
+			import mx.events.ItemClickEvent;
+			import mx.events.ListEvent;
+			import mx.events.MenuEvent;
+			import mx.graphics.codec.JPEGEncoder;
+			import mx.managers.ToolTipManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.xml.SimpleXMLDecoder;
+			import mx.utils.ArrayUtil;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String=""; 
+			
+			//Properties & Variables [Start]
+			private var mRollOverMenu:Menu;
+			[Bindable]
+			private var lacFcliendriver:ArrayCollection=new ArrayCollection();
+			private var lsImgBrwCtrl:String=""; //Image Browsed Control
+			
+			[Bindable]
+			public var lpuPopup:_tiMasterFile = new _tiMasterFile();
+			private var imgLoader:ImageBrowser=new ImageBrowser();
+			
+			[Bindable]
+			private var fTaxType:ArrayCollection = new ArrayCollection();
+			
+			private var liCusNIC:int=0;
+			private var lbaCusNIC:ByteArray;
+			
+			private var liCusNICBack:int=0;
+			private var lbaCusNICBack:ByteArray;
+			
+			private var liCusPass:int=0;
+			private var lbaCusPass:ByteArray;
+			
+			private var liDriLicFront:int=0;
+			private var lbaSelLicFront:ByteArray;
+			
+			private var liDriLicBack:int=0;
+			private var lbaSelLicBack:ByteArray;
+			
+			private var lbEditInit:Boolean;
+			
+			private var fdebtor:Com_dspl_malkey_domain_Fdebtor;
+			private var lsSelState:String;
+			//Propertis & Variables [End]
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//**************** CONTROL BUTTON HANDLERS [START] ************************
+			
+			private var liCurIndex:int=0;
+			private var liMFCount:int=0;
+			
+			private function setCtrlVal(index:int):void{
+				try{
+					if(crGetDebList.lastResult != null && crGetDebList.lastResult.length>0 && crGetDebList.lastResult.length >= liCurIndex)
+						loadDebtorById(crGetDebList.lastResult.getItemAt(liCurIndex).debcode);
+				}catch(error:Error){
+					//Message.displayAlert(1,"setCtrlVal: " + error.message,"Error",null);
+				}
+			} 
+			
+			private function goFirst():void{
+				liCurIndex=0;
+				setCtrlVal(liCurIndex); 
+			}
+			
+			private function goLast():void{
+				liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex); 
+			}
+			
+			private function goNext():void{
+				liCurIndex+=1;
+				if(liCurIndex>liMFCount)
+					liCurIndex=0;
+				setCtrlVal(liCurIndex);  
+			}
+			
+			private function goBack():void{
+				liCurIndex-=1;
+				if(liCurIndex<0)
+					liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex); 
+			}
+			
+			protected function btnNew_clickHandler(event:MouseEvent):void{
+				lsSelState="Add";
+				setState(lsSelState);
+			}
+			
+			protected function btnEdit_clickHandler(event:MouseEvent):void{
+				lsSelState="Edit";
+				setState(lsSelState);
+			}
+			
+			protected function btnDelete_clickHandler(event:MouseEvent):void{
+				if(StringUtil.trim(txtCusCode.text).length>0){
+					Message.displayAlert(4,"Are You Sure?","Delete Confirmation",deleteRecord);
+				}
+			}
+			
+			private function deleteRecord(event:CloseEvent):void{
+				if(event.detail==Alert.YES){
+					crRemoveByID.token=srvFdebtor.removeByID(fdebtor.debcode);
+				}
+			}
+			
+			protected function btnUndo_clickHandler(event:MouseEvent):void{
+				lsSelState="Default";
+				setState(lsSelState);
+			}
+			
+			protected function btnPrint_clickHandler(event:MouseEvent):void{
+				// TODO Auto-generated method stub
+			}
+			
+			protected function btnFind_clickHandler(event:MouseEvent):void{
+/* 				lsSelState="Find"; */
+/* 				var request:URLRequest = new URLRequest(resourceManager.getString("resource","app2URL",null,null).toString());
+				navigateToURL(request); */
+				
+				showDebList();
+			}
+			
+			protected function btnReload_clickHandler(event:MouseEvent):void{
+				loadDebListAll();
+				loadMasterFiles();
+			}
+			
+			protected function btnSave_clickHandler(event:MouseEvent):void{
+				if(currentState=="Delete")
+					Message.displayAlert(4,"Are You Sure?","Delete Confirmation",deleteConfirmationClose);
+				else
+					checkConditions();
+			}
+			
+			private function deleteConfirmationClose(event:CloseEvent):void{
+				if(event.detail==Alert.YES)
+					deleteCustomer();
+				else
+					resetForm();
+			}
+			
+			private function deleteCustomer():void{
+				try{
+					crRemoveByID.token=srvFdebtor.removeByID(txtCusCode.text);
+				}catch(error:Error){
+					Message.displayAlert(1,"deleteCustomer: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function checkConditions():void{
+				cursorManager.setBusyCursor();
+				try{
+					if(validateForm()==true){
+						var conStr:String="";
+						if(ddCusType.selectedItem.clienttype.toString().toLowerCase()=="corporate"){ 
+							if(txtGId.text=="")
+								conStr="Guarantor";
+							if(lacFcliendriver.length==0){
+								if(txtGId.text=="")
+									conStr+=" and ";
+								conStr+="Driver(s) are ";
+							}
+							else
+								conStr+=" is ";
+							conStr+=" not added.\rDo you want to continue?";
+							if(txtGId.text=="" || lacFcliendriver.length==0)
+								Message.displayAlert(4,conStr,"Confirmation",confirmationClose);
+							else
+								conStr="";
+						}
+			 			/* var strNIC:Number = 0;
+						var strPassPort:Number = 0;
+						strNIC = findIndex(crGetDebList.lastResult,"nicno",txtCusNIC.text);
+						strPassPort = findIndex(crGetDebList.lastResult,"passportno",txtCusPassNo.text);
+						Alert.show(strNIC.toString()+"=="+txtCusNIC.text);
+						if(strNIC != 0 && txtCusPassNo.text != "")
+						{
+							Message.displayAlert(2,"Duplicate NIC No","Warning",null);
+						}else if(strPassPort != 0 && txtCusPassNo.text != "")
+						{//&& strNIC == 0 && strPassPort == 0
+							Message.displayAlert(2,"Duplicate Passport No","Warning",null);
+						} */
+						if(conStr=="" )
+							save();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"checkConditions: " + error.message,"Error",null);
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function confirmationClose(event:CloseEvent):void
+			{
+				if(event.detail==Alert.YES)
+					save();
+				else if(event.detail==Alert.NO){
+					if(txtGId.text=="")
+						tnCusNavigator.selectedIndex=2;
+					else if(lacFcliendriver.length==0)
+						tnCusNavigator.selectedIndex=3;
+				}
+			}
+			
+			private function save():void{
+				cursorManager.setBusyCursor();
+				try{
+					if(currentState=="Add"){
+						fdebtor=new Com_dspl_malkey_domain_Fdebtor();
+						fdebtor.debcode=txtCusCode.text;
+					}
+					fdebtor.clienttype=ddCusType.selectedItem.clienttype;
+					fdebtor.debname=txtCusName.text;
+					fdebtor.country=txtCountry.text;
+					fdebtor.homeadd=txtResAddress.text;
+					fdebtor.hometele=txtResTel.text;
+					fdebtor.homemob=txtResMobile.text;
+					fdebtor.company=txtCompany.text;
+					fdebtor.vatno=txtVatRegNo.text;
+					fdebtor.svatno=txtSVatRegNo.text;
+					fdebtor.officeadd=txtOffAddress.text;
+					fdebtor.officetele=txtOffTel.text;
+					fdebtor.officemob=txtOffMobile.text;
+					fdebtor.debfax=txtOffFax.text;
+					fdebtor.email=txtEmail.text;
+					fdebtor.debstat=ddStatus.selectedItem.id;
+					fdebtor.emailClient=cbEmailClient.selected;
+					fdebtor.longterm=(cbLongTerm.selected==true?"Longterm":"");
+					
+					fdebtor.billname=txtBillName.text;
+					fdebtor.debadd=txtBillAddress.text;
+					fdebtor.tel=txtBillTel.text;
+					fdebtor.fax=txtBillFax.text;
+					fdebtor.billmob1=txtBillMobile1.text;
+					fdebtor.billmob2=txtBillMobile2.text;
+					
+					fdebtor.nicno=txtCusNIC.text;
+					if(txtCusNIC.text!=""){
+						fdebtor.nicno!="V"; 
+						if(lbaCusNIC!=null){
+							fdebtor.nicimagedata=lbaCusNIC;
+							fdebtor.nicimage=fdebtor.debcode+"_NF.jpeg";
+						}
+						if(lbaCusNICBack!=null){
+							fdebtor.nicbackimagedata=lbaCusNICBack;
+							fdebtor.nicbackimage=fdebtor.debcode+"_NB.jpeg";
+						}
+					}
+					else{
+						fdebtor.nicimagedata=null;
+						fdebtor.nicimage="";
+						fdebtor.nicbackimagedata=null;
+						fdebtor.nicbackimage="";
+					}
+					
+					fdebtor.passportno=txtCusPassNo.text;
+					if(txtCusPassNo.text!=""){
+						if(lbaCusPass!=null){
+							fdebtor.passimagedata=lbaCusPass;
+							fdebtor.ppimage=fdebtor.debcode+"_P.jpeg";
+						}
+					}
+					else{
+						fdebtor.passimagedata=null;
+						fdebtor.ppimage="";
+					}
+				
+					//Guarantor
+					fdebtor.gid=txtGId.text;
+					
+					fdebtor.adduser="";
+					fdebtor.addmach="";
+					fdebtor.adddate=null;
+					
+					
+					// Setting Tax Type
+					if(cboTaxType.selectedIndex>-1){
+					var lsTaxType:String = fTaxType[cboTaxType.selectedIndex].des;
+					if (lsTaxType.toUpperCase() == "TAX"){
+						fdebtor.vattyp = "T";
+					}else if (lsTaxType.toUpperCase() == "SVAT"){
+						fdebtor.vattyp = "S";
+					} else if (lsTaxType.toUpperCase() == "EXCEMPT"){
+						fdebtor.vattyp = "X";
+					} else if (lsTaxType.toUpperCase() == "ALL INCLUSIVE"){
+						fdebtor.vattyp = "E";
+					}
+					else
+					{
+						fdebtor.vattyp = "T";
+						Message.displayAlert(3,"System takes default tax type as TAX","Information",null);
+					}
+					
+					}
+					if(currentState=="Add"){
+						fdebtor.crepre="0";
+						fdebtor.crlmt="0";
+						fdebtor.debacc="";
+						//fdebtor.vattyp="";
+						fdebtor.contper="";
+						fdebtor.curcode="";
+						fdebtor.debtype="";
+					}
+					if(currentState=="Add"){
+						crCreateFdebtor.token=srvFdebtor.create(fdebtor,lacFcliendriver);
+					}
+					else if(currentState=="Edit"){
+						crUpdateFdebtor.token=srvFdebtor.update(fdebtor,lacFcliendriver);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"save: " + error.message,"Error",null);
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function validateForm():Boolean{
+				try{
+					ErrorTipManager.removeAllErrorTips();
+					txtCusCode.errorString="";
+					txtCompany.errorString="";
+					txtVatRegNo.errorString="";
+					txtSVatRegNo.errorString="";
+					txtCusNIC.errorString="";
+					txtCusPassNo.errorString="";
+					
+					var validationArray:Array;
+					
+					//Validate General Tab
+					if(ddCusType.selectedIndex<0){
+						Message.displayAlert(2,"Select Customer Type To Continue","Warning",null);
+						updateErrorTipVisibility();
+						return false;
+					}				
+					//Validate General Tab
+					if(cboTaxType.selectedIndex<0){
+						Message.displayAlert(2,"Select Tax Type To Continue","Warning",null);
+						return false;
+					}				
+					
+					var validators:Array=new Array();
+					validators.push(svCusType);
+					validators.push(svCusName);
+					validators.push(svCountry);
+					validators.push(svStatus);
+					validators.push(svBillName);
+					validators.push(svBillAddress);
+					
+					if(cboTaxType.selectedLabel=="SVAT")
+						validators.push(svSVatRegNo);
+					else if(cboTaxType.selectedLabel=="TAX")
+						validators.push(svVatRegNo);
+					/* if(ddCusType.selectedItem.clienttype.toString().toLowerCase()=="corporate"){ 
+						validators.push(svCompany);
+					}else{
+						if(txtCusNIC.text=="" && txtCusPassNo.text==""){
+							validators.push(svCusNIC);
+							validators.push(svCusPassNo);
+						}else{
+							if(txtCusNIC.text!=""){
+								validators.push(svCusNIC);
+							}							
+						}
+					}*/
+					
+					if(ddCusType.selectedItem.clienttype.toString().toLowerCase()=="corporate") 
+						validators.push(svCompany);
+					
+					validationArray=Validator.validateAll(validators);
+					if(validationArray.length>0){
+						tnCusNavigator.selectedIndex=0;
+						return false;
+					}
+					
+					//Validate NIC/Passport Tab
+					
+					validators=new Array();
+					if(ddCusType.selectedItem.clienttype.toString().toLowerCase()!="corporate" && !cbEmailClient.selected){ 
+						if(txtCusNIC.text=="" && txtCusPassNo.text==""){
+							validators.push(svCusNIC);
+							validators.push(svCusPassNo);
+						}else{
+							if(txtCusNIC.text!=""){
+								validators.push(svCusNIC);
+							}							
+						}
+					}
+					validationArray=Validator.validateAll(validators);
+					if(validationArray.length>0){
+						updateErrorTipVisibility();
+						tnCusNavigator.selectedIndex=1;
+						return false;
+					}
+						
+					//Validate NIC/Passport Tab Images
+					if(txtCusNIC.text!="" && liCusNIC==0){
+						Message.displayAlert(2,"Select NIC Image [Front] To Continue","Warning",null);
+						updateErrorTipVisibility();
+						cursorManager.removeBusyCursor();
+						tnCusNavigator.selectedIndex=1;
+						return false;
+					}	
+					if(txtCusNIC.text!="" && liCusNICBack==0){
+						Message.displayAlert(2,"Select NIC Image [Back] To Continue","Warning",null);
+						updateErrorTipVisibility();
+						cursorManager.removeBusyCursor();
+						tnCusNavigator.selectedIndex=1;
+						return false;
+					}	
+					if(txtCusPassNo.text!="" && liCusPass==0){
+						Message.displayAlert(2,"Select Passport Image To Continue","Warning",null);
+						updateErrorTipVisibility();
+						cursorManager.removeBusyCursor();
+						tnCusNavigator.selectedIndex=1;
+						return false;
+					}
+					
+					if(currentState=="Add"){
+						var strNIC:Number = -1;
+						var strPassPort:Number = -1;
+					
+						if(txtCusNIC.text != "")
+						{
+							//Alert.show(strNIC.toString()+"=='"+txtCusNIC.text+"' dddd");
+							strNIC = findIndex(crGetDebList.lastResult,"nicno",txtCusNIC.text);
+						}
+					
+						if(txtCusPassNo.text != "")
+						{
+							strPassPort = findIndex(crGetDebList.lastResult,"passportno",txtCusPassNo.text);
+						}					
+					
+						if(strNIC.toString() != "-1" )
+						{
+							//Alert.show("nic "+strNIC.toString());
+							Message.displayAlert(2,"Duplicate NIC No","Warning",null);
+							return false;						
+						}
+					
+						if(strPassPort.toString() != "-1" )
+						{
+							//Alert.show("Pass "+strPassPort.toString());
+							Message.displayAlert(2,"Duplicate Passport No","Warning",null);
+							return false;
+						}
+					}
+					return true;
+					
+				}catch(error:Error){
+					Message.displayAlert(1,"validateForm: " + error.message,"Error",null);
+				}
+				return false;
+			}
+			
+			private function showDeferred(target:DisplayObject):void {
+				//target.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OUT));
+				target.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_OVER));
+			}
+			
+			//**************** CONTROL BUTTON HANDLERS [END] ************************
+			
+			
+			//**************** SERVICE RESULT & FAULT HANDLERS [START] ************************ 
+			
+			protected function crListAllFclienttype_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Customer Types [Error]","Error",errorCloseHandler);
+					else
+						updateMasterListCnt();
+				}catch(error:Error){
+					Message.displayAlert(1,"List Customer Types [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crListAllFclienttype_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Customer Types [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+			protected function crListAllFdebtorstatus_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Customer Status [Error]","Error",errorCloseHandler);
+					else
+						updateMasterListCnt();
+				}catch(error:Error){
+					Message.displayAlert(1,"List Customer Status [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crListAllFdebtorstatus_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Customer Status [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+			protected function crListApprovedGuarantors_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Guarantor [Error]","Error",errorCloseHandler);
+					else
+						updateMasterListCnt();
+				}catch(error:Error){
+					Message.displayAlert(1,"List Guarantor [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crListApprovedGuarantors_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Guarantor [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+			protected function crCreateFdebtor_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null){
+						Message.displayAlert(1,"Error Saving Customer [Error]","Error",errorCloseHandler);
+						return;}
+					
+					 //if(event.result as Boolean==true){ 
+					Message.displayAlert(3,"Customer ID: " + event.result.toString() + "\rSave Successful","",successfulCloseHandler);
+					 //}else{
+					 //	Message.displayAlert(1,"Error Occured While Saving.\rCheck Whether Customer ID Already Exists","Error",null);
+					 //}	 					
+				}catch(error:Error){
+					Message.displayAlert(1,"Save Customer [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function successfulCloseHandler(event:Event):void{
+				loadDebList();
+			}
+			
+			protected function crCreateFdebtor_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Save Customer [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			//critical method
+			protected function crGetDebList_resultHandler(event:ResultEvent):void{
+				try{
+					trace("after call loadDebList() result handler");
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Customer List [Error]","Error",loadErrorHandler);
+					else
+						setNavigation();
+				}catch(error:Error){
+					Message.displayAlert(1,"Error Loading Customer List [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function setNavigation():void{
+				try{
+					liMFCount=(crGetDebList.lastResult.length-1);
+					if(lsSelState=="Default"){
+						liCurIndex=0;
+						goFirst();
+					}else{
+						setCtrlVal(liCurIndex);
+						lsSelState="Default";
+						setState(lsSelState);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"setNavigation: " + error.message,"Error",null);
+				}
+			}
+			
+			protected function crGetDebList_faultHandler(event:FaultEvent):void{
+				trace("after call loadDebList() crGetDebList_faultHandler");
+				Message.displayAlert(1,"Error Loading Customer List [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFindById_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null){
+						Message.displayAlert(1,"Error Loading Customer Details [Error]","Error",loadErrorHandler);
+						return;}
+					else{
+						fdebtor=event.result as Com_dspl_malkey_domain_Fdebtor;
+						loadCustomerDet();
+					}						
+				}catch(error:Error){
+					Message.displayAlert(1,"Error Loading Customer Details [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFindById_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Error Loading Customer Details [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crClientDriverFindByDebcode_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null){
+						Message.displayAlert(1,"Error Loading Driver Details [Error]","Error",loadErrorHandler);
+						return;}
+					else{
+						lacFcliendriver=event.result as ArrayCollection;
+						crClientDriverFindByDebcode.token=null;
+					}						
+				}catch(error:Error){
+					Message.displayAlert(1,"Error Loading Driver Details [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crClientDriverFindByDebcode_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Error Loading Driver Details [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crUpdateFdebtor_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null){
+						Message.displayAlert(1,"Error Updating Customer [Error]","Error",errorCloseHandler);
+						return;}
+					
+					if(event.result as Boolean==true){
+						Message.displayAlert(3,"Update Successful","",successfulCloseHandler);
+					}else{
+						Message.displayAlert(1,"Error Occured While Updating","Error",null);
+					}						
+				}catch(error:Error){
+					Message.displayAlert(1,"Update Customer [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crUpdateFdebtor_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Update Customer [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			protected function crRemoveByID_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null){
+						Message.displayAlert(1,"Error Deleting Customer [Error]","Error",errorCloseHandler);
+						return;}
+					
+					if(event.result as Boolean==true){
+						Message.displayAlert(3,"Delete Successful","",successfulCloseHandler);
+					}else{
+						Message.displayAlert(1,"Error Occured While Deleting","Error",null);
+					}						
+				}catch(error:Error){
+					Message.displayAlert(1,"Delete Customer [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crRemoveByID_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Delete Customer [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			//**************** SERVICE RESULT & FAULT HANDLERS [END] ************************ 
+			
+			//Execute After Application Creation Is Completed
+			private function initApp(event:FlexEvent):void
+			{
+				try{
+					this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE,stateChangeHandler,false,0,false);
+					registerValidators();
+					liMListLoadCnt=0;
+					txtCusCode.addEventListener(KeyboardEvent.KEY_DOWN,textInputKeyDown,true,0,false);
+					txtCusCode.addEventListener(TextOperationEvent.CHANGE,textInputChange,true,0,false);
+					loadMasterFiles();
+					loadTaxType();
+					imgLoader.addEventListener("imageLoaded",imageLoadedEvent,false,0,false);
+					lsSelState="Default";
+					if(currentState=="Default")
+						txtCountry.enabled=false;
+					Message.displayAlert(3,"For the Optimum Performance,All the Customers are not loading at once.\n" +
+						"Recomended: Instead of that use search box.\n" +
+						"Not Recomended: To load all customers click on Reload button.","Information",null);
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function loadTaxType():void
+			{
+				//var o:Object;
+				var o:Object = new Object();
+				o["des"] = "ALL INCLUSIVE";
+				fTaxType.addItem(o);
+				
+				var o1:Object = new Object();
+				o1["des"] = "SVAT";
+				fTaxType.addItem(o1);
+				
+				var o2:Object = new Object();
+				o2["des"] = "TAX";
+				fTaxType.addItem(o2);
+				
+				var o3:Object = new Object();
+				o3["des"] = "EXCEMPT";
+				fTaxType.addItem(o3);
+
+
+				
+/* 				case "T":
+				ntaxidx = 2;
+				break;
+				case "S":
+				ntaxidx = 1;
+				break;
+				case "E":
+				ntaxidx = 0;
+				break; */
+				
+/* 				var o3:Object = new Object();
+				o3["des"] = "EXCEMPT";
+				fTaxType.addItem(o3); */
+			}
+			
+			[Bindable]
+			private var lbEnbCtrl:Boolean=false;
+			private function stateChangeHandler(event:StateChangeEvent):void{
+				try{
+					if(event.newState=="Add"){
+						liCusNIC=0;
+						liCusNICBack=0;
+						liCusPass=0;
+					}else if(event.newState=="Edit"){
+						if(StringUtil.trim(ddCusType.selectedItem.clienttype).toLowerCase()=="corporate"){
+							lbEnbCtrl=true;
+						}else	
+							lbEnbCtrl=false;
+						resetDriverTab();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"stateChangeHandler: " + error.message,"Error",null);
+				} 
+			}
+			
+			public var gsCurTabName:String="";
+			public function parentTabChangedHandler(event:DataEvent):void{
+				if(gsCurTabName==event.data)
+					updateErrorTipVisibility();
+			} 
+			
+			private var lsCurIndex:int=0;
+			protected function tnCusNavigator_changeHandler(event:IndexChangedEvent):void{
+				if(currentState=="Add" || currentState=="Edit"){
+					lsCurIndex=event.newIndex;
+					updateErrorTipVisibility();
+				}
+			}
+			
+			public function updateErrorTipVisibility():void{
+				ErrorTipManager.hideAllErrorTips();
+				if(lsCurIndex>-1){
+					switch(lsCurIndex){
+						case 0:
+							ErrorTipManager.showErrorTip(svCusCode.source);
+							ErrorTipManager.showErrorTip(svCusType.source);
+							ErrorTipManager.showErrorTip(svCusName.source);
+							ErrorTipManager.showErrorTip(svCountry.source);
+							ErrorTipManager.showErrorTip(svCompany.source);
+							ErrorTipManager.showErrorTip(svStatus.source);
+							ErrorTipManager.showErrorTip(svBillName.source);
+							ErrorTipManager.showErrorTip(svBillAddress.source);
+							break;
+						case 1:
+							ErrorTipManager.showErrorTip(svCusNIC.source);
+							ErrorTipManager.showErrorTip(svCusPassNo.source);
+							break;
+						case 2:
+							break;
+						case 3:					
+							ErrorTipManager.showErrorTip(svDriName.source);
+							ErrorTipManager.showErrorTip(svDriLicNo.source);
+							ErrorTipManager.showErrorTip(svDriLicDIssued.source); 
+							break;
+					}
+				}
+			}
+			
+			private function registerValidators():void{
+				ErrorTipManager.registerValidator(svCusCode);
+				ErrorTipManager.registerValidator(svCusType);
+				ErrorTipManager.registerValidator(svCusName);
+				ErrorTipManager.registerValidator(svCountry);
+				ErrorTipManager.registerValidator(svCompany);
+				ErrorTipManager.registerValidator(svStatus);
+				ErrorTipManager.registerValidator(svBillName);
+				ErrorTipManager.registerValidator(svBillAddress);
+				ErrorTipManager.registerValidator(svCusNIC);
+				ErrorTipManager.registerValidator(svCusPassNo);
+				ErrorTipManager.registerValidator(svDriName);
+				ErrorTipManager.registerValidator(svDriLicNo);
+				ErrorTipManager.registerValidator(svDriLicDIssued); 
+			}
+			
+			private function removeFormErrorTips():void{
+				ErrorTipManager.removeErrorTip(svCusCode.source,true);
+				ErrorTipManager.removeErrorTip(svCusType.source,true);
+				ErrorTipManager.removeErrorTip(svCusName.source,true);
+				ErrorTipManager.removeErrorTip(svCountry.source,true);
+				ErrorTipManager.removeErrorTip(svCompany.source,true);
+				ErrorTipManager.removeErrorTip(svStatus.source,true);
+				ErrorTipManager.removeErrorTip(svBillName.source,true);
+				ErrorTipManager.removeErrorTip(svBillAddress.source,true);
+				ErrorTipManager.removeErrorTip(svCusNIC.source,true);
+				ErrorTipManager.removeErrorTip(svCusPassNo.source,true);
+				ErrorTipManager.removeErrorTip(svDriName.source,true);
+				ErrorTipManager.removeErrorTip(svDriLicNo.source,true);
+				ErrorTipManager.removeErrorTip(svDriLicDIssued.source,true); 
+			}
+			
+			private function textInputChange(e:TextOperationEvent):void{
+				try{
+					if(currentState=="Add"){
+						txtCusCode.text = txtCusCode.text.toString().toUpperCase();
+						txtCusCode.selectRange(txtCusCode.text.length,txtCusCode.text.length+1);
+						txtCusCode.setFocus();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"textInputChange: " + error.message,"Error",null);
+				}
+			}
+			
+			private function textInputKeyDown(e:KeyboardEvent):void{
+				try{
+					if(currentState=="Add"){
+						if(e.keyCode==32){
+							e.stopImmediatePropagation();
+							e.stopPropagation();
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"textInputKeydown: " + error.message,"Error",null);
+				}
+			}
+			
+			protected function browseImage_clickHandler(event:MouseEvent):void{
+				lsImgBrwCtrl=event.currentTarget.id;
+				imgLoader.browseImage();
+			}
+			
+			protected function clearImage_clickHandler(event:MouseEvent):void{
+				switch(event.currentTarget.id.toString()){
+					case "btnClearNIC":
+						iCusNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+						liCusNIC=0;
+						break;
+					case "btnClearNICBack":
+						iCusNICBack.source=resourceManager.getString("resource","inaUrl",null,null);
+						liCusNICBack=0;
+						break;
+					case "btnClearPass":
+						iCusPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+						liCusPass=0;
+						break;
+					case "btnClearFront":
+						iLicFront.source=resourceManager.getString("resource","inaUrl",null,null);
+						liDriLicFront=0;
+						break;
+					case "btnClearBack":
+						iLicBack.source=resourceManager.getString("resource","inaUrl",null,null);
+						liDriLicBack=0;
+						break;
+				}
+			}
+			
+			private function imageLoadedEvent(event:DataEvent):void{
+				cursorManager.setBusyCursor();
+				try{
+					var bitmapData:BitmapData;
+					var encoder:JPEGEncoder = new JPEGEncoder();
+					var imgBArray:ByteArray;
+					bitmapData = new BitmapData(imgLoader.imageData.width,imgLoader.imageData.height);
+					bitmapData.draw(imgLoader.imageData);
+					
+					switch(lsImgBrwCtrl){				
+						case "btnBrowNIC":
+							lbaCusNIC=encoder.encode(bitmapData);	
+							iCusNIC.source=imgLoader.imageData;
+							liCusNIC=1;
+							break;
+						case "btnBrowNICBack":
+							lbaCusNICBack=encoder.encode(bitmapData);	
+							iCusNICBack.source=imgLoader.imageData;
+							liCusNICBack=1;
+							break;
+						case "btnBrowPass":
+							lbaCusPass=encoder.encode(bitmapData);	
+							iCusPassport.source=imgLoader.imageData;
+							liCusPass=1;
+							break;
+						case "btnBrowLicFront":
+							lbaSelLicFront=encoder.encode(bitmapData);	
+							iLicFront.source=imgLoader.imageData;
+							liDriLicFront=1;
+							break;
+						case "btnBrowLicBack":
+							lbaSelLicBack=encoder.encode(bitmapData);
+							iLicBack.source=imgLoader.imageData;
+							liDriLicBack=1;
+							break;
+					}
+				}
+				catch(error:Error){
+					switch(lsImgBrwCtrl){
+						case "btnBrowNIC":
+							iCusNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+							liCusNIC=0;
+							break;
+						case "btnBrowNICBack":
+							iCusNICBack.source=resourceManager.getString("resource","inaUrl",null,null);
+							liCusNICBack=0;
+							break;
+						case "btnBrowPass":
+							iCusPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+							liCusPass=0;
+							break;
+						case "btnBrowLicFront":
+							iLicFront.source=resourceManager.getString("resource","inaUrl",null,null);
+							liDriLicFront=0;
+							break;
+						case "btnBrowLicBack":
+							iLicBack.source=resourceManager.getString("resource","inaUrl",null,null);
+							liDriLicBack=0;
+							break;
+					} 
+				}
+				cursorManager.removeBusyCursor();
+			}				
+			
+			//Display Popup Window 
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function,useCloseEvent:Boolean=false,otherColumns:String="",otherColumnHeaders:String="",otherColumnWidth:int=180):void
+			{
+				lpuPopup._acDataProvider = acDataProvider;								
+				lpuPopup._strKeyColumn = strKeyColumn;
+				lpuPopup._strKeyColCaption = strKeyColCaption; 
+				lpuPopup._strDetailColumn = strDetailColumn;
+				lpuPopup._strDetailColCaption = strDetailColCaption;
+				lpuPopup.otherColumns=otherColumns;
+				lpuPopup.otherColumnHeaderText=otherColumnHeaders;
+				lpuPopup.dgColWidth=otherColumnWidth;
+				lpuPopup._strWindowTitle = strWindowTitle;			
+				lpuPopup._sPostEventToRunPopUpExit = eventName;
+				lpuPopup.addEventListener(eventName,eventListener,false,0,false);
+				lpuPopup.launchSearchGrid(); 
+				lpuPopup.isPopUp=true;
+				if(useCloseEvent==true)
+					lpuPopup.grdSearch.addEventListener("twMFSearchClose",popUpCloseEvent,false,0,false);
+			}
+			
+			private function popUpCloseEvent(event:Event):void{
+				if(lbEditInit==true){
+					crGetDebList.token=null;
+					resetForm();
+				}
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return o;
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					Message.displayAlert(1,"findItem: " + error.message,"Error");
+				}
+				return obj;
+			}
+			
+			private function findIndex(ac:ArrayCollection,keyfield:String,keyvalue:String):int{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue){
+							return a;
+						}
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					//Message.displayAlert(1,"findIndex: " + error.message,"Error");
+				}
+				return -1;
+			}
+			
+			//Load Master Files
+			private function loadMasterFiles():void{
+				try{
+					crListAllFclienttype.token=srvFclienttype.ListAll();
+					crListAllFdebtorstatus.token=srvFdebtorstatus.ListAll();
+					crListApprovedGuarantors.token=srvFguarantor.listApprovedGuarantors();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterFiles: " + error.message,"Error",errorCloseHandler);		
+				}
+			}
+			
+			
+			//critical method 
+			//this method minimize the performance of application
+			private function loadDebList():void{
+				try{
+					trace("before call loadDebList()");
+					//crGetDebList.token=srvFdebtor.getDebList(); //crGetDebList.lastResult
+					crGetDebList.token=srvFdebtor.listAllOptimizedPage();
+					trace("after call loadDebList()");
+				}catch(error:Error){
+					Message.displayAlert(1,"getDebList: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			private function loadDebListAll():void{
+				try{
+					trace("before call loadDebList()");
+					//crGetDebList.token=srvFdebtor.getDebList(); //crGetDebList.lastResult
+					crGetDebList.token=srvFdebtor.getDebList();
+					trace("after call loadDebList()");
+				}catch(error:Error){
+					Message.displayAlert(1,"getDebList: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private var liMListLoadCnt:int=0;
+			private function updateMasterListCnt():void{
+				liMListLoadCnt+=1;
+				if(liMListLoadCnt==3)
+					loadDebList();
+			}
+			
+			//Set Application State
+			private function setState(state:String=""):void
+			{
+				if(state=="Default"){
+					//ErrorTipManager.hideAllErrorTips();
+					ErrorTipManager.removeAllErrorTips();
+					resetErrorString();
+					setModifiedByDet("");	
+					setCtrlVal(liCurIndex);
+				}else if(state=="Add"){
+					resetForm();
+					setModifiedByDet("N/A");
+					ddStatus.selectedIndex=0;
+					tnCusNavigator.selectedIndex=0;		
+				}else if(state=="Edit"){
+					
+				}else if(state=="Delete"){
+					
+				}else if(state=="Find"){
+					
+				}else if(state=="Print"){
+					
+				} 
+				currentState = state;
+				/* tnCusNavigator.selectedIndex=0;		
+				if(state=="Default"){
+					setModifiedByDet("");
+				}
+				if(state=="Add"){
+					setModifiedByDet("N/A");
+					var index:int=findIndex(crListAllFdebtorstatus.lastResult,"id","A");
+					if(index>-1)
+						ddStatus.selectedIndex=index;
+				}else if(state=="Edit"){
+					lbEditInit=true;
+					crGetDebList.token=srvFdebtor.getDebList();
+				}else if(state=="Delete"){
+					lbEditInit=true;
+					crGetDebList.token=srvFdebtor.getDebList();
+				}else if(state=="Find"){
+					lbEditInit=true;
+					crGetDebList.token=srvFdebtor.getDebList();
+				}else if(state=="Print"){
+					
+				} 
+				currentState = state; */
+			}
+			
+			private function setModifiedByDet(val:String):void{
+				lblModifiedBy.text="Last Modified By: ";
+				lblModifiedBy.text+=val;
+			}
+			
+			private function closeForm():void{
+				removeFormErrorTips();
+				this.parent.parent.removeChild(this.parent);
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function loadErrorHandler(event:Event):void{
+				resetForm();
+			}
+			
+			private function resetErrorString():void
+			{
+				try{
+					//Tab1
+					txtCusCode.errorString="";
+					ddCusType.errorString="";
+					txtCusName.errorString="";
+					txtCountry.errorString="";
+					txtResAddress.errorString="";
+					txtResTel.errorString="";
+					txtResMobile.errorString="";
+					txtCompany.errorString="";
+					txtVatRegNo.errorString="";
+					txtOffAddress.errorString="";
+					txtOffTel.errorString="";
+					txtOffMobile.errorString="";
+					txtOffFax.errorString="";
+					txtEmail.errorString="";	
+					ddStatus.errorString="";
+					txtCusNIC.errorString="";
+					iCusNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+					txtCusPassNo.errorString="";
+					iCusPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+					
+					//Tab1 Billing Details
+					txtBillName.errorString="";
+					txtBillAddress.errorString="";
+					txtBillTel.errorString="";
+					txtBillFax.errorString="";
+					txtBillMobile1.errorString="";
+					txtBillMobile2.errorString=""; 
+					
+					//Tab2
+					txtGId.errorString="";
+					txtGName.errorString="";
+					txtGResAddress.errorString="";
+					txtGResTel.errorString="";
+					txtGOffAddress.errorString="";
+					txtGOffTel.errorString="";
+					txtGMob.errorString="";
+					
+					//Tab3
+					txtDriName.errorString="";
+					txtDriLicNo.errorString="";
+					txtDriLicDIssued.errorString="";
+					txtDriLicDExpiry.errorString="";
+					txtDriMobile.errorString="";
+					
+					//setState("Default");
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"undoForm: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function resetForm():void
+			{
+				try{
+					//Tab1
+					txtCusCode.text="";
+					txtCusCode.errorString="";
+					ddCusType.selectedIndex=-1;
+					ddCusType.errorString="";
+					txtCusName.text="";
+					txtCusName.errorString="";
+					txtCountry.text="";
+					txtCountry.errorString="";
+					txtResAddress.text="";
+					txtResAddress.errorString="";
+					txtResTel.text="";
+					txtResTel.errorString="";
+					txtResMobile.text="";
+					txtResMobile.errorString="";
+					txtCompany.text="";
+					txtCompany.errorString="";
+					txtVatRegNo.text="";
+					txtVatRegNo.errorString="";
+					txtSVatRegNo.text="";
+					txtSVatRegNo.errorString="";
+					txtOffAddress.text="";
+					txtOffAddress.errorString="";
+					txtOffTel.text="";
+					txtOffTel.errorString="";
+					txtOffMobile.text="";
+					txtOffMobile.errorString="";
+					txtOffFax.text="";
+					txtOffFax.errorString="";
+					txtEmail.text="";
+					txtEmail.errorString="";	
+					ddStatus.selectedIndex=-1;
+					ddStatus.errorString="";
+					txtCusNIC.text="";
+					txtCusNIC.errorString="";
+					iCusNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+					iCusNICBack.source=resourceManager.getString("resource","inaUrl",null,null);
+					txtCusPassNo.text="";
+					txtCusPassNo.errorString="";
+					iCusPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+					cbEmailClient.selected=false;
+					cbLongTerm.selected=false;
+					
+					
+					cboTaxType.selectedIndex = -1
+					cboTaxType.errorString = ""	
+					//Tab1 Billing Details
+					 txtBillName.text="";
+					txtBillName.errorString="";
+					txtBillAddress.text="";
+					txtBillAddress.errorString="";
+					txtBillTel.text="";
+					txtBillTel.errorString="";
+					txtBillFax.text="";
+					txtBillFax.errorString="";
+					txtBillMobile1.text="";
+					txtBillMobile1.errorString="";
+					txtBillMobile2.text="";
+					txtBillMobile2.errorString=""; 
+					
+					//Tab2
+					txtGId.text="";
+					txtGId.errorString="";
+					txtGName.text="";
+					txtGName.errorString="";
+					txtGResAddress.text="";
+					txtGResAddress.errorString="";
+					txtGResTel.text="";
+					txtGResTel.errorString="";
+					txtGOffAddress.text="";
+					txtGOffAddress.errorString="";
+					txtGOffTel.text="";
+					txtGOffTel.errorString="";
+					txtGMob.text="";
+					txtGMob.errorString="";
+					
+					//Tab3
+					resetDriverTab();
+					/* txtDriName.text="";
+					txtDriName.errorString="";
+					txtDriLicNo.text="";
+					txtDriLicNo.errorString="";
+					txtDriLicDIssued.text="";
+					txtDriLicDIssued.errorString="";
+					txtDriLicDExpiry.text="";
+					txtDriLicDExpiry.errorString="";
+					txtDriMobile.text="";
+					txtDriMobile.errorString="";
+					iLicFront.source=resourceManager.getString("resource","inaUrl",null,null);
+					iLicBack.source=resourceManager.getString("resource","inaUrl",null,null);
+					lacFcliendriver.removeAll();
+					
+					liDGSelIndex=-1;
+					btnAdd.label="Add";
+					btnAdd.enabled=false;
+					btnDel.enabled=false;
+					btnCancel.enabled=false;
+					
+					liCusNIC=0;
+					liCusPass=0; */
+					
+					//setState("Default");
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"undoForm: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function resetDriverTab():void{
+				txtDriName.text="";
+				txtDriName.errorString="";
+				txtDriLicNo.text="";
+				txtDriLicNo.errorString="";
+				txtDriLicDIssued.text="";
+				txtDriLicDIssued.errorString="";
+				txtDriLicDExpiry.text="";
+				txtDriLicDExpiry.errorString="";
+				txtDriMobile.text="";
+				txtDriMobile.errorString="";
+				iLicFront.source=resourceManager.getString("resource","inaUrl",null,null);
+				iLicBack.source=resourceManager.getString("resource","inaUrl",null,null);
+				if(currentState!="Edit")
+					lacFcliendriver.removeAll();
+				
+				liDGSelIndex=-1;
+				btnAdd.label="Add";
+				if(currentState=="Edit")
+					btnAdd.enabled=true;
+				else 
+					btnAdd.enabled=false;
+				btnDel.enabled=false;
+				btnCancel.enabled=false;
+				
+				liDriLicFront=0;
+				liDriLicBack=0;
+				//liCusNIC=0;
+				//liCusPass=0;
+			}
+			
+			private function createAndShow(x:Number,y:Number):void 
+			{
+				var ac:ArrayCollection=new ArrayCollection();
+				var o:Object;
+				switch(lsCurCtrl)
+				{
+					case "lbtnResAdd":
+						o=new Object();
+						o["label"]="Same As Office Address";
+						ac.addItem(o);
+						o=new Object();
+						o["label"]="Same As Billing Address";
+						ac.addItem(o);
+						break;
+					case "lbtnOfficeAdd":
+						o=new Object();
+						o["label"]="Same As Residence Address";
+						ac.addItem(o);
+						o=new Object();
+						o["label"]="Same As Billing Address";
+						ac.addItem(o);
+						break;
+					case "lbtnBillName":
+						o=new Object();
+						o["label"]="Same As Customer Name";
+						ac.addItem(o);
+						o=new Object();
+						o["label"]="Same As Company Name";
+						ac.addItem(o);
+						break;
+					case "lbtnBillAddress":
+						o=new Object();
+						o["label"]="Same As Residence Address";
+						ac.addItem(o);
+						o=new Object();
+						o["label"]="Same As Office Address";
+						ac.addItem(o);
+						break;
+					case "lbtnBillTel":
+						o=new Object();
+						o["label"]="Same As Residence Telephone No.";
+						ac.addItem(o);
+						o=new Object();
+						o["label"]="Same As Office Telephone No.";
+						ac.addItem(o);
+						break;
+					case "lbtnBillFax":
+						o=new Object();
+						o["label"]="Same As Fax No.";
+						ac.addItem(o);
+						break;
+					case "lbtnBillMobile1":
+						o=new Object();
+						o["label"]="Same As Residence Mobile No.";
+						ac.addItem(o);
+						o=new Object();
+						o["label"]="Same As Office Mobile No.";
+						ac.addItem(o);
+						break;
+					case "lbtnBillMobile2":
+						o=new Object();
+						o["label"]="Same As Residence Mobile No.";
+						ac.addItem(o);
+						o=new Object();
+						o["label"]="Same As Office Mobile No.";
+						ac.addItem(o);
+						break;
+					case "lbtnDriName":
+						o=new Object();
+						o["label"]="Same As Customer Name";
+						ac.addItem(o);
+						break;
+				}
+				mRollOverMenu = Menu.createMenu(null,ac,false); 
+				mRollOverMenu.addEventListener(MenuEvent.ITEM_CLICK,menuItemClick,false,0,false);
+				mRollOverMenu.labelField="label";
+				mRollOverMenu.show(x,y);
+			}
+			
+			private function menuItemClick(e:MenuEvent):void
+			{
+				switch(lsCurCtrl)
+				{
+					case "lbtnResAdd":
+						if(e.label=="Same As Office Address")
+							txtResAddress.text=txtOffAddress.text;
+						else if(e.label=="Same As Billing Address")
+							txtResAddress.text=txtBillAddress.text;
+						break;
+					case "lbtnOfficeAdd":
+						if(e.label=="Same As Residence Address")
+							txtOffAddress.text=txtResAddress.text;
+						else if(e.label=="Same As Billing Address")
+							txtOffAddress.text=txtBillAddress.text;
+						break;
+					case "lbtnBillName":
+						if(e.label=="Same As Customer Name")
+							txtBillName.text=txtCusName.text;
+						if(e.label=="Same As Company Name")
+							txtBillName.text=txtCompany.text;
+						break;
+					case "lbtnBillAddress":
+						if(e.label=="Same As Residence Address")
+							txtBillAddress.text=txtResAddress.text;
+						if(e.label=="Same As Office Address")
+							txtBillAddress.text=txtOffAddress.text;
+						break;
+					case "lbtnBillTel":
+						if(e.label=="Same As Residence Telephone No.")
+							txtBillTel.text=txtResTel.text;
+						if(e.label=="Same As Office Telephone No.")
+							txtBillTel.text=txtOffTel.text;
+						break;
+					case "lbtnBillFax":
+						if(e.label=="Same As Fax No.")
+							txtBillFax.text=txtOffFax.text;
+						break;
+					case "lbtnBillMobile1":
+						if(e.label=="Same As Residence Mobile No.")
+							txtBillMobile1.text=txtResMobile.text;
+						if(e.label=="Same As Office Mobile No.")
+							txtBillMobile1.text=txtOffMobile.text;
+						break;
+					case "lbtnBillMobile2":
+						if(e.label=="Same As Residence Mobile No.")
+							txtBillMobile2.text=txtResMobile.text;
+						if(e.label==="Same As Office Mobile No.")
+							txtBillMobile2.text=txtOffMobile.text;
+						break;
+					case "lbtnDriName":
+						if(e.label=="Same As Customer Name")
+							txtDriName.text=txtCusName.text;
+						break;
+				}
+			}
+
+			private var lsCurCtrl:String="";
+			protected function lbtnRollOverOption_clickHandler(event:MouseEvent):void
+			{
+				lsCurCtrl=event.currentTarget.id;
+				createAndShow(contentMouseX,contentMouseY);
+			}
+			
+			protected function lbtnSearch_clickHandler(event:MouseEvent):void{
+				showGuarantors();	
+			}
+			
+			private function showGuarantors():void
+			{
+				try
+				{
+					showPopUp(crListApprovedGuarantors.lastResult,"gid","Guarantor Id","gname","Name","Select A Guarantor","guarantorSelected",guarantorSelection);
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"showGuarantors: " + error.message,"Error");
+				}
+			}
+			
+			private function guarantorSelection(event:Event):void
+			{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						loadGuarantorDet(lpuPopup.grdSearch._strSelectedCode);
+					}
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"guarantorSelection: " + error.message,"Error",null);
+				}
+			}
+			
+			private function loadGuarantorDet(gid:String):void
+			{
+				try{
+					var obj:Object=findItem(crListApprovedGuarantors.lastResult,"gid",gid);
+					if(obj!=null){
+						txtGId.text=obj["gid"].toString();
+						txtGName.text=obj["gname"].toString();
+						txtGResAddress.text=obj["homeadd1"].toString();
+						txtGResTel.text=obj["hometele"].toString();
+						txtGOffAddress.text=obj["offadd1"].toString();
+						txtGOffTel.text=obj["offtele"].toString();
+						txtGMob.text=obj["mobilephone"].toString();
+					}
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"loadGuarantorDet: " + error.message,"Error",null);
+				}
+			}
+
+			protected function ddCusType_changeHandler(event:IndexChangeEvent):void
+			{
+				if(currentState=="Add" || currentState=="Edit"){
+					if(ddCusType.selectedIndex>-1){
+						if(ddCusType.selectedItem.clienttype.toString().toLowerCase()=="corporate")
+							setCorporateRequiredFileds(true);
+						else
+							setCorporateRequiredFileds(false);
+						
+						if(ddCusType.selectedItem.clienttype.toString().toLowerCase()=="wedding")
+							ddCusType.selectedIndex=-1;
+					}	
+				}
+			}
+			
+			private function setCorporateRequiredFileds(value:Boolean):void{
+				fiCompany.required=value;
+				//fiVat.required=value;
+				if(value==true){
+					fiCusNIC.required=false;
+					fiCusPassNo.required=false;
+					//if(currentState=="Add" || currentState=="Edit")
+						//lbtnSearch.enabled=true;
+				}else{
+					fiCusNIC.required=true;
+					fiCusPassNo.required=true;
+					//if(currentState=="Add" || currentState=="Edit")
+						//lbtnSearch.enabled=false;
+				}
+			}
+
+			//*********** Driver Add/Update,Delete,Cancel Button Events [Start] *********
+			protected function btnAdd_clickHandler(event:MouseEvent):void{
+				auDriverDet();
+			}
+			
+			private var objCD:Com_dspl_malkey_domain_Fclientdriver;
+			private function auDriverDet():void
+			{
+				cursorManager.setBusyCursor();
+				cursorManager.showCursor();
+				try{
+					txtDriLicDExpiry.errorString="";
+					var validationArray:Array;
+					if(txtDriLicDExpiry.text.length>0){
+						validationArray= Validator.validateAll([
+							svDriName,
+							svDriLicNo,
+							svDriLicDIssued,
+							svDriLicDExpiry
+						]);
+					}else{
+						validationArray= Validator.validateAll([
+							svDriName,
+							svDriLicNo,
+							svDriLicDIssued
+						]);
+					}
+					if(validationArray.length==0)
+					{
+						var dLIssued:Date=validateDate(txtDriLicDIssued.text);
+						if(dLIssued==null){							
+							Message.displayAlert(1,"Invalid Date Of Issued","Error",null);
+							return;}
+						
+						var dLExpiry:Date=null;
+						if(txtDriLicDExpiry.text.length>0){
+							dLExpiry=validateDate(txtDriLicDExpiry.text);
+							if(dLExpiry==null){							
+								Message.displayAlert(1,"Invalid Date Of Expiry","Error",null);
+								return;
+							}
+							
+							if(dLIssued>=dLExpiry){
+								Message.displayAlert(2,"Invalid License Expiry Date","Warning",null);
+								return;
+							}
+						}
+						
+						if(liDriLicFront==0){
+							Message.displayAlert(2,"Please Select Driving License [Front] Image","Warning",null);
+							return;
+						}
+						if(liDriLicBack==0){
+							Message.displayAlert(2,"Please Select Driving License [Back] Image","Warning",null);
+							return;
+						}
+						
+						if(btnAdd.label=="Add" || btnAdd.label=="Update"){
+							for(var a:int=0;a<lacFcliendriver.length;a++){
+								if(txtDriLicNo.text==lacFcliendriver.getItemAt(a).dlno){
+									if(btnAdd.label=="Update" && a==liDGSelIndex)
+										break;
+									Message.displayAlert(2,"Driving License No. Is Already Added","Warning");
+									cursorManager.removeBusyCursor();
+									return;
+								}
+							}							
+						}
+						
+						if(btnAdd.label=="Add")
+							objCD=new Com_dspl_malkey_domain_Fclientdriver();
+						objCD.drivername=txtDriName.text;
+						objCD.dlno=txtDriLicNo.text;
+						objCD.dldissued=dLIssued;
+						if(dLExpiry==null)
+							objCD.dldexp=null;
+						else 
+						 	objCD.dldexp=dLExpiry;
+						objCD.mobilephone=txtDriMobile.text;
+						
+						objCD.licfrontdata=lbaSelLicFront;
+						objCD.licbackdata=lbaSelLicBack;
+						
+						if(btnAdd.label=="Add"){
+							objCD.dlfontimage="";
+							objCD.dlbackimage="";
+							objCD.adduser="";
+							objCD.addmach="";
+							objCD.adddate=null;
+							lacFcliendriver.addItem(objCD);
+						}
+						else if(btnAdd.label=="Update"){
+							lacFcliendriver.removeItemAt(liDGSelIndex);
+							lacFcliendriver.addItemAt(objCD,liDGSelIndex);
+						}
+						resetDriDetCtrls();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,btnAdd.label + " Driver Details: " + error.message,"Error",null);
+				}
+				cursorManager.removeBusyCursor();
+			}
+
+			//Reset Driver Detail Controls
+			private function resetDriDetCtrls():void
+			{
+				try{
+					txtDriName.text="";
+					txtDriName.errorString="";
+					txtDriLicNo.text="";
+					txtDriLicNo.errorString="";
+					txtDriLicDIssued.text="";
+					txtDriLicDIssued.errorString="";
+					txtDriLicDExpiry.text="";
+					txtDriLicDExpiry.errorString="";
+					txtDriMobile.text="";
+					txtDriMobile.errorString="";
+					iLicFront.source=resourceManager.getString("resource","inaUrl",null,null);
+					iLicBack.source=resourceManager.getString("resource","inaUrl",null,null);
+					liDriLicFront=0;
+					liDriLicBack=0;
+					lbaSelLicFront=null;
+					lbaSelLicBack=null;
+					btnAdd.label="Add";
+					btnDel.enabled=false;
+					btnCancel.enabled=false;
+				}catch(error:Error){
+					Message.displayAlert(1,"resetDriDetCtrl: " + error.message,"Error",null);
+				}				
+			}
+			
+			private function validateDate(dVal:String):Date
+			{
+				try{
+					var day:int,month:int,year:int;
+					
+					day=int(dVal.substring(0,2));
+					if(day>31)
+						return null;
+					month=int(dVal.substring(2,4))-1; 
+					if(month>11)
+						return null;
+					year=int(dVal.substring(4,8)); 
+					var fDate:Date=new Date(year,month,day,0,0,0,0);
+					return fDate;
+				}	
+				catch(error:Error){
+					trace("validateDate: " + error.message);
+				}
+				return null;
+			}
+
+			protected function btnDel_clickHandler(event:MouseEvent):void
+			{
+				lacFcliendriver.removeItemAt(liDGSelIndex);
+				resetDriDetCtrls();
+			}
+
+
+			protected function btnCancel_clickHandler(event:MouseEvent):void
+			{
+				resetDriDetCtrls();
+			}
+			//*********** Driver Add/Update,Delete,Cancel Button Events [End] *********
+
+
+			private var liDGSelIndex:int;
+			protected function dgDrivers_itemClickHandler(event:ListEvent):void
+			{
+				try{
+					if(lacFcliendriver.length<=0)
+						return;
+					objCD=lacFcliendriver.getItemAt(event.rowIndex) as Com_dspl_malkey_domain_Fclientdriver;
+					txtDriName.text=objCD.drivername;
+					txtDriLicNo.text=objCD.dlno;
+					txtDriLicDIssued.text=dfFormatter.format(objCD.dldissued);
+					if(objCD.dldexp!=null)
+						txtDriLicDExpiry.text=dfFormatter.format(objCD.dldexp);
+					txtDriMobile.text=objCD.mobilephone;
+					
+					//if(objCD.dlfontimage!=""){ 
+					if(objCD.licfrontdata==null){
+						lilLicFrontImgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLicFrontImageReady);
+						lilLicFrontImgLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLicFrontIOError);
+						lilLicFrontImgLoader.load(new URLRequest(objCD.dlfontimage + genRnd()));
+					}else{
+						lbaSelLicFront=objCD.licfrontdata;
+						iLicFront.source=objCD.licfrontdata;
+					}
+					
+					//if(objCD.dlbackimage!=""){
+					if(objCD.licbackdata==null){
+						lilLicBackImgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLicBackImageReady);
+						lilLicBackImgLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLicBackIOError);
+						lilLicBackImgLoader.load(new URLRequest(objCD.dlbackimage + genRnd()));
+					}else{ 
+						lbaSelLicBack=objCD.licbackdata;
+						iLicBack.source=objCD.licbackdata;
+					}
+					liDriLicFront=1;
+					liDriLicBack=1;
+					
+					if(currentState=="Add" || currentState=="Edit"){
+						btnAdd.label="Update";
+						btnDel.enabled=true;
+						btnCancel.enabled=true;
+					}
+					
+					liDGSelIndex=event.rowIndex;
+				}catch(error:Error){
+					Alert.show("Error: " + error.message);
+				}
+			}
+			
+			//******************** License Front/Back Image Loader [Start] ******************
+			
+			private var lilLicFrontImgLoader:Loader = new Loader();
+			private var lilLicBackImgLoader:Loader = new Loader();
+			
+			private function onLicFrontImageReady(event:Event):void 
+			{
+				cursorManager.setBusyCursor();
+				try{
+					var img:Bitmap = new Bitmap();
+					var encoder:JPEGEncoder = new JPEGEncoder();
+					var imgBArray:ByteArray;
+					img.smoothing = true;
+					img.bitmapData = event.target.content.bitmapData;
+					iLicFront.source=img;
+					if(currentState=="Add" || currentState=="Edit"){
+						lbaSelLicFront=encoder.encode(img.bitmapData);
+						liDriLicFront=1;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"onLicFrontImageReady: " + error.message,"Error",errorCloseHandler);
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function onLicFrontIOError(event:IOErrorEvent):void{
+				liDriLicFront=0;
+				iLicFront.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			
+			private function onLicBackImageReady(event:Event):void 
+			{
+				cursorManager.setBusyCursor();
+				try{
+					var img:Bitmap = new Bitmap();
+					var encoder:JPEGEncoder = new JPEGEncoder();
+					var imgBArray:ByteArray;
+					img.smoothing = true;
+					img.bitmapData = event.target.content.bitmapData;
+					iLicBack.source=img;
+					if(currentState=="Add" || currentState=="Edit"){
+						lbaSelLicBack=encoder.encode(img.bitmapData);
+						liDriLicBack=1;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"onLicBackImageReady: " + error.message,"Error",errorCloseHandler);
+				}				
+				cursorManager.removeBusyCursor();
+			} 
+			
+			private function onLicBackIOError(event:IOErrorEvent):void{
+				liDriLicBack=0;
+				iLicBack.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			
+			//******************** License Front/Back Image Loader [End] ******************
+			
+			private function formatDate(item:Object,column:DataGridColumn):String{
+				var str:String="";
+				if(item[column.dataField]!=null){
+					str=dfFormatter.format(item[column.dataField]);
+				}
+				return str;
+			}
+			
+			private function showDebList():void{
+				try{
+					if(crGetDebList.token!=null)
+						showPopUp(crGetDebList.lastResult,"debcode","Customer ID","debname","Name","Select A Customer","customerSelected",customerSelection,true,"nicno,passportno","NIC No.,Passport No.");
+				}catch(error:Error){
+					Message.displayAlert(1,"showDebList: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+
+			
+			private function customerSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						lbEditInit=false;
+						liCurIndex=lpuPopup.grdSearch._nSelectedIndex;
+						loadDebtorById(lpuPopup.grdSearch._strSelectedCode);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"customerSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function loadDebtorById(debcode:String):void{
+				try{
+					crDebtorFindById.token=srvFdebtor.findByID(debcode);
+				}catch(error:Error){
+					Message.displayAlert(1,"loadDebtor: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private var lilNicImgLoader:Loader;
+			private var lilNicBackImgLoader:Loader;
+			private var lilPassImgLoader:Loader;
+			
+			//NIC Front [Start]
+			public function onNicImageReady(event:Event):void 
+			{
+				cursorManager.setBusyCursor();
+				try{
+					var img:Bitmap = new Bitmap();
+					img.smoothing = true;
+					img.cacheAsBitmap=false;
+					img.bitmapData = event.target.content.bitmapData;
+					iCusNIC.source=img;
+					liCusNIC=1;
+				}catch(error:Error){
+					Message.displayAlert(1,"onNicImageReady: " + error.message,"Error",errorCloseHandler);
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function onNicIOError(event:IOErrorEvent):void{
+				liCusNIC=0;
+				iCusNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			//NIC Front [End]
+			
+			//NIC Back [Start]
+			public function onNicBackImageReady(event:Event):void 
+			{
+				cursorManager.setBusyCursor();
+				try{
+					var img:Bitmap = new Bitmap();
+					img.smoothing = true;
+					img.cacheAsBitmap=false;
+					img.bitmapData = event.target.content.bitmapData;
+					iCusNICBack.source=img;
+					liCusNICBack=1;
+				}catch(error:Error){
+					Message.displayAlert(1,"onNicBackImageReady: " + error.message,"Error",errorCloseHandler);
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function onNicBackIOError(event:IOErrorEvent):void{
+				liCusNICBack=0;
+				iCusNICBack.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			//NIC Back [End]
+			
+			public function onPassImageReady(event:Event):void 
+			{
+				cursorManager.setBusyCursor();
+				try{
+					var img:Bitmap = new Bitmap();
+					img.smoothing = true;
+					img.cacheAsBitmap=false;
+					img.bitmapData = event.target.content.bitmapData;
+					iCusPassport.source=img;
+					liCusPass=1;
+				}catch(error:Error){
+					Message.displayAlert(1,"onPassImageReady: " + error.message,"Error",errorCloseHandler);
+				}				
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function onPassIOError(event:IOErrorEvent):void{
+				liCusPass=0;
+				iCusPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			
+			private function genRnd():String{
+				return "?rnd=" + ImageBrowser.genRnd().toString();
+			}
+			
+			private function loadCustomerDet():void{
+				try{
+					resetForm();
+					
+					//------------------------------------------------------------------
+					var ntaxidx:Number = -1;
+					switch(fdebtor.vattyp)
+					{
+						case "X":
+							ntaxidx = 3;
+							break;
+						case "T":
+							ntaxidx = 2;
+							break;
+						case "S":
+							ntaxidx = 1;
+							break;
+						case "E":
+							ntaxidx = 0;
+							break;
+					}
+					cboTaxType.selectedIndex = ntaxidx;
+					//------------------------------------------------------------------
+					//Load General Details 
+					txtCusCode.text=fdebtor.debcode;
+					ddCusType.selectedIndex=findIndex(crListAllFclienttype.lastResult,"clienttype",fdebtor.clienttype);
+					if(fdebtor.clienttype=="CORPORATE"){
+						setCorporateRequiredFileds(true);
+					}else{
+						setCorporateRequiredFileds(false);
+					}						
+					txtCusName.text=fdebtor.debname;
+					txtCountry.text=fdebtor.country;
+					txtResAddress.text=fdebtor.homeadd;
+					txtResTel.text=fdebtor.hometele;
+					txtResMobile.text=fdebtor.homemob;
+					txtCompany.text=fdebtor.company;
+					txtVatRegNo.text=fdebtor.vatno;
+					txtSVatRegNo.text=fdebtor.svatno;
+					txtOffAddress.text=fdebtor.officeadd;
+					txtOffTel.text=fdebtor.officetele;
+					txtOffMobile.text=fdebtor.officemob;
+					txtOffFax.text=fdebtor.debfax;
+					txtEmail.text=fdebtor.email;
+					cbEmailClient.selected=fdebtor.emailClient;
+					cbLongTerm.selected=(fdebtor.longterm=="Longterm" ? true:false)
+					ddStatus.selectedIndex=findIndex(crListAllFdebtorstatus.lastResult,"id",fdebtor.debstat);
+					ddStatus.selectedIndex=1;
+					//Alert.show("fdebtor.debstat :"+fdebtor.debstat +" \nddStatus.selectedIndex :"+ddStatus.selectedIndex);
+ 					
+					for(var i:int=0; i< crListAllFdebtorstatus.lastResult.length;i++ )
+					{
+						var debtorstatus:Com_dspl_malkey_domain_Fdebtorstatus = crListAllFdebtorstatus.lastResult.getItemAt(i);
+						//Alert.show("fdebtor.debstat :"+fdebtor.debstat +" \nddStatus.selectedIndex :"+debtorstatus.id);
+						//Alert.show("-fdebtor.debstat.length-"+fdebtor.debstat.length+"-"+fdebtor.debstat +" \ndebtorstatus.id.length-"+debtorstatus.id.length+"-"+debtorstatus.id);
+						
+						
+						if(StringUtil.trim(debtorstatus.id)== StringUtil.trim(fdebtor.debstat) )
+						{
+							ddStatus.selectedIndex=i;
+							//Alert.show(debtorstatus.id);
+						}
+					}
+					
+					txtOffAddress.text=fdebtor.officeadd;
+					txtOffTel.text=fdebtor.officetele;
+					txtOffMobile.text=fdebtor.officemob;
+					txtOffFax.text=fdebtor.debfax;
+					txtEmail.text=fdebtor.email;
+
+					txtBillName.text=fdebtor.billname;
+					txtBillAddress.text=fdebtor.debadd;
+					txtBillTel.text=fdebtor.tel;
+					txtBillFax.text=fdebtor.fax;
+					txtBillMobile1.text=fdebtor.billmob1;
+					txtBillMobile2.text=fdebtor.billmob2;
+					
+					txtCusNIC.text=fdebtor.nicno;
+					//NIC Front
+					if(fdebtor.nicimage=="")
+						liCusNIC=0;
+					else{
+						lilNicImgLoader=new Loader();
+						lilNicImgLoader.cacheAsBitmap=false;
+						lilNicImgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onNicImageReady);
+						lilNicImgLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onNicIOError);
+						lilNicImgLoader.load(new URLRequest(fdebtor.nicimage + genRnd()));
+					}
+					//NIC Back
+					if(fdebtor.nicbackimage=="")
+						liCusNICBack=0;
+					else{
+						lilNicBackImgLoader=new Loader();
+						lilNicBackImgLoader.cacheAsBitmap=false;
+						lilNicBackImgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onNicBackImageReady);
+						lilNicBackImgLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onNicBackIOError);
+						lilNicBackImgLoader.load(new URLRequest(fdebtor.nicbackimage + genRnd()));
+					}
+					
+					txtCusPassNo.text=fdebtor.passportno;
+					if(fdebtor.ppimage=="")
+						liCusPass=0;
+					else{
+						lilPassImgLoader=new Loader();
+						lilPassImgLoader.cacheAsBitmap=false;
+						lilPassImgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onPassImageReady);
+						lilPassImgLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onPassIOError);
+						lilPassImgLoader.load(new URLRequest(fdebtor.ppimage + genRnd()));
+					}
+					
+					//Set Modified By 
+					setModifiedByDet(fdebtor.adduser);
+					
+					//Load Guarantor Details
+					if(fdebtor.gid!="")
+						loadGuarantorDet(fdebtor.gid);
+					
+					//Load Driver Details
+					crClientDriverFindByDebcode.token=srvFclientdriver.findByDebcode(txtCusCode.text);
+					
+				}catch(error:Error){
+					Message.displayAlert(1,"loadCustomerDet: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+
+			protected function controlbar2_creationCompleteHandler(event:FlexEvent):void{
+				setPermission();
+			}
+
+			protected function btnClose_clickHandler(event:MouseEvent):void{
+				closeForm();
+			}
+
+			protected function lbtnClear_clickHandler(event:MouseEvent):void
+			{
+				txtGId.text="";
+				txtGName.text="";
+				txtGResAddress.text="";
+				txtGResTel.text="";
+				txtGOffAddress.text="";
+				txtGOffTel.text="";
+				txtGMob.text="";
+			}
+
+
+			protected function cboTaxType_changeHandler(event:ListEvent):void
+			{
+				fiSVat.required=false;
+				fiVat.required=false;
+				if(cboTaxType.selectedLabel=="SVAT")
+				{
+					txtSVatRegNo.setFocus();
+					fiSVat.required=true;
+				}
+				else if(cboTaxType.selectedLabel=="TAX")
+				{
+					txtVatRegNo.setFocus();
+					fiVat.required=true;
+				}
+			}
+
+
+			protected function txtCusNIC_focusOutHandler(event:FocusEvent):void
+			{
+				
+				/* var strNIC:Number = -1;
+				
+				
+				if(txtCusNIC.text != "")
+				{
+					//Alert.show(strNIC.toString()+"=='"+txtCusNIC.text+"' dddd");
+					strNIC = findIndex(crGetDebList.lastResult,"nicno",txtCusNIC.text);
+				}						
+				
+				if(strNIC.toString() != "-1" )
+				{
+					//Alert.show("nic "+strNIC.toString());
+					Message.displayAlert(2,"Duplicate NIC No","Warning",null);
+					txtCusNIC.setFocus();						
+				} */
+			}
+
+
+			protected function txtCusPassNo_focusOutHandler(event:FocusEvent):void
+			{
+			/* 	var strPassPort:Number = -1;
+				
+				if(txtCusPassNo.text != "")
+				{
+					//Alert.show(strNIC.toString()+"=='"+txtCusNIC.text+"' dddd");
+					strPassPort = findIndex(crGetDebList.lastResult,"passportno",txtCusPassNo.text);
+				}						
+				
+				if(strPassPort.toString() != "-1" )
+				{
+					//Alert.show("nic "+strNIC.toString());
+					Message.displayAlert(2,"Duplicate Passport No","Warning",null);
+					txtCusPassNo.setFocus();						
+				} */
+			}
+
+
+			protected function txtCusNIC_changeHandler(event:Event):void
+			{
+				/* var strNIC:Number = -1;   
+				
+				
+				if(txtCusNIC.text != "")  
+				{
+					//Alert.show(strNIC.toString()+"=='"+txtCusNIC.text+"' dddd");
+					strNIC = findIndex(crGetDebList.lastResult,"nicno",txtCusNIC.text);
+				}						
+				
+				if(strNIC.toString() != "-1" )  
+				{
+					//Alert.show("nic "+strNIC.toString());
+					Message.displayAlert(2,"Duplicate NIC No","Warning",null);
+					txtCusNIC.setFocus();						
+				} */
+			}
+
+			protected function txtCusPassNo_changeHandler(event:TextOperationEvent):void
+			{
+				/* var strPassPort:Number = -1;
+				
+				if(txtCusPassNo.text != "")
+				{
+					//Alert.show(strNIC.toString()+"=='"+txtCusNIC.text+"' dddd");
+					strPassPort = findIndex(crGetDebList.lastResult,"passportno",txtCusPassNo.text);
+				}						
+				
+				if(strPassPort.toString() != "-1" )
+				{
+					//Alert.show("nic "+strNIC.toString());
+					Message.displayAlert(2,"Duplicate Passport No","Warning",null);
+					txtCusPassNo.setFocus();						
+				} */
+			}
+
+			
+			protected function listAllOptimizedPage():void
+			{
+				listAllOptimizedPageResult.token = srvFdebtor.listAllOptimizedPage();
+			}
+			
+
+			protected function btnCheckAvailability_clickHandler(event:MouseEvent):void
+			{
+				//if(StringUtil.trim(txtCusName.text).length>0){
+				listLikeNameResult.token = srvFdebtor.listLikeName(txtCusName.text);
+				//}
+			}
+
+			
+			protected function listLikeName(arg0:String):void
+			{
+				if(StringUtil.trim(arg0).length>0)
+				crGetDebList.token = srvFdebtor.listLikeName(arg0);
+/* 				listLikeNameResult.token = srvFdebtor.listLikeName(arg0); */
+			}
+			protected function listLikeName2(arg0:String):void
+			{
+				if(StringUtil.trim(arg0).length>0)
+			/* 	crGetDebList.token = srvFdebtor.listLikeName(arg0); */
+ 				listLikeNameResult.token = srvFdebtor.listLikeName(arg0); 
+			}
+			
+
+			protected function listLikeNameResult_resultHandler(event:ResultEvent):void
+			{
+				var result:ArrayCollection=event.result as ArrayCollection;
+				if(result.length>0)
+				showPopUp(listLikeNameResult.lastResult,"debcode","debcode","debname","Name","People With similer name","customerSelected",customerSelection,true,"nicno,passportno,email,clienttype,company","NIC No.,Passport No.,Email,Type,Company");
+				//showPopUp(crGetDebList.lastResult,"debcode","Customer ID","debname","Name","Select A Customer","customerSelected",customerSelection,true,"nicno,passportno","NIC No.,Passport No.");
+			}
+
+
+			/***
+			 * CONTINOUS HIRE DATA REPORT 
+			 * 2014 07 07
+			 * */
+			protected function btnContinousHireDataReport_clickHandler3(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/CAH.jsp");
+				request.data =new URLVariables();
+				request.data.debcode=txtDebCode.text;
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request); 
+			}			
+
+			/***
+			 * CONTINOUS HIRE DATA REPORT 
+			 * 2014 07 07
+			 * */
+			protected function btnContinousHireDataReport_clickHandler4(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/CAHDuration.jsp");
+				request.data =new URLVariables();
+				request.data.debcode=txtDebCode.text;
+				request.data.df=dfFormatter2.format(dtDateFrom.selectedDate);
+				request.data.dt=dfFormatter2.format(dtDateTo.selectedDate);
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request); 
+			}			
+
+		]]>
+	</fx:Script>
+	<!--<mx:ControlBar x="3" y="-6" horizontalGap="2" height="57" width="698">
+		<mx:Button  id="btnNew" width="40" height="40"
+					click="btnNew_clickHandler(event)"
+					toolTip="New"	
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')" enabled.Add="false" enabled.Edit="false" enabled.Find="false" enabled.Delete="false"/>
+		<mx:Button  id="btnEdit" width="40" height="40"
+					click="btnEdit_clickHandler(event)"
+					toolTip="Edit" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')" enabled.Add="false" enabled.Edit="false" enabled.Find="false" enabled.Delete="false"/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					click="btnDelete_clickHandler(event)"
+					toolTip="Delete" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')" enabled.Add="false" enabled.Edit="false" enabled.Find="false" enabled.Delete="false"/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					click="btnUndo_clickHandler(event)"
+					toolTip="Undo"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					enabled="false" enabled.Add="true" enabled.Edit="true" enabled.Find="true" enabled.Delete="true"/>
+		<mx:Button  id="btnTop" width="40" height="40" 
+					toolTip="GoTop" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+					click="goFirst()" 
+					enabled.Default="true"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnBack" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+					toolTip="goBack" 
+					click="goBack()" 
+					enabled.Default="true"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnNext" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+					toolTip="goNext" 
+					click="goNext()"
+					enabled.Default="true"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnBottom" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+					toolTip="goBottom" 
+					click="goLast()"
+					enabled.Default="true"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnPrint" width="40" height="40" 
+					click="btnPrint_clickHandler(event)"
+					toolTip="Print"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					enabled="true" enabled.Add="false" enabled.Edit="false" enabled.Find="false" enabled.Delete="false"/>
+		<mx:Button  id="btnFind" width="40" height="40" 
+					click="btnFind_clickHandler(event)"
+					toolTip="Find"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+ enabled.Add="false" enabled.Edit="false" enabled.Find="false" enabled.Delete="false"/>
+		<mx:Button  id="btnReload" width="40" height="40"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					toolTip="Reload"
+					click="btnReload_clickHandler(event)"
+		 enabled="false" enabled.Add="true" enabled.Edit="true"/>
+		<mx:Button  id="btnSave" width="40" height="40" 
+					click="btnSave_clickHandler(event)"
+					toolTip="Save"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					enabled="false"
+ enabled.Add="true" enabled.Edit="true" enabled.Delete="true"/>
+	</mx:ControlBar>-->
+	<mx:ControlBar x="3" y="-6" horizontalGap="2" height="57" width="848" creationComplete="controlbar2_creationCompleteHandler(event)">
+		<mx:Button  id="btnNew" width="40" height="40"
+					toolTip="New"	
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')"
+					click="btnNew_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnEdit" width="40" height="40"
+					toolTip="Edit" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')"
+					click="btnEdit_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					toolTip="Delete" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')"
+					click="btnDelete_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					toolTip="Undo"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					enabled="false"
+					click="btnUndo_clickHandler(event)"
+					enabled.Add="true" enabled.Edit="true" enabled.Delete="true" enabled.Find="true"/>
+		<mx:Button  id="btnTop" width="40" height="40" 
+					toolTip="GoTop" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+					click="goFirst()" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnBack" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+					toolTip="goBack" 
+					click="goBack()" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnNext" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+					toolTip="goNext" 
+					click="goNext()"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<mx:Button  id="btnBottom" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+					toolTip="goBottom" 
+					click="goLast()"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>
+		<!--<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					click="btnPrint_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"
+					/>-->
+		<mx:Button  id="btnFind" width="40" height="40" 
+					toolTip="Find"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/findD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+					click="btnFind_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.Find="false"/>
+		<mx:Button  id="btnReload" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					toolTip="Reload"
+					enabled="true"
+					click="btnReload_clickHandler(event)"
+					enabled.Add="true" enabled.Edit="true" enabled.Delete="true" enabled.Find="true"/>
+		<mx:Button  id="btnSave" width="40" height="40" 
+					toolTip="Save"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					enabled="false"
+					click="btnSave_clickHandler(event)"
+					enabled.Add="true" enabled.Edit="true" enabled.Delete="true"/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					enabled="true"
+					click="btnClose_clickHandler(event)"
+					/>
+		<mx:Label  text="Search by Customer Name"/>		
+		<s:TextInput 
+			id="txtDebname"
+			text="Search Here"
+			toolTip="Type name and hit enter"
+			width="150"
+			tabIndex="6"
+			enter="listLikeName2(txtDebname.text)"
+			contentBackgroundColor="#A5FA7F" focusColor="#94E4F8" borderColor="#0819F0"/>
+		
+	</mx:ControlBar>
+	<mx:HRule x="0" y="44" width="898"/>
+	<mx:TabNavigator
+		change="tnCusNavigator_changeHandler(event)"
+		creationPolicy="all"
+		id="tnCusNavigator"
+		x="6" y="49" width="885" height="470">
+		<s:NavigatorContent label="General" width="100%" height="100%">
+			<mx:Form x="2" y="-8"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 width="875" height="250">
+				<s:Label text="Customer Details" fontWeight="bold"/>
+				<mx:FormItem label="Customer ID" direction="horizontal" width="260" required="false">
+					<s:TextInput
+						restrict="0-9a-zA-Z"
+						enabled.Default="false"
+						enabled.Add="false"
+						text.Add="Auto Generated"
+						id="txtCusCode" width="125"
+						maxChars="10" enabled.Edit="false" enabled.Find="false" enabled.Delete="false"></s:TextInput>
+				</mx:FormItem>
+				<mx:FormItem label="Customer Type" direction="horizontal" required="true" width="372">
+					<s:DropDownList
+						change="ddCusType_changeHandler(event)"
+						dataProvider="{crListAllFclienttype.lastResult}"
+						labelField="description"
+						enabled="false"
+						id="ddCusType" width="189" enabled.Add="true" enabled.Edit="true">							
+					</s:DropDownList>
+				</mx:FormItem>
+				<mx:FormItem label="Name" direction="horizontal" required="true">
+					<s:TextInput id="txtCusName" width="204"
+								 maxChars="254"
+								 enabled="false"
+ 								 enabled.Add="true" enabled.Edit="true">
+					</s:TextInput>
+					<!--restrict="A-Z,a-z,.,0-9 "-->
+					<mx:Button
+						label="Check Availability" id="btnCheckAvailability"
+						click="btnCheckAvailability_clickHandler(event)"
+						textAlign="left"
+						fontSize="10"
+						width="110"
+						height="20"
+						/>
+					
+				</mx:FormItem>
+				<mx:HBox  horizontalGap="0" borderStyle="none">
+				<mx:Label textAlign="right" text="                      Country" paddingRight="0" paddingLeft="0"/>
+				<mx:FormItem required="true" id="fiCountry" direction="horizontal" paddingLeft="0" paddingRight="0" height="19">
+				</mx:FormItem>
+					<components:AutoComplete
+						enabled.Default="false"
+						enabled.Add="true"
+						enabled.Edit="true"
+						requireSelection="true"
+						dataProvider="{CountryList.gaCountryList}"
+						labelField="name"
+						id="txtCountry" width="304" height="21"
+						 enabled.Find="false" enabled.Delete="false"/>
+				</mx:HBox>
+				<mx:FormItem label="Residence Address" direction="horizontal" required="true">
+					<s:TextInput
+						maxChars="254"
+						id="txtResAddress" width="274" enabled="false" enabled.Add="true" enabled.Edit="true"
+						></s:TextInput>
+					<mx:LinkButton 
+						paddingLeft="0" 
+						id="lbtnResAdd" 
+						click="lbtnRollOverOption_clickHandler(event)" 
+						label="#"
+						color="#0A33BB" enabled="false" enabled.Add="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Residence Tel" direction="horizontal" required="true">
+					<s:TextInput
+						maxChars="20"
+						restrict="0-9"
+						id="txtResTel" width="125" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+				</mx:FormItem>
+				<mx:FormItem label="Mobile" direction="horizontal">
+					<s:TextInput
+						maxChars="20"
+						restrict="0-9"
+						id="txtResMobile" width="125" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+				</mx:FormItem>
+				
+				<mx:FormItem label="Tax Type">
+					<components2:customComboBox id="cboTaxType"  width="160"
+											   dataProvider="{fTaxType}" labelField="des"
+											   change="cboTaxType_changeHandler(event)"
+											   enabled="false" enabled.Add="true" enabled.Edit="true"
+											   toolTip="'EXCEMPT'=non tax\n'ALL INCLUSIVE'=tax hidden"/>
+					
+				</mx:FormItem>
+			</mx:Form>
+			<mx:Form height="94" x="2" y="250"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 width="875">
+				<s:Label text="Billing Details" fontWeight="bold"/>
+				<mx:FormItem label="Name" direction="horizontal" required="true">
+					<s:TextInput
+						maxChars="254"
+						id="txtBillName" width="300" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+					<mx:LinkButton 
+						paddingLeft="0" 
+						id="lbtnBillName" 
+						click="lbtnRollOverOption_clickHandler(event)" 
+						label="#"
+						color="#0A33BB" enabled="false" enabled.Add="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem direction="horizontal" label="Address" required="true">
+					<s:TextInput
+						maxChars="254"
+						id="txtBillAddress" width="333" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+					<mx:LinkButton 
+						paddingLeft="0" 
+						id="lbtnBillAddress" 
+						click="lbtnRollOverOption_clickHandler(event)" 
+						label="#"
+						color="#0A33BB" enabled="false" enabled.Add="true" enabled.Edit="true"/>
+				</mx:FormItem>
+			</mx:Form>
+			
+			<mx:FormItem label="Long-Term Customer" x="10" y="365">
+				<s:CheckBox label="Yes" id="cbLongTerm"/>
+			</mx:FormItem>	
+			
+			<mx:Form x="433" y="-1" width="440" height="249" borderVisible="false">
+				<mx:FormItem label="Company" direction="horizontal" id="fiCompany">
+					<s:TextInput
+						maxChars="254"
+						id="txtCompany" width="160" enabled="false" enabled.Add="true" enabled.Edit="true" ></s:TextInput>
+					<!--restrict="a-z A-z 0-9 /\- _ @ .()" maxChars="254"-->
+				</mx:FormItem>
+				
+				<mx:FormItem label="VAT Reg. No." direction="horizontal" width="100%" id="fiVat" horizontalGap="0">
+					<s:TextInput
+						maxChars="20"
+						id="txtVatRegNo" width="100" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+					
+					<mx:FormItem label="SVAT No."  width="100%" id="fiSVat">
+						<s:TextInput
+							maxChars="20"
+							id="txtSVatRegNo" width="90" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+					</mx:FormItem>
+					
+				</mx:FormItem>
+				
+				<mx:FormItem label="Office Address" direction="horizontal" width="408">
+					<s:TextInput
+						id="txtOffAddress" width="293" enabled="false" enabled.Add="true" enabled.Edit="true" maxChars="254"></s:TextInput>
+					<mx:LinkButton 
+						paddingLeft="0" 
+						id="lbtnOfficeAdd" 
+						click="lbtnRollOverOption_clickHandler(event)" 
+						label="#"
+						color="#0A33BB" enabled="false" enabled.Add="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Office Tel" direction="horizontal">
+					<s:TextInput
+						maxChars="20"
+						restrict="0-9"
+						id="txtOffTel" width="125" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+				</mx:FormItem>
+				<mx:FormItem label="Mobile" direction="horizontal">
+					<s:TextInput
+						maxChars="20"
+						restrict="0-9"
+						id="txtOffMobile" width="115" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+				</mx:FormItem>
+				<mx:FormItem label="Fax" direction="horizontal">
+					<s:TextInput
+						maxChars="15"
+						restrict="0-9"
+						id="txtOffFax" width="125" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+				</mx:FormItem>
+				<mx:FormItem label="Email" direction="horizontal">
+					<s:TextInput
+						restrict="0-9a-z@._"
+						maxChars="254"
+						id="txtEmail" width="206" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+				</mx:FormItem>
+				<mx:FormItem required="true" label="Customer Status" direction="horizontal">
+					<s:DropDownList
+						dataProvider="{crListAllFdebtorstatus.lastResult}"
+						labelField="description"
+						id="ddStatus" width="125" enabled="false" enabled.Add="true" enabled.Edit="true"></s:DropDownList>
+					
+				</mx:FormItem>
+			</mx:Form>
+			<mx:Form x="431" y="258" width="465" height="82" borderVisible="false">
+				<mx:FormItem label="Tel" direction="horizontal">
+					<s:TextInput
+						maxChars="20"
+						id="txtBillTel" restrict="0-9" width="130" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+					<mx:LinkButton 
+						paddingLeft="0" 
+						id="lbtnBillTel" 
+						click="lbtnRollOverOption_clickHandler(event)" 
+						label="#"
+						color="#0A33BB" enabled="false" enabled.Add="true" enabled.Edit="true" width="18"/>
+					<mx:FormItem label="Fax" direction="horizontal" width="199">
+						<s:TextInput
+							maxChars="20"
+							id="txtBillFax" restrict="0-9" enabled="false" enabled.Add="true" width.Add="157" width.Default="157" width.Edit="157" enabled.Edit="true" width.Find="157" width.Delete="157"></s:TextInput>
+						<mx:LinkButton 
+							paddingLeft="0" 
+							id="lbtnBillFax" 
+							click="lbtnRollOverOption_clickHandler(event)" 
+							label="#"
+							color="#0A33BB" enabled="false" enabled.Add="true" enabled.Edit="true"/>
+					</mx:FormItem>
+				</mx:FormItem>
+				<mx:FormItem label="Mobile 1" direction="horizontal">
+					<s:TextInput
+						maxChars="20"
+						id="txtBillMobile1" restrict="0-9" width="128" enabled="false" enabled.Add="true" width.Add="130" width.Default="130" width.Edit="130" enabled.Edit="true" width.Find="130" width.Delete="130"></s:TextInput>
+					<mx:LinkButton 
+						paddingLeft="0" 
+						id="lbtnBillMobile1" 
+						click="lbtnRollOverOption_clickHandler(event)" 
+						label="#"
+						color="#0A33BB" enabled="false" enabled.Add="true" enabled.Edit="true" width="18"/>
+					<mx:FormItem label="Mobile 2" direction="horizontal" width="200">
+						<s:TextInput
+							maxChars="20"
+							id="txtBillMobile2"
+							restrict="0-9" width="128" enabled="false" enabled.Add="true" width.Add="130" width.Default="130" width.Edit="130" enabled.Edit="true" width.Find="130" width.Delete="130"></s:TextInput>
+						<mx:LinkButton 
+							paddingLeft="0" 
+							id="lbtnBillMobile2" 
+							click="lbtnRollOverOption_clickHandler(event)" 
+							label="#"
+							color="#0A33BB" enabled="false" enabled.Add="true" enabled.Edit="true"/>
+					</mx:FormItem>
+				</mx:FormItem>
+			</mx:Form>
+			<s:Label text="tax type : 'EXCEMPT'=non tax 'ALL INCLUSIVE'=tax hidden " x="28" y="403" color="RED"/>
+			<!--<mx:Form height="474" x="535" y="-7"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 width="345">
+				<mx:FormItem id="fiCusNIC" label="NIC No." direction="horizontal" width="320" horizontalGap="1">
+					<controls:MaskedTextInput
+						enabled.Default="false"
+						enabled.Add="true"
+						enabled.Edit="true"
+						maxChars="10"						
+						inputMask="#########V" id="txtCusNIC" width="115" fontFamily="Arial" fontSize="12" enabled.Find="false" enabled.Delete="false"/>
+					<mx:Button
+						click="browseImage_clickHandler(event)"
+						label="Browse" id="btnBrowNIC" enabled="false" enabled.Add="true" enabled.Edit="true"
+						textAlign="left"
+						fontSize="10"
+						width="50"
+						height="20"
+						/>
+					<mx:Button
+						textAlign="left"
+						label="Clear" id="btnClearNIC" enabled="false" enabled.Add="true" enabled.Edit="true" 
+						fontSize="10"
+						width="43"
+						height="20"
+						click="clearImage_clickHandler(event)"
+						/>
+				</mx:FormItem>
+				<mx:FormItem label="NIC Image" direction="horizontal" width="320">
+					<mx:Image id="iCusNIC" width="200" height="200" source="@Resource(key='inaUrl',bundle='resource')"
+							  cacheAsBitmap="false"
+							  />
+				</mx:FormItem>
+				<mx:FormItem id="fiCusPassNo" label="Passport No." direction="horizontal" width="318"
+							 horizontalGap="1"
+							 >
+					<s:TextInput
+						maxChars="15"
+						id="txtCusPassNo" width="115" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+					<mx:Button
+						click="browseImage_clickHandler(event)"
+						id="btnBrowPass" label="Browse" enabled="false" enabled.Add="true" enabled.Edit="true"
+						fontSize="10"
+						width="50"
+						/>
+					<mx:Button
+						textAlign="left"
+						label="Clear" id="btnClearPass" enabled="false" enabled.Add="true" enabled.Edit="true" 
+						fontSize="10"
+						width="43"
+						click="clearImage_clickHandler(event)"
+						/>
+				</mx:FormItem>
+				<mx:FormItem label="Passport Image" direction="horizontal" width="315">
+					<mx:Image
+						id="iCusPassport"
+						maintainAspectRatio="true"
+						maintainProjectionCenter="true"
+						width="200" height="200" source="@Resource(key='inaUrl',bundle='resource')"
+						cacheAsBitmap="false"
+						/>
+				</mx:FormItem>
+			</mx:Form>-->
+		</s:NavigatorContent>
+		<s:NavigatorContent label="NIC/Passport" width="100%" height="100%">
+			<mx:Form 
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 x="5" y="-7" width="510" height="305">
+				<s:Label text="NIC Details" fontWeight="bold"/>
+				<mx:FormItem id="fiCusNIC" label="NIC No." direction="horizontal" width="320" horizontalGap="1">
+					<controls:MaskedTextInput
+						focusOut="txtCusNIC_focusOutHandler(event)"
+						change="txtCusNIC_changeHandler(event)"
+						enabled.Default="false"
+						enabled.Add="true"
+						enabled.Edit="true"
+						maxChars="10"						
+						inputMask="#########V" id="txtCusNIC" width="115" fontFamily="Arial" fontSize="12" enabled.Find="false" enabled.Delete="false"/>
+				</mx:FormItem>
+				<mx:FormItem width="498" height="247">
+					<mx:HBox>
+						<mx:VBox>
+							<s:Label text="NIC Image [Front]" fontWeight="bold"/>
+							<mx:Image id="iCusNIC" width="200" height="200" source="@Resource(key='inaUrl',bundle='resource')"
+									  cacheAsBitmap="false"
+									  />
+							<mx:HBox>
+								<mx:Button
+									click="browseImage_clickHandler(event)"
+									label="Browse" id="btnBrowNIC" enabled="false" enabled.Add="true" enabled.Edit="true"
+									textAlign="left"
+									fontSize="10"
+									width="50"
+									height="20"
+									/>
+								<mx:Button
+									textAlign="left"
+									label="Clear" id="btnClearNIC" enabled="false" enabled.Add="true" enabled.Edit="true" 
+									fontSize="10"
+									width="43"
+									height="20"
+									click="clearImage_clickHandler(event)"
+									/>
+							</mx:HBox>
+						</mx:VBox>
+						<mx:VBox>
+							<s:Label text="NIC Image [Back]" fontWeight="bold"/>
+							<mx:Image id="iCusNICBack" width="200" height="200" source="@Resource(key='inaUrl',bundle='resource')"
+									  cacheAsBitmap="false"
+									  />
+							<mx:HBox>
+								<mx:Button
+									click="browseImage_clickHandler(event)"
+									label="Browse" id="btnBrowNICBack" enabled="false" enabled.Add="true" enabled.Edit="true"
+									textAlign="left"
+									fontSize="10"
+									width="50"
+									height="20"
+									/>
+								<mx:Button
+									textAlign="left"
+									label="Clear" id="btnClearNICBack" enabled="false" enabled.Add="true" enabled.Edit="true" 
+									fontSize="10"
+									width="43"
+									height="20"
+									click="clearImage_clickHandler(event)"
+									/>
+							</mx:HBox>
+						</mx:VBox>
+					</mx:HBox>
+				</mx:FormItem>
+				
+
+				
+			</mx:Form>
+			<mx:Form height="305"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 x="525" y="-6" width="334">
+
+				<s:Label text="Passport Details" fontWeight="bold"/>
+
+				<mx:FormItem id="fiCusPassNo" label="Passport No." direction="horizontal" width="277"
+							 horizontalGap="1"
+							 >
+					<s:TextInput
+						maxChars="15"
+						focusOut="txtCusPassNo_focusOutHandler(event)"
+						change="txtCusPassNo_changeHandler(event)"
+						id="txtCusPassNo" width="115" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+					
+					
+				</mx:FormItem>
+				
+
+				
+				<mx:FormItem width="314">
+					<s:Label text="Passport Image" fontWeight="bold" />
+					<mx:Image
+						id="iCusPassport"
+						maintainAspectRatio="true"
+						maintainProjectionCenter="true"
+						width="200" height="200" source="@Resource(key='inaUrl',bundle='resource')"
+						cacheAsBitmap="false"
+						/>
+					<mx:HBox>
+						<mx:Button
+							click="browseImage_clickHandler(event)"
+							id="btnBrowPass" label="Browse" enabled="false" enabled.Add="true" enabled.Edit="true"
+							fontSize="10"
+							width="50"
+							/>
+						<mx:Button
+							textAlign="left"
+							label="Clear" id="btnClearPass" enabled="false" enabled.Add="true" enabled.Edit="true" 
+							fontSize="10"
+							width="43"
+							click="clearImage_clickHandler(event)"
+							/>
+					</mx:HBox>
+				</mx:FormItem>
+
+
+				
+			</mx:Form>
+			
+			<mx:FormItem label="Trusted Email Client and Allowed Without Passport/NIC" x="17" y="326" >
+				<s:CheckBox label="Yes" id="cbEmailClient"/>
+			</mx:FormItem>
+			
+
+			
+		</s:NavigatorContent>
+		<s:NavigatorContent label="Guarantor" width="100%" height="100%">
+			<mx:Form height="165" x="2" y="-8"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 width="877">
+				<s:Label text="Guarantor Details" fontWeight="bold"/>
+				<mx:FormItem label="Guarantor ID" direction="horizontal">
+					<s:TextInput id="txtGId" width="125" enabled="false"></s:TextInput>
+					<mx:LinkButton
+						id="lbtnSearch"
+						click="lbtnSearch_clickHandler(event)"
+						label="Search" color="#0A33BB" enabled.Default="false" enabled.Add="true" enabled.Edit="true"/>
+						<!--label="Search" color="#0A33BB" enabled.Default="false" enabled.Add="false" enabled.Edit="{lbEnbCtrl}"/>-->
+					<mx:LinkButton
+						id="lbtnClear"
+						click="lbtnClear_clickHandler(event)"
+						label="Clear" color="#0A33BB" enabled.Default="false" enabled.Add="true" enabled.Edit="true"/>
+					<!--label="Search" color="#0A33BB" enabled.Default="false" enabled.Add="false" enabled.Edit="{lbEnbCtrl}"/>-->
+				</mx:FormItem>
+				<mx:FormItem label="Name" direction="horizontal">
+					<s:TextInput id="txtGName" width="264" enabled="false"></s:TextInput>
+				</mx:FormItem>
+				<mx:FormItem label="Residence Address" direction="horizontal">
+					<s:TextInput id="txtGResAddress" width="395" enabled="false"></s:TextInput>
+					<mx:FormItem label="Tel" direction="horizontal">
+						<s:TextInput id="txtGResTel" width="115" enabled="false"></s:TextInput>
+					</mx:FormItem>
+				</mx:FormItem>
+				<mx:FormItem label="Office Address" direction="horizontal">
+					<s:TextInput id="txtGOffAddress" width="395" enabled="false" restrict="a-z A-z 0-9 \- _ @ ."></s:TextInput>
+					<mx:FormItem label="Tel" direction="horizontal">
+						<s:TextInput id="txtGOffTel" width="115" enabled="false"></s:TextInput>
+					</mx:FormItem>
+				</mx:FormItem>
+					<mx:FormItem label="Mobile" direction="horizontal">
+						<s:TextInput id="txtGMob" width="115" enabled="false"></s:TextInput>
+					</mx:FormItem>
+			</mx:Form>
+		</s:NavigatorContent>
+		<s:NavigatorContent label="Driver" width="100%" height="100%">
+			<mx:Form height="222" x="2" y="-8"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 width="378">
+				<s:Label text="Driver Details" fontWeight="bold"/>
+				<mx:FormItem label="Name" direction="horizontal" required="true">
+					<s:TextInput
+						restrict="A-Z,a-z"
+						id="txtDriName"
+						maxChars="254"
+						width="210" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+					<mx:LinkButton 
+						paddingLeft="0" 
+						id="lbtnDriName" 
+						click="lbtnRollOverOption_clickHandler(event)" 
+						label="#"
+						color="#0A33BB" 
+						enabled.Default="false" 
+						enabled.Add="true"
+						enabled.Edit="true"
+						enabled.Find="false"
+						 enabled.Delete="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Driving License No." direction="horizontal" required="true">
+					<s:TextInput
+						maxChars="20"
+						id="txtDriLicNo" restrict="0-9a-zA-Z^ " width="126" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+				</mx:FormItem>
+				<mx:FormItem label="Date Of Issued" direction="horizontal" required="true">
+					<controls:MaskedTextInput
+						enabled.Default="false"
+						enabled.Add="true"
+						enabled.Edit="true"
+						inputMask="@Resource(key='dateMask',bundle='resource')"
+						toolTip="@Resource(key='dateFormat',bundle='resource')"
+						id="txtDriLicDIssued" restrict="0-9,." width="125" enabled.Find="false" enabled.Delete="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Date Of Expiry" direction="horizontal">
+					<controls:MaskedTextInput
+						enabled.Default="false"
+						enabled.Add="true"
+						enabled.Edit="true"
+						inputMask="@Resource(key='dateMask',bundle='resource')"
+						toolTip="@Resource(key='dateFormat',bundle='resource')"
+						id="txtDriLicDExpiry" restrict="0-9,." width="125" enabled.Find="false" enabled.Delete="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Mobile Number" direction="horizontal">
+					<s:TextInput
+						maxChars="20"
+						restrict="0-9"
+						id="txtDriMobile" width="125" enabled="false" enabled.Add="true" enabled.Edit="true"></s:TextInput>
+				</mx:FormItem>
+				<mx:HBox>
+					<s:Button id="btnAdd"
+							  click="btnAdd_clickHandler(event)"
+							  label="Add" width="61" 
+							  enabled="false" 
+							  enabled.Add="true"
+							  enabled.Edit="true"
+							  />
+					<s:Button id="btnDel"
+							  click="btnDel_clickHandler(event)"
+							  label="Delete" width="61" enabled="false"/>
+					<s:Button id="btnCancel"
+							  click="btnCancel_clickHandler(event)"
+							  label="Cancel" width="61" enabled="false"/>
+				</mx:HBox>
+			</mx:Form>
+			<mx:Form height="222" x="382" y="-8"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 width="243">
+				<s:Label text="License Image [Front]" fontWeight="bold"/>
+				<mx:Image id="iLicFront" width="230" height="163" source="@Resource(key='inaUrl',bundle='resource')"
+						  cacheAsBitmap="false"
+						  />
+				<mx:HBox>
+					<mx:Button
+						click="browseImage_clickHandler(event)"
+						id="btnBrowLicFront" label="Browse" enabled="false" enabled.Add="true" enabled.Edit="true"
+						textAlign="left"
+						fontSize="10"
+						width="50"
+						/>
+					<mx:Button
+						textAlign="left"
+						label="Clear" id="btnClearFront" enabled="false" enabled.Add="true" enabled.Edit="true" 
+						fontSize="10"
+						width="43"
+						height="20"
+						click="clearImage_clickHandler(event)"
+						/>
+				</mx:HBox>
+			</mx:Form>
+			<mx:DataGrid
+				enabled.Default="false"
+				enabled.Add="true"
+				enabled.Edit="true"
+				dataProvider="{lacFcliendriver}"
+				id="dgDrivers" x="7" y="221" width="863" height="200"
+				itemClick="dgDrivers_itemClickHandler(event)"
+				 enabled.Find="false" enabled.Delete="false">
+				<mx:columns>
+					<mx:DataGridColumn headerText="Name" resizable="false" width="200" dataField="drivername"/>
+					<mx:DataGridColumn headerText="Driving License No"  width="150" resizable="false" dataField="dlno"/>
+					<mx:DataGridColumn
+						labelFunction="formatDate"
+						headerText="Date Of Issued" width="150" resizable="false" dataField="dldissued"/>
+					<mx:DataGridColumn
+						labelFunction="formatDate"
+						headerText="Date Of Expiry" width="150" resizable="false" dataField="dldexp"/>
+					<mx:DataGridColumn headerText="Mobile Number" width="150" resizable="false" dataField="mobilephone"/>
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:Form height="222" x="627" y="-8"
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 width="243">
+				<s:Label text="License Image [Back]" fontWeight="bold"/>
+				<mx:Image id="iLicBack" width="230" height="163" source="@Resource(key='inaUrl',bundle='resource')"
+						  cacheAsBitmap="false"
+						  />
+				<mx:HBox>
+				<mx:Button
+					click="browseImage_clickHandler(event)"
+					id="btnBrowLicBack" label="Browse" enabled="false" enabled.Add="true" enabled.Edit="true"
+					textAlign="left"
+					fontSize="10"
+					width="50"
+					/>
+					<mx:Button
+						textAlign="left"
+						label="Clear" id="btnClearBack" enabled="false" enabled.Add="true" enabled.Edit="true" 
+						fontSize="10"
+						width="43"
+						height="20"
+						click="clearImage_clickHandler(event)"
+						/>
+				</mx:HBox>
+			</mx:Form>
+		</s:NavigatorContent>
+		<s:NavigatorContent label="Report" width="100%" height="100%">
+			<mx:Form 
+					 borderAlpha="0.10"
+					 paddingTop="5"
+					 paddingLeft="5"
+					 paddingRight="5"
+					 paddingBottom="2"
+					 borderColor="black"
+					 borderStyle="solid"
+					 borderVisible="true" 
+					 >
+			<mx:FormItem label="Customer No" direction="horizontal">
+				<s:TextInput
+					id="txtDebCode"
+					text="{txtCusCode.text}"
+					width="148"
+					maxChars="254"
+					/>
+			
+			<mx:LinkButton x="27" y="420" label="Customer Agreement History Report" id="btnContinousHireDataReport3" click="btnContinousHireDataReport_clickHandler3(event)"  color="#2908F5"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="Customer No" direction="horizontal">
+				<mx:FormItem label="Date Range" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  required="true">
+					<mx:DateField width="100" id="dtDateFrom" 
+								  formatString="@Resource(key='dateFormat2',bundle='resource')"
+								  />
+					<mx:DateField width="100" id="dtDateTo" 
+								  formatString="@Resource(key='dateFormat2',bundle='resource')"
+								  />
+				</mx:FormItem>	
+					
+			<mx:LinkButton x="27" y="420" label="Customer Invoice History Report for Duration" id="btnContinousHireDataReport4" click="btnContinousHireDataReport_clickHandler4(event)"  color="#2908F5"/>
+			</mx:FormItem>
+				</mx:Form>
+		</s:NavigatorContent>
+	</mx:TabNavigator>
+	<s:Label x="6" y="524" text="Last Modified By:" id="lblModifiedBy"/>
+</s:TitleWindow>

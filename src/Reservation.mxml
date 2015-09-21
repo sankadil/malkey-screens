@@ -1,0 +1,1515 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" xmlns:local="*"
+			   creationComplete="application1_creationCompleteHandler(event)"
+			   title="Reservation/Check-Out/Check-In"
+			    width="910" height="523"
+				close="titlewindow1_closeHandler(event)"
+				>
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.components.odoPopup;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.managers.SystemManager;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			private var AcAr:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var OsAr:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			public var fDrivers:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			public var fCDrivers:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var fRates:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var fHireTypes:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			public var inventory:ArrayCollection = new ArrayCollection([
+				{des:"Insurance",isSelected:false},
+				{des:"License",isSelected:false},
+				{des:"Spare Wheel",isSelected:false},
+				{des:"Spare Wheel",isSelected:false},
+				{des:"Spare Jack",isSelected:false},
+				{des:"Spare Jack Handle",isSelected:false},
+				{des:"Spare Wheelbraise",isSelected:false},
+				{des:"Air Con",isSelected:false},
+				{des:"CD Player",isSelected:false},
+				{des:"Cassette",isSelected:false},
+				{des:"Radio",isSelected:false},
+				{des:"Meters",isSelected:false},
+				{des:"Fan Belt",isSelected:false},
+				{des:"Fuses",isSelected:false},
+				{des:"Wrench",isSelected:false},
+				{des:"Screw Driver",isSelected:false},
+				{des:"Seat Covers",isSelected:false},
+				{des:"Carpets",isSelected:false}
+			]);
+			
+			[Bindable]
+			public var inventoryCI:ArrayCollection = new ArrayCollection([
+				{des:"Insurance",isSelected:false},
+				{des:"License",isSelected:false},
+				{des:"Spare Wheel",isSelected:false},
+				{des:"Spare Wheel",isSelected:false},
+				{des:"Spare Jack",isSelected:false},
+				{des:"Spare Jack Handle",isSelected:false},
+				{des:"Spare Wheelbraise",isSelected:false},
+				{des:"Air Con",isSelected:false},
+				{des:"CD Player",isSelected:false},
+				{des:"Cassette",isSelected:false},
+				{des:"Radio",isSelected:false},
+				{des:"Meters",isSelected:false},
+				{des:"Fan Belt",isSelected:false},
+				{des:"Fuses",isSelected:false},
+				{des:"Wrench",isSelected:false},
+				{des:"Screw Driver",isSelected:false},
+				{des:"Seat Covers",isSelected:false},
+				{des:"Carpets",isSelected:false}
+			]);
+			
+			[Bindable]
+			private var addchgs:ArrayCollection = new ArrayCollection([
+				{des:"Seasonal Rate - 10%",isSelected:false}
+			]);
+
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				try
+				{
+					/* sloader.content.addEventListener("fuelMeterArm",fuelMeterArmHandler,false,0,false);
+					sOdoCO.content.addEventListener("ODOClick",ODIClick,false,0,false);
+					sOdoCI.content.addEventListener("ODOClick",ODINClick,false,0,false); */
+					
+					/* sloader.addEventListener("fuelMeterArm",fuelMeterArmHandler,false,0,false);
+					sloader.addEventListener(Event.COMPLETE,sloaderLoaded,false,0,false);
+					sOdoCO.addEventListener("ODOClick",ODIClick,false,0,false); */
+					
+					
+					/* sOdoCI.addEventListener("ODOClick",ODINClick,false,0,false);  */
+					
+					initAccessories();
+					initOthSrv();
+					loadDrivers();
+					loadCDrivers();
+					loadHireTypes();
+					
+					fRates.filterFunction = filterRates;
+					loadRates();
+					//setCOFuelLevel("300");
+				}
+				catch(error:Error)
+				{
+					Alert.show("initApp: " + error.message);
+				}
+			}
+			
+			private function loadHireTypes():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["id"] = "1";
+				o["des"] = "Self Drive";
+				fHireTypes.addItem(o);
+				
+				o = new Object();
+				o["id"] = "2";
+				o["des"] = "With Driver";
+				fHireTypes.addItem(o);
+				
+				o = new Object();
+				o["id"] = "3";
+				o["des"] = "Wedding";
+				fHireTypes.addItem(o);
+			}
+			
+			private function filterRates(item:Object):Boolean
+			{
+				if(cmbHireType.selectedIndex<0)
+				{
+					return false;
+				}
+				else
+				{
+					if(cmbHireType.selectedItem.id==item["id"])
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+			}
+			
+			private function loadRates():void
+			{
+				try
+				{
+					var o:Object;
+					
+					//Self Drive
+					o = new Object();
+					o["id"] = "1";
+					o["type"] = "Daily";
+					o["rate"] = "3500";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "1";
+					o["type"] = "Weekly";
+					o["rate"] = "24500";
+					o["disper"] = "5";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "1";
+					o["type"] = "Monthly";
+					o["rate"] = "105000";
+					o["disper"] = "10";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "1";
+					o["type"] = "Excess Mileage";
+					o["rate"] = "25";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "1";
+					o["type"] = "Detention";
+					o["rate"] = "250";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					//Allocated Hours
+					//Allocated Mileage
+					
+					//With Driver
+					o = new Object();
+					o["id"] = "2";
+					o["type"] = "Daily";
+					o["rate"] = "1000";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "2";
+					o["type"] = "Weekly";
+					o["rate"] = "7000";
+					o["disper"] = "5";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "2";
+					o["type"] = "Monthly";
+					o["rate"] = "30000";
+					o["disper"] = "10";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "2";
+					o["type"] = "Excess Mileage";
+					o["rate"] = "15";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "2";
+					o["type"] = "Detention";
+					o["rate"] = "300";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					//Wedding
+					o = new Object();
+					o["id"] = "3";
+					o["type"] = "Daily";
+					o["rate"] = "1000";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "3";
+					o["type"] = "Weekly";
+					o["rate"] = "0";
+					o["disper"] = "5";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "3";
+					o["type"] = "Monthly";
+					o["rate"] = "0";
+					o["disper"] = "10";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "3";
+					o["type"] = "Excess Mileage";
+					o["rate"] = "15";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					o = new Object();
+					o["id"] = "3";
+					o["type"] = "Detention";
+					o["rate"] = "300";
+					o["disper"] = "0";
+					fRates.addItem(o);
+					
+					fRates.refresh();
+				}
+				catch(error:Error)
+				{
+					Alert.show("filterRates: " + error.message);
+				}
+			}
+			
+			private function sloader0Loaded(e:Event):void
+			{
+				try
+				{
+					
+				}
+				catch(error:Error)
+				{
+					Alert.show("sloader0Loaded: " + error.message);
+				}
+			}
+			
+			private function sloaderLoaded(e:Event):void
+			{
+				try
+				{
+					setCOFuelLevel("300");
+				}
+				catch(error:Error)
+				{
+					Alert.show("sloaderLoaded: " + error.message);
+				}
+			}
+			
+			private function ODIClick(e:DataEvent):void
+			{
+				try
+				{
+					var pop:odoPopup = new odoPopup();
+					pop.cMileage = e.data;
+					pop.addEventListener("mileageChange",odoPopupClose,false,0,false);
+					PopUpManager.addPopUp(pop,this,true,null,null);
+					PopUpManager.centerPopUp(pop);
+				}
+				catch(error:Error)
+				{
+					Alert.show(error.message);
+				}
+			}
+			
+			private function ODINClick(e:DataEvent):void
+			{
+				try
+				{
+					var pop:odoPopup = new odoPopup();
+					pop.cMileage = e.data;
+					pop.addEventListener("mileageChange",odoINPopupClose,false,0,false);
+					PopUpManager.addPopUp(pop,this,true,null,null);
+					PopUpManager.centerPopUp(pop);
+				}
+				catch(error:Error)
+				{
+					Alert.show(error.message);
+				}
+			}
+			
+			private function odoPopupClose(e:DataEvent):void
+			{
+				setODOMeter(e.data);
+			}
+			
+			private function odoINPopupClose(e:DataEvent):void
+			{
+				setODOCIMeter(e.data);
+			}
+			
+			private function fuelMeterArmHandler(e:DataEvent):void
+			{
+				try
+				{
+					
+					 //Alert.show(e.data); 
+				}
+				catch(error:Error)
+				{
+					Alert.show(error.message);
+				}
+			}
+			
+			private function loadDrivers():void
+			{
+				var o:Object;
+				for(var a:int=0;a<10;a++)
+				{
+					o = new Object();
+					o["name"] = "Name " + (a+1).toString();
+					o["nic"] = "61000000" + (a+1).toString() + "V";
+					o["license"] = "000000000" + (a+1).toString();
+					o["isSelected"] = false; 
+					fDrivers.addItem(o);
+				}
+			}
+			
+			private function loadCDrivers():void
+			{
+				var o:Object;
+				for(var a:int=0;a<10;a++)
+				{
+					o = new Object();
+					o["name"] = "Name " + (a+1).toString();
+					o["nic"] = "61000000" + (a+1).toString() + "V";
+					o["license"] = "000000000" + (a+1).toString();
+					o["isSelected"] = false; 
+					fCDrivers.addItem(o);
+				}
+			}
+			
+			private function initOthSrv():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["label"] = "Driver Service - Rs.200";
+				o["isSelected"] = false;
+				OsAr.addItem(o);	
+			}
+			
+			private function initAccessories():void
+			{
+				for(var a:int=1;a<=10;a++)
+				{
+					var o:Object = new Object();
+					o["id"] = "id_" + a.toString();
+					o["label"] = "Accessory " + a.toString() + " - Rs.200";
+					o["isSelected"] = false;
+					AcAr.addItem(o);
+				}
+			}
+			
+			public function chkBoxChange(index:int,checked:Boolean):void
+			{
+				var o:Object = AcAr.getItemAt(index);
+				o["isSelected"] = checked;
+			}
+
+
+			protected function btnDentCO_clickHandler(event:MouseEvent):void
+			{
+				btnScratchCO.selected=false;
+			}
+
+
+			protected function btnScratchCO_clickHandler(event:MouseEvent):void
+			{
+				btnDentCO.selected=false;
+			}
+			
+			protected function btnDentCO0_clickHandler(event:MouseEvent):void
+			{
+				btnScratchCO0.selected=false;
+			}
+			
+			
+			protected function btnScratchCO0_clickHandler(event:MouseEvent):void
+			{
+				btnDentCO0.selected=false;
+			}
+
+			private function setCOFuelLevel(level:String):void
+			{
+				try
+				{
+					var loaderManager:Object = sloader.content as Object;
+					loaderManager.setFuelLevel(level);
+				}
+				catch(error:Error)
+				{
+					Alert.show("setCOFuelLevel: " + error.message);
+				}
+			}
+			
+			private function setODOCIMeter(value:String):void
+			{
+				try
+				{
+					var loaderManager:Object = sOdoCI.content as Object;
+					loaderManager.setOdoMeter(value);
+				}
+				catch(error:Error)
+				{
+					Alert.show(error.message);
+				}
+			}
+			
+			private function setODOMeter(value:String):void
+			{
+				try
+				{
+					var loaderManager:Object = sOdoCO.content as Object;
+					loaderManager.setOdoMeter(value);
+				}
+				catch(error:Error)
+				{
+					Alert.show(error.message);
+				}
+			}
+
+			protected function btnUndoCO_clickHandler(event:MouseEvent):void
+			{
+				undoCO();
+			}
+
+			
+			protected function btnUndoCI_clickHandler(event:MouseEvent):void
+			{
+				undoCI();	
+			}
+			
+			private function undoCO():void
+			{
+				try
+				{
+					if(COchildCnt>1)
+					{
+						COchildCnt -= 1;
+						imgCO.removeChildAt(COchildCnt);
+					}
+				}
+				catch(error:Error)
+				{
+					Alert.show("undoCO: " + error.message);
+				}
+			}
+			
+			private function undoCI():void
+			{
+				try
+				{
+					if(CIchildCnt>1)
+					{
+						CIchildCnt -= 1;
+						imgCI.removeChildAt(CIchildCnt);
+					}
+				}
+				catch(error:Error)
+				{
+					Alert.show("undoCI: " + error.message);
+				}
+			}
+			
+			private var size:uint         = 80;
+			private var bgColor:uint      = 0xFFCC00;
+			private var bgColor1:uint     = 0xFFAACC;
+			private var borderColor:uint  = 0x666666;
+			private var borderSize:uint   = 0;
+			private var cornerRadius:uint = 9;
+			private var gutter:uint       = 5;
+			
+			private function doDrawRectCO(lx:Number,ly:Number,type:int):void {
+				//Alert.show("x: " + lx.toString() + "   y: " + ly.toString());
+				try
+				{
+					var child:Shape = new Shape();
+					if(type==1)
+					{
+						child.graphics.beginFill(bgColor);
+					}
+					else if(type==2)
+					{
+						child.graphics.beginFill(bgColor1);
+					}
+					child.graphics.lineStyle(borderSize, borderColor);
+					child.graphics.drawRect(lx, ly, 10, 10);
+					child.graphics.endFill();
+					imgCO.addChild(child);
+				}
+				catch(error:Error)
+				{
+					Alert.show("doDrawRect: " + error.message);
+				}
+			}
+			
+			
+			private function doDrawRectCI(lx:Number,ly:Number,type:int):void {
+				//Alert.show("x: " + lx.toString() + "   y: " + ly.toString());
+				try
+				{
+					var child:Shape = new Shape();
+					if(type==1)
+					{
+						child.graphics.beginFill(bgColor);
+					}
+					else if(type==2)
+					{
+						child.graphics.beginFill(bgColor1);
+					}
+					child.graphics.lineStyle(borderSize, borderColor);
+					child.graphics.drawRect(lx, ly, 10, 10);
+					child.graphics.endFill();
+					imgCI.addChild(child);
+				}
+				catch(error:Error)
+				{
+					Alert.show("doDrawRect: " + error.message);
+				}
+			}
+
+			private var COchildCnt:int=1;
+			protected function imgCO_clickHandler(event:MouseEvent):void
+			{
+				var type:int;
+				if(btnDentCO.selected==true)
+				{
+					type = 1;
+				}
+				else if(btnScratchCO.selected==true)
+				{
+					type = 2;
+				}
+				else
+				{
+					return;
+				}
+				//Alert.show("rootx: " + root.x.toString() + "  stageX: " + event.stageX.toString() + "   imgCO: " + imgCO.x.toString());
+/* 				Alert.show(imgCO.parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.name); */
+				/* var xpos:Number = mouseX-panel.x-tabNavigator.x-ncCO.x-frmCO.x-imgCO.x;
+				var ypos:Number = mouseY-panel.y-tabNavigator.y-ncCO.y-frmCO.y-imgCO.y; */
+				var xpos:Number = imgCO.mouseX;
+				var ypos:Number = imgCO.mouseY;
+				doDrawRectCO(xpos,ypos,type);
+				COchildCnt += 1;
+			}
+
+			private var CIchildCnt:int=1;
+			protected function imgCI_clickHandler(event:MouseEvent):void
+			{
+				var type:int;
+				if(btnDentCO0.selected==true)
+				{
+					type = 1;
+				}
+				else if(btnScratchCO0.selected==true)
+				{
+					type = 2;
+				}
+				else
+				{
+					return;
+				}
+				var xpos:Number = imgCI.mouseX;
+				var ypos:Number = imgCI.mouseY;
+				doDrawRectCI(xpos,ypos,type);
+				CIchildCnt += 1;
+			}
+
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+
+			protected function ncCO_creationCompleteHandler(event:FlexEvent):void
+			{
+
+			}
+
+			protected function sloader_creationCompleteHandler(event:FlexEvent):void
+			{
+				try
+				{
+					sloader.addEventListener(Event.COMPLETE,sloaderLoaded,false,0,false);
+					sloader.load("http://localhost:8400/malkey_server/malkey-screens-debug/fuelmeter.swf");
+					//sloader.load("http://sandaruwan:8400/efinac/efinac-client-debug/fuelmeter.swf");
+					sloader.addEventListener("fuelMeterArm",fuelMeterArmHandler,false,0,false);
+					
+				}
+				catch(error:Error)
+				{
+					Alert.show("ncCO: " + error.message);
+				}
+			}
+
+			protected function sOdoCO_creationCompleteHandler(event:FlexEvent):void
+			{
+				sOdoCO.addEventListener(Event.COMPLETE,sOdoCOComplete,false,0,false);
+				sOdoCO.addEventListener("ODOClick",ODIClick,false,0,false);
+				sOdoCO.load("http://localhost:8400/malkey_server/malkey-screens-debug/odometer.swf");
+			}
+			
+			private function sOdoCOComplete(event:Event):void
+			{
+				try
+				{
+					setODOMeter("154789");
+				}
+				catch(error:Error)
+				{
+					Alert.show("sloaderLoaded: " + error.message);
+				}
+			}
+
+
+			protected function sloader0_creationCompleteHandler(event:FlexEvent):void
+			{
+				try
+				{
+					sloader0.addEventListener(Event.COMPLETE,sloader0Loaded,false,0,false);
+					sloader0.load("../swf/fuelmeter.swf");
+					//sloader.load("http://sandaruwan:8400/efinac/efinac-client-debug/fuelmeter.swf");
+					sloader0.addEventListener("fuelMeterArm",fuelMeterArmHandler,false,0,false);
+					
+				}
+				catch(error:Error)
+				{
+					Alert.show("sloader0: " + error.message);
+				}
+			}
+
+
+			protected function sOdoCI_creationCompleteHandler(event:FlexEvent):void
+			{
+				sOdoCI.addEventListener(Event.COMPLETE,sOdoCIComplete,false,0,false);
+				sOdoCI.addEventListener("ODOClick",ODINClick,false,0,false);
+				sOdoCI.load("../swf/odometer.swf");
+			}
+			
+			private function sOdoCIComplete(event:Event):void
+			{
+				try
+				{
+					
+				}
+				catch(error:Error)
+				{
+					Alert.show("sloaderLoaded: " + error.message);
+				}
+			}
+
+			protected function cmbHireType_changeHandler(event:IndexChangeEvent):void
+			{
+				fRates.refresh();
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<mx:RadioButtonGroup id="CDrivers"/>
+		<mx:RadioButtonGroup id="MDrivers"/>
+	</fx:Declarations>
+	<!--<s:Panel id="panel" x="19" y="21" width="910" height="507" title="Reservation/Check-Out/Check-In">-->
+		<!--<mx:ControlBar id="cbar" x="-1" y="-4" horizontalGap="2" height="57" width="698">
+			<mx:Button  id="btnNew" width="40" height="40"
+						toolTip="New"	
+						icon="@Embed(source='icons/add.png')"/>
+			<mx:Button  id="btnEdit" width="40" height="40"
+						toolTip="Edit" 
+						icon="@Embed(source='icons/edit.png')"/>
+			<mx:Button  id="btnApprove" width="40" height="40" 
+						toolTip="Approve" 
+						icon="@Embed(source='icons/approve1.png')"/>
+			<mx:Button  id="btnUndo" width="40" height="40" 
+						toolTip="Undo"
+						icon="@Embed(source='icons/undo.png')" 
+						enabled="false"/>
+			<mx:Button  id="btnTop" width="40" height="40" 
+						toolTip="Top" 
+						icon="@Embed(source='icons/left2arrow.png')" 
+			/>
+			<mx:Button  id="btnBack" width="40" height="40"
+						toolTip="Back"  
+						icon="@Embed(source='icons/left1arrow.png')" 
+			/>
+			<mx:Button  id="btnNext" width="40" height="40" 
+						toolTip="Next" 
+						icon="@Embed(source='icons/right1arrow.png')" 
+			/>
+			<mx:Button  id="btnBottom" width="40" height="40" 
+						toolTip="Bottom"
+						icon="@Embed(source='icons/right2arrow.png')" 
+			/>
+			
+			<mx:Button  id="btnPrint" width="40" height="40" 
+						toolTip="Print"
+						icon="@Embed(source='icons/fileprint.png')" 
+			 			enabled="true"
+			 />
+			<mx:Button  id="btnFilter" width="40" height="40" 
+						toolTip="Filter"
+						icon="@Embed(source='icons/filter22.png')" 
+			/>
+			<mx:Button  id="btnSort" width="40" height="40"
+						toolTip="Sort"
+						icon="@Embed(source='icons/sort.png')" 
+			/>
+			<mx:Button  id="btnFind" width="40" height="40" 
+						toolTip="Find"
+						icon="@Embed(source='icons/find.png')" 
+			/>
+			<mx:Button  id="btnReload" width="40" height="40"
+						icon="@Embed(source='icons/reload.png')" 
+						toolTip="Reload" 
+			/>
+			<mx:Button  id="btnList" width="40" height="40" 
+						toolTip="List"
+						icon="@Embed(source='icons/view.png')" 
+			/>
+			<mx:Button  id="btnSave" width="40" height="40" 
+						toolTip="Save"
+						icon="@Embed(source='icons/filesave.png')" 
+						enabled="false"
+			/>
+			<mx:Button  id="btnClose" width="40" height="40" 
+						icon="@Embed(source='icons/exit.png')"
+			>
+				<fx:Script>
+					<![CDATA[
+
+					]]>
+				</fx:Script>
+			</mx:Button>
+		
+			
+
+		</mx:ControlBar>-->
+		<mx:HRule x="0" y="50" width="908" height="3"/>
+		<mx:TabNavigator id="tabNavigator" x="11" y="59" width="891" height="405" creationPolicy="auto">
+			<s:NavigatorContent label="General" width="100%" height="100%">
+				<s:NavigatorContent  label="General" width="100%" height="445">
+						<mx:Form height="135" x="5" y="0"
+								 borderAlpha="0.10"
+								 paddingTop="5"
+								 paddingLeft="5"
+								 paddingRight="5"
+								 paddingBottom="2"
+								 borderColor="black"
+								 borderStyle="solid"
+								 borderVisible="true" 
+								 width="435">
+							<s:Label text="Rental Details" fontWeight="bold"/>
+							<mx:FormItem label="Quotation #" direction="horizontal">
+								<s:TextInput width="171"></s:TextInput>
+								<mx:LinkButton label="Search" width="60" color="#0A33BB" textDecoration="underline"/>
+							</mx:FormItem>
+							<mx:FormItem label="Hire Type">
+								<s:DropDownList change="cmbHireType_changeHandler(event)" dataProvider="{fHireTypes}" labelField="des" id="cmbHireType" width="172"></s:DropDownList>
+							</mx:FormItem>
+							<mx:FormItem label="Date Out" direction="horizontal" width="408">
+								<mx:DateField width="150"/>
+								<mx:FormItem label="Num. Days">
+									<s:NumericStepper/>
+								</mx:FormItem>
+							</mx:FormItem>
+							<mx:FormItem label="Date In" direction="horizontal">
+								<mx:DateField width="150"/>
+								<mx:FormItem label="Chargeable Days">
+									<s:NumericStepper/>
+								</mx:FormItem>
+							</mx:FormItem>
+						</mx:Form>
+						<mx:Form
+							borderAlpha="0.10"
+							paddingTop="5"
+							paddingLeft="5"
+							paddingRight="5"
+							paddingBottom="2"
+							borderColor="black"
+							borderStyle="solid"
+							borderVisible="true"
+							x="5" y="137" height="225" width="435">
+							<s:Label text="Accessories" fontWeight="bold"/>
+							<mx:FormItem label="Accessory">
+								<s:DropDownList width="172"></s:DropDownList>
+							</mx:FormItem>
+							<mx:FormItem label="Date From" direction="horizontal">
+								<mx:DateField width="135"/>
+								<mx:FormItem label="Num. Days">
+									<s:NumericStepper/>
+								</mx:FormItem>
+							</mx:FormItem>
+							<mx:FormItem label="Date To" direction="horizontal">
+								<mx:DateField width="135"/>
+								<s:Button id="btnAdd" label="Add"/>
+							</mx:FormItem>
+							<mx:DataGrid width="415" height="108" dropShadowVisible="false" borderAlpha="0.28" borderVisible="true">
+								<mx:columns>
+									<mx:DataGridColumn headerText="Accessory" dataField="col1"/>
+									<mx:DataGridColumn headerText="From" dataField="col2"/>
+									<mx:DataGridColumn headerText="To" dataField="col3"/>
+									<mx:DataGridColumn dataField="col4" headerText="Rate"/>
+								</mx:columns>
+							</mx:DataGrid>
+						</mx:Form>
+						<mx:Form x="442" y="0"
+								 borderAlpha="0.10"
+								 paddingTop="5"
+								 paddingLeft="5"
+								 paddingRight="5"
+								 paddingBottom="2"
+								 borderColor="black"
+								 borderStyle="solid"
+								 borderVisible="true"
+								 height="135"
+								 width="435"
+								 >
+							<s:Label text="Vehicle Details" fontWeight="bold"/>
+							<mx:FormItem label="Vehicle" direction="horizontal">
+								<s:TextInput width="239"></s:TextInput>
+								<mx:LinkButton label="Search" width="60" color="#0A33BB" textDecoration="underline"/>
+							</mx:FormItem>
+							<mx:FormItem label="Class" direction="horizontal">
+								<s:TextInput width="130"></s:TextInput>
+								<mx:FormItem label="Transmission">
+									<s:TextInput width="100"></s:TextInput>
+								</mx:FormItem>
+							</mx:FormItem>
+							<mx:FormItem label="Vehicle Type" direction="horizontal">
+								<s:TextInput width="130"></s:TextInput>
+							</mx:FormItem>
+							<mx:FormItem label="Reg. No." direction="horizontal">
+								<s:TextInput width="130"></s:TextInput>
+							</mx:FormItem>
+						</mx:Form>
+						<mx:Form
+							borderAlpha="0.10"
+							paddingTop="5"
+							paddingLeft="5"
+							paddingRight="5"
+							paddingBottom="2"
+							borderColor="black"
+							borderStyle="solid"
+							borderVisible="true"
+							x="442" y="137" height="225" width="435">
+							<s:Label text="Other Services" fontWeight="bold"/>
+							<mx:FormItem label="Service">
+								<s:DropDownList width="172"></s:DropDownList>
+							</mx:FormItem>
+							<mx:FormItem label="Date From" direction="horizontal">
+								<mx:DateField width="135"/>
+								<mx:FormItem label="Num. Days">
+									<s:NumericStepper/>
+								</mx:FormItem>
+							</mx:FormItem>
+							<mx:FormItem label="Date To" direction="horizontal">
+								<mx:DateField width="135"/>		
+								<s:Button id="btnAdd1" label="Add"/>
+							</mx:FormItem>
+							<mx:DataGrid width="415" height="108" dropShadowVisible="false" borderAlpha="0.28" borderVisible="true">
+								<mx:columns>
+									<mx:DataGridColumn headerText="Service" dataField="col1"/>
+									<mx:DataGridColumn headerText="From" dataField="col2"/>
+									<mx:DataGridColumn headerText="To" dataField="col3"/>
+									<mx:DataGridColumn dataField="col4" headerText="Rate"/>
+								</mx:columns>
+							</mx:DataGrid>
+						</mx:Form>
+				</s:NavigatorContent>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Customer" width="100%" height="100%">
+				<mx:Form height="136" x="2" y="-4"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="877">
+					<s:Label text="Customer Details" fontWeight="bold"/>
+					<mx:FormItem label="Name" direction="horizontal">
+						<s:TextInput width="264"></s:TextInput>
+						<mx:LinkButton label="Search" width="60" color="#0A33BB" textDecoration="underline"/>
+						<mx:FormItem label="NIC/Passport No." direction="horizontal">
+							<s:TextInput width="276"></s:TextInput>
+						</mx:FormItem>
+					</mx:FormItem>
+					<mx:FormItem label="Customer Type" direction="horizontal">
+						<s:TextInput width="125">							
+						</s:TextInput>
+						<mx:FormItem label="Company" direction="horizontal">
+							<s:TextInput width="238"></s:TextInput>
+							<mx:FormItem label="VAT Registration No." direction="horizontal" width="280">
+								<s:TextInput width="147"></s:TextInput>
+							</mx:FormItem>
+						</mx:FormItem>
+					</mx:FormItem>
+					<mx:FormItem label="Residence Address" direction="horizontal">
+						<s:TextInput width="395"></s:TextInput>
+						<mx:FormItem label="Tel" direction="horizontal">
+							<s:TextInput width="115"></s:TextInput>
+						</mx:FormItem>
+						<mx:FormItem label="Mobile" direction="horizontal">
+							<s:TextInput width="115"></s:TextInput>
+						</mx:FormItem>
+					</mx:FormItem>
+					<mx:FormItem label="Office Address" direction="horizontal">
+						<s:TextInput width="395"></s:TextInput>
+						<mx:FormItem label="Tel" direction="horizontal">
+							<s:TextInput width="115"></s:TextInput>
+						</mx:FormItem>
+						<mx:FormItem label="Mobile" direction="horizontal">
+							<s:TextInput width="115"></s:TextInput>
+						</mx:FormItem>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Form height="115" x="2" y="134"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="877">
+					<s:Label text="Guarantor Details" fontWeight="bold"/>
+					<mx:FormItem label="Name" direction="horizontal">
+						<s:TextInput width="264"></s:TextInput>
+					</mx:FormItem>
+					<mx:FormItem label="Residence Address" direction="horizontal">
+						<s:TextInput width="395"></s:TextInput>
+						<mx:FormItem label="Tel" direction="horizontal">
+							<s:TextInput width="115"></s:TextInput>
+						</mx:FormItem>
+						<mx:FormItem label="Mobile" direction="horizontal">
+							<s:TextInput width="115"></s:TextInput>
+						</mx:FormItem>
+					</mx:FormItem>
+					<mx:FormItem label="Office Address" direction="horizontal">
+						<s:TextInput width="395"></s:TextInput>
+						<mx:FormItem label="Tel" direction="horizontal">
+							<s:TextInput width="115"></s:TextInput>
+						</mx:FormItem>
+						<mx:FormItem label="Mobile" direction="horizontal">
+							<s:TextInput width="115"></s:TextInput>
+						</mx:FormItem>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Form height="115" x="2" y="251"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="877">
+					<s:Label text="Billing Details" fontWeight="bold"/>
+					<mx:FormItem label="Name" direction="horizontal">
+						<s:TextInput width="393"></s:TextInput>
+					</mx:FormItem>
+					<mx:FormItem direction="horizontal" label="Address">
+						<s:TextInput width="395"></s:TextInput>
+					</mx:FormItem>
+					<mx:FormItem label="Tel" direction="horizontal">
+						<s:TextInput width="130"></s:TextInput>
+						<mx:FormItem label="Mobile 1" direction="horizontal">
+							<s:TextInput width="128"></s:TextInput>
+						</mx:FormItem>
+						<mx:FormItem label="Mobile 2" direction="horizontal">
+							<s:TextInput width="128"></s:TextInput>
+						</mx:FormItem>
+					</mx:FormItem>
+				</mx:Form>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Driver" width="100%" height="100%">
+				<mx:Image id="image1" x="622" y="23" width="209" height="152" source="images/INA.png"/>
+				<mx:Form height="214" x="2" y="-11"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="572">
+					<s:Label text="Malkey Driver Details" fontWeight="bold"/>
+					<mx:DataGrid id="MD" editable="true" dataProvider="{fDrivers}" width="555" height="186">
+						<mx:columns>
+							<mx:DataGridColumn editable="false" headerText="Name" dataField="name" width="400"/>
+							<mx:DataGridColumn dataField="nic" headerText="NIC " width="300"/>
+							<mx:DataGridColumn editable="false" headerText="License Number" dataField="license" width="300"/>
+							<mx:DataGridColumn editable="true" rendererIsEditor="true" headerText="Selection" width="100" dataField="isSelected">
+								<mx:itemRenderer>
+									<fx:Component> 
+										<mx:RadioButton value="{data}" selected="{data.isSelected}" change="radiobutton1_changeHandler(event)" group="{outerDocument.MDrivers}" textAlign="center" buttonMode="true">
+											
+											<fx:Script>
+												<![CDATA[
+													import mx.controls.Alert;
+													protected function radiobutton1_changeHandler(event:Event):void
+													{
+														for(var a:int=0;a<outerDocument.fDrivers.length;a++)
+														{
+															var o:Object = outerDocument.fDrivers.getItemAt(a);
+															if(a==outerDocument.MD.selectedIndex)
+															{
+																o["isSelected"] = true;
+															}
+															else
+															{
+																o["isSelected"] = false;
+															}
+														}
+													}
+												]]>
+											</fx:Script>
+										</mx:RadioButton>
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:Form>
+				<mx:Form height="153" x="2" y="208"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="572">
+					<s:Label text="Customer Driver Details" fontWeight="bold"/>
+					<mx:DataGrid id="CD" height="122" width="555" dataProvider="{fCDrivers}" editable="true">
+						<mx:columns>
+							<mx:DataGridColumn editable="false" headerText="Name" dataField="name" width="400"/>
+							<mx:DataGridColumn dataField="nic" headerText="NIC" width="300"/>
+							<mx:DataGridColumn editable="false" headerText="License Number" dataField="license" width="300"/>
+							<mx:DataGridColumn editable="true" rendererIsEditor="true" headerText="Selection" width="100" dataField="isSelected">
+								<mx:itemRenderer>
+									<fx:Component> 
+										<mx:RadioButton value="{data}" selected="{data.isSelected}" change="radiobutton1_changeHandler(event)" group="{outerDocument.CDrivers}" textAlign="center" buttonMode="true">
+
+											<fx:Script>
+												<![CDATA[
+													import mx.controls.Alert;
+													protected function radiobutton1_changeHandler(event:Event):void
+													{
+														for(var a:int=0;a<outerDocument.fCDrivers.length;a++)
+														{
+															var o:Object = outerDocument.fCDrivers.getItemAt(a);
+															if(a==outerDocument.CD.selectedIndex)
+															{
+																o["isSelected"] = true;
+															}
+															else
+															{
+																o["isSelected"] = false;
+															}
+														}
+													}
+												]]>
+											</fx:Script>
+										</mx:RadioButton>
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:Form>
+				<mx:Image id="image0" x="620" y="209" width="209" height="152" source="images/INA.png"/>
+				<s:Label x="624" y="9" text="Front" width="48"/>
+				<s:Label x="622" y="194" text="Back" width="48"/>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Rates" width="100%" height="100%">
+				<mx:Form height="115" x="5" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="418">
+					<s:Label text="Deposit/Advance" fontWeight="bold"/>
+					<mx:FormItem label="Payment Type">
+						<s:DropDownList width="153"></s:DropDownList>
+					</mx:FormItem>
+					<mx:FormItem label="Deposit">
+						<s:TextInput width="210">
+							
+						</s:TextInput>
+					</mx:FormItem>
+					<mx:FormItem label="Advance">
+						<s:TextInput width="210">
+							
+						</s:TextInput>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Form height="248" x="5" y="118"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="418">
+					<s:Label text="Additional Charges" fontWeight="bold"/>
+					<mx:List width="404" height="217" labelField="des" dataProvider="{addchgs}">
+						<mx:itemRenderer>
+							<fx:Component>
+								<mx:CheckBox selectedField="isSelected">
+									
+								</mx:CheckBox>
+							</fx:Component>
+						</mx:itemRenderer>
+					</mx:List>
+				</mx:Form>
+				<mx:Form height="366" x="425" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="455">
+					<s:Label text="Rental Rates" fontWeight="bold"/>
+					<mx:DataGrid dataProvider="{fRates}" width="443" height="336">
+						<mx:columns>
+							<mx:DataGridColumn headerText="Type" dataField="type"/>
+							<mx:DataGridColumn headerText="Rate" dataField="rate"/>
+							<mx:DataGridColumn headerText="Discount (%)" dataField="disper"/>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:Form>
+			</s:NavigatorContent>
+			<s:NavigatorContent id="ncCO" label="Check-Out" width="100%" height="100%" creationComplete="ncCO_creationCompleteHandler(event)">
+				<mx:Form id="frmCO" height="294" x="5" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="417">
+					<s:Label text="Indication of Damages" fontWeight="bold"/>
+					<mx:Image id="imgCO" click="imgCO_clickHandler(event)" width="402" height="235" source="images/Coupe.png"/>
+					<s:HGroup width="200" height="25">
+						<s:ToggleButton click="btnDentCO_clickHandler(event)" id="btnDentCO" label="Dent"/>
+						<s:ToggleButton click="btnScratchCO_clickHandler(event)" id="btnScratchCO" label="Scratch"/>
+						<s:Button id="btnUndoCO" label="Undo" click="btnUndoCO_clickHandler(event)"/>
+					</s:HGroup>
+				</mx:Form>
+				<mx:Form height="194" x="426" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="213">
+					<s:Label text="Fuel Level" fontWeight="bold"/>
+					<mx:SWFLoader creationComplete="sloader_creationCompleteHandler(event)" id="sloader" scaleContent="true" width="200" height="165" autoLoad="true"/>
+				</mx:Form>
+				<mx:Form height="67" x="6" y="298"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="417">
+					<s:Label text="Mileage" fontWeight="bold"/>
+					<mx:SWFLoader creationComplete="sOdoCO_creationCompleteHandler(event)" id="sOdoCO" scaleContent="true" width="219" height="37"/>
+				</mx:Form>
+				<mx:Form height="167" x="426" y="197"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="213">
+					<s:Label text="Inventory" fontWeight="bold"/>
+					<mx:List id="CheckOutInv" width="200" height="139" dataProvider="{inventory}" labelField="des">
+						<mx:itemRenderer>
+							<fx:Component>
+								<mx:CheckBox change="checkbox1_changeHandler(event)" selected="{data.isSelected}" selectedField="isSelected">
+
+									<fx:Script>
+										<![CDATA[
+											import mx.controls.Alert;
+											protected function checkbox1_changeHandler(event:Event):void
+											{
+												var cb:CheckBox = event.target as CheckBox;
+												var o:Object = outerDocument.inventory.getItemAt(outerDocument.CheckOutInv.selectedIndex);
+												o["isSelected"] = cb.selected;
+											}
+										]]>
+									</fx:Script>
+
+									
+								</mx:CheckBox>
+							</fx:Component>
+						</mx:itemRenderer>
+					</mx:List>
+				</mx:Form>
+			</s:NavigatorContent>
+			<s:NavigatorContent id="ncCI" label="Check-In" width="100%" height="100%">
+				<mx:Form height="294" x="5" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="417">
+					<s:Label text="Indication of Damages" fontWeight="bold"/>
+					<mx:Image id="imgCI" click="imgCI_clickHandler(event)" width="402" height="235" source="images/Coupe.png"/>
+					<s:HGroup width="232" height="25">
+						<s:ToggleButton click="btnDentCO0_clickHandler(event)" id="btnDentCO0" label="Dent"/>
+						<s:ToggleButton click="btnScratchCO0_clickHandler(event)" id="btnScratchCO0" label="Scratch"/>
+						<s:Button id="btnUndoCI" label="Undo" click="btnUndoCI_clickHandler(event)"/>
+					</s:HGroup>
+				</mx:Form>
+				<mx:Form height="194" x="426" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="213">
+					<s:Label text="Fuel Level" fontWeight="bold"/>
+					<mx:SWFLoader creationComplete="sloader0_creationCompleteHandler(event)" id="sloader0" scaleContent="true" width="200" height="165" autoLoad="true"/>
+				</mx:Form>
+				<mx:Form height="67" x="6" y="298"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="417">
+					<s:Label text="Mileage" fontWeight="bold"/>
+					<mx:SWFLoader creationComplete="sOdoCI_creationCompleteHandler(event)" id="sOdoCI" scaleContent="true" width="219" height="37"/>
+				</mx:Form>
+				<mx:Form height="364" x="642" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="237">
+					<mx:FormItem label="Hire Status" width="225">
+						<s:DropDownList width="115"/>
+					</mx:FormItem>
+					<mx:FormItem label="Excess Mileage" width="225">
+						<s:TextInput width="115"/>
+					</mx:FormItem>
+					<mx:FormItem label="Detention Hours">
+						<s:TextInput width="115"/>
+					</mx:FormItem>
+					<mx:FormItem label="Night Out ">
+						<s:TextInput width="115"/>
+					</mx:FormItem>
+					<mx:FormItem label="Out of Colombo ">
+						<s:TextInput width="115"/>
+					</mx:FormItem>
+					<mx:FormItem label="Other (Rs.)">
+						<s:TextInput width="115"/>
+					</mx:FormItem>
+					<mx:FormItem label="Damage (Rs.)">
+						<s:TextInput width="115"/>
+					</mx:FormItem>
+					<mx:FormItem label="Fuel Diff (Rs.)">
+						<s:TextInput width="115"/>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Form height="167" x="426" y="197"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="213">
+					<s:Label text="Inventory" fontWeight="bold"/>
+					<mx:List id="CheckInInv" width="200" height="139" dataProvider="{inventoryCI}" labelField="des">
+						<mx:itemRenderer>
+							<fx:Component>
+								<mx:CheckBox change="checkbox1_changeHandler(event)" selected="{data.isSelected}" selectedField="isSelected">
+									
+									<fx:Script>
+										<![CDATA[
+											import mx.controls.Alert;
+											protected function checkbox1_changeHandler(event:Event):void
+											{
+												var cb:CheckBox = event.target as CheckBox;
+												var o:Object = outerDocument.inventoryCI.getItemAt(outerDocument.CheckInInv.selectedIndex);
+												o["isSelected"] = cb.selected;
+											}
+										]]>
+									</fx:Script>
+									
+									
+								</mx:CheckBox>
+							</fx:Component>
+						</mx:itemRenderer>
+					</mx:List>
+				</mx:Form>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Summary" width="100%" height="100%">
+				<mx:Form height="368" x="5" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="441">
+					<mx:FormItem label="Hire Type">
+						<s:TextInput width="305"/>
+					</mx:FormItem>
+					<mx:FormItem label="From" direction="horizontal">
+						<s:TextInput width="120"/>
+						<mx:FormItem label="To">
+							<s:TextInput width="144"/>
+						</mx:FormItem>
+					</mx:FormItem>
+					<mx:FormItem label="Extended From" direction="horizontal">
+						<s:TextInput width="120"/>
+						<mx:FormItem label="To">
+							<s:TextInput width="144"/>
+						</mx:FormItem>
+					</mx:FormItem>
+					<mx:FormItem label="Rental">
+						<s:TextInput width="305"/>
+					</mx:FormItem>
+					<mx:FormItem label="Tax">
+						<s:TextInput width="305"/>
+					</mx:FormItem>
+					<mx:FormItem label="Ref Deposit">
+						<s:TextInput width="305"/>
+					</mx:FormItem>
+					<mx:FormItem label="Allocated Mileage">
+						<s:TextInput width="305"/>
+					</mx:FormItem>
+					<mx:FormItem label="Excess Mileage" direction="horizontal" width="420">
+						<s:TextInput width="238"/>
+						<s:Label text="per KM" height="18" verticalAlign="bottom"/>
+					</mx:FormItem>
+					<mx:FormItem label="Detention" direction="horizontal">
+						<s:TextInput width="91"/>
+						<s:Label text="Rs" height="18" verticalAlign="bottom" width="44"/>
+						<s:TextInput width="87"/>
+						<s:Label text="per Hour" height="18" verticalAlign="bottom"/>
+					</mx:FormItem>
+					<mx:FormItem label="Night Out" direction="horizontal">
+						<s:TextInput width="91"/>
+						<s:Label text="Rs" height="18" verticalAlign="bottom" width="44"/>
+						<s:TextInput width="87"/>
+						<s:Label text="per Day" height="18" verticalAlign="bottom"/>
+					</mx:FormItem>
+					<mx:FormItem label="Out of Colombo" direction="horizontal">
+						<s:TextInput width="91"/>
+						<s:Label text="Rs" height="18" verticalAlign="bottom" width="44"/>
+						<s:TextInput width="87"/>
+						<s:Label text="per Day" height="18" verticalAlign="bottom"/>
+					</mx:FormItem>
+					<mx:FormItem label="Other (Rs)" direction="horizontal">
+						<s:TextInput width="91"/>
+					</mx:FormItem>
+					<mx:FormItem label="Damage (Rs)" direction="horizontal">
+						<s:TextInput width="91"/>
+					</mx:FormItem>
+					
+				</mx:Form>
+				<mx:Form height="274" x="453" y="94"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="426">
+					<s:Label text="Summary of Charges" fontWeight="bold"/>
+					<mx:FormItem label="Total Payable" direction="horizontal">
+						<s:TextInput width="137"/>
+					</mx:FormItem>
+					<mx:FormItem label="Amount Paid" direction="horizontal">
+						<s:TextInput width="137"/>
+					</mx:FormItem>
+					<mx:FormItem label="Balance Payable" direction="horizontal">
+						<s:TextInput width="137"/>
+					</mx:FormItem>
+					
+				</mx:Form>
+				<mx:Form height="90" x="453" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="426">
+					<mx:FormItem label="Accessories">
+						<s:TextInput width="144"/>
+					</mx:FormItem>
+					<mx:FormItem label="Other Services">
+						<s:TextInput width="144"/>
+					</mx:FormItem>
+					<mx:FormItem label="Additional Charges">
+						<s:TextInput width="144"/>
+					</mx:FormItem>
+				</mx:Form>
+			</s:NavigatorContent>
+		</mx:TabNavigator>
+		<s:Label x="14" y="469" text="Last Modified By: Name"/>
+	<!--</s:Panel>-->
+</s:TitleWindow>

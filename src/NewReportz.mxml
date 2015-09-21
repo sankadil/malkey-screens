@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="500"
+			   title="New Reportz"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			   >
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat2',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.data.events.DataConflictEvent;
+			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			[Bindable]
+			[Bindable]
+			private var lacStatus:ArrayCollection=new ArrayCollection([
+				{id:"A",description:"All"},
+				{id:"O",description:"Out"},
+				{id:"I",description:"In"}
+			]);
+			
+			//RD: Reservation Diary
+			//WD: Daily Hire Bookings With Driver
+			//SD: Daily Hire Bookings Without Driver
+			public var gsType:String;
+			public var gsTitle:String;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					this.title=gsTitle;
+					setPermission();					
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}catch(error:Error){
+					Message.displayAlert(1,"closeForm: " + error.message,"Error",errorCloseHandler);	
+				}
+			}
+
+
+			
+			private function getDateString(dt:Date):String{
+				var year:String=dt.getFullYear().toString();
+				var month:String=(dt.getMonth()+1).toString();
+				var date:String=dt.getDate().toString();
+				if(StringUtil.trim(month).length<2)
+					month="0"+month;
+				if(StringUtil.trim(date).length<2)
+					date="0"+date;
+				return year+"."+month+"."+date;
+			}
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/***
+			 * CONTINOUS HIRE DATA REPORT 
+			 * 2014 07 07
+			 * */
+			protected function btnContinousHireDataReport_clickHandler(event:MouseEvent):void
+			{
+				
+				
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/CHD.jsp");
+				request.data =new URLVariables();
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request);
+				
+				/* 				var selectedReservation:Com_dspl_malkey_domain_Freservation=acReservationListAll.getItemAt(0) as Com_dspl_malkey_domain_Freservation;
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/CHD.jsp");
+				request.data =new URLVariables();
+				request.data.agrno=selectedReservation.agrno;
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request); */
+			}
+			
+			/***
+			 * CONTINOUS HIRE DATA REPORT 
+			 * 2014 07 07
+			 * */
+			protected function btnContinousHireDataReport_clickHandler2(event:MouseEvent):void
+			{
+				
+				
+				
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/HCD.jsp");
+				request.data =new URLVariables();
+				request.data.agrno=txtagrno.text;
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request); 
+			}
+			
+			/***
+			 * CONTINOUS HIRE DATA REPORT 
+			 * 2014 07 07
+			 * */
+			protected function btnContinousHireDataReport_clickHandler3(event:MouseEvent):void
+			{
+				
+				
+				
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/CAH.jsp");
+				request.data =new URLVariables();
+				request.data.debcode=txtDebCode.text;
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request); 
+			}
+			/***
+			 * MONTHLY ALERT FOR LONGTERM HIRE
+			 * 2014 07 07
+			 * */
+			protected function btnContinousHireDataReport_clickHandler4(event:MouseEvent):void
+			{
+				
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/CHDAlert.jsp");
+				request.data =new URLVariables();
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request); 
+			}
+			
+			
+			
+			
+
+			protected function btnVehicleHireReport_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/VehicleHistory.jsp");
+				request.data =new URLVariables();
+				request.data.df=dfFormatter.format(dfFrom.selectedDate);
+				request.data.dt=dfFormatter.format(dfTo.selectedDate);
+				request.data.regno=txtregno.text;
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request); 
+				
+			}
+
+			
+			import mx.collections.ArrayCollection; 
+			
+			[Bindable]
+			public var complexDP:ArrayCollection = new ArrayCollection(
+				[    {id:"1", data:"New Customer"}, 
+					{id:"2", data:"New Agreement"}
+				]                
+			);
+			
+
+			protected function btnNCReport_clickHandler(event:MouseEvent):void
+			{
+				var criteria:String=ddCriteria.selectedItem.id;
+				if(criteria=="0" || ddCriteria.selectedIndex==0)
+				{
+					criteria="1";
+				}
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/NewDebtorList.jsp");
+				request.data =new URLVariables();
+				request.data.df=dfFormatter.format(dfFromNCR.selectedDate);
+				request.data.dt=dfFormatter.format(dfToNCR.selectedDate);
+				request.data.criteria=criteria;
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request); 
+			}
+
+		]]>
+	</fx:Script>
+	<mx:Form
+		paddingLeft="0"
+		paddingRight="0"
+		paddingTop="0"
+		paddingBottom="0"
+		x="10" y="10" width="99%" height="90%">
+		
+		<mx:LinkButton x="27" y="400" label="Continous Hire Data Report" id="btnContinousHireDataReport" click="btnContinousHireDataReport_clickHandler(event)"  color="#C608F5"/>
+
+		
+		<mx:LinkButton x="270" y="415" label="Monthly Alert For Longterm Hire" id="btnContinousHireDataReport4" click="btnContinousHireDataReport_clickHandler4(event)"     color="#FC0A76"/>
+
+		
+		
+		
+		
+		
+		<mx:FormItem label="Agreement No" direction="horizontal">
+			<s:TextInput
+				id="txtagrno"
+				width="148"
+				/>
+		</mx:FormItem>
+		<mx:LinkButton x="270" y="400" label="Hire Chain Data Report" id="btnContinousHireDataReport2" click="btnContinousHireDataReport_clickHandler2(event)" color="#B88701"/>
+	
+		
+		
+		
+		
+		
+		<mx:FormItem label="Customer No" direction="horizontal">
+			<s:TextInput
+				id="txtDebCode"
+				width="148"
+				/>
+		</mx:FormItem>
+		<mx:LinkButton x="27" y="420" label="Customer Agreement History Report" id="btnContinousHireDataReport3" click="btnContinousHireDataReport_clickHandler3(event)"  color="#2908F5"/>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	<mx:Form
+	paddingLeft="0"
+	paddingRight="0"
+	paddingTop="0"
+	paddingBottom="0"
+	borderVisible="true"
+	borderStyle="solid"
+	width="100%" height="70">		
+		
+		<mx:FormHeading label="Vehicle Hire Report"/>
+		<mx:FormItem label="Date From" direction="horizontal" borderColor="Green" borderVisible="true" >
+			<mx:DateField id="dfFrom" width="100"  formatString="@Resource(key='dateFormat',bundle='resource')"/>
+			
+			<mx:FormItem label="Date To" direction="horizontal">
+				<mx:DateField id="dfTo" width="100" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+			</mx:FormItem>
+			
+			<s:TextInput
+				id="txtregno"
+				width="100"
+				/>
+			
+				<mx:LinkButton x="27" y="440" label="Vehicle Hire Report" id="btnVehicleHireReport" click="btnVehicleHireReport_clickHandler(event)"  color="#C608F5"/>		
+		</mx:FormItem>
+
+	</mx:Form>
+		
+	<mx:Form
+	paddingLeft="0"
+	paddingRight="0"
+	paddingTop="0"
+	paddingBottom="0"
+	borderVisible="true"
+	width="100%" height="110" borderStyle="solid">		
+		
+		<mx:FormHeading label="New Customer/Agreement Listing Report" textAlign="left" width="270"/>
+		<mx:FormItem label="Date From" direction="horizontal" borderColor="Green" borderVisible="true" >
+			<mx:DateField id="dfFromNCR" width="100"  formatString="@Resource(key='dateFormat',bundle='resource')"/>
+			
+			<mx:FormItem label="Date To" direction="horizontal">
+				<mx:DateField id="dfToNCR" width="100" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+			</mx:FormItem>
+			<mx:FormItem label="Criteria" direction="horizontal">
+				<s:DropDownList
+					id="ddCriteria"
+					dataProvider="{complexDP}"
+					labelField="data"
+					width="126"
+					/>
+			</mx:FormItem>
+			<mx:LinkButton x="27" y="440" label="Show Report" id="btnNCReport" click="btnNCReport_clickHandler(event)"  color="#0DBDA2"/>
+		</mx:FormItem>
+		<mx:Label text="New Customer Report Mean:- New Customers Created in Given Date Range "/>
+		<mx:Label text="New Agreement Report Mean:- New Agreement Created in Given Date Range"/>
+	</mx:Form>
+		
+	</mx:Form>
+</s:TitleWindow>

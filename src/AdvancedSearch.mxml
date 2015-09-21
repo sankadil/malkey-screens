@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:components="com.dspl.malkey.components.*" 
+			   xmlns:controls="com.dspl.efinac.components.common.controls.*"
+			   xmlns:services="com.dspl.malkey.services.*"
+			   minWidth="955" minHeight="600" height="450" width="1045" title="{title_text}" 
+			   close="titlewindow1_closeHandler(event)"
+			   creationComplete="creationCompleteHandler(event)"
+			    >
+
+	<!--View Tier-->
+			<mx:FormItem label="Date From" x="7" y="2" borderStyle="solid" borderVisible="true" borderAlpha=".5" styleName="formItem" labelStyleName="formItemLabel">
+				<mx:DateField id="dtFrom" change="dtFrom_changeHandler(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Date To" x="7" y="31" borderStyle="solid" borderVisible="true" borderAlpha=".5"  styleName="formItem" labelStyleName="formItemLabel">
+				<mx:DateField id="dtTo"/>
+			</mx:FormItem>
+			<mx:FormItem label="Hire Status" x="229" y="33" direction="horizontal" horizontalGap="0" borderStyle="solid" borderVisible="true" borderAlpha=".5"  styleName="formItem" labelStyleName="formItemLabel">
+				<controls:_tiMasterFile id="txtHireStatus"											
+										_acDataProvider="{acHireStatus /* session.getAttribute('acHireStatus') */}"
+										text=""
+										_strKeyColumn="hirestsid"
+										_strKeyColCaption="Hire Status" 
+										_strDetailColumn="description" 
+										_strDetailColCaption="description"
+										_strWindowTitle="Select Hire Status"
+										width="100"
+										editable="true" 
+										enter="search()"
+										/>
+				<mx:LinkButton 
+					id="lnkHireStatus" 
+					label="?" 
+					width="30" 
+					color="#0A33BB" 
+					textDecoration="underline" 
+					click="{txtHireStatus.launchSearchGrid();}" 
+					/>
+			</mx:FormItem>
+		<mx:FormItem label="Hire Type" x="229" y="2" direction="horizontal" horizontalGap="0" borderStyle="solid" borderVisible="true" borderAlpha=".5"  styleName="formItem" labelStyleName="formItemLabel">
+			<controls:_tiMasterFile id="txtHireType"											
+									_acDataProvider="{acHireType /* session.getAttribute('acHireType') */}"
+									_strKeyColumn="hiretypeid"
+									_strKeyColCaption="Ref Code" 
+									_strDetailColumn="description" 
+									_strDetailColCaption="description"
+									_strWindowTitle="Select Hire Type"
+									width="100"
+									editable="true" 
+									enter="search()"
+									/>
+			<mx:LinkButton 
+				id="lnkHireType" 
+				label="?" 
+				width="30" 
+				color="#0A33BB" 
+				textDecoration="underline" 
+				click="{txtHireType.launchSearchGrid();}" 
+				/>
+		</mx:FormItem>
+		<mx:FormItem label="Customer" direction="horizontal" x="482" y="33" horizontalGap="0"  borderStyle="solid" borderVisible="true" borderAlpha=".5"  styleName="formItem" labelStyleName="formItemLabel">
+			<controls:_tiMasterFile id="txtClient"											
+									_acDataProvider="{acClientListAll /* session.getAttribute('acClient') */}"
+									_strKeyColumn="debcode"
+									_strKeyColCaption="ID" 
+									_strDetailColumn="debname" 
+									_strDetailColCaption="Name"
+									_strWindowTitle="Select Customer"
+									otherColumns="nicno"
+									otherColumnHeaderText="NIC-NO"
+									dgColWidth="100"
+									editable="true" 
+									width="100"
+									toolTip="Type:{txtClient.selectedItem.clienttype}	Address:{txtClient.selectedItem.debadd}	 Mobile:{txtClient.selectedItem.billmob1}	"
+									enter="search()"
+									/>
+			<mx:LinkButton 
+				id="lnkClient" 
+				label="?" 
+				width="30" 
+				color="#0A33BB" 
+				textDecoration="underline" 
+				click="{getClientListAndShow();/* txtClient.launchSearchGrid(); */}" 
+				/>
+		</mx:FormItem>
+		<mx:FormItem label="Vehicle" direction="horizontal" x="482" y="2" horizontalGap="0"  borderStyle="solid" borderVisible="true" borderAlpha=".5"  styleName="formItem" labelStyleName="formItemLabel">
+			<controls:_tiMasterFile id="txtVehicle"											
+									_acDataProvider="{acVehicle/* session.getAttribute('acVehicle') */}"
+									_strKeyColumn="regno"
+									_strKeyColCaption="Reg: No" 
+									_strDetailColumn="vehimodelid" 
+									_strDetailColCaption="model"
+									_strWindowTitle="Select Vehicle"
+									otherColumns="vehimakeid,vehiclassid,fueltypeid,vehitypeid,colourid"
+									otherColumnHeaderText="Make,Class,Fuel,Type,Colour"
+									editable="true"
+									width="100"
+									enter="search()"
+									/>
+			<mx:LinkButton id="lnkVehicle" label="?" width="30" color="#0A33BB" textDecoration="underline" click="{txtVehicle.launchSearchGrid();}"/>
+		</mx:FormItem>
+	
+	<mx:Image x="734" y="2" source="com/dspl/malkey/components/common/icons/3.png" width="196" height="62"/>
+
+	
+		<mx:HRule x="0" y="61" width="1043"/>
+		<mx:Button 
+			id="lnkSearch" 
+			label="Search" 
+			width="95" 
+			color="#0A33BB" 
+			click="search()" 
+			x="934" y="13" chromeColor="#FFFFFF"/>
+		<mx:DataGrid x="8" y="68" width="1025" height="339" dataProvider="{acSearchDetails}" 
+					 doubleClickEnabled="true"
+					 itemDoubleClick="dgSearchDetails_itemDoubleClickHandler(event)"
+					 id="dgSearchDetails">
+				<mx:columns>
+						<mx:DataGridColumn headerText="Hed Agreement" 	dataField="agrno"	width="100"/>
+						<!--<mx:DataGridColumn headerText="Company Name" 	dataField="agrno"/>-->
+						<mx:DataGridColumn headerText="Sub Agreement" 	dataField="resno" width="100"/>
+						<mx:DataGridColumn headerText="Date Out" 		dataField="dout" labelFunction="lblfDout" width="110"/>
+						<mx:DataGridColumn headerText="Date In" 		dataField="din"  labelFunction="lblfDin" width="110"/>
+<!--						<mx:DataGridColumn headerText="Time Out" 		dataField="timeout"/>
+						<mx:DataGridColumn headerText="Time In" 		dataField="timein"/>-->
+						<mx:DataGridColumn headerText="Hire Type" 		dataField="hiretypeid" width="80" labelFunction="lblfhireTypeDescription"/>
+						<mx:DataGridColumn headerText="Hire Status" 	dataField="cohirestsid" width="100" labelFunction="lblfhireStatusDescription"/>
+						<mx:DataGridColumn headerText="Customer Name" 	dataField="debcode" width="150" labelFunction="lblfDebname"/>
+<!--							<mx:DataGridColumn headerText="Customer Type" 	dataField="debcode"/>
+					<mx:DataGridColumn headerText="Garage Out" 		dataField="gdout"/>
+						<mx:DataGridColumn headerText="Time" 			dataField="gotime"/>-->
+						<mx:DataGridColumn headerText="Vehicle" 		dataField="regno" width="100"/>
+						<mx:DataGridColumn headerText="Total" 		dataField="total" width="100"/>
+
+				</mx:columns>
+		</mx:DataGrid>
+	
+
+	
+	
+	
+	
+	
+	
+	
+	<!--METADATA here-->
+	<fx:Metadata>
+		[Event(name="selectHed",type="flash.events.Event")]
+		[Event(name="selectDet",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	
+	<!--Bindings Here-->
+	<fx:Declarations>
+		<!--Formatters here-->
+		<mx:DateFormatter id="dateFormatter" formatString="YYYY.MM.DD"/>
+		<mx:DateFormatter id="dateFormatterView" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+		<s:CallResponder id="crAdvanceSearch" result="advanceSearchResult_resultHandler(event)"/>
+		<services:FreservationSRV id="freservationSRV" endpoint="@Resource(key='url',bundle='resource')"  showBusyCursor="true"/>
+		<!--Validators-->
+		
+		<!--CallResponders here-->
+		<s:CallResponder id="crFhiretypeSRVListAll"			result="crFhiretypeSRVListAll_resultHandler(event)"/>
+		<s:CallResponder id="crFhirestatusSRVListAll"		result="crFhirestatusSRVListAll_resultHandler(event)"/>
+		<s:CallResponder id="crFvehicleSRVListAll"			result="crFvehicleSRVListAll_resultHandler(event)"/>
+		<s:CallResponder id="crfdebtorSRVListAll" 			result="crfdebtorSRVListAll_resultHandler(event)"/>
+		
+		<!--services here-->
+		<services:FhiretypeSRV 			id="fhiretypeSRV" 		endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FhirestatusSRV 		id="fhirestatusSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>	
+		<services:FdebtorSRV 			id="fdebtorSRV" 		endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FvehicleSRV 			id="fvehicleSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		
+	</fx:Declarations>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace controls "com.dspl.efinac.components.common.controls.*";
+		@namespace services "services.*";
+		
+		.formItems
+		{
+			label-width:60;
+		}
+		.formItem
+		{
+			label-width:80;
+		}
+		
+		.formItemL
+		{
+			label-width:120;
+		}
+		.formItemXL
+		{
+			label-width:180;
+		}
+		
+		.formItemLabel
+		{
+			text-align:left;
+		}
+		
+		
+		
+		
+	</fx:Style>
+
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.StringUtil;
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.events.DeleteCommentEvent;
+			import com.dspl.malkey.util.HireStatus;
+			import com.dspl.malkey.util.RateType;
+			import com.dspl.malkey.util.Session;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.StateChangeEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] 	private var session:Session = Session.getInstance();
+			[Bindable] 	private var genericFunctions:GenericFunctions = new GenericFunctions();
+			[Bindable] 	private var title_text:String = "Agreement Advance Search ";
+			[Bindable] 	private var acSearchDetails:ArrayCollection = new ArrayCollection();
+			[Bindable] 	public 	var acClientListAll:ArrayCollection = new ArrayCollection();
+			[Bindable] 	public 	var acHireType:ArrayCollection = new ArrayCollection();
+			[Bindable] 	public 	var acRateType:ArrayCollection = new ArrayCollection();
+			[Bindable] 	public 	var acHireStatus:ArrayCollection = new ArrayCollection();
+			[Bindable] 	public 	var acVehicle:ArrayCollection = new ArrayCollection();
+			
+			protected function search():void
+			{
+				var hireStatus:String=txtHireStatus.text;
+				var hireType:String=txtHireType.text;
+				var debcode:String=txtClient.text;
+				var regno:String=txtVehicle.text;
+				var dateFrom:String=dateFormatter.format(dtFrom.selectedDate);
+				var dateTo:String=dateFormatter.format(dtTo.selectedDate);
+				if(isvalied()){
+				advanceSearch(hireStatus,hireType,debcode,regno,dateFrom ,dateTo);
+				}
+				
+			}
+
+			private function isvalied():Boolean
+			{
+				var dateFrom:String=dateFormatter.format(dtFrom.selectedDate);
+				var dateTo:String=dateFormatter.format(dtTo.selectedDate);
+				
+				var isValied:Boolean=true;
+				if(!(dtFrom.selectedDate==null && dtFrom.selectedDate==null))
+				{
+					if(dtFrom.selectedDate!=null && dtFrom.selectedDate!=null)
+					{
+						if(dateFrom.length>0 && dateTo.length>0)
+						{
+							isValied=true;
+						}
+						else
+						{
+							isValied=false;
+							Alert.show("From/To Date Requred.");
+						}
+					}
+				}
+				return isValied;
+			}
+
+			
+			protected function advanceSearch( hireStatus:String, hireType:String, debcode:String, regno:String, dateFrom:String , dateTo:String):void
+			{
+				crAdvanceSearch.token = freservationSRV.advanceSearch( hireStatus, hireType, debcode, regno, dateFrom , dateTo);
+			}
+			
+
+			protected function advanceSearchResult_resultHandler(event:ResultEvent):void
+			{
+				acSearchDetails=crAdvanceSearch.lastResult;
+				title_text="Agreement Advance Search - "+crAdvanceSearch.lastResult.length+" Agreements Found.";
+			}
+
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			/*Lable Functions here  */
+			//---------------------------------------------------------------------------------------	
+			private function lblfDout(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return dateFormatterView.format(item.dout)+" "+item.timeout;
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+			private function lblfDin(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return dateFormatterView.format(item.din)+" "+item.timein;
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+			private function lblfDebname(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return item.debcode;
+/* 					return genericFunctions.getArrayCollection(session.getAttribute("acClient"),'debcode',item.debcode).debname +"-"+item.debcode; */
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+
+			private function lblfhireStatusDescription(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return genericFunctions.getArrayCollection(session.getAttribute("acHireStatus"),"hirestsid",item.cohirestsid).description+" ("+item.cohirestsid+")";
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+
+			private function lblfhireTypeDescription(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return genericFunctions.getArrayCollection(session.getAttribute("acHireType"),"hiretypeid",item.hiretypeid).description+" ("+item.hiretypeid+")";
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+			//END label function-----------------------------------------------------------------------------------------------------------------
+			
+			
+			
+			
+			//select date----------------------------------------------------------------------------
+			protected function dtFrom_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				dtTo.selectedDate=dtFrom.selectedDate;
+			}
+
+
+			//----------------------------------------------------------------------------------------------------------------
+			/***
+			 * select item
+			 * 
+			 * */
+			protected function dgSearchDetails_itemDoubleClickHandler(event:ListEvent):void
+			{
+				var dataEvent:DataEvent=new  DataEvent("selectHed");
+				dataEvent.data= acSearchDetails.getItemAt(event.rowIndex).agrno;
+				dispatchEvent(dataEvent);
+				var dataEvent2:DataEvent=new  DataEvent("selectDet");
+				dataEvent2.data= acSearchDetails.getItemAt(event.rowIndex).resno;
+				dispatchEvent(dataEvent2);
+				PopUpManager.removePopUp(this);
+				PopUpManager.removePopUp(this);
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			private function getClientListAndShow():void
+			{
+				if(session.getAttribute("acClient")==null || (session.getAttribute("acClient") as ArrayCollection).length==0)
+				{
+					trace("acClient");
+					listAllFclientSRV();
+				}
+				else
+				{
+					acClientListAll=session.getAttribute("acClient");
+					txtClient.launchSearchGrid();
+				} 
+				
+			}
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			//load methods here
+			/***
+			 * Following method load requred data for advanced search but data is loading whether is it not in session only  and put it into session
+			 * 
+			 * */
+			protected function loadData():void
+			{
+				if(session.getAttribute("acHireType")==null)
+				{
+					trace("acHireType");
+					fhiretypeSRVlistAll();
+				}
+				else
+				{
+					acHireType=session.getAttribute("acHireType");
+				}
+				
+				if(session.getAttribute("acHireStatusAll")==null)
+				{
+					trace("acHireStatusAll");
+					fhirestatusSRVlistAll();
+				}
+				else
+				{
+					acHireStatus=session.getAttribute("acHireStatus");
+				}
+				//listAllFclientSRV();
+/* 				if(session.getAttribute("acClient")==null || (session.getAttribute("acClient") as ArrayCollection).length==0)
+				{
+					trace("acClient");
+					listAllFclientSRV();
+				}
+				else
+				{
+					acClientListAll=session.getAttribute("acClient");
+				}  */
+				
+				if(session.getAttribute("acVehicle")==null)
+				{
+					trace("acVehicle");
+					listAllFvehicleSRV();
+				}
+				else
+				{
+					acVehicle=session.getAttribute("acVehicle");
+				}
+			}
+			
+			//---------------------------------------------------------------------------------------
+			//service call methods here			
+			protected function fhiretypeSRVlistAll():void
+			{
+				crFhiretypeSRVListAll.token = fhiretypeSRV.ListAll();
+			}
+			
+			protected function fhirestatusSRVlistAll():void
+			{
+				crFhirestatusSRVListAll.token = fhirestatusSRV.ListAll();
+			}
+			
+			protected function listAllFclientSRV():void
+			{
+				crfdebtorSRVListAll.token = fdebtorSRV.listAllNameNIC();
+			}
+			
+			protected function listAllFvehicleSRV():void
+			{
+				crFvehicleSRVListAll.token = fvehicleSRV.listAll();
+			}
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			//result-handlers methods here
+			protected function crfdebtorSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				acClientListAll=crfdebtorSRVListAll.lastResult;
+				session.setAttribute("acClient",crfdebtorSRVListAll.lastResult);
+				txtClient.launchSearchGrid();
+			}
+			
+			protected function crFhirestatusSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				acHireStatus=crFhirestatusSRVListAll.lastResult;
+				session.setAttribute("acHireStatusAll",acHireStatus);
+				
+			}
+			protected function crFvehicleSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				acVehicle=crFvehicleSRVListAll.lastResult;
+				session.setAttribute("acVehicle",crFvehicleSRVListAll.lastResult);
+			}
+			protected function crFhiretypeSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				acHireType=crFhiretypeSRVListAll.lastResult;
+				session.setAttribute("acHireType",acHireType);
+			}
+
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				loadData();
+				//search();
+			}
+
+
+
+
+		]]>
+	</fx:Script>
+</s:TitleWindow>

@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Project :efinac-client~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--File 	:NavigationBar.mxml~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--Date	:Jan 4, 2011~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!--Author 	:Sanka~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 			   
+			   x="0" y="0"  
+			   height="40"
+			   width="730"
+			  >
+
+	
+	
+	<mx:Button  id="btnNew" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+				toolTip="New"
+				click="click();btnNew_clickHandler(event);" 
+				enabled.stEdit="false"
+				enabled.stNew="false"
+				enabled.stDelete="false" 
+				enabled.stUndo="false" 
+				enabled.stView="false"
+				tabIndex="0"
+				/>
+	<mx:Button  id="btnEdit" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')"
+				enabled.stNew="false"
+				enabled.stEdit="false"
+				enabled.stDelete="false"
+				enabled.stUndo="false" 
+				enabled.stView="false"
+				toolTip="Edit"
+				click="click();btnEdit_clickHandler(event);"   
+				tabIndex="1"
+				/>
+	<mx:Button  id="btnDelete" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')"
+				enabled.stNew="false" 
+				enabled.stEdit="false"
+				enabled.stDelete="false"
+				enabled.stUndo="false" 
+				enabled.stView="false"
+				toolTip="Delete"
+				click="click();btnDelete_clickHandler(event);"   
+				tabIndex="2"
+				/>
+	<mx:Button  id="btnUndo" width="40" height="40"
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')"
+				click="click();btnUndo_clickHandler(event);" 
+				enabled.stUndo="false"
+				toolTip="Undo"
+				tabIndex="3"
+				/>
+	<mx:Button  id="btnTop" 
+				width="40" height="40"
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrowD.png')"
+				enabled="false" 
+				enabled.stView="true" 
+				enabled.stDelete="false"
+				enabled.stUndo="false" 
+				click="click();goTop();"  
+				toolTip="Top"
+				tabIndex="4"
+				/>
+	<mx:Button  id="btnBack" 
+				width="40" height="40"
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrowD.png')"
+				enabled="false" 
+				enabled.stUndo="false" 
+				enabled.stView="true" 
+				toolTip="Back"
+				click="click();goBack();"
+				tabIndex="5"
+				/>
+	<mx:Button  id="btnNext" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrowD.png')"
+				enabled="false" 
+				enabled.stUndo="false" 
+				enabled.stView="true" 
+				click="click();goNext();" 
+				toolTip="Next"
+				tabIndex="6"
+				/>
+	<mx:Button  id="btnBottom" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrowD.png')"
+				enabled="false" 
+				enabled.stUndo="false" 
+				enabled.stView="true" 
+				click="click();goBottom();" 
+				toolTip="Bottom"
+				tabIndex="7"
+				/>			
+	<mx:Button  id="btnPrint" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')"
+				click="click();btnPrint_clickHandler(event);"
+				enabled.stNew="false" 
+				enabled.stEdit="true" 
+				enabled.stDelete="false"
+				enabled.stUndo="false" 
+				toolTip="Print"
+				tabIndex="8"
+				/>
+	<mx:Button  id="btnFilter" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/filter22.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filter22.png')"
+				click="click();btnFilter_clickHandler(event);"
+				enabled.stNew="false" 
+				enabled.stEdit="false" 
+				enabled.stDelete="false"
+				enabled.stUndo="false" 
+				toolTip="Filter"
+				enabled.stView="true"
+				 tabIndex="9"
+				 />
+	<mx:Button  id="btnSort" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/sort.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/sortD.png')"
+				click="click();btnSort_clickHandler(event);"
+				enabled.stNew="false" 
+				enabled.stEdit="false" 
+				enabled.stDelete="false"
+				enabled.stUndo="false" 
+				toolTip="Sort"
+				 enabled.stView="false"
+				 tabIndex="10"
+				 />
+	<mx:Button  id="btnFind" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/findD.png')"
+				click="click();btnFind_clickHandler(event);"
+				enabled="false" 
+				enabled.stUndo="false" 
+				enabled.stView="false" 
+				toolTip="Find"
+				tabIndex="11"
+				/>
+	<mx:Button  id="btnReload" width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')"
+				enabled="true" 
+				click="click();btnReload_clickHandler(event);"  
+				toolTip="Reload"
+				enabled.stView="false"
+				enabled.stUndo="false" 
+				tabIndex="12"
+				/> 
+	<mx:Button  id="btnList" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/view.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/viewD.png')"
+				click="click();btnList_clickHandler(event);"
+				enabled.stNew="false" 
+				enabled.stEdit="false" 
+				enabled.stDelete="false"
+				enabled.stUndo="false" 
+				enabled.stView="false"
+				toolTip="List"
+				tabIndex="13"
+				
+				/>
+	<mx:Button  id="btnSave" 
+				width="40" height="40" 
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')"
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')"
+				click="click();btnSave_clickHandler(event);" 
+				enabled.stNew="true"
+				enabled.stEdit="true"
+				enabled.stView="false"
+				enabled="false" 
+				toolTip="Save"
+				tabIndex="14"
+				
+				 />
+	<mx:Button  id="btnClose" 
+				width="40" height="40"
+				click="click();btnClose_clickHandler(event);"
+				icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')" 
+				disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')" 
+				toolTip="Close"
+				tabIndex="15"
+				
+				/>	
+
+
+	
+	<fx:Binding source="{stCurrent}" destination="currentState"/>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			[Bindable]public var gsTransCode:String="";
+			[Bindable]public var stCurrent:String;
+			[Bindable]public var trransasctionId:String;
+			[Bindable]public var  recordIndex:int=0;
+			[Bindable]public var maxRecord:int=0;
+			//[Bindable]
+			private var _menuMode:int;
+			//[Bindable(event="menuModeChanged")]
+			public function get menuMode():int
+			{
+				return _menuMode;
+			}
+			[Bindable(event="menuModeChanged")]
+			public function set menuMode(value:int):void
+			{
+				_menuMode = value;
+				switch(_menuMode)
+				{
+					case 1 :{
+						btnNew.visible=true;
+						btnEdit.visible=true;
+						btnUndo.visible=true;
+						btnDelete.visible=true;
+						btnFind.visible=true;
+						btnList.visible=true;
+						btnPrint.visible=true;
+						btnSave.visible=true;
+						btnReload.visible=true;
+						btnNext.visible=true;
+						btnTop.visible=true;
+						btnBack.visible=true;
+						btnBottom.visible=true;
+						btnFilter.visible=false;
+						btnSort.visible=false;
+						btnFilter.includeInLayout = false;
+						btnSort.includeInLayout = false;
+/* 						btn.visible=false;
+						btn.visible=false;
+						btn.visible=false;
+						btn.visible=false; */
+						break;}
+					case 2 :{
+						btnNew.visible=true;
+						btnEdit.visible=true;
+						btnUndo.visible=true;
+						btnDelete.visible=false;
+						btnFind.visible=true;
+						btnList.visible=true;
+						btnPrint.visible=true;
+						btnSave.visible=false;
+						btnReload.visible=true;
+						btnNext.visible=true;
+						btnTop.visible=true;
+						btnBack.visible=true;
+						btnBottom.visible=true;
+						btnFilter.visible=true;
+						btnSort.visible=false;
+						btnFilter.includeInLayout = true;
+						btnSort.includeInLayout = false;
+						btnSave.includeInLayout = false;
+						btnPrint.includeInLayout = true;
+						btnDelete.includeInLayout = false;
+						break;}
+					case 3 :{
+						btnNew.visible=false;
+						btnEdit.visible=false;
+						btnUndo.visible=false;
+						btnDelete.visible=false;
+						btnFind.visible=true;
+						btnList.visible=true;
+						btnPrint.visible=true;
+						btnSave.visible=true;
+						btnReload.visible=true;
+						btnNext.visible=true;
+						btnTop.visible=true;
+						btnBack.visible=true;
+						btnBottom.visible=true;
+						btnFilter.visible=false;
+						btnSort.visible=false;
+						btnFilter.includeInLayout = false;
+						btnSort.includeInLayout = false;
+						btnNew.includeInLayout = false;
+						btnEdit.includeInLayout = false;
+						btnDelete.includeInLayout = false;
+						btnUndo.includeInLayout = false;
+						break;}
+				}
+				
+			}
+
+			private function topRecord():void
+			{	
+				recordIndex=maxRecord;
+			}
+			private function backRecord():void
+			{	
+				if(recordIndex!=0)
+					recordIndex=recordIndex -1;
+				else
+					recordIndex=maxRecord;
+			}
+			private function nextRecord():void
+			{	
+				if(recordIndex != maxRecord)
+					recordIndex=recordIndex +1;
+				else
+					recordIndex=0;
+			}
+			private function firstRecord():void
+			{	
+				recordIndex=0;
+			}
+			
+			
+			
+			private function btnNew_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("new", true, true));
+			}
+			
+			private function btnEdit_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("edit", true, true));
+			}
+			
+			
+			private function btnDelete_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("delete", true, true));
+			}
+			
+			
+			private function btnUndo_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("undo", true, true));
+			}
+			
+			
+			private function btnSave_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("save", true, true));
+			}
+			
+			
+			private function btnReload_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("refresh", true, true));
+			}
+			
+			
+			private function btnFind_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("find", true, true));
+			}
+			
+			private function goTop():void
+			{
+				topRecord();
+				dispatchEvent(new Event("top", true, true));
+			}
+			private function goBottom():void
+			{
+				firstRecord();
+				dispatchEvent(new Event("bottom", true, true));
+			}
+			private function goNext():void
+			{
+				nextRecord();
+				dispatchEvent(new Event("next", true, true));
+			}
+			private function goBack():void
+			{
+				backRecord();
+				dispatchEvent(new Event("back", true, true));
+			}
+			
+			
+			
+			private function btnClose_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new CloseEvent("close", true, true));
+			}
+			
+			
+			private function btnList_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("list", true, true));
+			}
+			
+			
+			private function btnSort_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("sort", true, true));
+			}
+			
+			
+			private function btnFilter_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("filter", true, true));
+			}
+			
+			
+			private function btnPrint_clickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(new Event("print", true, true));
+			}
+			
+			/***
+			 * This method indicate user click any button in NavigationBar
+			 * 
+			 * */
+			private function click():void
+			{
+				dispatchEvent(new Event("click", true, true));
+			}
+			
+			
+			
+			
+
+
+
+
+		]]>
+	</fx:Script>
+	
+	
+	
+	<s:states>
+		<s:State name="State1"   id="State1"/>
+		<s:State name="stDelete" id="stDelete"/>
+		<s:State name="stEdit" id="stEdit"/>
+		<s:State name="stNew"    id="stNew"/>
+		<s:State name="stView"  id="stView"/>
+		<s:State name="stUndo"  id="stUndo"/>
+	</s:states>
+	
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Metadata>
+		[Event(name="save", type="flash.events.Event")]
+		[Event(name="delete", type="flash.events.Event")]
+		[Event(name="cancel", type="flash.events.Event")]
+		[Event(name="refresh", type="flash.events.Event")]
+		[Event(name="view", type="flash.events.Event")]
+		[Event(name="edit", type="flash.events.Event")]
+		[Event(name="close", type="mx.events.CloseEvent")]
+		[Event(name="undo", type="flash.events.Event")]
+		[Event(name="back", type="flash.events.Event")]
+		[Event(name="bottom", type="flash.events.Event")]
+		[Event(name="top", type="flash.events.Event")]
+		[Event(name="next", type="flash.events.Event")]
+		[Event(name="previous", type="flash.events.Event")]
+		[Event(name="filter", type="flash.events.Event")]
+		[Event(name="find", type="flash.events.Event")]
+		[Event(name="print", type="flash.events.Event")]
+		[Event(name="list", type="flash.events.Event")]
+		[Event(name="new", type="flash.events.Event")]
+		[Event(name="sort", type="flash.events.Event")]
+		[Event(name="click", type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+		
+	
+</s:HGroup>

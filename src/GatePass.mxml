@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="680" height="530"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			   title="Gate Pass"
+			    currentState="Default" xmlns:services="com.dspl.malkey.services.*">
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="Out"/>
+		<s:State name="In"/>
+	</s:states>
+	<fx:Declarations>
+		
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+		
+		<!--Validators [Start]-->
+		<mx:StringValidator
+			id="svRegNo"
+			source="{txtRegNo}"
+			property="text"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator
+			id="svEmpId"
+			source="{txtEmpId}"
+			property="text"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator
+			id="svAuthBy"
+			source="{txtAuthBy}"
+			property="text"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator
+			id="svFrom"
+			source="{txtFrom}"
+			property="text"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator
+			id="svTo"
+			source="{txtTo}"
+			property="text"
+			triggerEvent=""
+			/>
+		<!--Validators [End]-->
+		
+		<!--Service-->
+		<services:FlocationSRV
+			id="srvFlocation"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder 
+			id="crListAllLocations"
+			result="crListAllLocations_resultHandler(event)"
+			fault="crListAllLocations_faultHandler(event)"
+			/>
+		<s:CallResponder 
+			id="crListAllCheckInLocations"
+			result="crListAllCheckInLocations_resultHandler(event)"
+			fault="crListAllCheckInLocations_faultHandler(event)"
+			/>
+		<!--Service-->
+		<services:FgatepassSRV
+			id="srvFgatepass"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetVehicleList"
+			result="crGetVehicleList_resultHandler(event)"
+			fault="crGetVehicleList_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetEmployeeList"
+			result="crGetEmployeeList_resultHandler(event)"
+			fault="crGetEmployeeList_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetDriverList"
+			result="crGetDriverList_resultHandler(event)"
+			fault="crGetDriverList_faultHandler(event)"
+			/>
+		
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crSave"
+			result="crSave_resultHandler(event)"
+			fault="crSave_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crUpdate"
+			result="crUpdate_resultHandler(event)"
+			fault="crUpdate_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetRefList"
+			result="crGetRefList_resultHandler(event)"
+			fault="crGetRefList_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crFindByPassNo"
+			result="crFindByPassNo_resultHandler(event)"
+			fault="crFindByPassNo_faultHandler(event)"
+			/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.ErrorTipManager;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.malkey.components.odoPopup;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Femployee;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fgatepass;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Flocation;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ArrayUtil;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+			
+			private var lsSelState:String;
+			
+			[Bindable]
+			public var lpuPopup:_tiMasterFile = new _tiMasterFile();
+			
+			[Bindable]
+			private var lacMidDay:ArrayCollection=new ArrayCollection([
+				{des:"AM"},
+				{des:"PM"}
+			]);
+
+			protected function initApp(event:FlexEvent):void{
+				try{
+					registerValidators();
+					//this.addEventListener(KeyboardEvent.KEY_DOWN,appKeyDown,false,0,false);
+					slMile.addEventListener("ODOClick",odoMileOnClick,false,0,false);
+					loadMasterFiles();
+					lsSelState="Default";
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			public var gsCurTabName:String="";
+			public function parentTabChangedHandler(event:DataEvent):void{
+				if(gsCurTabName==event.data)
+					updateErrorTipVisibility();
+			}
+			
+			public function updateErrorTipVisibility():void{
+				if(currentState=="Add" || currentState=="Edit"){								
+					ErrorTipManager.showErrorTip(svRegNo.source);
+					ErrorTipManager.showErrorTip(svEmpId.source);
+					ErrorTipManager.showErrorTip(svAuthBy.source);
+					ErrorTipManager.showErrorTip(svFrom.source);
+					ErrorTipManager.showErrorTip(svTo.source);
+				}
+			}
+			
+			private function removeFormErrorTips():void{				
+				ErrorTipManager.removeErrorTip(svRegNo.source,true);
+				ErrorTipManager.removeErrorTip(svEmpId.source,true);
+				ErrorTipManager.removeErrorTip(svAuthBy.source,true);
+				ErrorTipManager.removeErrorTip(svFrom.source,true);
+				ErrorTipManager.removeErrorTip(svTo.source,true);
+			} 
+			
+			private function registerValidators():void{
+				ErrorTipManager.registerValidator(svRegNo);
+				ErrorTipManager.registerValidator(svEmpId);
+				ErrorTipManager.registerValidator(svAuthBy);
+				ErrorTipManager.registerValidator(svFrom);
+				ErrorTipManager.registerValidator(svTo);
+			}
+			
+			private function appKeyDown(e:KeyboardEvent):void{
+				try{
+					if(currentState=="Out" || currentState=="In"){
+						if(StringUtil.trim(txtRegNo.text).length>0){
+							if(e.keyCode==38){//Up
+								setFuelLevelUp();
+							}else if(e.keyCode==40){//Down
+								setFuelLevelDown();	
+							}
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"appKeyDown: " + error.message,"Error",null);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function loadErrorHandler(event:Event):void{
+				undoForm();
+			}
+			
+			private function closeForm():void{
+				removeFormErrorTips();
+				this.parent.parent.removeChild(this.parent);
+			}
+			
+			private function setModifiedByDet(val:String=""):void{
+				lblModifiedBy.text="Last Modified By: ";
+				lblModifiedBy.text+=val;
+			}
+			
+			private function loadMasterFiles():void{
+				try{
+					crListAllLocations.token=srvFlocation.ListAll();
+					crListAllCheckInLocations.token = srvFlocation.ListCheckIn("Y");
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterFiles: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private var fgatepass:Com_dspl_malkey_domain_Fgatepass;
+			private function save():void{
+				try{
+					if(currentState=="Out"){
+						fgatepass=new Com_dspl_malkey_domain_Fgatepass();
+						fgatepass.regno=txtRegNo.text;
+						fgatepass.empid=txtEmpId.text;
+						fgatepass.outdate=dfDate.selectedDate;
+						fgatepass.outtime=getTime();
+						fgatepass.outmileage=getCurrentMileage();
+						if(fgatepass.outmileage<0){							
+							displaySaveError();
+							return;
+						}
+						fgatepass.outfuellevel=getCurrentFuelMeterLevel();
+						fgatepass.authorisedby=authById;
+						fgatepass.status="O";
+						fgatepass.outfromloc=fromLocationId;
+						fgatepass.outtoloc=toLocationId;
+						fgatepass.locationtype=toLocationType;
+					}else if(currentState=="In"){
+						if(dfDate.selectedDate<fgatepass.outdate){
+							Message.displayAlert(2,"Invalid Date Selection. Date In Should Not Be Less Than Date Out","Warning",null);
+							return;
+						}
+						fgatepass.indate=dfDate.selectedDate;
+						fgatepass.intime=getTime();
+						fgatepass.inmileage=getCurrentMileage();
+						if(fgatepass.inmileage<0){							
+							displaySaveError();
+							return;
+						}
+						fgatepass.infuellevel=getCurrentFuelMeterLevel();
+						fgatepass.status="I";
+						fgatepass.infromloc=fromLocationId;
+						fgatepass.intoloc=toLocationId;
+					}
+					
+					fgatepass.remarks=txtRemarks.text;
+					
+					if(currentState=="Out"){
+						crSave.token=srvFgatepass.create(fgatepass);
+					}else if(currentState=="In"){
+						crUpdate.token=srvFgatepass.update(fgatepass);
+					}
+					
+				}catch(error:Error){
+					Message.displayAlert(1,"save: " + error.message,"Error",null);
+				}
+			}
+			
+			private function getTime():String{
+				try{
+					var hour:String=StringUtil.trim(nsHour.value.toString());
+					var min:String=StringUtil.trim(nsMin.value.toString());
+					if(hour.length<2)
+						hour="0"+hour;
+					if(min.length<2)
+						min="0"+min;
+					
+					return hour+":"+min+" "+ddMidDay.selectedItem.des;
+				}catch(error:Error){
+					Message.displayAlert(1,"getTime: " + error.message,"Error",null);
+				}
+				return null;
+			}
+			
+			private function displaySaveError():void{
+				var err:String;
+				if(currentState=="Out")
+					err="Saving";
+				else if(currentState=="Out")
+					err="Updating";
+				Message.displayAlert(1,"Error Occured While "+ err +". Please Try Again....","Error",null);
+			}
+			
+			private function validateForm():Boolean{
+				try{
+					txtRegNo.errorString="";
+					txtEmpId.errorString="";
+					txtAuthBy.errorString="";
+					var validationArray:Array = Validator.validateAll([
+						svRegNo,
+						svEmpId,
+						svAuthBy,
+						svFrom,
+						svTo
+					]);
+					if(validationArray.length==0){
+						if(fromLocationId==toLocationId){
+							Message.displayAlert(2,"Location From & To Cannot Be Same","Warning",null);
+							updateErrorTipVisibility();
+							return false;
+						}
+						return true;
+					}	 
+				}catch(error:Error){
+					Message.displayAlert(1,"validateForm: " + error.message,"Error",null);
+				}
+				return false;
+			}
+			
+			// Start: Fuel Meter
+			private function setFuelLevel(level:String):void{
+				var loaderManager:Object = slFuelMeter.content as Object;
+				loaderManager.setFuelLevel(level);
+			}
+			
+			private function setFuelLevelUp():void{
+				var loaderManager:Object = slFuelMeter.content as Object;
+				loaderManager.setFuelLevelUp();
+			}
+			
+			private function setFuelLevelDown():void{
+				var loaderManager:Object = slFuelMeter.content as Object;
+				loaderManager.setFuelLevelDown();
+			}
+			
+			private function setFuelMeterEnabled(lEnabled:Boolean):void{
+				try{
+					var loaderManager:Object = slFuelMeter.content as Object;
+					loaderManager.setEnable(lEnabled);
+				}catch(error:Error){
+					Message.displayAlert(1,"setFuelMeterEnabled: " + error.message,"Error",null);
+				}
+			}
+			
+			private function getCurrentFuelMeterLevel():int{
+				var loaderManager:Object = slFuelMeter.content as Object;
+				return loaderManager.getCurrentLevel();
+			}
+			
+			private function getCurrentMileage():int{
+				try{
+					var loaderManager:Object = slMile.content as Object;
+					return int(loaderManager.getCurrentOdo());
+				}catch(error:Error){
+					
+				}
+				return -1;
+			}
+
+			private function odoMileOnClick(e:DataEvent):void{
+				try{
+					if (currentState.toUpperCase() == "IN" || currentState.toUpperCase() == "OUT"){
+						if(StringUtil.trim(txtRegNo.text).length>0){
+							var pop:odoPopup = new odoPopup();
+							pop.cMileage = e.data;
+							pop.addEventListener("mileageChange",odoMilePopupClose,false,0,false);
+							PopUpManager.addPopUp(pop,this,true,null,null);
+							PopUpManager.centerPopUp(pop);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"showODOPopup: " + error.message,"Error",null);
+				}
+			}
+			
+			private function odoMilePopupClose(e:DataEvent):void{
+				if(currentState=="Out"){
+					if(fvehicle!=null){
+						if(int(e.data)<fvehicle.curmileage)
+							Message.displayAlert(2,"Invalid Mileage","Warning",null); 
+						else
+							setMile(e.data);
+					}
+				}else if(currentState=="In"){
+					if(fgatepass!=null){
+						if(int(e.data)<fgatepass.outmileage)
+							Message.displayAlert(2,"Invalid Mileage","Warning",null);
+						else
+							setMile(e.data);
+					}
+				}
+				//fTmpVehicle.curmileage = int(e.data);
+			}
+			
+			private function setMile(value:String):void{
+				var loaderManager:Object = slMile.content as Object;
+				loaderManager.setOdoMeter(value);
+			}
+
+			protected function slFuelMeter_completeHandler(event:Event):void{
+				try{
+					setFuelMeterEnabled(false);
+					setFuelLevel("8");
+				}catch(error:Error){
+					Message.displayAlert(1,"slFuelMeter: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function slMile_completeHandler(event:Event):void{
+				setMile("0");
+			}
+			
+			private function setState(state:String):void{
+				if(state=="Default"){
+					ErrorTipManager.hideAllErrorTips();
+				}else if(state=="Out"){
+					setFuelLevel("8");
+					setDateTime();
+				}else if(state=="In"){
+
+				}
+				currentState=state;
+				this.setFocus();
+			}
+			
+			private function setDateTime():void{
+				try{
+					var tmpDt:Date=new Date();
+					dfDate.selectedDate=tmpDt;
+					if(tmpDt.getHours()>12){
+						nsHour.value=tmpDt.getHours()-12;
+						ddMidDay.selectedIndex=1;
+					}else{ 
+						nsHour.value=tmpDt.getHours();
+						ddMidDay.selectedIndex=0;
+					}
+					nsMin.value=tmpDt.getMinutes();
+				}catch(error:Error){
+					Message.displayAlert(1,"undoForm: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function successfulCloseHandler(event:Event):void{
+				if(currentState=="Out")
+					displayGatePass();
+				undoForm();
+			}
+			
+			private function displayGatePass():void{
+				try{
+					var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/GatePass.jsp?pn="+ lsRefNo);
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,"displayGatePass: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+						
+			private var lsTitle:String="Gate Pass";
+			private function undoForm():void{
+				try{
+					this.title=lsTitle;
+					txtPassno.text="";
+					txtPassno.errorString="";
+					dfDate.selectedDate=null;
+					dfDate.errorString="";
+					nsHour.value=1;
+					nsMin.value=0;
+					ddMidDay.selectedIndex=-1;
+					setFuelLevel("8");
+					setMile("0");
+					setFuelMeterEnabled(false);
+					txtRegNo.text="";
+					txtRegNo.errorString="";
+					txtMake.text="";
+					txtModel.text="";
+					txtEmpId.text="";
+					txtEmpId.errorString="";
+					txtDriverName.text="";
+					txtAuthBy.text="";
+					txtAuthBy.errorString="";
+					txtRemarks.text="";
+					
+					txtFrom.text="";
+					txtFrom.errorString="";
+					txtTo.text="";
+					txtTo.errorString="";
+					
+					setModifiedByDet();
+					setState("Default");
+				}catch(error:Error){
+					Message.displayAlert(1,"undoForm: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			//Display Popup Window 
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function,useCloseEvent:Boolean=false,otherColumns:String="",otherColumnHeaders:String="",otherColumnWidth:int=180):void
+			{
+				lpuPopup._acDataProvider = acDataProvider;								
+				lpuPopup._strKeyColumn = strKeyColumn;
+				lpuPopup._strKeyColCaption = strKeyColCaption; 
+				lpuPopup._strDetailColumn = strDetailColumn;
+				lpuPopup._strDetailColCaption = strDetailColCaption;
+				lpuPopup.otherColumns=otherColumns;
+				lpuPopup.otherColumnHeaderText=otherColumnHeaders;
+				lpuPopup.dgColWidth=otherColumnWidth;
+				lpuPopup._strWindowTitle = strWindowTitle;			
+				lpuPopup._sPostEventToRunPopUpExit = eventName;
+				lpuPopup.addEventListener(eventName,eventListener,false,0,false);
+				lpuPopup.launchSearchGrid(); 
+				lpuPopup.isPopUp=true;
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return o;
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					Message.displayAlert(1,"findItem: " + error.message,"Error");
+				}
+				return obj;
+			}
+			
+			private function findIndex(ac:ArrayCollection,keyfield:String,keyvalue:String):int{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return a;
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					//Message.displayAlert(1,"findIndex: " + error.message,"Error");
+				}
+				return -1;
+			}
+			
+			//**** Control Button Click Handlers [Start]
+			protected function btnOut_clickHandler(event:MouseEvent):void{
+				setState("Out");
+			}
+			
+			protected function btnIn_clickHandler(event:MouseEvent):void{
+				crGetRefList.token=srvFgatepass.getRefList();
+			}
+			
+			protected function btnSave_clickHandler(event:MouseEvent):void{
+				if(validateForm()==true)
+					save();
+			}
+			
+			protected function btnUndo_clickHandler(event:MouseEvent):void{
+				undoForm();
+			}
+			
+			protected function btnReload_clickHandler(event:MouseEvent):void{
+				loadMasterFiles();
+			}
+
+			//**** Control Button Click Handlers [End]
+			
+
+			//**** Result And Fault Handlers [Start]
+			
+			protected function crListAllLocations_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Location List [Error]","Error",errorCloseHandler);
+				}catch(error:Error){
+					Message.displayAlert(1,"List All Locations [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crListAllLocations_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List All Locations [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+			protected function crGetRefList_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Gate Pass List [Error]","Error",errorCloseHandler);
+					else
+						showRefListPopup();
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Gate Pass List [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private var lacTmpRefList:ArrayCollection=new ArrayCollection();
+			private function showRefListPopup():void{
+				try{
+					if(crGetRefList.token!=null){
+						if(crGetRefList.lastResult.length<=0)
+							Message.displayAlert(3,"Gate Pass Records Not Found","Message",null);
+						else{
+							lacTmpRefList.removeAll();
+							var obj:Object;
+							for(var a:int=0;a<crGetRefList.lastResult.length;a++){
+								var fgp:Com_dspl_malkey_domain_Fgatepass=crGetRefList.lastResult.getItemAt(a) as Com_dspl_malkey_domain_Fgatepass;
+								obj=new Object();
+								obj["passno"]=fgp.passno;
+								obj["regno"]=fgp.regno;
+								obj["outdate"]=dfFormatter.format(fgp.outdate);
+								obj["outtime"]=fgp.outtime;
+								lacTmpRefList.addItem(obj);
+							}								
+							crGetRefList.token=null;	
+							showPopUp(lacTmpRefList,"passno","Gate Pass No","regno","Registration No.","Select A Gate Pass No","gatePassSelected",gatePassSelection,false,"outdate,outtime","Date Out,Time Out",100);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"showVehicleList: " + error.message,"Error",null);
+				}
+			}
+			
+			private function gatePassSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						crFindByPassNo.token=srvFgatepass.findByPassNo(lpuPopup.grdSearch._strSelectedCode);
+						lacTmpRefList.removeAll();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"vehicleSelection: " + error.message,"Error",null);
+				}
+			}
+			
+			protected function crGetRefList_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Gate Pass List [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			protected function crFindByPassNo_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading FindByPass [Error]","Error",errorCloseHandler);
+					else{
+						fgatepass=event.result as Com_dspl_malkey_domain_Fgatepass;
+						crFindByPassNo.token=null;
+						loadGatePassDet();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"FindByPass [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function loadGatePassDet():void{
+				try{
+					this.title=lsTitle+"  ["+fgatepass.passno+" - "+ dfFormatter.format(fgatepass.outdate) +"]" 
+					txtPassno.text=fgatepass.passno;
+					setDateTime();
+					txtRegNo.text=fgatepass.regno;
+					txtMake.text=fgatepass.vehimakeid;
+					txtModel.text=fgatepass.vehimodelid;
+					txtEmpId.text=fgatepass.empid;
+					txtDriverName.text=fgatepass.name;
+					txtAuthBy.text=fgatepass.authorisedbyname;
+					txtRemarks.text=fgatepass.remarks;
+					setMile(fgatepass.outmileage.toString());
+					setFuelLevel(fgatepass.outfuellevel.toString());
+					setFuelMeterEnabled(true);
+					
+					fromLocationId=fgatepass.locationid;
+					toLocationId=fgatepass.outtoloc;
+					toLocationType=fgatepass.locationtype;
+					
+					if(toLocationType=="I"){
+						fromLocationId=fgatepass.locationid;
+						toLocationId=fgatepass.outtoloc;
+					}else if(toLocationType=="E"){
+						fromLocationId=fgatepass.outtoloc;
+						toLocationId=fgatepass.outfromloc;
+					}
+					
+					txtFrom.text=findItem(crListAllLocations.lastResult,"locationid",fromLocationId).description;
+					txtTo.text=findItem(crListAllLocations.lastResult,"locationid",toLocationId).description;
+					
+					setModifiedByDet(fgatepass.adduser);
+					setState("In");
+				}catch(error:Error){
+					Message.displayAlert(1,"loadGatePassDet [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFindByPassNo_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"FindByPass [Fault]: " + event.fault.toString(),"Error",null);
+			}
+
+			protected function crGetVehicleList_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Vehicle List [Error]","Error",errorCloseHandler);
+					else 
+						showVehiclePopup();
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Vehicle List [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crGetVehicleList_faultHandler(event:FaultEvent):void	{
+				Message.displayAlert(1,"Get Vehicle List [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			protected function crGetEmployeeList_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Employee List [Error]","Error",errorCloseHandler);
+					else 
+						showEmployeePopup();
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Employee List [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crGetEmployeeList_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Employee List [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			protected function crGetDriverList_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Driver List [Error]","Error",errorCloseHandler);
+					else 
+						showDriverPopup();
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Driver List [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crGetDriverList_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Driver List [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			
+			private var lsRefNo:String="";
+			protected function crSave_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null || StringUtil.trim(event.result.toString()).length<=0)
+						displaySaveError();
+					else{
+						lsRefNo=StringUtil.trim(event.result.toString());
+						Message.displayAlert(3,"New Gate Pass No: " + lsRefNo + ".\rSave Successful","Successful",successfulCloseHandler);
+					} 						
+				}catch(error:Error){
+					Message.displayAlert(1,"Save [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crSave_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Save [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			protected function crUpdate_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null || StringUtil.trim(event.result.toString()).length<=0)
+						displaySaveError();
+					else{
+						Message.displayAlert(3,"Update Successful","Successful",successfulCloseHandler);
+					} 						
+				}catch(error:Error){
+					Message.displayAlert(1,"Update [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crUpdate_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Update [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			//**** Result And Fault Handlers [End]
+
+			
+			
+			private function showVehicleList():void{
+				try{
+					cursorManager.setBusyCursor();
+					crGetVehicleList.token=srvFgatepass.getVehicleList();
+					cursorManager.removeBusyCursor();
+				}catch(error:Error){
+					Message.displayAlert(1,"showVehicleList: " + error.message,"Error",null);
+				}
+			}
+			
+			private function showEmployeeList():void{
+				try{
+					cursorManager.setBusyCursor();
+					crGetEmployeeList.token=srvFgatepass.getEmployeeList();
+					cursorManager.removeBusyCursor();
+				}catch(error:Error){
+					Message.displayAlert(1,"showEmployeeList: " + error.message,"Error",null);
+				}
+			}
+			
+			private function showDriverList():void{
+				try{
+					cursorManager.setBusyCursor();
+					crGetDriverList.token=srvFgatepass.getDriverList();
+					cursorManager.removeBusyCursor();
+				}catch(error:Error){
+					Message.displayAlert(1,"showDriverList: " + error.message,"Error",null);
+				}
+			}
+			
+			//Vehicle Popup [Start]
+			private function showVehiclePopup():void{
+				try{
+					if(crGetVehicleList.token!=null)
+						showPopUp(crGetVehicleList.lastResult,"regno","Registration No.","vehimakeid","Make","Select A Vehicle","vehicleSelected",vehicleSelection,false,"vehimodelid","Model",100);
+				}catch(error:Error){
+					Message.displayAlert(1,"showVehicleList: " + error.message,"Error",null);
+				}
+			}
+			
+			private function vehicleSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						loadVehicleDet(lpuPopup.grdSearch._strSelectedCode);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"vehicleSelection: " + error.message,"Error",null);
+				}
+			}
+			
+			private var fvehicle:Com_dspl_malkey_domain_Fvehicle;
+			private function loadVehicleDet(regno:String):void{
+				try{
+					fvehicle=findItem(crGetVehicleList.lastResult,"regno",regno) as Com_dspl_malkey_domain_Fvehicle;
+					if(fvehicle!=null){
+						txtRegNo.text=fvehicle.regno;
+						txtMake.text=fvehicle.vehimakeid;
+						txtModel.text=fvehicle.vehimodelid;
+						fromLocationId=fvehicle.locationid;
+						txtFrom.text=findItem(crListAllLocations.lastResult,"locationid",fromLocationId).description;
+						setMile(fvehicle.curmileage.toString());
+						setFuelLevel(fvehicle.fuellevel.toString());
+						setFuelMeterEnabled(true);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"loadVehicleDet: " + error.message,"Error",null);
+				}
+				crGetVehicleList.token=null;
+			}
+			//Vehicle Popup [End]
+			
+			//Driver Popup [Start]
+			private function showDriverPopup():void{
+				try{
+					if(crGetDriverList.token!=null)
+						showPopUp(crGetDriverList.lastResult,"empid","Employee ID","name","Name","Select A Driver","driverSelected",driverSelection,false,"dlno","Driving License",100);
+				}catch(error:Error){
+					Message.displayAlert(1,"showDriverPopup: " + error.message,"Error",null);
+				}
+			}
+			
+			private function driverSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						loadDriverDet(lpuPopup.grdSearch._strSelectedCode);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"driverSelection: " + error.message,"Error",null);
+				}
+			}
+			
+			private function loadDriverDet(empid:String):void{
+				try{
+					var femployee:Com_dspl_malkey_domain_Femployee=findItem(crGetDriverList.lastResult,"empid",empid) as Com_dspl_malkey_domain_Femployee;
+					if(femployee!=null){
+						txtEmpId.text=femployee.empid;
+						txtDriverName.text=femployee.name;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"loadDriverDet: " + error.message,"Error",null);
+				}
+				crGetDriverList.token=null;
+			}
+			//Driver Popup [End]
+			
+			//Employee Popup [Start]
+			private function showEmployeePopup():void{
+				try{
+					if(crGetEmployeeList.token!=null)
+						showPopUp(crGetEmployeeList.lastResult,"empid","Employee ID","name","Name","Select An Employee","employeeSelected",employeeSelection,false,"emptype","Type",100);
+				}catch(error:Error){
+					Message.displayAlert(1,"showEmployeePopup: " + error.message,"Error",null);
+				}
+			}
+			
+			private function employeeSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						loadEmployeeDet(lpuPopup.grdSearch._strSelectedCode);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"employeeSelection: " + error.message,"Error",null);
+				}
+			}
+
+			private var authById:String="";
+			private var fromLocationId:String="";
+			private var toLocationId:String="";
+			private var toLocationType:String="";
+			
+			private function loadEmployeeDet(empid:String):void{
+				try{
+					var femployee:Com_dspl_malkey_domain_Femployee=findItem(crGetEmployeeList.lastResult,"empid",empid) as Com_dspl_malkey_domain_Femployee;
+					if(femployee!=null){
+						authById=femployee.empid;
+						txtAuthBy.text=femployee.name;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"loadEmployeeDet: " + error.message,"Error",null);
+				}
+				crGetEmployeeList.token=null;
+			}
+			//Employee Popup [End]
+			
+			//Location Popup [Start]
+			private function showLocationPopup():void{
+				try{
+					if(crListAllLocations.token!=null)
+						showPopUp(crListAllLocations.lastResult,"locationid","ID","description","Location","Select A Location","locationSelected",locationSelection,false,"","",100);
+				}catch(error:Error){
+					Message.displayAlert(1,"showLocationPopup: " + error.message,"Error",null);
+				}
+			}
+			
+			private function showCheckInLocationPopup():void
+			{
+				try{
+					if(crListAllCheckInLocations.token != null)
+						showPopUp(crListAllCheckInLocations.lastResult,"locationid","ID","description","Location","Select A Location","locationSelected",locationSelection,false,"","",100)
+				}catch(error:Error){
+					Message.displayAlert(1,"showCheckInLocationPopup: " + error.message,"Error",null);
+				}
+			}
+			
+			private function locationSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						loadLocationDet(lpuPopup.grdSearch._strSelectedCode);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Location Selection: " + error.message,"Error",null);
+				}
+			}
+			
+			private function loadLocationDet(locationid:String):void{
+				try{
+					var flocation:Com_dspl_malkey_domain_Flocation=findItem(crListAllLocations.lastResult,"locationid",locationid) as Com_dspl_malkey_domain_Flocation;
+					if(flocation!=null){
+						toLocationId=flocation.locationid;
+						toLocationType=flocation.type;
+						txtTo.text=findItem(crListAllLocations.lastResult,"locationid",toLocationId).description;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"loadLocationDet: " + error.message,"Error",null);
+				}
+			}
+			//Location Popup [End]
+			
+
+			
+			//**** Link Button Click Handlers [Start]
+			protected function lbtnSearchVehicle_clickHandler(event:MouseEvent):void{
+				showVehicleList();
+			}
+
+			protected function lbtnSearchDriver_clickHandler(event:MouseEvent):void{
+				showDriverList();
+			}
+
+			protected function lbtnSearchAuth_clickHandler(event:MouseEvent):void{
+				showEmployeeList();
+			}
+			
+			protected function lbtnSearchLocation_clickHandler(event:MouseEvent):void{
+				if(currentState=="Out")
+				{
+					showLocationPopup();
+				}
+				if(currentState=="In")
+				{
+					showCheckInLocationPopup();
+				}
+				
+			}
+			//**** Link Button Click Handlers [End]
+
+
+			protected function controlbar1_creationCompleteHandler(event:FlexEvent):void{
+				setPermission();
+			}
+
+			protected function btnClose_clickHandler(event:MouseEvent):void{
+				closeForm();
+			}
+
+
+			protected function crListAllCheckInLocations_resultHandler(event:ResultEvent):void
+			{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Location List [Error]","Error",errorCloseHandler);
+				}catch(error:Error){
+					Message.displayAlert(1,"List All Locations [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+
+			protected function crListAllCheckInLocations_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"List All Locations [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+
+		]]>
+	</fx:Script>
+	<mx:ControlBar x="3" y="-6" horizontalGap="2" height="57" width="651" creationComplete="controlbar1_creationCompleteHandler(event)">
+		<mx:Button  id="btnOut" width="40" height="40"
+					toolTip="Vehicle Out"	
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/outD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/out.png')"
+					enabled="false"
+					enabled.In="false"
+					enabled.Out="false"
+				    click="btnOut_clickHandler(event)"
+		 />
+		<mx:Button  id="btnIn" width="40" height="40"
+					click="btnIn_clickHandler(event)"
+					toolTip="Vehicle In" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/inD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/in.png')"
+					enabled="false"
+					enabled.Out="false"
+					enabled.In="false"/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					toolTip="Undo"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					enabled="false"
+		 			enabled.Out="true"
+					enabled.In="true"
+					click="btnUndo_clickHandler(event)"
+		 			>
+		</mx:Button>
+		 			 
+		<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					enabled="false"
+		 			enabled.Out="false"
+					enabled.In="false"
+					/>
+		<mx:Button  id="btnReload" width="40" height="40"
+					click="btnReload_clickHandler(event)"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					toolTip="Reload"
+		 			enabled="false"
+					enabled.Out="true"
+					enabled.In="true"
+		/>
+		<mx:Button  id="btnSave" width="40" height="40" 
+					click="btnSave_clickHandler(event)"
+					toolTip="Save"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					enabled="false"
+		 			enabled.Out="true"
+					enabled.In="true"/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					enabled="true"
+					click="btnClose_clickHandler(event)"
+					/>
+	</mx:ControlBar>
+	<mx:HRule x="0" y="47" width="677"/>
+	<mx:Form x="8" y="55" width="398" height="420"
+			 borderColor="#C0C0C0"
+			 borderAlpha="20"
+			 borderVisible="true"
+			 borderStyle="solid"
+			 paddingLeft="2"
+			 paddingBottom="0"
+			 paddingTop="5"
+			 >
+		<mx:FormItem label="Gate Pass No" required="false">
+			<s:TextInput enabled="false" id="txtPassno"
+						 width="150"
+						 maxChars="10"
+			/>
+		</mx:FormItem>
+		<mx:FormItem label="Date" required="true" fontWeight="bold">
+			<mx:DateField
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				enabled="false" id="dfDate"
+				width="150" enabled.Out="true" enabled.In="true"/>
+		</mx:FormItem>
+		<mx:FormItem label="Time" required="true"  fontWeight="bold" direction="horizontal"
+					 paddingBottom="5"
+					 horizontalGap="0"
+					 >
+			<s:NumericStepper 
+				enabled.Default="false"
+				enabled.Out="true"
+				id="nsHour"
+						 width="50"
+						 minimum="1"
+						 maximum="12"
+						  enabled.In="true"/>
+			<mx:Label text="Hr." 
+					  paddingTop="3"
+					  />
+			<s:NumericStepper 
+				enabled.Default="false"
+				enabled.Out="true"
+				id="nsMin"
+							  width="50"
+							  minimum="0"
+							  maximum="59"
+							   enabled.In="true"/>
+			<mx:Label text="Min." 
+					  paddingTop="3"
+					  />
+			<s:DropDownList textAlign="left"
+				dataProvider="{lacMidDay}"
+				labelField="des"
+				id="ddMidDay"
+				width="56" height="23" 
+				enabled.Default="false"
+				enabled.Out="true" enabled.In="true"/> 
+		</mx:FormItem>
+		<s:Label text="Vehicle Details" fontWeight="bold"/>
+		<mx:FormItem label="Registration No" required="true" direction="horizontal">
+			<s:TextInput width="150" enabled="false" id="txtRegNo"
+						 maxChars="10"
+			 />
+			<mx:LinkButton 
+				click="lbtnSearchVehicle_clickHandler(event)"
+				paddingLeft="0" 
+				id="lbtnSearchVehicle" 
+				label="Search"
+				color="#0A33BB" enabled="false" enabled.Out="true" enabled.In="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Make" required="false">
+			<s:TextInput enabled="false" id="txtMake"
+						 width="150"
+						 maxChars="10"
+						 />
+		</mx:FormItem>	
+		<mx:FormItem label="Model" required="false"
+					 paddingBottom="5"
+					 >
+			<s:TextInput enabled="false" id="txtModel"
+						 width="150"
+						 maxChars="10"
+						 />
+		</mx:FormItem>
+		
+		<s:Label text="Driver Details" fontWeight="bold"/>
+		<mx:FormItem label="Employee Id" required="true" direction="horizontal">
+			<s:TextInput width="150" enabled="false" id="txtEmpId"
+						 maxChars="10"
+			 />
+			<mx:LinkButton 
+				click="lbtnSearchDriver_clickHandler(event)"
+				paddingLeft="0" 
+				id="lbtnSearchDriver" 
+				label="Search"
+				color="#0A33BB" enabled="false" enabled.Out="true" enabled.In="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Driver Name" required="false"
+					 paddingBottom="5"
+					 >
+			<s:TextInput enabled="false" id="txtDriverName"
+						 width="272"
+						 maxChars="10"
+						 />
+		</mx:FormItem>
+		<s:Label text="Other Details" fontWeight="bold"/>
+		<mx:FormItem label="Authorized By" required="true" direction="horizontal">
+			<s:TextInput enabled="false" id="txtAuthBy"
+						 width="150"
+						 maxChars="10"
+						 />
+			<mx:LinkButton 
+				click="lbtnSearchAuth_clickHandler(event)"
+				paddingLeft="0" 
+				id="lbtnSearchAuth" 
+				label="Search"
+				color="#0A33BB" 
+				enabled.Default="false"
+				enabled.Out="true"
+				 enabled.In="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Remarks" required="false">
+			<s:TextArea id="txtRemarks"
+						 width="273"
+						 height="85"
+						 maxChars="50"
+						 enabled.Default="false"
+						 enabled.Out="true"
+						 />
+		</mx:FormItem>
+	</mx:Form>
+	<mx:VBox x="410" y="54" height="421" width="260"
+			 paddingLeft="5"
+			 paddingRight="0"
+			 paddingBottom="0"
+			 borderAlpha="20" borderColor="#C0C0C0" borderStyle="solid" borderVisible="true"
+			 >
+		<mx:Form
+			paddingLeft="5"
+			paddingRight="0"
+			paddingBottom="0"
+			paddingTop="5"
+			x="10" y="327" width="252" height="66">
+			<s:Label text="Mileage" fontWeight="bold"/>
+			<mx:SWFLoader
+				complete="slMile_completeHandler(event)"
+				enabled="false"
+				id="slMile" scaleContent="true" width="219" height="37" source="@Resource(key='odourl', bundle='resource')" autoLoad.Default="true"/>
+		</mx:Form>
+		
+		<mx:Form width="252" height="256" x="447" y="52"
+				 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2">
+			<s:Label text="Fuel Level" fontWeight="bold"/>
+			<mx:SWFLoader
+				cachePolicy="off"
+				cacheAsBitmap="false"
+				complete="slFuelMeter_completeHandler(event)"
+				enabled="false"
+				id="slFuelMeter" scaleContent="true" width="220" height="220" source="@Resource(key='fuelurl', bundle='resource')" autoLoad="true"/>
+		</mx:Form>
+		<s:Label text="Location Details" fontWeight="bold"/>
+		<mx:Form
+			paddingLeft="0"
+			paddingRight="0"
+			paddingBottom="0"
+			paddingTop="0"
+			>
+			<mx:FormItem label="From" required="true">
+				<s:TextInput
+					enabled="false"
+					id="txtFrom" width="138"/>
+			</mx:FormItem>
+			<mx:FormItem label="To" required="true" direction="horizontal">
+				<s:TextInput 
+					enabled="false"
+					id="txtTo" width="138"/>
+				<mx:LinkButton 
+					click="lbtnSearchLocation_clickHandler(event)"
+					paddingLeft="0" 
+					id="lbtnSearchLocation" 
+					label="Search"
+					color="#0A33BB" 
+					enabled.Default="false"
+					enabled.Out="true"
+					enabled.In="true"
+					/>
+			</mx:FormItem>
+		</mx:Form>
+	</mx:VBox>
+	<s:Label x="8" y="480" text="Last Modified By:" id="lblModifiedBy"/>
+</s:TitleWindow>

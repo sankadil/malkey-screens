@@ -1,0 +1,2681 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project		:	malkey-screen
+Package		:	com/dspl/malkey/
+Component	:	Vehicle.mxml
+Description	:	Vehicle Master File
+Author		:	Fuzuli Hameed On Mar 18, 2010
+Modified By :	
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="initApp()"
+			   title="Vehicle Master File"
+			   close="twVehicle_closeHandler(event)"
+			   width="950" height="600" minWidth="916" minHeight="516" 
+			   xmlns:services="com.dspl.malkey.services.*" 
+			   xmlns:valueObjects="com.dspl.malkey.valueObjects.*" 
+			   xmlns:components="com.dspl.malkey.components.*">
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- Properties of the parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="New"/>
+		<s:State name="Edit"/>
+	</s:states>		
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat2',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+	</fx:Declarations>
+	
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.controls._twMasterFileSearch;
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.components.odoPopup;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fclienttype;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fhiretype;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fsupplier;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicledamage;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicleinventry;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FvehicleinventryPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehiclepic;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehiclerate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FvehicleratePK;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Text;
+			import mx.core.FlexGlobals;
+			import mx.core.IFlexDisplayObject;
+			import mx.effects.easing.*;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.graphics.codec.JPEGEncoder;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			// Class and variable used in User access level  
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+									
+			[Bindable]
+			private var fOwnerType:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var fDumyVehi:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var acVintage:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var fCompanies:ArrayCollection = new ArrayCollection();			
+			[Bindable]
+			private var fRates:ArrayCollection = new ArrayCollection();
+			[Bindable] 
+			private var sVehiTypeImage:String = "";
+			[Bindable] 
+			private var sVehicleImageURL:String = "";
+			[Bindable] 
+			private var sLastModBy:String = "";
+			[Bindable] 
+			private var sLastModDate:String = "";
+			[Bindable] 
+			private var sVehicleMake:String = "";
+			[Bindable] 
+			private var sVehicleModel:String = "";
+			[Bindable] 
+			private var sVehiModelID:String = "";
+			[Bindable]
+			private var oOutsideOwnerDetail:Com_dspl_malkey_domain_Fsupplier;
+			[Bindable] 
+			private var nVehicleColour:int = 0;
+			
+			private var aVehiclePic:ArrayCollection = new ArrayCollection();
+			
+			private var oFileRef:FileReference = new FileReference();
+			private var oGenFunctions:GenericFunctions = new GenericFunctions();
+			private var oGenFuncForImageNav:GenericFunctions = new GenericFunctions();
+						
+			// Arrays to store the list of mandatory objects in each page (which cannot be empty when saving)
+			private var aMandatoryFldGeneral:Array = new Array();
+			private var aMandatoryFldOutsideOwner:Array = new Array();
+			private var aMandatoryFldMaintenance:Array = new Array();
+			private var aMandatoryFldLeasing:Array = new Array();
+			
+			private var sVehicleImageNotAvailable:String; 
+			private var nCalledVImgNA:int = 0; 
+			private var sVehicleMakeID:String = "";
+			private var sHireType:String = "";
+			private var sClientType:String = "";
+			private var oUpdatedVehicleRec:Com_dspl_malkey_domain_Fvehicle;
+			private var oGrdVSearch:Object;
+			private var oVRate:Object;
+			private var sVRateTitle:String = "Vehicle Rates";
+			private var lCreateNewVehiRate:Boolean;
+			private var lLoadMasterFilesButtonClicked:Boolean = false;
+			private var sRegNoToDisplay:String = "";
+			private var nOrgMileage:int;
+			private var nCurMileage:int;
+			
+			private function initApp():void
+			{
+				sVehicleImageNotAvailable = resourceManager.getString("resource","inaUrl",null,null);		// Image to display when no image is defined
+				
+				// Master files
+				loadOwnerType();
+				loadCompanies();
+				loadDummyVehi();
+				loadMasterFiles();
+				loadVintage();
+				
+				// Set the some effects for the Vehicle image
+				imgVehicle.setStyle("showEffect", fade);
+					
+				// Disable the click events of the ODO Meter contrls
+				slODOOrgMile.addEventListener("ODOClick",odoOrgrMileOnClick,false,0,false);
+				slODOCurMile.addEventListener("ODOClick",odoCurMileOnClick,false,0,false);
+				
+				// Arrays storing the mandatory fields
+				aMandatoryFldGeneral = [svRegNo, nvClass, nvType, nvMake, nvModel, nvTrans, nvFuel, nvColour, nvEngine, nvSts, nvLoc,  
+										dvPDate, svAvgFuel, svFuelTankVal, nvMainSeat, nvSpareKey, nvOrgMile, nvCurMile];
+				aMandatoryFldOutsideOwner = [svOutOwnName, svOutOwnID, svOutOwnResAdd, svOutOwnResTel, svOutOwnResMob];
+				aMandatoryFldMaintenance = [nvFleet, svInsPolicyNo, svInsCompany, svInsAmt, dvInsDExp, nvPolicyType, dvDEmission, dvDRevLic];
+				aMandatoryFldLeasing = [nvLeaseCom, dvLeaseDStart, svLeaseAmt, svLeaseMonthlyAmt, nvLeaseMonths];
+								
+				oGenFunctions.intCurrentRecNo = -1;
+				
+				crVehicle.token = srvFvehicle.listAll();		// Available Vehicle details 
+			}
+			
+			
+			protected function twVehicle_closeHandler(event:CloseEvent):void
+			{
+				close();
+			}
+			
+			
+			// Start: Fuel Meter
+			private function setFuelLevel(level:String):void
+			{ 
+				var loaderManager:Object = slFuelMeter.content as Object;
+				loaderManager.setFuelLevel(level);
+			}
+			
+			private function setFuelMeterEnabled(lEnabled:Boolean):void
+			{
+				var loaderManager:Object = slFuelMeter.content as Object;
+				loaderManager.setEnable(lEnabled);
+			}
+			
+			private function getCurrentFuelMeterLevel():int
+			{
+				var loaderManager:Object = slFuelMeter.content as Object;
+				return loaderManager.getCurrentLevel();
+			}
+			// End: Fuel Meter
+			
+			
+			// Start: ODO Meter - Current Mileage
+			private function odoCurMileOnClick(e:DataEvent):void
+			{
+				if (currentState.toUpperCase() == "NEW" || currentState.toUpperCase() == "EDIT"){
+					var pop:odoPopup = new odoPopup();
+					pop.cMileage = e.data;
+					pop.addEventListener("mileageChange",odoCurMilePopupClose,false,0,false);
+					PopUpManager.addPopUp(pop,this,true,null,null);
+					PopUpManager.centerPopUp(pop);
+				}
+			}
+			
+			private function odoCurMilePopupClose(e:DataEvent):void
+			{
+				setODOCurMile(e.data);
+				fTmpVehicle.curmileage = int(e.data);
+			}
+			
+			private function setODOCurMile(value:String):void
+			{
+				var loaderManager:Object = slODOCurMile.content as Object;
+				loaderManager.setOdoMeter(value);
+			}
+			// End: ODO Meter - Current Mileage
+			
+			
+			// Start: ODO Meter - Original Mileage
+			private function odoOrgrMileOnClick(e:DataEvent):void
+			{
+				if (currentState.toUpperCase() == "NEW" || currentState.toUpperCase() == "EDIT"){
+					var pop:odoPopup = new odoPopup();
+					pop.cMileage = e.data;
+					pop.addEventListener("mileageChange",odoOrgMilePopupClose,false,0,false);
+					PopUpManager.addPopUp(pop,this,true,null,null);
+					PopUpManager.centerPopUp(pop);
+				}
+			}
+			
+			private function odoOrgMilePopupClose(e:DataEvent):void
+			{
+				setODOOrgMile(e.data);
+				fTmpVehicle.orgmileage = int(e.data);
+			}
+			
+			private function setODOOrgMile(value:String):void
+			{
+				var loaderManager:Object = slODOOrgMile.content as Object;
+				loaderManager.setOdoMeter(value);
+			}
+			// End: ODO Meter - Original Mileage
+			
+			
+			private function loadCompanies():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["des"] = "Mahesh E Mallawarachchi Enterprises";
+				fCompanies.addItem(o);
+				
+				o = new Object();
+				o["des"] = "Malkey Travel & Tours (Pvt) Ltd";
+				fCompanies.addItem(o);
+			}
+			
+			private function loadOwnerType():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["des"] = "Company";
+				fOwnerType.addItem(o);
+				
+				o = new Object();
+				o["des"] = "Outside";
+				fOwnerType.addItem(o);
+			}
+			
+			private function loadVintage():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["id"] = "0";
+				o["des"] = "No";
+				acVintage.addItem(o);
+				
+				o = new Object();
+				o["id"] = "1";
+				o["des"] = "Yes";
+				acVintage.addItem(o);
+			}
+			
+			private function loadDummyVehi():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["des"] = "No";
+				fDumyVehi.addItem(o);
+				
+				o = new Object();
+				o["des"] = "Yes";
+				fDumyVehi.addItem(o);
+			}
+
+			protected function ncOwner_creationCompleteHandler(event:FlexEvent):void
+			{
+				frmCompany.visible=false;
+				frmOutside.visible=false;
+			}
+
+			protected function cboOwnerType_changeHandler(event:*):void
+			{
+				if(cboOwnerType.selectedIndex>-1)
+				{
+					if(cboOwnerType.selectedItem.des=="Company")
+					{
+						frmCompany.visible=true;
+						frmOutside.visible=false;	
+					}
+					else if(cboOwnerType.selectedItem.des=="Outside")
+					{
+						frmOutside.visible=true;	
+						frmCompany.visible=false;
+					}
+				}
+			}
+			
+			
+			// Start: Browse an image from the User's local directory
+			protected function btnBrowseImage_clickHandler(event:MouseEvent):void
+			{
+				oFileRef.addEventListener(Event.SELECT,imageSelection,false,0,false);
+				oFileRef.browse();
+			}
+			
+			private function imageSelection(e:Event):void
+			{
+				oFileRef.addEventListener(Event.COMPLETE,imageLoadComplete,false,0,false);
+				oFileRef.load();
+			}
+			
+			private function imageLoadComplete(e:Event):void
+			{
+				var loader:Loader = new Loader();
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadBytesHandler); 
+				loader.loadBytes(oFileRef.data); 
+			}
+			
+			private function loadBytesHandler(e:Event):void
+			{
+				var loaderInfo:LoaderInfo = (e.target as LoaderInfo); 
+				imgVehicle.source = loaderInfo.content;
+				
+				// Update the image collection
+				var lnDefaultImage:int = aVehiclePic.length==0 ? 1 : 0;
+				createVehiclePicRecord("", lnDefaultImage, oFileRef.name, loaderInfo.bytes);
+				
+				oGenFuncForImageNav.intTotalRecs = aVehiclePic.length;
+				oGenFuncForImageNav.intCurrentRecNo = aVehiclePic.length - 1;		// Navigate to the image just added
+				chkDefaultPic.selected = aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].defaultimage==1 ? true : false;
+				
+				btnClearImage.enabled = true;
+				chkDefaultPic.enabled = true;
+				
+				if (aVehiclePic.length>1){
+					btnPrevPic.enabled = true;
+					btnNextPic.enabled = true;
+				}
+			}
+			// End: Browse an image from the User's local directory
+			
+			
+			// Start: Remove/ clear image
+			protected function btnClearImage_clickHandler(event:MouseEvent):void
+			{
+				if (aVehiclePic.length==0)
+					return;		// Nothing to do
+				
+				var lbIsDefaultImageRemoved:Boolean = aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].defaultimage==1 ? true : false;
+				// Remove the currently displayed image
+				aVehiclePic.removeItemAt(oGenFuncForImageNav.intCurrentRecNo);
+				
+				// Refresh the Image navigation related objects and properties
+				var liTotalPic:int = aVehiclePic.length;
+				oGenFuncForImageNav.intTotalRecs = liTotalPic;
+				oGenFuncForImageNav.intCurrentRecNo = liTotalPic - 1;		// Navigate to the image just added
+								
+				chkDefaultPic.selected = false;
+								
+				if (liTotalPic==0){
+					btnClearImage.enabled = false;
+					chkDefaultPic.enabled = false;
+					nCalledVImgNA = 1;
+					loadImageFromServer(sVehicleImageNotAvailable);
+				} else {
+					if (aVehiclePic.length<=1){
+						btnPrevPic.enabled = false;
+						btnNextPic.enabled = false;
+					}
+				
+					if (lbIsDefaultImageRemoved)			// Removed image was the default, so make the top most image as the default
+						aVehiclePic[0].defaultimage = 1;
+
+					btnNextPic_clickHandler(Event);
+				}
+			}
+			// End: Remove/ clear image
+			
+			
+			// Start: Make an image as the Default
+			protected function chkDefaultPic_clickHandler(event:MouseEvent):void
+			{
+				if (aVehiclePic.length==1){
+					chkDefaultPic.selected = true;
+				} else {										
+					var lnDefaultImage:int;
+					for (var lnCount:int = 0; lnCount < aVehiclePic.length ; lnCount++)
+					{
+						if (chkDefaultPic.selected)
+							lnDefaultImage = oGenFuncForImageNav.intCurrentRecNo;
+						else 
+							lnDefaultImage = lnCount==0 ? 1 : 0; // Make the top most image as the default
+						
+						aVehiclePic[lnCount].defaultimage = lnDefaultImage; 
+					}
+				}
+			}
+			// End: Make an image as the Default
+			
+			
+			// Start: Vehicle image navigation
+			protected function btnPrevPic_clickHandler(event:MouseEvent):void
+			{
+				oGenFuncForImageNav.goBack();
+				
+				if (aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].imageurl.length==0){
+					// An image selected by the user from the local computer, display the content 
+					imgVehicle.source = aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].imagedata;
+				} else {
+					// Already saved image and assign the URL to load the image automatically
+					loadImageFromServer(aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].imageurl);
+				}
+				chkDefaultPic.selected = aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].defaultimage==1 ? true : false;
+			}
+			
+			private function loadImageFromServer(imageURL:String):void{
+				var imageLoader:Loader = new Loader();
+				imageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadImageFromServer_Complete);
+				imageLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, loadImageFromServer_Error);
+				//Alert.show("imageURL sanka : "+imageURL);
+				imageLoader.load(new URLRequest(imageURL));
+			}
+			
+			private function loadImageFromServer_Complete(e:Event):void
+			{
+				try{
+					imgVehicle.source = (e.target as LoaderInfo).content;
+				} catch(error:Error){
+					nCalledVImgNA = 1;
+					loadImageFromServer(sVehicleImageNotAvailable);
+				}
+			}
+			
+			private function loadImageFromServer_Error(event:IOErrorEvent):void
+			{
+				if (nCalledVImgNA == 0){
+					nCalledVImgNA = 1;
+					loadImageFromServer(sVehicleImageNotAvailable);
+				} else
+					imgVehicle.source = null;
+			}
+			
+			protected function btnNextPic_clickHandler(event:*):void
+			{
+				oGenFuncForImageNav.goNext();
+								
+				if (aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].imageurl.length==0){
+					imgVehicle.source = aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].imagedata;
+				} else {
+					loadImageFromServer(aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].imageurl);
+				}
+				chkDefaultPic.selected = aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].defaultimage==1 ? true : false;
+			}
+			// End: Vehicle image navigation
+
+			
+			// Start: Vehicle Damage Marking 
+			private var CIchildCnt:int=1;
+			private var size:uint         = 80;
+			private var bgColor:uint      = 0xCCCCCC;
+			private var bgColor1:uint     = 0x000000;
+			private var borderColor:uint  = 0x666666;
+			private var borderSize:uint   = 0;
+			private var cornerRadius:uint = 9;
+			private var gutter:uint       = 5;
+			
+			protected function imgCI_clickHandler(event:MouseEvent):void
+			{
+				if (currentState.toUpperCase() == "NEW" || currentState.toUpperCase() == "EDIT"){
+					var lnDamageType:int;
+					if(btnDent.selected==true){
+						lnDamageType = 1;
+					} else if(btnScratch.selected==true){
+						lnDamageType = 2;
+					} else {
+						return;
+					}
+					
+					var lnXValue:Number = imgCI.mouseX;
+					var lnYValue:Number = imgCI.mouseY;
+					var lnChildCount:int = CIchildCnt;			// Store the current value since the "CIchildCnt" would be incremented within doDrawRectCI() method 
+					doDrawRectCI(lnXValue,lnYValue,lnDamageType);
+					
+					// Update the relational table with the damage info
+					var loVehiDamage:Com_dspl_malkey_domain_Fvehicledamage = new Com_dspl_malkey_domain_Fvehicledamage();
+					loVehiDamage.regno = txtRegNo.text;
+					loVehiDamage.xvalue = lnXValue.toString();
+					loVehiDamage.yvalue = lnYValue.toString();
+					loVehiDamage.damagetype = lnDamageType;
+					loVehiDamage.seq = lnChildCount;
+					loVehiDamage.recordid = 0;
+					crVehicleDamage.lastResult.addItem(loVehiDamage);
+				}
+			}			
+			
+			
+			private function doDrawRectCI(lx:Number,ly:Number,type:int):void {
+				try
+				{
+					var loChild:Shape = new Shape();
+					if(type==1){
+						loChild.graphics.beginFill(bgColor);
+					} else if(type==2){
+						loChild.graphics.beginFill(bgColor1);
+					}
+					
+					loChild.graphics.lineStyle(borderSize, borderColor);
+					loChild.graphics.drawRect(lx, ly, 10, 10);
+					loChild.graphics.endFill();
+					imgCI.addChild(loChild);
+					CIchildCnt += 1;
+				}
+				catch(error:Error)
+				{
+					Alert.show("doDrawRect: " + error.message);
+				}
+			}
+			
+			protected function btnDent_clickHandler(event:MouseEvent):void
+			{
+				btnScratch.selected=false;
+			}
+			
+			
+			protected function btnScratch_clickHandler(event:MouseEvent):void
+			{
+				btnDent.selected=false;
+			}
+			
+			protected function btnUndoMarking_clickHandler(event:MouseEvent):void
+			{
+				undoCI();	
+			}
+			
+			private function undoCI():void
+			{
+				if(CIchildCnt>1){
+					CIchildCnt -= 1;
+					imgCI.removeChildAt(CIchildCnt);
+					crVehicleDamage.lastResult.removeItemAt(CIchildCnt-1);		// Since the array collection is zero based, reduce one
+				}
+			}
+			
+			// Remove all the existing damage marks and set the counter to zero
+			private function removeAllCI():void{
+				if (CIchildCnt>1){
+					CIchildCnt -= 1;
+					for (var lnCount:int = CIchildCnt ; lnCount > 0 ; lnCount--)
+						imgCI.removeChildAt(lnCount);
+										
+					CIchildCnt = 1
+				}
+			}  
+			// End: Vehicle Damage Marking	
+
+			
+			// Start: Result and Fault Handlers of Data Services
+			protected function crVehicle_resultHandler(event:ResultEvent):void
+			{
+				oGenFunctions.intTotalRecs = crVehicle.lastResult.length;
+				
+				var lnCurRecNo:int = 0;
+				if (sRegNoToDisplay.length>0){
+					// Determine the index of the RegNo to be displayed. (This would be initiated when creating a new vehicle or updating an existing vehicle)
+					lnCurRecNo = oGenFunctions.getArrayCollectionIndex(crVehicle.lastResult, "regno", sRegNoToDisplay);
+					sRegNoToDisplay = "";
+				}
+					
+				oGenFunctions.intCurrentRecNo = lnCurRecNo;
+				refreshFormControls();
+			}
+			
+			protected function crVehicleModel_resultHandler(event:ResultEvent):void
+			{
+				crVehicleModel.lastResult.filterFunction = filterVehicleModel;
+				crVehicleModel.lastResult.refresh();
+				
+				if (lLoadMasterFilesButtonClicked){
+					// Refresh the based onthe Vehicle Make selection when "Refresh" button is specifically clicked. If this is not the value cboModel defaults some other value other than the one which is saved in the table
+					cboMake_changeHandler(Event);
+					lLoadMasterFilesButtonClicked = false;
+				}
+			}
+			
+			protected function crVehicleRate_resultHandler(event:ResultEvent):void
+			{
+				crVehicleRate.lastResult.filterFunction = filterVehicleRate;
+				crVehicleRate.lastResult.refresh();
+			}
+			
+			protected function crVehicleInventry_resultHandler(event:ResultEvent):void
+			{
+				// Update the Vehicle Inventry display list with the available items
+				for each(var loVehiInv:Object in crVInventryList.lastResult){
+					var lnVehiInvIndex:int = oGenFunctions.getArrayCollectionIndex(crVehicleInventry.lastResult, "id.invid", loVehiInv.invid);
+					loVehiInv.isselected = lnVehiInvIndex > -1 ? 1 : 0;
+				}
+			}
+			
+			protected function crVehicleDamage_resultHandler(event:ResultEvent):void
+			{
+				for each(var loVehiDamage:Object in crVehicleDamage.lastResult){
+					doDrawRectCI(loVehiDamage.xvalue,loVehiDamage.yvalue,loVehiDamage.damagetype);
+				}
+			}
+			
+			protected function crVehicleUpdate_resultHandler(event:ResultEvent):void
+			{
+				var lbUpdateStatus:Boolean = event.message.body;				
+				if (lbUpdateStatus == true){
+					Alert.show("Updated Vehicle information successfully.", title + " - Save", Alert.OK, null, null, oGenFunctions.IconInformation);
+					
+					crVehicle.token = srvFvehicle.listAll();
+					currentState = "Default";
+				} else		
+					Alert.show("Error updating the Vehicle information. Please try again.", title + " - Save", Alert.OK, null, null, oGenFunctions.IconWarning);
+			}			
+			
+			protected function crVehicleCreate_resultHandler(event:ResultEvent):void
+			{
+				var lbUpdateStatus:Boolean = event.message.body;				
+				if (lbUpdateStatus == true){
+					Alert.show("Updated the server with the new Vehicle information successfully.", title + " - Save", Alert.OK, null, null, oGenFunctions.IconInformation);
+					
+					crVehicle.token = srvFvehicle.listAll();
+					currentState = "Default";
+				} else		
+					Alert.show("Error while updating the server with the Vehicle information. Please try again.", title + " - Save", Alert.OK, null, null, oGenFunctions.IconWarning);
+			}
+			
+			protected function crVehicleRemove_resultHandler(event:ResultEvent):void
+			{			
+				if (event.message.body==true){
+					Alert.show("Deleted the Vehicle information successfully.", title + " - Delete", Alert.OK, null, null, oGenFunctions.IconInformation);
+					
+					crVehicle.token = srvFvehicle.listAll();		// Refresh data list
+				}
+				else
+					Alert.show("Error encountered while deleting the Vehicle information. Please try again.", title + " - Delete", Alert.OK, null, null, oGenFunctions.IconWarning);
+			}
+			
+			protected function crVehicleFindByID_resultHandler(event:ResultEvent):void
+			{
+				if (crVehicleFindByID.lastResult==null)
+					// No duplicates found, proceed with the updating the master table with the new record
+					save();
+				else {
+					// Duplicate Vehicle RegNo
+					Alert.show("A Vehicle with the same Registration No already exists. Please enter the correct Registration No and try again.", title + " - Save", Alert.OK, null, null, oGenFunctions.IconWarning);
+				}					
+			}			
+			
+			protected function crVehicleRemovable_resultHandler(event:ResultEvent):void
+			{
+				var lsRegNo:String = txtRegNo.text;
+				if (event.message.body==true)			// Remove the record
+					crVehicleRemove.token = srvFvehicle.removeByID(lsRegNo);
+				else
+					Alert.show("Details of Vehicle Registration No '"+lsRegNo+"' cannot be deleted as it has been made use of in other modules.", title + " - Delete", Alert.OK, null, null, oGenFunctions.IconInformation);
+			}
+			
+			private function crVehiclePic_resultHandler(event:ResultEvent):void
+			{ 
+				aVehiclePic = new ArrayCollection();
+				oGenFuncForImageNav.intTotalRecs = crVehiclePic.lastResult.length;
+				oGenFuncForImageNav.intCurrentRecNo = 0;
+				
+				if (oGenFuncForImageNav.intTotalRecs==0){
+					// No images has been defined for this vehicle
+					nCalledVImgNA = 1;
+					sVehicleImageURL = sVehicleImageNotAvailable;
+					chkDefaultPic.selected = false;
+				} else {
+					if (oGenFuncForImageNav.intTotalRecs>1){
+						// Only enable the buttons if multiple images are uploaded
+						btnPrevPic.enabled = true;
+						btnNextPic.enabled = true;
+						
+						if (currentState.toUpperCase()=="NEW" || currentState.toUpperCase()=="EDIT"){
+							btnClearImage.enabled = true;
+							chkDefaultPic.enabled = true;
+						}
+					}
+					
+					sVehicleImageURL = crVehiclePic.lastResult[oGenFuncForImageNav.intCurrentRecNo].imageurl;
+					
+					// Vehicle Pictures
+					for each(var loVehiPic:Object in crVehiclePic.lastResult)
+					{
+						var lsFileName:String = StringUtil.trim(loVehiPic.imageurl.substring(loVehiPic.imageurl.lastIndexOf("/")+1));	// Extract the file name out of the URL
+						createVehiclePicRecord(loVehiPic.imageurl, loVehiPic.defaultimage, lsFileName);
+					}
+					
+					chkDefaultPic.selected = aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].defaultimage==1 ? true : false;
+					
+				}
+				
+				loadImageFromServer(sVehicleImageURL);
+			}
+			
+			private function createVehiclePicRecord(imageURL:String, defaultImage:int, fileName:String, imageData:ByteArray=null):void
+			{
+				// Crate a new record based on the provided data
+				var loNewRec:Com_dspl_malkey_domain_Fvehiclepic = new Com_dspl_malkey_domain_Fvehiclepic();
+				loNewRec.imageurl = imageURL;
+				loNewRec.defaultimage = defaultImage;
+				loNewRec.imagedata = imageData;
+				loNewRec.imagename = fileName;
+				
+				aVehiclePic.addItem(loNewRec);
+			}
+			
+			protected function crClientType_resultHandler(event:ResultEvent):void
+			{
+				if (crClientType.lastResult is ArrayCollection && crClientType.lastResult.length>0){
+					// Add an empty record to the top
+					var loClientType:Com_dspl_malkey_domain_Fclienttype = new Com_dspl_malkey_domain_Fclienttype();
+					loClientType.clienttype = "";
+					loClientType.description = "All";
+					crClientType.lastResult.addItemAt(loClientType, 0);
+					
+					if (cboClientType.selectedIndex < 0)
+						cboClientType.selectedIndex = 0;		// Set to "All", if no value is selected yet
+				}
+						
+			}
+			
+			protected function crHireType_resultHandler(event:ResultEvent):void
+			{
+				if (crHireType.lastResult is ArrayCollection && crHireType.lastResult.length>0){
+					// Add an empty record to the top
+					var loHireType:Com_dspl_malkey_domain_Fhiretype = new Com_dspl_malkey_domain_Fhiretype();
+					loHireType.hiretypeid = "";
+					loHireType.description = "All";
+					crHireType.lastResult.addItemAt(loHireType, 0);
+					
+					if (cboHireType.selectedIndex < 0)
+						cboHireType.selectedIndex = 0;		// Set to "All", if no value is selected yet
+				}
+			}
+			// End: Result and Fault Handlers of Data Services
+			
+			
+			// Start: Bring all Master File data
+			private function loadMasterFiles():void{
+				crClientType.token = srvFclienttype.ListAll();
+				crClientTypeOrg.token = srvFclienttype.ListAll();
+				crColour.token = srvFcolour.ListAll();
+				crEngineSize.token = srvFenginesize.ListAll();
+				crVehicleModel.token = srvFvehiclemodel.ListAll();
+				crFuelType.token = srvFfueltype.ListAll();
+				crHireType.token = srvFhiretype.ListAll();
+				crHireTypeOrg.token = srvFhiretype.ListAll();
+				crInspolicy.token = srvFinspolicy.ListAll();
+				crLocation.token = srvFlocation.ListAll();
+				crVehicleClass.token = srvFvehicleclass.ListAll();
+				crVehicleMake.token = srvFvehiclemake.ListAll();
+				crVehicleStatus.token = srvFvehiclestatus.ListAll();
+				crVehicleTrans.token = srvFvehicletrans.ListAll();
+				crVehicleType.token = srvFvehicletype.ListAll();
+				crVInventryList.token = srvFvinventrylist.ListAll();
+				crRateType.token = srvFratetype.listAll();
+								
+				cr3rdPartyOwners.token = srvFsupplier.listBySupType("T");
+				crInsFleet.token = srvFsupplier.listBySupType("I");
+				crLeaseCom.token = srvFsupplier.listBySupType("L");
+				crCompany.token = srvFcompany.ListAll();
+			}
+			// End: Bring all Master File data
+			
+			
+			// Start: Filter the Vehicle Model Combo drop down based on selected the Vehicle Make
+			protected function cboMake_changeHandler(event:*):void
+			{
+				sVehicleMakeID = "";
+				sVehicleMake = "";
+				if(cboMake.selectedIndex > -1){
+					sVehicleMakeID = crVehicleMake.lastResult[cboMake.selectedIndex].vehimakeid;
+					sVehicleMake = crVehicleMake.lastResult[cboMake.selectedIndex].description;
+					crVehicleModel.lastResult.refresh();
+					
+					if (crVehicleModel.lastResult is ArrayCollection && fTmpVehicle.vehimodelid is String)
+						cboModel.selectedIndex = oGenFunctions.getArrayCollectionIndex(crVehicleModel.lastResult, "id.vehimodelid", fTmpVehicle.vehimodelid);
+				}	
+			}
+			
+			private function filterVehicleModel(item:Object):Boolean
+			{
+				var val:Boolean = false;
+				if(sVehicleMakeID==item.id.vehimakeid)
+					val = true;
+				
+				return val;
+			}
+			// End: Filter the Vehicle Model Combo drop down 
+
+
+			// Start: Filter the Vehicle Rate data based on selected the Vehicle Model, HireType and Client Type
+			protected function cboModel_changeHandler(event:*):void
+			{
+				var lsVehiModelID:String = "";
+				if (cboModel.selectedIndex > -1){
+					sVehicleModel = crVehicleModel.lastResult[cboModel.selectedIndex].description;
+					sVehiModelID = crVehicleModel.lastResult[cboModel.selectedIndex].id.vehimodelid;
+				} else {
+					sVehicleModel = "";
+					sVehiModelID = "";
+				}
+					
+				
+				crVehicleRate.token = srvFvehiclerate.listByVehiModelID(sVehiModelID);
+			}
+			
+			protected function cboHireType_changeHandler(event:ListEvent):void
+			{
+				if (cboHireType.selectedIndex > -1){
+					sHireType = crHireType.lastResult[cboHireType.selectedIndex].hiretypeid;
+					crVehicleRate.lastResult.refresh();
+				} else sHireType = "";
+			}
+			
+			 protected function cboClientType_changeHandler(event:ListEvent):void
+			{
+				if (cboClientType.selectedIndex > -1){
+					sClientType = crClientType.lastResult[cboClientType.selectedIndex].clienttype;
+					crVehicleRate.lastResult.refresh();
+				} else sClientType = "";
+			} 
+			
+			private function filterVehicleRate(item:Object):Boolean
+			{				
+				var val:Boolean = true;
+				
+				if (sHireType.length>0 && sHireType!=item.id.hiretypeid)		// Only filter based on Hire Type if a value is selected
+					val = false;
+				
+				if (sClientType.length>0 && sClientType!=item.id.clienttype)	// Only filter based on Client Type if a value is selected
+					val = false;
+				
+				return val;
+			}
+			// End: Filter the Vehicle Rate data 
+
+
+			protected function cboType_changeHandler(event:*):void
+			{
+				if (cboType.selectedIndex > -1)
+					sVehiTypeImage = crVehicleType.lastResult[cboType.selectedIndex].image; 
+			}
+			
+
+			// Start: Refresh form controls
+			protected function refreshFormControls():void{
+				nCalledVImgNA = 0;
+				
+				// Refresh the master file combo's  
+				cboClass.selectedIndex = oGenFunctions.getArrayCollectionIndex(crVehicleClass.lastResult, "vehiclassid", fTmpVehicle.vehiclassid);
+				cboType.selectedIndex = oGenFunctions.getArrayCollectionIndex(crVehicleType.lastResult, "vehitypeid", fTmpVehicle.vehitypeid);
+				cboMake.selectedIndex = oGenFunctions.getArrayCollectionIndex(crVehicleMake.lastResult, "vehimakeid", fTmpVehicle.vehimakeid);
+				cboTrans.selectedIndex = oGenFunctions.getArrayCollectionIndex(crVehicleTrans.lastResult, "vehitransid", fTmpVehicle.vehitransid);
+				cboFuel.selectedIndex = oGenFunctions.getArrayCollectionIndex(crFuelType.lastResult, "fueltypeid", fTmpVehicle.fueltypeid);
+				cboEngine.selectedIndex = oGenFunctions.getArrayCollectionIndex(crEngineSize.lastResult, "engsizeid", fTmpVehicle.engsizeid);
+				cboLoc.selectedIndex = oGenFunctions.getArrayCollectionIndex(crLocation.lastResult, "locationid", fTmpVehicle.locationid);
+				cboSts.selectedIndex = oGenFunctions.getArrayCollectionIndex(crVehicleStatus.lastResult, "vehistsid", fTmpVehicle.vehistsid);
+				cboFleet.selectedIndex = oGenFunctions.getArrayCollectionIndex(crInsFleet.lastResult, "supcode", fTmpVehicle.fleetid);
+				cboPolicyType.selectedIndex = oGenFunctions.getArrayCollectionIndex(crInspolicy.lastResult, "policyid", fTmpVehicle.policyid);
+				
+				// Vehicle Color
+				cboColour.selectedIndex = oGenFunctions.getArrayCollectionIndex(crColour.lastResult, "colourid", fTmpVehicle.colourid);
+				setColurBox();
+				/* if (cboColour.selectedIndex > -1){
+					nVehicleColour = crColour.lastResult[cboColour.selectedIndex].colcode;
+					bColour.visible = true;
+				} else {
+					bColour.visible = false;
+					nVehicleColour = 0;
+				} */
+								
+				if (fTmpVehicle.leasecomid.length==0)
+					cboLeaseCom.selectedIndex = -1;
+				else
+					cboLeaseCom.selectedIndex = oGenFunctions.getArrayCollectionIndex(crLeaseCom.lastResult, "supcode", fTmpVehicle.leasecomid);
+				
+				cboMake_changeHandler(Event);						// Filter the Vehicle Models based on the selected Make
+				cboModel.selectedIndex = oGenFunctions.getArrayCollectionIndex(crVehicleModel.lastResult, "id.vehimodelid", fTmpVehicle.vehimodelid);
+				
+				// Refresh the Vehicle Owner Details
+				if (fTmpVehicle.ownertype.length>0){
+					var lnOwnerDetail:int = -1;
+					cboOwnerType.selectedIndex = oGenFunctions.getArrayCollectionIndex(fOwnerType, "des", fTmpVehicle.ownertype);
+					if (cboOwnerType.text.toUpperCase()=="COMPANY"){
+						cboCompany.selectedIndex = oGenFunctions.getArrayCollectionIndex(crCompany.lastResult, "companyid", fTmpVehicle.ownercompanyid);
+					} else {	// 3rd party vehicles
+						lnOwnerDetail = oGenFunctions.getArrayCollectionIndex(cr3rdPartyOwners.lastResult, "supcode", fTmpVehicle.ownerid);
+					}
+					
+					if (lnOwnerDetail==-1) 
+						oOutsideOwnerDetail = new Com_dspl_malkey_domain_Fsupplier();
+					else
+						oOutsideOwnerDetail = cr3rdPartyOwners.lastResult.getItemAt(lnOwnerDetail);
+				}
+				
+				cboDummy.selectedIndex = fTmpVehicle.dummyvehi;
+				/* cboVintage.selectedIndex = fTmpVehicle.vintage; */
+				
+				cboOwnerType_changeHandler(Event);					// Set the page layout based on the Owner Type
+				cboModel_changeHandler(Event);						// Refresh the Vehicle Model on Rates page tab 
+				cboType_changeHandler(Event);						// Set the Vehicle Diagram based on the Vehicle Type
+				
+				// Set the ODO Meter and Fuel Meter
+				setODOOrgMile(fTmpVehicle.orgmileage.toString());
+				setODOCurMile(fTmpVehicle.curmileage.toString());
+				setFuelLevel(fTmpVehicle.fuellevel.toString());
+				setFuelMeterEnabled(false);
+								
+				
+				// Display last updated info of the record
+				sLastModBy = fTmpVehicle.adduser;
+				sLastModDate = fTmpVehicle.adddate.toDateString();
+								
+				removeAllCI();		// Remove all damage marks from the Vehicle Diagram Image on "Status" page
+				btnScratch.selected = false;
+				btnDent.selected = false;
+				
+				// Vehicle image related buttons
+				btnPrevPic.enabled = false;
+				btnNextPic.enabled = false;
+				btnClearImage.enabled = false;
+				chkDefaultPic.enabled = false;
+				
+				// Refresh the relational data
+				crVehicleInventry.token = srvFvehicleinventry.listByRegNo(fTmpVehicle.regno);		// Vehicle Inventory
+				crVehicleDamage.token = srvFvehicledamage.listByRegNo(fTmpVehicle.regno);
+				crVehiclePic.token = srvFvehiclepic.listByRegNo(fTmpVehicle.regno);
+			}
+			// End: Refresh form controls
+			
+			
+			// Start: Save the changes made
+			private function save():void
+			{	
+				var lsRegNo:String = txtRegNo.text.toUpperCase();
+				var lsVehiModelID:String = crVehicleModel.lastResult[cboModel.selectedIndex].id.vehimodelid;
+				
+				oUpdatedVehicleRec = new Com_dspl_malkey_domain_Fvehicle();
+				
+				// General page tab
+				oUpdatedVehicleRec.regno = lsRegNo;
+				oUpdatedVehicleRec.vehiclassid = crVehicleClass.lastResult[cboClass.selectedIndex].vehiclassid;
+				oUpdatedVehicleRec.vehitypeid = crVehicleType.lastResult[cboType.selectedIndex].vehitypeid;
+				oUpdatedVehicleRec.vehimakeid = crVehicleMake.lastResult[cboMake.selectedIndex].vehimakeid;
+				oUpdatedVehicleRec.vehimodelid = lsVehiModelID;
+				oUpdatedVehicleRec.vehitransid = crVehicleTrans.lastResult[cboTrans.selectedIndex].vehitransid;
+				oUpdatedVehicleRec.fueltypeid = crFuelType.lastResult[cboFuel.selectedIndex].fueltypeid;
+				oUpdatedVehicleRec.colourid = crColour.lastResult[cboColour.selectedIndex].colourid;
+				oUpdatedVehicleRec.engsizeid = crEngineSize.lastResult[cboEngine.selectedIndex].engsizeid;
+				oUpdatedVehicleRec.locationid = crLocation.lastResult[cboLoc.selectedIndex].locationid;
+				oUpdatedVehicleRec.vehistsid = crVehicleStatus.lastResult[cboSts.selectedIndex].vehistsid;
+				oUpdatedVehicleRec.orgmileage = fTmpVehicle.orgmileage;
+				oUpdatedVehicleRec.description = txtDescription.text;
+				oUpdatedVehicleRec.dpurchase = dfPDate.selectedDate;
+				oUpdatedVehicleRec.year = int(txtYOM.text);
+				oUpdatedVehicleRec.chassisno = txtChassisNo.text;
+				oUpdatedVehicleRec.engineno = txtEngineNo.text;
+				oUpdatedVehicleRec.value = txtValue.text;
+				oUpdatedVehicleRec.fuelconsump = txtAvgFuel.text;
+				oUpdatedVehicleRec.fueltankval = txtFuelTankVal.text;
+				oUpdatedVehicleRec.mainseats = nsMainSeat.value;
+				oUpdatedVehicleRec.jumpseats = nsJumpSeat.value;
+				oUpdatedVehicleRec.sparekeys = nsSpareKey.value;
+				oUpdatedVehicleRec.curmileage = fTmpVehicle.curmileage;
+				oUpdatedVehicleRec.image = sVehicleImageURL;
+				/* oUpdatedVehicleRec.vintage=acVintage[cboVintage.selectedIndex].id; */
+				// Ownership page tab
+				var lsOwnerType:String = fOwnerType[cboOwnerType.selectedIndex].des;
+				if (lsOwnerType.toUpperCase()=="COMPANY"){
+					oUpdatedVehicleRec.ownercompanyid = crCompany.lastResult[cboCompany.selectedIndex].companyid;
+					oUpdatedVehicleRec.ownerid = "";
+				} else {
+					// 3rd party vehicles
+					oUpdatedVehicleRec.ownerid = oOutsideOwnerDetail.supcode;
+					oUpdatedVehicleRec.ownercompanyid = "";
+				}
+				
+				// Dummy Vehicle Update
+				var lsDummyVehi:String = fDumyVehi[cboDummy.selectedIndex].des;
+				if (lsDummyVehi.toUpperCase() == "YES"){
+					oUpdatedVehicleRec.dummyvehi = 1;
+				}else {
+					oUpdatedVehicleRec.dummyvehi = 0;
+				}
+				
+				oUpdatedVehicleRec.ownertype = lsOwnerType;
+				
+				// Maintenance page tab - Insurance
+				oUpdatedVehicleRec.fleetid = crInsFleet.lastResult[cboFleet.selectedIndex].supcode;
+				oUpdatedVehicleRec.inspolicyno = txtInsPolicyNo.text;
+				oUpdatedVehicleRec.inscompany = txtInsCompany.text;
+				oUpdatedVehicleRec.insamount = txtInsAmt.text;
+				oUpdatedVehicleRec.insdexpiry = dfInsDExp.selectedDate;
+				oUpdatedVehicleRec.inspolexces = txtPolExces.text;
+				oUpdatedVehicleRec.policyid = crInspolicy.lastResult[cboPolicyType.selectedIndex].policyid;
+				oUpdatedVehicleRec.insncb = txtNCB.text;
+				
+				// Maintenance page tab - Test Reports
+				oUpdatedVehicleRec.demission = dfDEmission.selectedDate;
+				oUpdatedVehicleRec.dfitness = dfDFitness.selectedDate;
+				
+				// Maintenance page tab - Revenue License
+				oUpdatedVehicleRec.drevlicense = dfDRevLic.selectedDate;
+				
+				// Maintenance page tab - Lease
+				if (cboLeaseCom.selectedIndex>-1)
+					oUpdatedVehicleRec.leasecomid = crLeaseCom.lastResult[cboLeaseCom.selectedIndex].supcode;
+				else	oUpdatedVehicleRec.leasecomid = "";
+				
+				oUpdatedVehicleRec.leasedstart = dfLeaseDStart.selectedDate;
+				oUpdatedVehicleRec.leasedlastpay = dfLeaseDLastPay.selectedDate;
+				oUpdatedVehicleRec.leaseamt = txtLeaseAmt.text;
+				oUpdatedVehicleRec.leasemonthlyamt = txtLeaseMonthlyAmt.text;
+				oUpdatedVehicleRec.leasenoofmonth = nsLeaseMonths.value;
+				
+				// Status page tab
+				oUpdatedVehicleRec.fuellevel = getCurrentFuelMeterLevel();
+				
+				oUpdatedVehicleRec.recordid = fTmpVehicle.recordid;
+				oUpdatedVehicleRec.adddate = new Date();
+				oUpdatedVehicleRec.adduser = "";		// Would be updated at the server
+				oUpdatedVehicleRec.addmach = "";		// Would be updated at the server
+				
+				// Vehicle Inventry
+				var laVehicleInventory:ArrayCollection = new ArrayCollection();
+				for each(var loVehiInv:Object in crVInventryList.lastResult)
+				{
+					if (loVehiInv.isselected==1){
+						var loNewVehiInv:Com_dspl_malkey_domain_Fvehicleinventry = new Com_dspl_malkey_domain_Fvehicleinventry();
+						var loNewVehiInvPK:Com_dspl_malkey_domain_FvehicleinventryPK = new Com_dspl_malkey_domain_FvehicleinventryPK();
+						loNewVehiInvPK.regno = lsRegNo;
+						loNewVehiInvPK.invid = loVehiInv.invid;
+						loNewVehiInv.id = loNewVehiInvPK;
+						loNewVehiInv.recordid = 0;
+						laVehicleInventory.addItem(loNewVehiInv);
+					}
+				}
+
+				// Vehicle Rate
+				crVehicleRate.lastResult.filterFunction = null;					// Remove the active filters 
+				crVehicleRate.lastResult.refresh();
+				
+				var laVehicleRate:ArrayCollection = new ArrayCollection();
+				for each(var loVehiRate:Object in crVehicleRate.lastResult)
+				{
+					var loNewVehiRate:Com_dspl_malkey_domain_Fvehiclerate = new Com_dspl_malkey_domain_Fvehiclerate();
+					var loNewVehiRatePK:Com_dspl_malkey_domain_FvehicleratePK = new Com_dspl_malkey_domain_FvehicleratePK();
+					loNewVehiRatePK.vehimodelid = lsVehiModelID;
+					loNewVehiRatePK.clienttype = loVehiRate.id.clienttype;
+					loNewVehiRatePK.hiretypeid = loVehiRate.id.hiretypeid;
+					loNewVehiRatePK.ratetype = loVehiRate.id.ratetype;
+					loNewVehiRate.id = loNewVehiRatePK;
+					loNewVehiRate.standardrate = loVehiRate.standardrate;
+					loNewVehiRate.rate = loVehiRate.rate;
+					loNewVehiRate.xsmilerate = loVehiRate.xsmilerate;
+					loNewVehiRate.allotedkms = loVehiRate.allotedkms;
+					loNewVehiRate.xhourrate = new Number(loVehiRate.xhourrate).toString();
+					loNewVehiRate.allotedhours = new Number(loVehiRate.allotedhours);
+					// If the record the is an new/ edited record, update the "add" fields with the current user info. If not leave it as it is
+					loNewVehiRate.adduser = loVehiRate.recordid==0 ? oUpdatedVehicleRec.adduser : loVehiRate.adduser;
+					loNewVehiRate.adddate = loVehiRate.recordid==0 ? oUpdatedVehicleRec.adddate : loVehiRate.adddate;
+					loNewVehiRate.addmach = loVehiRate.recordid==0 ? oUpdatedVehicleRec.addmach : loVehiRate.addmach;
+					loNewVehiRate.recordid = 0;
+					laVehicleRate.addItem(loNewVehiRate);
+				}
+				
+				// Vehicle Pictures
+				var liImageFileCount:int = 0;
+				for each(var loVehiPic:Com_dspl_malkey_domain_Fvehiclepic in aVehiclePic)
+				{
+					if (loVehiPic.imageurl.length==0){
+						// New image has been selected, construct the file name to be created at the server when uploading
+						var lnFileAlreadyExists:int=-1;		// This would "-1" when a similar file name already exists for this vehicle
+						var lsFileExtention:String = loVehiPic.imagename.substr(loVehiPic.imagename.lastIndexOf(".")+1);
+						var lsImageFileName:String = "";
+						
+						// Construct an unique image file to name be saved at the server
+						do{
+							liImageFileCount += 1;
+							lsImageFileName = lsRegNo+"-"+liImageFileCount.toString()+"."+lsFileExtention;
+							
+							// Check if a file with the similar name already exists
+							lnFileAlreadyExists = oGenFuncForImageNav.getArrayCollectionIndex(aVehiclePic, "imagename", lsImageFileName);
+						} while (lnFileAlreadyExists>-1);
+						
+						loVehiPic.imagename = lsImageFileName;		// Image file to be created at the server
+					}
+				} 
+				
+				sRegNoToDisplay = oUpdatedVehicleRec.regno;			// Update this with the current RegNo, so that the edited/ created Vehicle info is displayed after SAVE() is completed.
+								
+				if (currentState.toUpperCase()=="NEW")
+					crVehicleCreate.token = srvFvehicle.create(oUpdatedVehicleRec, crVehicleDamage.lastResult, laVehicleInventory, laVehicleRate, aVehiclePic);
+				else
+					crVehicleUpdate.token = srvFvehicle.update(oUpdatedVehicleRec, crVehicleDamage.lastResult, laVehicleInventory, laVehicleRate, aVehiclePic);
+			}
+			// End: Save the changes made
+			
+			
+			/**
+			 * Verify if mandatory fields are specified 
+			 */
+			private function validateMandatoryInput():Boolean
+			{
+				//~ General Page Tab
+				if (txtRegNo.text.length==0){
+					Alert.show("Vehicle registration number cannot be empty. Please enter a valid registration number.", title, Alert.OK, this, null, oGenFunctions.IconWarning);
+					tnMain.selectedIndex = 0;
+					return false;
+				}
+				
+				var laFldGeneralVals:Array = Validator.validateAll(aMandatoryFldGeneral);
+				if (laFldGeneralVals.length>0){					
+					Alert.show("Unable to save changes since mandatory field values are missing/ invalid in General Tab.", title, Alert.OK, null, null, oGenFunctions.IconWarning);
+					tnMain.selectedIndex = 0;
+					return false;
+				}
+				
+				//~ Ownership Page Tab
+				if (cboOwnerType.text.length==0){
+					Alert.show("Please select a Vehicle Owner Type.", title, Alert.OK, this, null, oGenFunctions.IconWarning);
+					tnMain.selectedIndex = 3;
+					return false;
+				}
+				
+				// Check if a Owner has been specified
+				if (cboOwnerType.text.toUpperCase()=="COMPANY"){
+					// Ensure a company is selected
+					if (cboCompany.text.length==0){
+						Alert.show("Please select a valid Vehicle Owning Company.", title, Alert.OK, null, null, oGenFunctions.IconWarning);
+						tnMain.selectedIndex = 3;
+						return false;
+					}
+				} else { // Validate of Outside Owner details
+					var laFldOutsideOwnerVals:Array = Validator.validateAll(aMandatoryFldOutsideOwner);
+					if (laFldOutsideOwnerVals.length > 0){					
+						Alert.show("Unable to save changes since some of the Ownership details are missing.", title, Alert.OK, null, null, oGenFunctions.IconWarning);
+						tnMain.selectedIndex = 3;
+						return false;
+					}
+				}
+				
+				//~ Maintenance Page Tab
+				// Insurance
+				if (cboFleet.text.length==0){
+					Alert.show("Please select a Vehicle Insurance Fleet.", title, Alert.OK, this, null, oGenFunctions.IconWarning);
+					tnMain.selectedIndex = 4;
+					return false;
+				}
+				
+				var laFldMaintenanceVals:Array = Validator.validateAll(aMandatoryFldMaintenance);
+				if (laFldMaintenanceVals.length > 0){					
+					Alert.show("Unable to save changes since some of Maintenance details are missing.", title, Alert.OK, null, null, oGenFunctions.IconWarning);
+					tnMain.selectedIndex = 4;
+					return false;
+				}
+				
+				// Leasing
+				if (cboLeaseCom.selectedIndex>-1){
+					var laFldLeasingVals:Array = Validator.validateAll(aMandatoryFldLeasing);
+					if (laFldLeasingVals.length > 0){					
+						Alert.show("Unable to save changes since some of Leasing details are missing.", title, Alert.OK, null, null, oGenFunctions.IconWarning);
+						cboLeaseCom.setFocus();
+						tnMain.selectedIndex = 4;
+						return false;
+					}					
+				}
+				
+				return true;				
+			}
+			// End: Save the changes made
+			
+			
+			/**
+			 *  Delete a Vehicle Entry
+			 */
+			private function deleteVehicle(event:CloseEvent):void
+			{
+				if (event.detail==Alert.NO)
+					return;		// Nothing to do
+				
+				// Validate if this record can be deleted
+				crVehicleRemovable.token = srvFvehicle.isVehicleRemovable(txtRegNo.text);
+				
+				// Remove the record
+				//crVehicleRemove.token = srvFvehicle.removeByID(txtRegNo.text); 
+			}
+			// End: Delete a Vehicle Entry
+			
+			
+			// Start: Tool Bar button related code
+			protected function btnNew_clickHandler(event:MouseEvent):void
+			{
+				fTmpVehicle = new Com_dspl_malkey_domain_Fvehicle();
+				
+				with (fTmpVehicle){
+					regno = "";
+					vehiclassid = "";
+					vehitypeid = "";
+					vehimakeid = "";
+					vehimodelid = "";
+					vehitransid = "";
+					fueltypeid = "";
+					colourid = "";
+					engsizeid = "";
+					locationid = "";
+					vehistsid = "";
+					orgmileage = 0;
+					description = "";
+					dpurchase = null;
+					year = 0;
+					chassisno = "";
+					engineno = "";
+					value = "0.00";
+					fuelconsump = "0";
+					fueltankval = "0";
+					mainseats = 0;
+					jumpseats = 0;
+					sparekeys = 0;
+					curmileage = 0;
+					image = "";
+					
+					// Ownership page tab
+					ownertype = "Company";
+					ownercompanyid = "";
+					
+					// Maintenance page tab - Insurance
+					fleetid = "";
+					inspolicyno = "";
+					inscompany = "";
+					insamount = "0.00";
+					insdexpiry = null;
+					inspolexces = "0.00";
+					policyid = "";
+					insncb = "0.00";
+					
+					// Maintenance page tab - Test Reports
+					demission = null;
+					dfitness = null;
+					
+					// Maintenance page tab - Revenue License
+					drevlicense = null;
+					
+					// Maintenance page tab - Lease
+					leasecomid = "";
+					
+					leasedstart = null;
+					leasedlastpay = null;
+					leaseamt = "0.00";
+					leasemonthlyamt = "0.00";
+					leasenoofmonth = 0;
+					
+					// Status page tab
+					fuellevel = 0;
+					
+					ownerid = "";
+					recordid = 0;
+					adddate = new Date();
+					adduser = "";
+					addmach = "";
+				}
+				
+				refreshFormControls();
+				setFuelMeterEnabled(true);
+				currentState = "New";
+				tnMain.selectedIndex = 0;
+				txtRegNo.setFocus();
+			}
+			
+			protected function btnEdit_clickHandler(event:MouseEvent):void
+			{
+				currentState = "Edit";
+				
+				setFuelMeterEnabled(true);
+				
+				if (oGenFuncForImageNav.intTotalRecs>0)
+					btnClearImage.enabled = true;
+				
+				if (oGenFuncForImageNav.intTotalRecs>1)			// A single image is available, so this would the default image
+					chkDefaultPic.enabled = true;
+				
+				nOrgMileage = fTmpVehicle.orgmileage;
+				nCurMileage = fTmpVehicle.curmileage;
+			}
+			
+			protected function btnDelete_clickHandler(event:MouseEvent):void
+			{
+				var lsRegNo:String = StringUtil.trim(txtRegNo.text);
+				
+				if (lsRegNo.length > 0)
+					Alert.show("Delete details of Vehicle Registration No '"+lsRegNo+"' and its related details?", title + " - Delete", Alert.YES | Alert.NO, null, deleteVehicle, oGenFunctions.IconQuestion, Alert.NO);
+			}
+
+			protected function btnUndo_clickHandler(event:MouseEvent):void
+			{
+				var liCurrentRecNo:int = oGenFunctions.intCurrentRecNo;
+				
+				if (currentState.toUpperCase()=="NEW")
+					liCurrentRecNo = 0;		// Move to the TOP record
+				
+				if (currentState.toUpperCase()=="EDIT"){
+					fTmpVehicle.orgmileage = nOrgMileage;
+					fTmpVehicle.curmileage = nCurMileage;
+				}
+				
+				currentState = "Default";
+								
+				// Shuffle the RecNo and set it to the current RecNo inorder to properly refresh screen with the original data
+				oGenFunctions.intCurrentRecNo = -1;
+				oGenFunctions.intCurrentRecNo = liCurrentRecNo;
+				
+				refreshFormControls();
+			}
+			
+			protected function btnTop_clickHandler(event:MouseEvent):void
+			{
+				oGenFunctions.goTop();
+				refreshFormControls();
+			}
+
+			protected function btnBack_clickHandler(event:MouseEvent):void
+			{
+				oGenFunctions.goBack();
+				refreshFormControls();
+			}
+
+			protected function btnNext_clickHandler(event:MouseEvent):void
+			{
+				oGenFunctions.goNext();
+				refreshFormControls();
+			}
+
+			protected function btnBottom_clickHandler(event:MouseEvent):void
+			{
+				oGenFunctions.goBottom();
+				refreshFormControls();
+			}
+			
+
+			/**
+			 * Launch the Search Grid [mySearchGrid.mxml]  
+			 */
+			protected function btnFind_clickHandler(event:MouseEvent):void
+			{
+				// Launch the Search Grid [mySearchGrid.mxml]
+				var loApp:DisplayObject = DisplayObject(FlexGlobals.topLevelApplication);
+				//oGrdVSearch = PopUpManager.createPopUp(loApp, _twMasterFileSearch, true);
+				oGrdVSearch = PopUpManager.createPopUp(loApp, _twMasterFileSearch, true);
+				oGrdVSearch.addCol("vehiclassid,vehimakeid,vehimodelid,vehitransid,fueltypeid,colourid,engsizeid,year","Class,Make,Model,Transmission,Fuel,Colour,Engine Size,YOM",90);
+				
+				// Set the requried Master File related setting				
+				oGrdVSearch._acDataProvider = crVehicle.lastResult;
+				oGrdVSearch._strKeyColumn = "regno";
+				oGrdVSearch._strDetailColumn = "description";
+				oGrdVSearch._strKeyColCaption = "Registration No";
+				oGrdVSearch._strDetailColCaption = "Description";
+				oGrdVSearch._strWindowTitle = "Find Vehicle";
+				
+				// Center the pop-up window			
+				PopUpManager.centerPopUp(IFlexDisplayObject(oGrdVSearch));
+				
+				// Bind the pop-up windows close event to the "closeSearchGrid" of this component 
+				oGrdVSearch.addEventListener("twMFSearchClose", closeVehicleFind);
+			}
+			
+			private function closeVehicleFind(event:Event):void
+			{				
+				// Remove the pop-up window
+				PopUpManager.removePopUp(IFlexDisplayObject(oGrdVSearch));
+				
+				if (oGrdVSearch._strSelectedCode != "") {
+					oGenFunctions.intCurrentRecNo = oGrdVSearch._nSelectedIndex;
+					refreshFormControls();
+				}
+			}
+			
+			protected function btnReload_clickHandler(event:MouseEvent):void
+			{
+				lLoadMasterFilesButtonClicked = true;
+				loadMasterFiles();
+			}
+
+			protected function btnSave_clickHandler(event:MouseEvent):void
+			{
+				// Validate for mandatory fields
+				if (validateMandatoryInput())
+					if (currentState.toUpperCase()=="NEW")
+						crVehicleFindByID.token = srvFvehicle.findByID(txtRegNo.text);
+					else
+						save();
+			}
+			// End: Tool Bar button realted code
+
+
+			/**
+			 * Vehicle Rate New/ Edit/ Delete related code
+			 */
+			protected function btnVehiRateNew_clickHandler(event:MouseEvent):void
+			{
+				lCreateNewVehiRate = true;
+				launchVehicleRatePopUp()
+			}
+
+			protected function btnVehiRateEdit_clickHandler(event:MouseEvent):void
+			{
+				if (dgVehiRate.selectedIndex == -1)
+					Alert.show("Select a record to edit.", sVRateTitle, Alert.OK, this, null, oGenFunctions.IconWarning);
+				else {
+					Alert.show("Editing vehicle rate would affect all the vehicle(s) of Model ‘" + StringUtil.trim(sVehiModelID) + "’. Continue editing?", 
+						sVRateTitle, Alert.YES | Alert.NO, this, editVehicleRate_closeHandler, oGenFunctions.IconQuestion);
+				}
+			}
+			
+			private function editVehicleRate_closeHandler(event:CloseEvent):void
+			{
+				if (event.detail==Alert.YES){
+					lCreateNewVehiRate = false;
+					launchVehicleRatePopUp()
+				}
+			}
+
+			protected function btnVehiRateDel_clickHandler(event:MouseEvent):void
+			{
+				if (dgVehiRate.selectedIndex == -1)
+					Alert.show("Select a record to delete!", sVRateTitle, Alert.OK, this, null, oGenFunctions.IconInformation);
+				else 
+					Alert.show("Do you want to delete this vehicle rate entry?", sVRateTitle, Alert.YES | Alert.NO, this, vehicleRateDel_closeHandler, oGenFunctions.IconQuestion);
+			}
+			
+			private function vehicleRateDel_closeHandler(event:CloseEvent):void
+			{
+				if (event.detail==Alert.YES)
+					crVehicleRate.lastResult.removeItemAt(dgVehiRate.selectedIndex);
+			}
+			
+			private function launchVehicleRatePopUp():void
+			{
+				crVehicleRate.lastResult.filterFunction = null;					// Remove the active filters 
+				crVehicleRate.lastResult.refresh(); 
+				
+				var app:DisplayObject = DisplayObject(FlexGlobals.topLevelApplication);
+				oVRate = PopUpManager.createPopUp(app, VehicleRate, true);
+				oVRate.gaVehicleRate = crVehicleRate.lastResult;
+				oVRate.gaClientType = crClientTypeOrg.lastResult;
+				oVRate.gaHireType = crHireTypeOrg.lastResult;
+				oVRate.gaRateType = crRateType.lastResult;
+				oVRate.addEventListener("closeVehicleRatePopUp", closeVehicleRatePopUp);		// Link with this method upon closure of the pop-up
+				
+				var lcWindowTitleSuffix:String = "Edit";
+				
+				if (lCreateNewVehiRate==true){
+					lcWindowTitleSuffix = "New";
+					
+					var oVehicleRatePK:Com_dspl_malkey_domain_FvehicleratePK = new Com_dspl_malkey_domain_FvehicleratePK();					 
+					oVehicleRatePK.vehimodelid = fTmpVehicle.vehimodelid;
+					oVehicleRatePK.clienttype = cboClientType.selectedIndex>-1 ? crClientType.lastResult[cboClientType.selectedIndex].clienttype : "";
+					oVehicleRatePK.hiretypeid = cboHireType.selectedIndex>-1 ? crHireType.lastResult[cboHireType.selectedIndex].hiretypeid : "";
+					oVehicleRatePK.ratetype = "";
+					
+					oVRate.gfTmpVehicleRate = new Com_dspl_malkey_domain_Fvehiclerate();
+					oVRate.gfTmpVehicleRate.id = oVehicleRatePK;
+					oVRate.gfTmpVehicleRate.recordid = 0;
+					oVRate.gfTmpVehicleRate.standardrate = "0.00";
+					oVRate.gfTmpVehicleRate.xsmilerate = "0.00";
+					oVRate.gfTmpVehicleRate.xhourrate = "0.00";
+				} else {
+					oVRate.gfTmpVehicleRate = crVehicleRate.lastResult[dgVehiRate.selectedIndex];			
+				}
+				
+				oVRate.title = sVRateTitle + " - " +  lcWindowTitleSuffix;
+				
+				PopUpManager.centerPopUp(IFlexDisplayObject(oVRate));
+			}
+			
+			private function closeVehicleRatePopUp(event:Event):void
+			{
+				if (oVRate.glBtnSaveClicked==true){		// Save button is clicked
+					if (lCreateNewVehiRate==true)		
+						// A new record is being created, add the record to the existing collection 
+						crVehicleRate.lastResult.addItem(oVRate.gfTmpVehicleRate);
+					
+					crVehicleRate.lastResult.refresh();
+				}
+				PopUpManager.removePopUp(IFlexDisplayObject(oVRate));
+				
+				crVehicleRate.lastResult.filterFunction = filterVehicleRate;				// Active the filters 
+				crVehicleRate.lastResult.refresh();
+			}
+			// End: Vehicle Rate New/ Edit/ Delete related code			
+			
+			
+			/**
+			 *  When a NEW Vehicle record is being created, when the user selects purchase date update 
+			 * Emission Test Date, Revenue License Renewal Date & Insurance Expiry Date accordingly
+			 */
+			protected function dfPDate_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				if (currentState.toUpperCase()=="NEW" && !(dfPDate.selectedDate==null)){
+					var ldPDate:Date = dfPDate.selectedDate;
+					
+					if (fTmpVehicle.demission==null)		// Emission Test Date
+						fTmpVehicle.demission = dfPDate.selectedDate;
+					
+					if (fTmpVehicle.drevlicense==null)		// Revenue License Renewal Date
+						fTmpVehicle.drevlicense = dfPDate.selectedDate;
+					
+					if (fTmpVehicle.insdexpiry==null){		// Insurance Expiry Date
+						ldPDate.fullYear += 1;				// Increament by 1 Year
+						ldPDate.date -= 1;					// Reduce 1 day from the Purchase Date to cover 1 year
+						fTmpVehicle.insdexpiry = ldPDate;
+					}
+				}
+			}
+			
+			protected function cboFleet_changeHandler(event:ListEvent):void
+			{
+				if (cboFleet.selectedIndex>-1)
+					txtInsCompany.text = crInsFleet.lastResult[cboFleet.selectedIndex].supname;
+			}
+
+
+			/**
+			 *  Outside Owner (3rd Party) Search
+			 */
+			protected function lbtnOutOwnerSearch_clickHandler(event:MouseEvent):void
+			{
+				// Launch the Search Grid [mySearchGrid.mxml]
+				var loApp:DisplayObject = DisplayObject(FlexGlobals.topLevelApplication);
+				oGrdVSearch = PopUpManager.createPopUp(loApp, _twMasterFileSearch, true);
+				
+				// Set the requried Master File related setting				
+				oGrdVSearch._strWindowTitle = "Find Outside Owner";
+				oGrdVSearch._acDataProvider = cr3rdPartyOwners.lastResult;
+				oGrdVSearch._strKeyColumn = "supcode";
+				oGrdVSearch._strDetailColumn = "supname";
+				oGrdVSearch._strKeyColCaption = "NIC/ Passport No";
+				oGrdVSearch._strDetailColCaption = "Name";
+				
+				// Center the pop-up window			
+				PopUpManager.centerPopUp(IFlexDisplayObject(oGrdVSearch));
+				
+				// Bind the pop-up windows close event to the "closeSearchGrid" of this component 
+				oGrdVSearch.addEventListener("twMFSearchClose", closeOutOwnerSearchGrid);
+			}
+			
+			private function closeOutOwnerSearchGrid(event:Event):void
+			{				
+				// Remove the pop-up window
+				PopUpManager.removePopUp(IFlexDisplayObject(oGrdVSearch));
+				if (oGrdVSearch._strSelectedCode != "") {
+					oOutsideOwnerDetail = cr3rdPartyOwners.lastResult.getItemAt(oGrdVSearch._nSelectedIndex);
+				}
+			}
+			// End: Outside Owner (3rd Party) Search
+
+
+			/**
+			 * Close this screen, 1st try to remove tab (which is in use in final application) if unable to just remove the pop-up
+			 */
+			protected function close():void
+			{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}
+				catch(e:Error)
+				{
+					PopUpManager.removePopUp(this);
+				}
+			}
+
+
+			/**
+			 * Enable/ disabled buttons based on the access level of the log-on user
+			 */ 
+			protected function controlbar1_creationCompleteHandler(event:FlexEvent):void
+			{
+				setPermission();
+			}
+			
+			
+			/**
+			 * Based on the value selected for the Colour combo set the Box with the approriate colur value
+			 */			
+			private function setColurBox():void
+			{
+				if (cboColour.selectedIndex > -1){
+					nVehicleColour = crColour.lastResult[cboColour.selectedIndex].colcode;
+					bColour.visible = true;
+				} else {
+					bColour.visible = false;
+					nVehicleColour = 0;
+				}
+			}
+
+			protected function dfLeaseDStart_changeHandler(event:CalendarLayoutChangeEvent):void{
+				getLastPaymentDate();
+			}
+			
+			protected function nsLeaseMonths_changeHandler(event:Event):void{
+				getLastPaymentDate();
+			}
+			
+			private function getLastPaymentDate():void{
+				try{
+					if(dfLeaseDStart.selectedDate!=null && nsLeaseMonths.value>0){
+						var lDate:Date=new Date(dfLeaseDStart.selectedDate.fullYear,dfLeaseDStart.selectedDate.month,dfLeaseDStart.selectedDate.date,0,0,0,0);
+						var months:int=nsLeaseMonths.value;
+						//dfLeaseDLastPay.selectedDate=dateAdd("month",months,lDate);
+						
+						lDate["month"] += months;
+						dfLeaseDLastPay.selectedDate=lDate;
+					}else{
+						dfLeaseDLastPay.selectedDate=dfLeaseDStart.selectedDate;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"getLastPaymentDate: " + error.message,"Error",null);
+				}
+			}
+			
+			private function dateAdd(datepart:String = "", number:Number = 0, date:Date = null):Date {
+				try{
+					if (date == null) {
+						/* Default to current date. */
+						date = new Date();
+					}
+					
+					var returnDate:Date = new Date(date.time);
+					
+					/* switch(datepart.toLocaleLowerCase()) {
+						case "yyyy":
+						case "year":
+							datepart = "fullYear";
+							break;
+						case "m":
+							datepart = "month";
+							break;
+						case "y":
+						case "d":
+						case "w":
+						case "day":
+							datepart = "date";
+							break;
+						case "h":
+							datepart = "hours";
+							break;
+						case "n":
+							datepart = "minutes";
+							break;
+						case "s":
+							datepart = "seconds";
+							break;
+						case "l":
+							datepart = "milliseconds";
+							break;
+					} */
+					
+					switch (datepart.toLowerCase()) {
+						case "fullyear":
+						case "month":
+						case "date":
+						case "hours":
+						case "minutes":
+						case "seconds":
+						case "milliseconds":
+							returnDate[datepart]  = number;
+							break;
+						default:
+							/* Unknown date part, do nothing. */
+							break;
+					}
+					return returnDate;
+				}catch(error:Error){
+					Message.displayAlert(1,"dateAdd: " + error.message,"Error",null);
+				}
+				return null;
+			}
+
+
+			protected function cboDummy_changeHandler(event:ListEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+		
+		
+		
+		protected function btnVehicleHireReport_clickHandler(event:MouseEvent):void
+		{
+			var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/VehicleHistory.jsp");
+			request.data =new URLVariables();
+			request.data.df=dfFormatter.format(dfFrom.selectedDate);
+			request.data.dt=dfFormatter.format(dfTo.selectedDate);
+			request.data.regno=fTmpVehicle.regno;
+			request.method = URLRequestMethod.POST;
+			navigateToURL(request); 
+			
+		}
+		]]>
+	</fx:Script>
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- Declarations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Declarations>
+		<services:FclienttypeSRV id="srvFclienttype"
+							 fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							 showBusyCursor="true"
+							 endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crClientType" result="crClientType_resultHandler(event)"/>
+		<s:CallResponder id="crClientTypeOrg"/>
+		
+		<services:FcolourSRV id="srvFcolour"
+							 fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							 showBusyCursor="true"
+							 endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crColour"/>
+		
+		<services:FenginesizeSRV id="srvFenginesize"
+								 fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								 showBusyCursor="true"
+								 endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crEngineSize"/>
+		
+		<services:FfueltypeSRV id="srvFfueltype"
+							   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							   showBusyCursor="true"
+							   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crFuelType"/>
+		
+		<services:FhiretypeSRV id="srvFhiretype"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+			showBusyCursor="true"
+			endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crHireType" result="crHireType_resultHandler(event)"/>
+		<s:CallResponder id="crHireTypeOrg"/>
+		
+		<services:FlocationSRV id="srvFlocation"
+							   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							   showBusyCursor="true"
+							   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crLocation"/>
+		
+		<services:FvehicleclassSRV id="srvFvehicleclass"
+								   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								   showBusyCursor="true"
+								   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleClass"/>
+		
+		<services:FvehiclemakeSRV id="srvFvehiclemake"
+								  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								  showBusyCursor="true"
+								  endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleMake"/>
+		
+		<services:FvehiclemodelSRV id="srvFvehiclemodel"
+								   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								   showBusyCursor="true"
+								   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleModel" result="crVehicleModel_resultHandler(event)"/>
+		
+		<services:FvehiclerateSRV id="srvFvehiclerate"
+									fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+									showBusyCursor="true"
+									endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleRate" result="crVehicleRate_resultHandler(event)"/>
+		
+		<services:FvehiclestatusSRV id="srvFvehiclestatus"
+									fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+									showBusyCursor="true"
+									endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleStatus"/>
+		
+		<services:FvehicletransSRV id="srvFvehicletrans"
+								   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								   showBusyCursor="true"
+								   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleTrans"/>
+		
+		<services:FvehicletypeSRV id="srvFvehicletype"
+								  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								  showBusyCursor="true"
+								  endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleType"/>
+
+		<services:FvinventrylistSRV id="srvFvinventrylist"
+								  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								  showBusyCursor="true"
+								  endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVInventryList"/>
+		
+		<services:FinspolicySRV id="srvFinspolicy"
+								  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								  showBusyCursor="true"
+								  endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crInspolicy"/>
+		
+		<services:FvehicleSRV id="srvFvehicle"
+								  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								  showBusyCursor="true"
+								  endpoint="@Resource(key='url',bundle='resource')"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicle id="fTmpVehicle"/>
+		<s:CallResponder id="crVehicle" result="crVehicle_resultHandler(event)"/>
+		<s:CallResponder id="crVehicleUpdate" result="crVehicleUpdate_resultHandler(event)"/>
+		<s:CallResponder id="crVehicleCreate" result="crVehicleCreate_resultHandler(event)"/>
+		<s:CallResponder id="crVehicleRemove" result="crVehicleRemove_resultHandler(event)"/>
+		<s:CallResponder id="crVehicleFindByID" result="crVehicleFindByID_resultHandler(event)"/>
+		<s:CallResponder id="crVehicleRemovable" result="crVehicleRemovable_resultHandler(event)"/>
+		
+		<services:FvehicleinventrySRV id="srvFvehicleinventry"
+							  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							  showBusyCursor="true"
+							  endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleInventry" result="crVehicleInventry_resultHandler(event)"/>
+		
+		<services:FvehicledamageSRV id="srvFvehicledamage"
+									  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+									  showBusyCursor="true"
+									  endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleDamage" result="crVehicleDamage_resultHandler(event)"/>
+		
+		<services:FratetypeSRV id="srvFratetype"
+								fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								showBusyCursor="true"
+								endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crRateType"/>
+		
+		<services:FvehiclepicSRV id="srvFvehiclepic"
+							   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							   showBusyCursor="true"
+							   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehiclePic" result="crVehiclePic_resultHandler(event)"/>
+		
+		<services:FsupplierSRV id="srvFsupplier"
+							   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							   showBusyCursor="true"
+							   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="cr3rdPartyOwners"/>
+		<s:CallResponder id="crInsFleet"/>
+		<s:CallResponder id="crLeaseCom"/>
+
+		<services:FcompanySRV id="srvFcompany"
+								fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								showBusyCursor="true"
+								endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crCompany"/>
+		
+		<!-- Effects for the Vehicle Image -->
+		<mx:Fade id="fade" />
+		<mx:Rotate id="rotate"
+			   angleFrom="-180"
+			   angleTo="0"
+			   easingFunction="Elastic.easeInOut"
+			   duration="2000" />
+	
+		<!-- Input Validations for Manadatory Form Items -->
+		
+		<!-- General Page Tab -->
+		<mx:StringValidator id="svRegNo" source="{txtRegNo}" property="text" maxLength="10"/>
+		<mx:NumberValidator id="nvClass" source="{cboClass}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvType" source="{cboType}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvMake" source="{cboMake}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvModel" source="{cboModel}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvTrans" source="{cboTrans}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvFuel" source="{cboFuel}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvColour" source="{cboColour}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvEngine" source="{cboEngine}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvLoc" source="{cboLoc}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvSts" source="{cboSts}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:DateValidator id="dvPDate" source="{dfPDate}" property="selectedDate" required="true"/>
+		<mx:StringValidator id="svAvgFuel" source="{txtAvgFuel}" property="text" required="true"/>
+		<mx:StringValidator id="svFuelTankVal" source="{txtFuelTankVal}" property="text" required="true"/>
+		<mx:NumberValidator id="nvMainSeat" source="{nsMainSeat}" property="value" required="true" minValue="1"/>
+		<mx:NumberValidator id="nvSpareKey" source="{nsSpareKey}" property="value" required="true" minValue="1"/>
+		<mx:NumberValidator id="nvOrgMile" source="{fTmpVehicle}" property="orgmileage" required="true" minValue="0"/>
+		<mx:NumberValidator id="nvCurMile" source="{fTmpVehicle}" property="curmileage" required="true" minValue="0"/>
+		
+		<!-- Ownership Page Tab -->
+		<mx:NumberValidator id="nvOwnerType" source="{cboOwnerType}" property="selectedIndex" required="true" minValue="0"/>
+		
+		<!-- Ownership Page Tab : Outside Owner Mandatory Fields (Seperate Validator) -->
+		<mx:StringValidator id="svOutOwnName" source="{txtOutOwnName}" property="text" required="true"/>
+		<mx:StringValidator id="svOutOwnID" source="{txtOutOwnID}" property="text" required="true"/>
+		<mx:StringValidator id="svOutOwnResAdd" source="{txtOutOwnResAdd}" property="text" required="true"/>
+		<mx:StringValidator id="svOutOwnResTel" source="{txtOutOwnResTel}" property="text" required="true"/>
+		<mx:StringValidator id="svOutOwnResMob" source="{txtOutOwnResMob}" property="text" required="true"/>
+		
+		<!-- Maintenance Page Tab -->
+		<mx:NumberValidator id="nvFleet" source="{cboFleet}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:StringValidator id="svInsPolicyNo" source="{txtInsPolicyNo}" property="text" required="true"/>
+		<mx:StringValidator id="svInsCompany" source="{txtInsCompany}" property="text" required="true"/>
+		<mx:StringValidator id="svInsAmt" source="{txtInsAmt}" property="text" required="true"/>
+		<mx:DateValidator id="dvInsDExp" source="{dfInsDExp}" property="selectedDate" required="true"/>
+		<mx:NumberValidator id="nvPolicyType" source="{cboPolicyType}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:DateValidator id="dvDEmission" source="{dfDEmission}" property="selectedDate" required="true"/>
+		<mx:DateValidator id="dvDRevLic" source="{dfDRevLic}" property="selectedDate" required="true"/>
+		
+		<!-- Maintenance Page Tab : Leasing -->
+		<mx:NumberValidator id="nvLeaseCom" source="{cboLeaseCom}" property="selectedIndex" required="true" minValue="0"/>
+		<mx:DateValidator id="dvLeaseDStart" source="{dfLeaseDStart}" property="selectedDate" required="true"/>
+		<mx:StringValidator id="svLeaseAmt" source="{txtLeaseAmt}" property="text" required="true"/>
+		<mx:StringValidator id="svLeaseMonthlyAmt" source="{txtLeaseMonthlyAmt}" property="text" required="true"/>
+		<mx:NumberValidator id="nvLeaseMonths" source="{nsLeaseMonths}" property="value" required="true"/>
+		
+	</fx:Declarations>
+	
+	<fx:Binding source="{crVehicle.lastResult.getItemAt(oGenFunctions.intCurrentRecNo)}" destination="fTmpVehicle"/>
+	
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	<mx:ControlBar x="-1" y="-4" horizontalGap="2" height="57" width="520" creationComplete="controlbar1_creationCompleteHandler(event)">
+		<mx:Button id="btnNew" width="40" height="40" toolTip="New"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+				   click="btnNew_clickHandler(event)"
+				   enabled.Default="false" enabled.New="false" enabled.Edit="false"/>
+		<mx:Button id="btnEdit" width="40" height="40" toolTip="Edit" 
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')"
+				   click="btnEdit_clickHandler(event)"
+				   enabled.Default="false" enabled.New="false" enabled.Edit="false"/>
+		<mx:Button id="btnDelete" height="40" width="40" toolTip="Delete"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')"
+				   click="btnDelete_clickHandler(event)" 
+				   enabled.Default="false" enabled.New="false" enabled.Edit="false"/>
+		<mx:Button id="btnUndo" width="40" height="40" toolTip="Undo"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')"
+				   click="btnUndo_clickHandler(event)"
+				   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+		<mx:Button id="btnTop" width="40" height="40" toolTip="Top" 
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrowD.png')"
+				   click="btnTop_clickHandler(event)"
+				   enabled.Default="false" enabled.New="false" enabled.Edit="false"/>
+		<mx:Button id="btnBack" width="40" height="40" toolTip="Back"  
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrowD.png')"
+				   click="btnBack_clickHandler(event)"
+				   enabled.Default="false" enabled.New="false" enabled.Edit="false"/>
+		<mx:Button id="btnNext" width="40" height="40" toolTip="Next" 
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrowD.png')"
+				   click="btnNext_clickHandler(event)"
+				   enabled.Default="false" enabled.New="false" enabled.Edit="false"/>
+		<mx:Button id="btnBottom" width="40" height="40" toolTip="Bottom"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrowD.png')"
+				   click="btnBottom_clickHandler(event)"
+				   enabled.Default="false" enabled.New="false" enabled.Edit="false"/>
+		<mx:Button id="btnFind" width="40" height="40" toolTip="Find"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/findD.png')"
+				   click="btnFind_clickHandler(event)"
+				   enabled.Default="false" enabled.New="false" enabled.Edit="false"/>
+		<mx:Button id="btnReload" width="40" height="40" toolTip="Reload" 
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')"
+				   click="btnReload_clickHandler(event)" enabled.New="true" enabled.Edit="true"/>
+		<mx:Button id="btnSave" width="40" height="40" toolTip="Save"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')"
+				   click="btnSave_clickHandler(event)"
+				   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+		<mx:Button id="btnClose" width="40" height="40" toolTip="Save"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+				   click="close();"
+				   enabled.Default="true" enabled.New="false" enabled.Edit="false"/>
+	</mx:ControlBar>
+	
+	<mx:TabNavigator id="tnMain" x="11" y="59" width="98%" height="474" creationPolicy="all">
+		<s:NavigatorContent label="General" id="ncGeneral" width="100%" height="100%">
+			<mx:Form x="10" y="-11" width="330" height="360">
+				<mx:FormItem label="Registration No." direction="horizontal">
+					<s:TextInput id="txtRegNo" width="160" restrict="a-z,A-Z,0-9,\-"
+								 text="{fTmpVehicle.regno}"
+								 enabled.Default="false" enabled.New="true" enabled.Edit="false"/>
+				</mx:FormItem>
+				<mx:FormItem label="Class">
+					<components:customComboBox id="cboClass"  width="160"
+											   dataProvider="{crVehicleClass.lastResult}" labelField="description" 
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Vehicle Type">
+					<components:customComboBox id="cboType" width="160"
+											   dataProvider="{crVehicleType.lastResult}" labelField="description"
+											   change="cboType_changeHandler(event)"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Make">
+					<components:customComboBox id="cboMake" width="160"
+												dataProvider="{crVehicleMake.lastResult}" labelField="description"
+												change="cboMake_changeHandler(event)"
+												enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Model">
+					<components:customComboBox id="cboModel" width="160"
+											   dataProvider="{crVehicleModel.lastResult}" labelField="description"
+											   change="cboModel_changeHandler(event)"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Transmission">
+					<components:customComboBox id="cboTrans" width="160"
+											   dataProvider="{crVehicleTrans.lastResult}" labelField="description"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Fuel Type">
+					<components:customComboBox id="cboFuel"  width="160"
+											   dataProvider="{crFuelType.lastResult}" labelField="description"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Colour" direction="horizontal">
+					<components:customComboBox id="cboColour"  width="160"
+											   dataProvider="{crColour.lastResult}" labelField="description"
+											   change="setColurBox();"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<mx:Box id="bColour" borderColor="black" borderVisible="true" borderStyle="inset" width="20" height="18"
+							visible="false" backgroundColor="{nVehicleColour}"/>
+				</mx:FormItem>
+				<mx:FormItem label="Engine">
+					<components:customComboBox id="cboEngine"  width="160"
+											   dataProvider="{crEngineSize.lastResult}" labelField="description"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Location">
+					<components:customComboBox id="cboLoc"  width="160"
+											   dataProvider="{crLocation.lastResult}" labelField="description"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Status">
+					<components:customComboBox id="cboSts"  width="160"
+											   dataProvider="{crVehicleStatus.lastResult}" labelField="description"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Dummy Vehicle">
+					<components:customComboBox id="cboDummy"  width="160"
+											   dataProvider="{fDumyVehi}" labelField="des"
+											   change="cboDummy_changeHandler(event)"
+											   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+
+			</mx:Form>
+			
+			
+			<mx:Form x="10" y="347" width="315" height="80" paddingTop="5">
+				<s:Label text="Original Mileage" fontWeight="bold"/>
+				<mx:SWFLoader id="slODOOrgMile" scaleContent="true" width="219" height="37" 
+							  source="@Resource(key='odourl',bundle='resource')"/>
+			</mx:Form>
+			
+			<mx:Form x="321" width="100%" y="-11" height="360">
+				<mx:FormItem label="Description" width="100%">
+					<s:TextInput id="txtDescription" width="100%" text="{fTmpVehicle.description}" enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>					
+				<mx:FormItem label="Purchase Date">
+					<mx:DateField id="dfPDate" formatString="@Resource(key='dateFormat',bundle='resource')" width="160"
+								  selectedDate="{fTmpVehicle.dpurchase}"
+								  change="dfPDate_changeHandler(event)"
+								  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="YOM">
+					<s:TextInput id="txtYOM" restrict="0-9" width="160" text="{fTmpVehicle.year}" 
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Chasis Number">
+					<s:TextInput id="txtChassisNo" width="160" text="{fTmpVehicle.chassisno}" 
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Engine Number">
+					<s:TextInput id="txtEngineNo" width="160" text="{fTmpVehicle.engineno}" 
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Value (Rs)">
+					<s:TextInput id="txtValue" restrict="0-9,." width="160" text="{fTmpVehicle.value}" 
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Avg. Fuel Cons." direction="horizontal">
+					<s:TextInput id="txtAvgFuel" restrict="0-9,." width="77" text="{fTmpVehicle.fuelconsump}" 
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<s:Label text="KMs per Ltr" height="17" verticalAlign="bottom"/>
+				</mx:FormItem>
+				<mx:FormItem label="Fuel Tank Value (Rs)">
+					<s:TextInput id="txtFuelTankVal" restrict="0-9,." width="77" text="{fTmpVehicle.fueltankval}" 
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Main Seats" direction="horizontal">
+					<s:NumericStepper id="nsMainSeat" value="{fTmpVehicle.mainseats}"
+									  minimum="0" maximum="250"
+									  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Jump Seats" direction="horizontal">
+					<s:NumericStepper id="nsJumpSeat" value="{fTmpVehicle.jumpseats}"
+									  minimum="0" maximum="100"
+									  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Spare Keys" direction="horizontal">
+					<s:NumericStepper id="nsSpareKey" value="{fTmpVehicle.sparekeys}"
+									  minimum="0" maximum="100"
+									  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					
+<!--					<mx:FormItem label="Vintage Vehicle">
+						<components:customComboBox id="cboVintage"  width="60"
+												   dataProvider="{acVintage}" labelField="des"
+												   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					</mx:FormItem>-->
+					
+				</mx:FormItem>
+				
+			</mx:Form>
+			
+			<mx:Form x="331" y="347" width="350" height="80" paddingTop="5">
+				<s:Label text="Current Mileage" fontWeight="bold"/>
+				<mx:SWFLoader id="slODOCurMile" scaleContent="true" width="219" height="37" source="@Resource(key='odourl',bundle='resource')"/>
+			</mx:Form>
+			
+			<!--<mx:Form x="679" y="-11" width="532" height="441">
+				<s:BorderContainer id="bcVehiPic" width="495" height="345" verticalCenter="0" horizontalCenter="0">			
+					<mx:Image id="imgVehicle" x="5" y="5"
+							  maxWidth="490" maxHeight="340" minWidth="100" minHeight="100"
+							  verticalCenter="0" horizontalCenter="0"
+							  completeEffect="fade"
+							  maintainAspectRatio="true" maintainProjectionCenter="true"
+							  cacheAsBitmap="false"/>
+				</s:BorderContainer>
+				<mx:FormItem width="{bcVehiPic.width}" direction="horizontal">
+					<mx:Spacer width="30%"/>
+					<mx:Button id="btnPrevPic" toolTip="Prev" width="30"
+							   icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow-small.png')"
+							   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow-smallD.png')"
+							   click="btnPrevPic_clickHandler(event)"/>
+					<s:Label id="lblImageCount" height="{btnNextPic.height}" verticalAlign="middle"
+							 text="{oGenFuncForImageNav.intTotalRecs==0 ? 0 : oGenFuncForImageNav.intCurrentRecNo+1} of {oGenFuncForImageNav.intTotalRecs}"/>
+					<mx:Button id="btnNextPic" toolTip="Next" width="30"
+							   icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow-small.png')"
+							   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow-smallD.png')"
+							   click="btnNextPic_clickHandler(event)"/>
+					<mx:Spacer width="30%"/>
+				</mx:FormItem>
+				
+				<mx:FormItem label="Image" direction="horizontal">
+					<s:Button id="btnBrowseImage" label="Browse" click="btnBrowseImage_clickHandler(event)" 
+							  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<s:Button id="btnClearImage" label="Clear" click="btnClearImage_clickHandler(event)"/> 
+					<s:CheckBox id="chkDefaultPic" label="Make this the default image"
+								click="chkDefaultPic_clickHandler(event)"/>
+				</mx:FormItem>
+			</mx:Form>-->
+			
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent label="Image" id="ncImg" width="100%" height="100%">
+			<!--<mx:Form width="878" height="37" x="12" y="6"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true" includeIn="Edit,New">
+				
+				<s:HGroup>
+					<mx:FormItem label="Registration No.">
+						<s:TextInput text="{txtRegNo.text}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="30"/>
+					<mx:FormItem label="Vehicle Make">
+						<s:TextInput text="{sVehicleMake}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="30"/>
+					<mx:FormItem label="Vehicle Model">
+						<s:TextInput text="{sVehicleModel}" width="160" enabled="false"/>
+					</mx:FormItem>
+				</s:HGroup>
+			</mx:Form>-->
+			
+			<mx:Form x="10" y="-11" width="532" height="441">
+				<s:BorderContainer id="bcVehiPic" width="495" height="345" verticalCenter="0" horizontalCenter="0">			
+					<mx:Image id="imgVehicle"
+							  maxWidth="490" maxHeight="340" minWidth="100" minHeight="100"
+							  verticalCenter="0" horizontalCenter="0"
+							  completeEffect="fade"
+							  maintainAspectRatio="true" maintainProjectionCenter="true"
+							  cacheAsBitmap="false"/>
+				</s:BorderContainer>
+				<mx:FormItem width="{bcVehiPic.width}" direction="horizontal">
+					<mx:Spacer width="30%"/>
+					<mx:Button id="btnPrevPic" toolTip="Prev" width="30"
+							   icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow-small.png')"
+							   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow-smallD.png')"
+							   click="btnPrevPic_clickHandler(event)"/>
+					<s:Label id="lblImageCount" height="{btnNextPic.height}" verticalAlign="middle"
+							 text="{oGenFuncForImageNav.intTotalRecs==0 ? 0 : oGenFuncForImageNav.intCurrentRecNo+1} of {oGenFuncForImageNav.intTotalRecs}"/>
+					<mx:Button id="btnNextPic" toolTip="Next" width="30"
+							   icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow-small.png')"
+							   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow-smallD.png')"
+							   click="btnNextPic_clickHandler(event)"/>
+					<mx:Spacer width="30%"/>
+				</mx:FormItem>
+				
+				<mx:FormItem label="Image" direction="horizontal">
+					<s:Button id="btnBrowseImage" label="Browse" click="btnBrowseImage_clickHandler(event)" 
+							  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<s:Button id="btnClearImage" label="Clear" click="btnClearImage_clickHandler(event)"/> 
+					<s:CheckBox id="chkDefaultPic" label="Make this the default image"
+								click="chkDefaultPic_clickHandler(event)"/>
+				</mx:FormItem>
+			</mx:Form>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent label="Rates" id="ncRates" width="100%" height="100%" enabled.New="true">
+			<mx:Form width="878" height="37" x="12" y="6"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				
+				<s:HGroup>
+					<mx:FormItem label="Registration No.">
+						<s:TextInput text="{txtRegNo.text}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="30"/>
+					<mx:FormItem label="Vehicle Make">
+						<s:TextInput text="{sVehicleMake}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="30"/>
+					<mx:FormItem label="Vehicle Model">
+						<s:TextInput text="{sVehicleModel}" width="160" enabled="false"/>
+					</mx:FormItem>
+				</s:HGroup>
+			</mx:Form>
+					
+			<mx:Form width="878" height="88%" x="12" y="48"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:HGroup>
+					<mx:FormItem label="Client Type">
+						<components:customComboBox id="cboClientType" width="160"
+										dataProvider="{crClientType.lastResult}" labelField="description"
+										change="cboClientType_changeHandler(event)"/>
+					</mx:FormItem>
+					<mx:FormItem label="Hire Type">
+						<components:customComboBox id="cboHireType" width="160"
+										dataProvider="{crHireType.lastResult}" labelField="description"
+										change="cboHireType_changeHandler(event)"/>
+					</mx:FormItem>
+				</s:HGroup>
+				
+				<s:HGroup width="{dgVehiRate.width}">
+					<mx:Spacer width="100%"/>
+						<s:Button id="btnVehiRateNew" label="New"
+								  click="btnVehiRateNew_clickHandler(event)"
+								  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+						<s:Button id="btnVehiRateEdit" label="Edit"
+								  click="btnVehiRateEdit_clickHandler(event)"
+								  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+						<s:Button id="btnVehiRateDel" label="Delete"
+								  click="btnVehiRateDel_clickHandler(event)"
+								  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</s:HGroup>
+				
+				<mx:DataGrid id="dgVehiRate" width="850" height="320" dataProvider="{crVehicleRate.lastResult}">
+					<mx:columns>
+						<mx:DataGridColumn headerText="Client Type" dataField="id.clienttype" width="0.13"/>
+						<mx:DataGridColumn headerText="Hire Type" dataField="id.hiretypeid" width="0.13"/>
+						<mx:DataGridColumn headerText="Rate Type" dataField="id.ratetype" width="0.13"/>
+						<mx:DataGridColumn headerText="Rate (Rs)" dataField="standardrate" textAlign="right" width="0.16"/>
+						<mx:DataGridColumn headerText="Excess Mileage Rate (Rs)" dataField="xsmilerate" textAlign="right" width="0.22"/>							
+						<mx:DataGridColumn headerText="Allotted KMs (Rs)" dataField="allotedkms" textAlign="right" width="0.13"/>
+						<mx:DataGridColumn headerText="Excess Hour Rate (Rs)" dataField="xhourrate" textAlign="right" width="0.11"/>							
+						<mx:DataGridColumn headerText="Allotted Hours" dataField="allotedhours" textAlign="right" width="0.13"/>
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:Form>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent id="ncOwner" creationComplete="ncOwner_creationCompleteHandler(event)" label="Ownership" width="100%" height="100%">
+			<mx:Form width="878" height="37" x="12" y="6"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				
+				<s:HGroup>
+					<mx:FormItem label="Registration No.">
+						<s:TextInput text="{txtRegNo.text}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="30"/>
+					<mx:FormItem label="Vehicle Make">
+						<s:TextInput text="{sVehicleMake}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="30"/>
+					<mx:FormItem label="Vehicle Model">
+						<s:TextInput text="{sVehicleModel}" width="160" enabled="false"/>
+					</mx:FormItem>
+				</s:HGroup>
+			</mx:Form>
+			
+			<mx:Form height="37" x="12" y="52"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<mx:FormItem label="Owner Type">
+					<components:customComboBox id="cboOwnerType"  width="160"
+									dataProvider="{fOwnerType}" labelField="des"
+									change="cboOwnerType_changeHandler(event)" 
+									enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+			</mx:Form>
+			
+			<mx:Form id="frmOutside" height="303" width="878" x="12" y="98"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Owner" fontWeight="bold"/>
+				<mx:FormItem label="Name" direction="horizontal">
+					<s:TextInput id="txtOutOwnName" width="270" 
+								 enabled="false"
+								 text="{oOutsideOwnerDetail.supname}"/>
+					<mx:LinkButton id="lbtnOutOwnerSearch" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="lbtnOutOwnerSearch_clickHandler(event)"/>
+					<mx:FormItem label="NIC/Passport No." direction="horizontal">
+						<s:TextInput id="txtOutOwnID" width="255"
+									 enabled="false"
+									 text="{oOutsideOwnerDetail.supcode}"/>
+					</mx:FormItem>
+				</mx:FormItem>
+				
+				<mx:Form paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+						 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+					<s:Label text="Residence"/>
+					<mx:FormItem label="Address" direction="horizontal">
+						<s:TextInput id="txtOutOwnResAdd" width="480"
+									 enabled="false"
+									 text="{oOutsideOwnerDetail.supadd1}"/>
+						<mx:FormItem label="Phone" direction="horizontal">
+							<s:TextInput id="txtOutOwnResTel" width="115"
+										 enabled="false"
+										 text="{oOutsideOwnerDetail.suptele}"/>
+						</mx:FormItem>
+					</mx:FormItem>
+					
+					<mx:FormItem label="Email" direction="horizontal">
+						<s:TextInput id="txtOutOwnResEmail" width="270"
+									 enabled="false"
+									 text="{oOutsideOwnerDetail.supemail}"/>
+						<mx:FormItem label="Fax">
+							<s:TextInput id="txtOutOwnResFax" width="115"
+										 enabled="false"
+										 text="{oOutsideOwnerDetail.supfax}"/>
+						</mx:FormItem>
+						<mx:FormItem label="Mobile">
+							<s:TextInput id="txtOutOwnResMob" width="115"
+										 enabled="false"
+										 text="{oOutsideOwnerDetail.supmobile}"/>
+						</mx:FormItem>
+					</mx:FormItem>
+					<s:Label text=""/>
+					<mx:HRule width="100%"/>
+					<s:Label text=""/>
+					<s:Label text="Company"/>
+					<mx:FormItem label="Name" direction="horizontal">
+						<s:TextInput id="txtOutOwnCompany" width="480"
+									 enabled="false"
+									 text="{oOutsideOwnerDetail.company}"/>
+						<mx:FormItem label="Phone" direction="horizontal">
+							<s:TextInput id="txtOutOwnOffTel" width="115"
+										 enabled="false"
+										 text="{oOutsideOwnerDetail.officetele}"/>
+						</mx:FormItem>
+					</mx:FormItem>
+					
+					<mx:FormItem id="fiOffAdd" label="Office Address" direction="horizontal">
+						<s:TextInput id="txtOutOwnOffAdd" width="480"
+									 enabled="false"
+									 text="{oOutsideOwnerDetail.officeadd}"/>
+						<mx:FormItem label="Mobile" direction="horizontal">
+							<s:TextInput id="txtOutOwnOffMob" width="115"
+										 enabled="false"
+										 text="{oOutsideOwnerDetail.officemobile}"/>
+						</mx:FormItem>
+					</mx:FormItem>
+				</mx:Form>
+			</mx:Form>
+			
+			<mx:Form id="frmCompany" height="303" width="878" x="12" y="98" 
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Owner" fontWeight="bold"/>
+				<mx:FormItem label="Company">
+					<components:customComboBox id="cboCompany"  width="321"
+									dataProvider="{crCompany.lastResult}" labelField="description"
+									enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+			</mx:Form>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent label="Maintenance" id="ncMaint" width="100%" height="100%">
+			<mx:Form width="878" height="37" x="12" y="6"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				
+				<s:HGroup>
+					<mx:FormItem label="Registration No.">
+						<s:TextInput text="{txtRegNo.text}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="30"/>
+					<mx:FormItem label="Vehicle Make">
+						<s:TextInput text="{sVehicleMake}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="30"/>
+					<mx:FormItem label="Vehicle Model">
+						<s:TextInput text="{sVehicleModel}" width="160" enabled="false"/>
+					</mx:FormItem>
+				</s:HGroup>
+			</mx:Form>
+			
+			<mx:Form width="878" height="135" x="12" y="50"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Insurance" fontWeight="bold"/>
+				<mx:FormItem label="Fleet" direction="horizontal">
+					<components:customComboBox id="cboFleet" width="210" 
+									dataProvider="{crInsFleet.lastResult}" labelField="supcode"
+									change="cboFleet_changeHandler(event)"
+									enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<mx:Spacer width="40"/>
+					<mx:FormItem label="Insurance Company" labelWidth="150">
+						<s:TextInput id="txtInsCompany" text="{fTmpVehicle.inscompany}" width="210"
+									 enabled="false"/>
+					</mx:FormItem>
+				</mx:FormItem>
+
+				<mx:FormItem label="Insurance Policy #" direction="horizontal">
+					<s:TextInput id="txtInsPolicyNo" text="{fTmpVehicle.inspolicyno}" width="210"
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<mx:Spacer width="40"/>
+					<mx:FormItem label="Policy Type" labelWidth="150">
+						<components:customComboBox id="cboPolicyType" width="210" 
+												   dataProvider="{crInspolicy.lastResult}" labelField="description"
+												   enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					</mx:FormItem>
+				</mx:FormItem>
+				
+				<mx:FormItem label="Insurance Amount (Rs)" direction="horizontal">
+					<s:TextInput id="txtInsAmt" restrict="0-9,." text="{fTmpVehicle.insamount}" width="210"
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<mx:Spacer width="40"/>
+					<mx:FormItem label="Insurance Expiration Date" labelWidth="150">
+						<mx:DateField id="dfInsDExp" formatString="@Resource(key='dateFormat',bundle='resource')" width="177" 
+									  selectedDate="{fTmpVehicle.insdexpiry}" 
+									  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					</mx:FormItem>
+				</mx:FormItem>
+
+				<mx:FormItem label="Policy Excess (Rs)" direction="horizontal">
+					<s:TextInput id="txtPolExces" restrict="0-9,." text="{fTmpVehicle.inspolexces}" width="210"
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<mx:Spacer width="40"/>
+					<mx:FormItem label="NCB (Rs)" labelWidth="150">
+						<s:TextInput id="txtNCB" restrict="0-9,." text="{fTmpVehicle.insncb}" width="210"
+									 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					</mx:FormItem>
+				</mx:FormItem>
+			</mx:Form>
+			
+			<mx:Form width="387" height="82" x="12" y="193"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Test Reports" fontWeight="bold"/>
+				<mx:FormItem label="Emission Test Taken On">
+					<mx:DateField id="dfDEmission" formatString="@Resource(key='dateFormat',bundle='resource')" width="177"
+								  selectedDate="{fTmpVehicle.demission}" 
+								  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="Fitness Test Taken On">
+					<mx:DateField id="dfDFitness" formatString="@Resource(key='dateFormat',bundle='resource')" width="177"
+								  selectedDate="{fTmpVehicle.dfitness}" 
+								  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+			</mx:Form>
+			
+			<mx:Form width="487" height="82" x="403" y="193"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Revenue License" fontWeight="bold"/>
+				<mx:FormItem label="License Valid From" labelWidth="175">
+					<mx:DateField id="dfDRevLic" formatString="@Resource(key='dateFormat',bundle='resource')" width="177" 
+								  selectedDate="{fTmpVehicle.drevlicense}" 
+								  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+			</mx:Form>
+			
+			<mx:Form width="877" height="136" x="12" y="284"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Leasing" fontWeight="bold"/>
+				<mx:FormItem label="Leasing Company" direction="horizontal">
+					<components:customComboBox id="cboLeaseCom" width="210" 
+									dataProvider="{crLeaseCom.lastResult}" labelField="supname" prompt="Select Leasing Company..."
+									enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<mx:Spacer width="40"/>
+					<mx:FormItem label="Date Commenced" labelWidth="150">
+						<mx:DateField id="dfLeaseDStart" formatString="@Resource(key='dateFormat',bundle='resource')" width="177"
+									  selectedDate="{fTmpVehicle.leasedstart}" 
+									  enabled.Default="false" enabled.New="true" enabled.Edit="true"
+									  change="dfLeaseDStart_changeHandler(event)"
+									  />
+					</mx:FormItem>
+				</mx:FormItem>
+				<mx:FormItem label="Amount (Rs)" direction="horizontal">
+					<s:TextInput id="txtLeaseAmt" restrict="0-9,." text="{fTmpVehicle.leaseamt}" width="210"
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<mx:Spacer width="40"/>
+					<mx:FormItem label="Last Payment Date" labelWidth="150">
+						<mx:DateField id="dfLeaseDLastPay" formatString="@Resource(key='dateFormat',bundle='resource')" width="177"
+									  selectedDate="{fTmpVehicle.leasedlastpay}" 
+									  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					</mx:FormItem>
+				</mx:FormItem>
+				<mx:FormItem label="Monthly Installment (Rs)">
+					<s:TextInput id="txtLeaseMonthlyAmt" restrict="0-9,." text="{fTmpVehicle.leasemonthlyamt}" width="210"
+								 enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</mx:FormItem>
+				<mx:FormItem label="No. of Months">
+					<s:NumericStepper id="nsLeaseMonths" value="{fTmpVehicle.leasenoofmonth}"
+									  minimum="0" maximum="1000"
+									  enabled.Default="false" enabled.New="true" enabled.Edit="true"
+									  change="nsLeaseMonths_changeHandler(event)"
+									  />
+				</mx:FormItem>
+			</mx:Form>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent label="Status" id="ncSts" width="100%" height="100%">
+			<mx:Form width="912" height="37" x="12" y="6"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				
+				<s:HGroup>
+					<mx:FormItem label="Registration No.">
+						<s:TextInput text="{txtRegNo.text}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="45"/>
+					<mx:FormItem label="Vehicle Make">
+						<s:TextInput text="{sVehicleMake}" width="160" enabled="false"/>
+					</mx:FormItem>
+					<mx:Spacer width="45"/>
+					<mx:FormItem label="Vehicle Model">
+						<s:TextInput text="{sVehicleModel}" width="160" enabled="false"/>
+					</mx:FormItem>
+				</s:HGroup>
+			</mx:Form>
+			
+			<mx:Form width="417" height="380" x="12" y="52"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Indication of Damages" fontWeight="bold"/>
+				
+				<s:BorderContainer id="bcVehiDiagram" width="404" height="279" verticalCenter="0" horizontalCenter="0">
+					<mx:Image id="imgCI" click="imgCI_clickHandler(event)" width="402" height="277" source="{sVehiTypeImage}"/>					
+				</s:BorderContainer>
+				<s:HGroup width="232" height="25">
+					<s:ToggleButton id="btnDent" label="Dent"
+									click="btnDent_clickHandler(event)" 
+									enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<s:ToggleButton id="btnScratch" label="Scratch"
+									click="btnScratch_clickHandler(event)" 
+									enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+					<s:Button id="btnUndoMarking" label="Undo" 
+							  click="btnUndoMarking_clickHandler(event)" 
+							  enabled.Default="false" enabled.New="true" enabled.Edit="true"/>
+				</s:HGroup>
+			</mx:Form>
+			
+			<mx:Form width="233" height="380" x="447" y="52"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Fuel Level" fontWeight="bold"/>
+				<mx:SWFLoader id="slFuelMeter" scaleContent="true" width="220" height="310" source="@Resource(key='fuelurl',bundle='resource')"/>
+			</mx:Form>
+			
+			<mx:Form width="225" height="380" x="699" y="52"
+					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+				<s:Label text="Inventory" fontWeight="bold"/>
+									
+				<mx:List id="lstVehiInv" dataProvider="{crVInventryList.lastResult}" labelField="description"
+						 width="213" height="100%" alternatingItemColors="[#edf0fa, white]"
+						 enabled.Default="false" enabled.New="true" enabled.Edit="true">
+					
+					<mx:itemRenderer>
+						<fx:Component>
+							<mx:CheckBox selected="{Boolean(data.isselected)}" 
+										 change="checkbox1_changeHandler(event)">
+								<fx:Script>
+									<![CDATA[
+										protected function checkbox1_changeHandler(event:Event):void
+										{
+											data.isselected = this.selected ? 1 : 0;
+										}
+									]]>
+								</fx:Script>
+							</mx:CheckBox>
+																		 
+						</fx:Component>
+					</mx:itemRenderer>
+					
+				</mx:List>
+			</mx:Form>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent label="Report" id="ncReport" width="100%" height="100%">
+			<mx:Form
+				paddingLeft="0"
+				paddingRight="0"
+				paddingTop="0"
+				paddingBottom="0"
+				borderVisible="true"
+				width="100%" height="70">		
+				
+				<mx:FormHeading label="Vehicle Hire Report"/>
+				<mx:FormItem label="Date From" direction="horizontal" borderColor="Green" borderVisible="true" >
+					<mx:DateField id="dfFrom" width="100"  formatString="@Resource(key='dateFormat',bundle='resource')"/>
+					
+					<mx:FormItem label="Date To" direction="horizontal">
+						<mx:DateField id="dfTo" width="100" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+					</mx:FormItem>
+					
+					<s:TextInput
+						id="txtregno"
+						width="100"
+						/>
+					
+					<mx:LinkButton x="27" y="440" label="Vehicle Hire Report" id="btnVehicleHireReport" click="btnVehicleHireReport_clickHandler(event)"  color="#C608F5"/>		
+				</mx:FormItem>
+				
+			</mx:Form>
+		</s:NavigatorContent>
+	</mx:TabNavigator>
+	
+	
+	<mx:FormItem x="15" y="551" width="500" direction="horizontal">
+		<s:Label text="Last Modified By: {sLastModBy}"/>
+		<mx:Spacer width="30%"/>
+		<s:Label text="On: {sLastModDate}"/>
+	</mx:FormItem>
+	
+</s:TitleWindow>

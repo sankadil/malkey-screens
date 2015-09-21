@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="352" height="78"
+			   title="Mileage"
+			   close="titlewindow1_closeHandler(event)"
+			   creationComplete="initApp()"
+			   >
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			public var cMileage:String;
+			
+			private function initApp():void
+			{
+				txtMileage.text = cMileage;
+				txtMileage.selectAll();
+				txtMileage.setFocus();
+			}
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				closePopup();
+			}
+			
+			private function closePopup():void
+			{
+				PopUpManager.removePopUp(this);
+			}
+
+			protected function btnDone_clickHandler(event:MouseEvent):void
+			{
+				dispatchData();
+			}
+			
+			private function dispatchData():void
+			{
+				dispatchEvent(new DataEvent("mileageChange",true,true,txtMileage.text));
+				closePopup();
+			}
+
+
+			protected function txtMileage_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode==13)
+				{
+					dispatchData();
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<mx:Form x="1" y="-2" width="272" height="65">
+		<mx:FormItem label="Enter Mileage">
+			<s:TextInput keyUp="txtMileage_keyUpHandler(event)" id="txtMileage" width="139" maxChars="8" restrict="0-9"/>
+		</mx:FormItem>
+	</mx:Form>
+	<s:Button id="btnDone" click="btnDone_clickHandler(event)" x="266" y="14" label="Done"/>
+</s:TitleWindow>

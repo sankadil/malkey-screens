@@ -1,0 +1,935 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="706" height="238"
+				creationComplete="initApp(event)"
+				close="closeForm()"
+				currentState="Default" xmlns:services="com.dspl.malkey.services.*"
+				title="Additional Charges"
+				>
+
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="List"/>
+		<s:State name="Add"/>
+		<s:State name="Edit"/>
+		<s:State name="Delete"/>
+	</s:states>
+	<fx:Declarations>
+		
+		<!--Number Formatter-->
+		<mx:NumberFormatter
+			id="nfNumFormatter"
+			precision="0"
+			rounding="nearest"
+			useThousandsSeparator="false"
+			/>
+		
+		<!--Validators [Start]-->
+		<mx:StringValidator id="svID"
+							source="{txtId}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svDes"
+							source="{txtDes}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svCType"
+							source="{ddCType}"							
+							property="selectedItem"							
+							triggerEvent=""
+							/>
+		
+		<mx:NumberValidator id="nvValue"
+							source="{txtValue}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<!--Validators [End]-->
+		
+		<!--Service-->
+		<services:FaddchargeSRV
+			id="srvFaddcharge"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder 
+			id="crFaddchargeListAll"
+			result="crFaddchargeListAll_resultHandler(event)"
+			fault="crFaddchargeListAll_faultHandler(event)"
+			/>
+		
+		<s:CallResponder
+			id="crFaddchargeSave"
+			result="crFaddchargeSave_resultHandler(event)"
+			fault="crFaddchargeSave_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crFaddchargeUpdate"
+			result="crFaddchargeUpdate_resultHandler(event)"
+			fault="crFaddchargeUpdate_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crFaddchargeRemove"
+			result="crFaddchargeRemove_resultHandler(event)"
+			fault="crFaddchargeRemove_faultHandler(event)"
+			/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.ErrorTipManager;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Faddcharge;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			import spark.events.TextOperationEvent;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+			
+			/* [Bindable]
+			private var lactype:ArrayCollection= new ArrayCollection([
+				{id:"P",description:"Percentage"},
+				{id:"V",description:"Value"}]); */
+			[Bindable]
+			private var lactype:ArrayCollection= new ArrayCollection([
+				{id:"P",description:"Percentage"}]);
+		
+			protected function crFaddchargeListAll_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Loading Additional Charges","Error",loadErrorHandler);
+					else{				
+						lacListMF = event.result as ArrayCollection;
+						crFaddchargeListAll.token=null;
+						setNavigation();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"List Additional Charges [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			private function setNavigation():void{
+				liMFCount=(lacListMF.length-1);
+				if(lsSelState=="Default"){
+					liCurIndex=0;
+					goFirst();
+				}else{
+					setCtrlVal(liCurIndex);
+					lsSelState="Default";
+					setState(lsSelState);
+				}
+			}
+						
+			protected function crFaddchargeListAll_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Additional Charges [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			private function successfulHandler(event:Event):void{
+				txtId.errorString="";
+				txtDes.errorString="";
+				loadRecords()
+			}
+			
+			protected function crFaddchargeSave_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Saving","Error",loadErrorHandler);
+					else{				
+						crFaddchargeSave.token=null;
+						Message.displayAlert(3,"Save Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Additional Charge Save [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFaddchargeSave_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Additional Charge Save [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFaddchargeUpdate_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Updating","Error",loadErrorHandler);
+					else{				
+						crFaddchargeUpdate.token=null;
+						Message.displayAlert(3,"Update Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Update Additional Charge [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFaddchargeUpdate_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Update Additional Charge [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFaddchargeRemove_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Deleting","Error",loadErrorHandler);
+					else{				
+						crFaddchargeUpdate.token=null;
+						Message.displayAlert(3,"Delete Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Delete Additional Charge [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFaddchargeRemove_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Delete Additional Charge [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			//**** Result/Fault Handlers [End]
+			
+			//Variables
+			[Bindable]
+			public var lpuPopup:_tiMasterFile = new _tiMasterFile();
+			/* private var lacMasterList:ArrayCollection=new ArrayCollection();
+			//private var lbEditInit:Boolean;
+			private var loSelMF:Object;*/
+			private var lsSelState:String="";
+			 
+			[Bindable]
+			private var lacListMF:ArrayCollection;
+			private var liCurIndex:int=0;
+			private var liMFCount:int=0;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					registerValidators();
+					txtId.addEventListener(KeyboardEvent.KEY_DOWN,textInputKeyDown,true,0,false);
+					txtId.addEventListener(TextOperationEvent.CHANGE,textInputChange,true,0,false);
+					loadRecords();
+					lsSelState="Default";
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			public var gsCurTabName:String="";
+			public function parentTabChangedHandler(event:DataEvent):void{
+				if(gsCurTabName==event.data)
+					updateErrorTipVisibility();
+			}
+			
+			public function updateErrorTipVisibility():void{
+				if(currentState=="Add" || currentState=="Edit"){			
+					ErrorTipManager.showErrorTip(svID.source);
+					ErrorTipManager.showErrorTip(svDes.source);
+					ErrorTipManager.showErrorTip(svCType.source);
+					ErrorTipManager.showErrorTip(nvValue.source);
+				}
+			}
+			
+			private function removeFormErrorTips():void{
+				ErrorTipManager.removeErrorTip(svID.source,true);
+				ErrorTipManager.removeErrorTip(svDes.source,true);
+				ErrorTipManager.removeErrorTip(svCType.source,true);
+				ErrorTipManager.removeErrorTip(nvValue.source,true);
+			} 
+			
+			private function registerValidators():void{
+				ErrorTipManager.registerValidator(svID);
+				ErrorTipManager.registerValidator(svDes);
+				ErrorTipManager.registerValidator(svCType);
+				ErrorTipManager.registerValidator(nvValue);
+			}
+			
+			private function loadRecords():void{
+				try{
+					crFaddchargeListAll.token=srvFaddcharge.ListAll();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadRecords: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function textInputChange(e:TextOperationEvent):void{
+				try{
+					if(currentState=="Add"){
+						txtId.text = txtId.text.toString().toUpperCase();
+						txtId.selectRange(txtId.text.length,txtId.text.length+1);
+						txtId.setFocus();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"textInputChange: " + error.message,"Error",null);
+				}
+			}
+			
+			private function textInputKeyDown(e:KeyboardEvent):void{
+				try{
+					if(currentState=="Add"){
+						if(e.keyCode==32){
+							e.stopImmediatePropagation();
+							e.stopPropagation();
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"textInputKeydown: " + error.message,"Error",null);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function loadErrorHandler(event:Event):void{
+				//undoForm();
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function resetForm():void{
+				//lacListMF.removeAll();
+				//lsSelState=""; //Selected State
+				//liCurIndex=0; //Selected Index 
+				//liMFCount=0; //Master File Record Count
+				txtId.text="";
+				txtId.errorString="";
+				txtDes.text="";
+				txtDes.errorString="";
+				ddCType.selectedIndex=-1;
+				ddCType.errorString="";
+				txtValue.text="";
+				txtValue.errorString="";
+				setModifiedByDet("");
+			}
+			
+			//Display Popup Window 
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function,useCloseEvent:Boolean=false,otherColumns:String="",otherColumnHeaders:String="",otherColumnWidth:int=180):void{
+				lpuPopup._acDataProvider = acDataProvider;								
+				lpuPopup._strKeyColumn = strKeyColumn;
+				lpuPopup._strKeyColCaption = strKeyColCaption; 
+				lpuPopup._strDetailColumn = strDetailColumn;
+				lpuPopup._strDetailColCaption = strDetailColCaption;
+				lpuPopup.otherColumns=otherColumns;
+				lpuPopup.otherColumnHeaderText=otherColumnHeaders;
+				lpuPopup.dgColWidth=otherColumnWidth;
+				lpuPopup._strWindowTitle = strWindowTitle;			
+				lpuPopup._sPostEventToRunPopUpExit = eventName;
+				lpuPopup.addEventListener(eventName,eventListener,false,0,false);
+				lpuPopup.launchSearchGrid(); 
+				lpuPopup.isPopUp=true;
+				if(useCloseEvent==true)
+					lpuPopup.grdSearch.addEventListener("twMFSearchClose",popUpCloseEvent,false,0,false);
+			}
+			
+			private function popUpCloseEvent(event:Event):void{
+				/* if(lbEditInit==true){
+					undoForm();
+				} */
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return o;
+					}
+				}catch(error:Error){
+					obj = null;
+					Message.displayAlert(1,"findItem: " + error.message,"Error");
+				}
+				return obj;
+			}
+			
+			private function findIndex(ac:ArrayCollection,keyfield:String,keyvalue:String):int{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return a;
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					//Message.displayAlert(1,"findIndex: " + error.message,"Error");
+				}
+				return -1;
+			}
+			
+			private function setState(state:String):void{
+ 				if(state=="Default"){
+					txtId.errorString="";
+					txtDes.errorString="";
+					ddCType.errorString="";
+					txtValue.errorString="";
+					setCtrlVal(liCurIndex);
+					ErrorTipManager.hideAllErrorTips();
+				}else if(state=="Add")
+					resetForm();
+				currentState=state;
+			}
+			
+			private function deleteRecord(event:CloseEvent):void{
+				if(event.detail==Alert.YES){
+					crFaddchargeRemove.token=srvFaddcharge.removeByID(txtId.text);
+				}
+			}
+			
+			/* private function loadMasterList():void{
+				try{
+					crFmasterlistListAll.token = srvFmasterlist.ListAll();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterList: " + error.message,"Error",errorCloseHandler);
+				}
+			} */
+			
+			private function closeForm():void{
+				removeFormErrorTips();
+				this.parent.parent.removeChild(this.parent);
+			}
+			
+			private function showRecordList():void{
+				try{
+					if(lacListMF.length<=0)
+						return;
+					if(lacListMF.length>0){
+						showPopUp(lacListMF,"addchargeid","ID","description","Description","Select Record","recordSelection",recordSelection,true,"","",0);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"showRecordList: " + error.message,"Error",null);
+				}
+			}
+			
+			private function recordSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						liCurIndex=lpuPopup.grdSearch._nSelectedIndex;
+						setCtrlVal(liCurIndex);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"recordSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			//**** Control Button Events [Start]
+			protected function btnList_clickHandler(event:MouseEvent):void{	
+				/* showRecordList(); */
+			}
+			
+			protected function btnFind_clickHandler(event:MouseEvent):void{
+				showRecordList();
+			}
+			
+			protected function btnReload_clickHandler(event:MouseEvent):void{
+				loadRecords();
+			}
+			
+			protected function btnNew_clickHandler(event:MouseEvent):void{
+				lsSelState="Add";
+				setState(lsSelState);
+			}
+			
+			protected function btnEdit_clickHandler(event:MouseEvent):void{
+				lsSelState="Edit";
+				setState(lsSelState);
+			}
+			
+			protected function btnDelete_clickHandler(event:MouseEvent):void{
+				if(StringUtil.trim(txtId.text).length>0){
+					Message.displayAlert(4,"Are You Sure?","Delete Confirmation",deleteRecord);
+				}
+			}
+			
+			protected function btnUndo_clickHandler(event:MouseEvent):void{
+				setState("Default");
+			}
+			
+			private function goNext():void{
+				liCurIndex+=1;
+				if(liCurIndex>liMFCount)
+					liCurIndex=0;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function goBack():void{
+				liCurIndex-=1;
+				if(liCurIndex<0)
+					liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function setCtrlVal(index:int):void{
+				if(lacListMF.length>0){
+					var obj:Object=lacListMF.getItemAt(index);
+					txtId.text=obj["addchargeid"].toString();
+					txtDes.text=obj["description"].toString();
+					ddCType.selectedIndex=findIndex(lactype,"id",obj["ctype"].toString());
+					if(obj["ctype"].toString()=="P")
+						txtValue.text=Number(obj["percentage"].toString()).toFixed(2);
+					else if(obj["ctype"].toString()=="V")
+						txtValue.text=Number(obj["amount"].toString()).toFixed(2);
+					setModifiedByDet(obj["adduser"].toString());
+				}
+			}
+			
+			protected function number_focusInHandler(event:FocusEvent):void{
+				event.currentTarget.setSelection(0,event.currentTarget.length);
+			}
+			
+			private function setModifiedByDet(val:String):void{
+				lblModifiedBy.text="Last Modified By: ";
+				lblModifiedBy.text+=val;
+			}
+			
+			private function goFirst():void{
+				liCurIndex=0;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function goLast():void{
+				liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex);
+			}
+			
+			protected function btnSave_clickHandler(event:MouseEvent):void{
+				save();
+			}
+			
+			protected function btnPrint_clickHandler(event:MouseEvent):void{
+				displayMFReport();
+			}
+			
+			//**** Control Button Events [End]
+			
+			private function validateForm():Boolean{
+				try{
+					var validationArray:Array = Validator.validateAll([
+						svID,
+						svDes,
+						svCType,
+						nvValue
+					]);
+					if(validationArray.length==0){
+						if(currentState=="Add"){
+							var obj:Object=findItem(lacListMF,"addchargeid",txtId.text);
+							if(obj==null){
+								txtId.errorString="";
+								return true;
+							}else{
+								txtId.errorString="ID Already Exists";
+								updateErrorTipVisibility();
+							}
+						}else{
+							return true;
+						}
+					}	 
+				}catch(error:Error){
+					Message.displayAlert(1,"validateForm: " + error.message,"Error",null);
+				}
+				return false;
+			}
+			
+			private function save():void{
+				try{
+					if(validateForm()==true){
+						if(formatValue()==false)
+							return;
+						var faddcharge:Com_dspl_malkey_domain_Faddcharge=lacListMF.getItemAt(liCurIndex) as Com_dspl_malkey_domain_Faddcharge;
+						faddcharge.addchargeid=txtId.text;
+						faddcharge.description=txtDes.text;
+						faddcharge.ctype=ddCType.selectedItem.id;
+						if(ddCType.selectedItem.id=="P"){
+							faddcharge.percentage=Number(txtValue.text).toFixed(2);	
+							faddcharge.amount="0.00";
+						}else if(ddCType.selectedItem.id=="V"){
+							faddcharge.amount=Number(txtValue.text).toFixed(2);
+							faddcharge.percentage="0.00";	
+						}
+						
+						if(lsSelState=="Add"){
+							crFaddchargeSave.token=srvFaddcharge.create(faddcharge);								
+						}else if(lsSelState=="Edit"){
+							crFaddchargeUpdate.token=srvFaddcharge.update(faddcharge);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"save: " + error.message,"Error",null);
+				}
+			}
+			
+			private function showAddChargesSelection():void{
+				try{
+					showPopUp(lacListMF,"addchargeid","ID","description","Description","Select ID","additionalChargeSelection",additionalChargeSelection,true,"","",0);
+				}catch(error:Error){
+					Message.displayAlert(1,"showMasterRecordSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function additionalChargeSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						var obj:Object=findItem(lacListMF,"id",lpuPopup.grdSearch._strSelectedCode);
+						if(obj==null)
+							setState("Default")
+						else{
+							txtId.text=obj["id"].toString();
+							txtDes.text=obj["description"].toString();
+							setState(lsSelState);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"masterRecordSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function displayMFReport():void{
+				try{
+					//var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/MasterList.jsp?tn="+ gsMFName +"&kf=" + gsKeyField);
+					//request.method = URLRequestMethod.POST;
+					//navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,"printMF: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+
+			protected function controlbar2_creationCompleteHandler(event:FlexEvent):void{
+				setPermission();
+			}
+
+			protected function btnClose_clickHandler(event:MouseEvent):void{
+				closeForm();
+			}
+
+			protected function txtValue_focusOutHandler(event:FocusEvent):void{
+				formatValue();
+			}
+			
+			private function formatValue():Boolean{
+				txtValue.text=nfNumFormatter.format(txtValue.text);
+				return true;
+			}
+
+		]]>
+	</fx:Script>
+	<!--<mx:ControlBar x="0" y="0"  horizontalGap="2" height="57" width="691">
+		
+		<mx:Button  id="btnNew" width="40" height="40"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')" 
+					enabled="true"
+					toolTip="New"
+					enabled.List="false" enabled.Add="false"
+					click="btnNew_clickHandler(event)"
+					enabled.Edit="false" enabled.Delete="false"/>
+		<mx:Button  id="btnEdit" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')" 
+					enabled="true"
+					toolTip="Edit"
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnEdit_clickHandler(event)"
+					/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')" 
+					enabled="true"
+					toolTip="Delete" 
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnDelete_clickHandler(event)"
+					/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					enabled="false"
+					toolTip="Undo" 
+					enabled.List="true"
+					click="btnUndo_clickHandler(event)"
+					enabled.Add="true" enabled.Edit="true" enabled.Delete="true"/>
+		<mx:Button  id="btnTop" width="40" height="40" 
+					toolTip="GoTop" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+					enabled="false"
+					enabled.List="true"
+					click="goFirst()" enabled.Default="true"/>
+		<mx:Button  id="btnBack" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+					enabled="false"
+					toolTip="goBack" 
+					enabled.List="true"
+					click="goBack()" enabled.Default="true"/>
+		<mx:Button  id="btnNext" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+					enabled="false"
+					toolTip="goNext" 
+					enabled.List="true"
+					click="goNext()"
+					 enabled.Default="true"/>
+		<mx:Button  id="btnBottom" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+					enabled="false"
+					toolTip="goBottom" 
+					enabled.List="true"
+					click="goLast()"
+					 enabled.Default="true"/>
+		<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					enabled="true" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnPrint_clickHandler(event)"
+					/>
+		<mx:Button  id="btnFilter" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filter22.png')" 
+					enabled="true" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>
+		<mx:Button  id="btnSort" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/sort.png')" 
+					enabled="true" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>
+		<mx:Button  id="btnFind" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+					enabled="true"
+					toolTip="Find" 
+					 enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					 click="btnFind_clickHandler(event)"
+					 />
+		<mx:Button  id="btnReload" width="40" height="40" 
+					toolTip="Refresh" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					enabled="true"
+					 enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/> 
+		<mx:Button  id="btnList" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/view.png')" 
+					toolTip="View"
+					enabled="true"
+					click="btnList_clickHandler(event)"
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>
+		<mx:Button  id="btnSave" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					enabled="false"
+					toolTip="Save"
+					enabled.Add="true"
+					click="btnSave_clickHandler(event)"
+					enabled.Edit="true" enabled.Delete="true"/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					enabled="true" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					 enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>
+	</mx:ControlBar>-->
+	
+	<mx:ControlBar x="0" y="0"  horizontalGap="2" height="57" width="691" creationComplete="controlbar2_creationCompleteHandler(event)">
+		<mx:Button  id="btnNew" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					toolTip="New"
+					click="btnNew_clickHandler(event)"
+					/>
+		<mx:Button  id="btnEdit" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')" 
+					toolTip="Edit"
+					click="btnEdit_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')" 
+					toolTip="Delete" 
+					click="btnDelete_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					toolTip="Undo" 
+					click="btnUndo_clickHandler(event)"
+					enabled="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnTop" width="40" height="40" 
+					toolTip="GoTop" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+					click="goFirst()"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnBack" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+					toolTip="goBack" 
+					click="goBack()" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnNext" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+					toolTip="goNext" 
+					click="goNext()"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnBottom" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+					toolTip="goBottom" 
+					click="goLast()"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<!--<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					click="btnPrint_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>-->
+		<!--<mx:Button  id="btnFilter" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filter22D.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filter22.png')" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>-->
+		<!--<mx:Button  id="btnSort" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/sortD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/sort.png')" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>-->
+		<mx:Button  id="btnFind" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/findD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+					toolTip="Find" 
+					click="btnFind_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnReload" width="40" height="40" 
+					toolTip="Refresh" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					enabled="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					enabled.Delete="false"
+					enabled.List="false"
+					/> 
+		<!--<mx:Button  id="btnList" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/viewD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/view.png')" 
+					toolTip="View"
+					click="btnList_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>-->
+		<mx:Button  id="btnSave" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					toolTip="Save"
+					click="btnSave_clickHandler(event)"
+					enabled="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					enabled="true"
+					click="btnClose_clickHandler(event)"
+					/>
+	</mx:ControlBar>
+	<mx:Form x="10" y="55" width="688" height="124"
+			 borderColor="#C0C0C0"
+			 borderAlpha="20"
+			 borderVisible="true"
+			 borderStyle="solid"
+			 paddingLeft="0"
+			 paddingBottom="0"
+			 paddingTop="5"
+			 >
+		<mx:FormItem label="ID" required="true">
+			<s:TextInput enabled="false" id="txtId"
+						 width="150"
+						 maxChars="10"
+						 restrict="0-9a-zA-Z"
+						 enabled.Add="true" enabled.Edit="false" enabled.Delete="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Description" required="true">
+			<s:TextInput width="578" enabled="false" id="txtDes"
+						 maxChars="254"
+						 enabled.Add="true" enabled.Edit="true" enabled.Delete="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Charge Type" required="true">
+			<s:DropDownList
+				dataProvider="{lactype}"
+				labelField="description"
+				width="150" enabled="false" id="ddCType"
+				enabled.Add="true" enabled.Edit="true" enabled.Delete="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Value" required="true" direction="horizontal">
+			<mx:TextInput
+				textAlign="right"
+				focusIn="number_focusInHandler(event)"
+				width="150" enabled="false" id="txtValue"
+				enabled.Add="true" enabled.Edit="true" enabled.Delete="false"
+				focusOut="txtValue_focusOutHandler(event)"
+				/>
+			<mx:Label
+				text="Additional charges will be applied for (Vehicle Daily Rate - Discount) value"
+				 color.Default="#5A5A5A"/>
+		</mx:FormItem>
+	</mx:Form>
+	<s:Label x="13" y="187"  text="Last Modified By:" id="lblModifiedBy"/>
+	<mx:HRule x="0" y="50" width="706" width.Default="704"/>
+</s:TitleWindow>

@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   close="closeForm()"
+			   creationComplete="initApp()"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="422" height="285" title="User Management" currentState="Default" xmlns:text="org.hamcrest.text.*" xmlns:services="com.dspl.malkey.services.*" xmlns:flexunit="org.flexunit.*" xmlns:utils="com.dspl.malkey.components.common.utils.*" title.Add="User Management [Add]" title.Edit="User Management [Edit]" title.Delete="User Management [Delete]" title.Reset="User Management [Reset Password]">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.crypto.MD5;
+			import com.adobe.utils.ErrorTipManager;
+			import com.adobe.utils.StringUtil;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fpass;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.TabNavigator;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
+			
+			import spark.events.TextOperationEvent;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+			
+			[Bindable]
+			public static var maxLength:int=24;
+			[Bindable]
+			public var lacFpass:ArrayCollection = new ArrayCollection();	
+			[Bindable]
+			public var lpuPopup:_tiMasterFile = new _tiMasterFile();
+			private var selUser:Object;
+			[Bindable]
+			private var lacStatus:ArrayCollection=new ArrayCollection([
+				{id:"A",description:"Active"},
+				{id:"I",description:"Inactive"}
+			]);
+			
+			private var fp:Com_dspl_malkey_domain_Fpass;
+			
+			private function closeForm():void{
+				removeFormErrorTips();
+				this.parent.parent.removeChild(this.parent);
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function loadErrorHandler(event:Event):void{
+				setState("Default");
+			}
+			
+			private function initApp():void{
+				registerValidators();
+				txtEmpid.addEventListener(KeyboardEvent.KEY_DOWN,textInputKeyDown,true,0,false);
+				txtEmpid.addEventListener(TextOperationEvent.CHANGE,textInputChange,true,0,false);
+				loadMasterFiles();
+				ddStatus.selectedIndex=-1;
+			}
+			
+			public var gsCurTabName:String="";
+			public function parentTabChangedHandler(event:DataEvent):void{
+				if(gsCurTabName==event.data)
+					updateErrorTipVisibility();
+			}
+			
+			public function updateErrorTipVisibility():void{
+				if(currentState=="Add" || currentState=="Edit" || currentState=="Reset"){								
+					ErrorTipManager.showErrorTip(svEmpid.source);
+					ErrorTipManager.showErrorTip(svUsername.source);
+					ErrorTipManager.showErrorTip(svNewPass.source);
+					ErrorTipManager.showErrorTip(svConPass.source);
+					ErrorTipManager.showErrorTip(svUserType.source);
+					ErrorTipManager.showErrorTip(svStatus.source);
+				}
+			}
+			
+			private function removeFormErrorTips():void{				
+				ErrorTipManager.removeErrorTip(svEmpid.source,true);
+				ErrorTipManager.removeErrorTip(svUsername.source,true);
+				ErrorTipManager.removeErrorTip(svNewPass.source,true);
+				ErrorTipManager.removeErrorTip(svConPass.source,true);
+				ErrorTipManager.removeErrorTip(svUserType.source,true);
+				ErrorTipManager.removeErrorTip(svStatus.source,true);
+			} 
+			
+			private function registerValidators():void{
+				ErrorTipManager.registerValidator(svEmpid);
+				ErrorTipManager.registerValidator(svUsername);
+				ErrorTipManager.registerValidator(svNewPass);
+				ErrorTipManager.registerValidator(svConPass);
+				ErrorTipManager.registerValidator(svUserType);
+				ErrorTipManager.registerValidator(svStatus);
+			}
+			
+			private function loadMasterFiles():void{
+				try{
+					crListAllFusertype.token = srvFusertype.listAll();
+					loadEmpList();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterFiles: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function listUsers():void{
+				crListUsers.token = srvFpass.listUsers();
+			}
+			
+			private function loadEmpList():void{
+				try{
+					crGetEmpListFemployee.token=srvFemployee.getEmpList();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadEmpList: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function textInputChange(e:TextOperationEvent):void{
+				try{
+					if(currentState=="Add"){
+						txtEmpid.text = txtEmpid.text.toString().toUpperCase();
+						txtEmpid.selectRange(txtEmpid.text.length,txtEmpid.text.length+1);
+						txtEmpid.setFocus();
+					}
+				}catch(error:Error){
+					Alert.show("textInputChange: " + error.message);
+				}
+			}
+			
+			private function textInputKeyDown(e:KeyboardEvent):void{
+				try{
+					if(currentState=="Edit"){
+						if(e.keyCode==8 || e.keyCode==46){
+							e.stopImmediatePropagation();
+							e.stopPropagation();
+						}
+					}
+				}catch(error:Error){
+					Alert.show("textInputKeyPress: " + error.message);
+				}
+			}
+
+			//Display Popup Window 
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function,useCloseEvent:Boolean=false,otherColumns:String="",otherColumnHeaders:String="",otherColumnWidth:int=180):void{
+				lpuPopup._acDataProvider = acDataProvider;								
+				lpuPopup._strKeyColumn = strKeyColumn;
+				lpuPopup._strKeyColCaption = strKeyColCaption; 
+				lpuPopup._strDetailColumn = strDetailColumn;
+				lpuPopup._strDetailColCaption = strDetailColCaption;
+				lpuPopup.otherColumns=otherColumns;
+				lpuPopup.otherColumnHeaderText=otherColumnHeaders;
+				lpuPopup.dgColWidth=otherColumnWidth;
+				lpuPopup._strWindowTitle = strWindowTitle;			
+				lpuPopup._sPostEventToRunPopUpExit = eventName;
+				lpuPopup.addEventListener(eventName,eventListener,false,0,false);
+				lpuPopup.launchSearchGrid(); 
+				lpuPopup.isPopUp=true;
+			}
+			
+			
+			protected function btnNew_clickHandler(event:MouseEvent):void{
+				lsSelState="Add";
+				setState("Add");
+			}
+
+			private var lsSelState:String;
+			protected function btnEdit_clickHandler(event:MouseEvent):void{
+				lsSelState="Edit";
+				listUsers();
+			}
+
+			protected function btnDelete_clickHandler(event:MouseEvent):void{
+				lsSelState="Delete";
+				listUsers();
+			}
+			
+			
+			protected function btnReset_clickHandler(event:MouseEvent):void{
+				lsSelState="Reset";
+				listUsers();
+			}
+
+			protected function btnSave_clickHandler(event:MouseEvent):void{
+				if(validateForm()==true){
+					saveUser();
+				}
+			}
+			
+			private function saveUser():void{
+				try{	
+					if(currentState=="Add"){
+						fp=new Com_dspl_malkey_domain_Fpass();
+						fp.username = txtUsername.text;
+					}
+					
+					fp.empid = lsSelEmpId;
+					fp.usertypeid=ddUserType.selectedItem.usertypeid;
+					fp.status=ddStatus.selectedItem.id;
+					if(currentState=="Add" || currentState=="Reset")
+						fp.password = MD5.hash(txtNewPass.text).substring(0,maxLength);
+					
+					if(currentState=="Add")
+						createResult.token = srvFpass.create(fp);
+					else if(currentState=="Edit" || currentState=="Reset")
+						updateResult.token = srvFpass.update(fp);
+					else if(currentState=="Delete")
+						removeByIdResult.token = srvFpass.removeById(fp.username);
+				}catch(error:Error){
+					Alert.show("saveUser: " + error.message);
+				}
+			}
+			
+			private function validateForm():Boolean{
+				try{
+					if(currentState=="Delete")
+						return true;	
+					
+					var validators:Array=new Array();
+					validators.push(svEmpid,svUsername,svUserType,svStatus);
+					
+					if(currentState=="Add" || currentState=="Reset"){
+						validators.push(svNewPass);
+						validators.push(svConPass);
+					}
+					
+					var validationArray:Array=Validator.validateAll(validators);
+					
+					if(validationArray.length>0){
+						return false;
+					}else{
+						if(txtNewPass.text!=txtConPass.text){
+							txtConPass.errorString = "Password Mismatch";
+							updateErrorTipVisibility();
+							return false;
+						}else{
+							txtConPass.errorString = "";
+						}
+					}
+					
+					if(currentState=="Add"){
+						for(var a:int=0;a<lacFpass.length;a++){
+							var obj:Object = lacFpass.getItemAt(a);	
+							if(obj["username"].toString().toLowerCase()==txtUsername.text.toString().toLowerCase()){
+								txtUsername.errorString = "Username Already Exists";
+								updateErrorTipVisibility();
+								return false;		
+							}else{
+								txtEmpid.errorString = "";
+							}
+						}
+					}
+				}catch(error:Error){
+					Alert.show("validateForm: " + error.message);
+				}
+				return true;
+			}
+
+
+			protected function btnUndo_clickHandler(event:MouseEvent):void{
+				setState("Default");
+			}
+			
+			private function setState(state:String):void
+			{
+				if(state=="Default"){
+					ErrorTipManager.hideAllErrorTips();
+					resetControls();
+				}else if(state=="Add"){
+					ddStatus.selectedIndex=0;
+					loadEmpList();
+					listUsers();
+				}else if(state=="Edit"){
+					loadEmpList();
+				}
+				currentState = state;
+			}
+			
+			private function resetControls():void
+			{
+				txtEmpid.text = "";
+				txtEmpid.errorString = "";
+				txtUsername.text = "";
+				txtUsername.errorString = "";
+				txtNewPass.text = "";
+				txtNewPass.errorString = "";
+				txtConPass.text = "";
+				txtConPass.errorString = "";
+				ddUserType.selectedIndex = -1;
+				ddUserType.errorString = "";
+				ddStatus.selectedIndex=-1;
+				ddStatus.errorString="";
+			}
+
+			protected function crListUsers_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"List Users [Error]: Error Occured While Loading User Details: ","Error",loadErrorHandler);
+					else{
+						lacFpass=event.result as ArrayCollection;
+						if(lsSelState=="Edit" || lsSelState=="Delete" || lsSelState=="Reset")
+							showUsers();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"List Users: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function showUsers():void{
+				try{
+					showPopUp(lacFpass,"username","Username","usertype","User Type","Select An User","userSelection",userSelection,false,"empname","Employee Name",100);
+				}catch(error:Error){
+					Message.displayAlert(1,"showUsers: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function userSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						//txtEmpid.text=crGetEmpListFemployee.lastResult.getItemAt(lpuPopup.grdSearch._nSelectedIndex).name;
+						crFindByIdFpass.token=srvFpass.findById(lpuPopup.grdSearch._strSelectedCode);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"userSelection: " + error.message,"Error",null);
+				}
+			}
+			
+			protected function crFindByIdFpass_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null){
+						Message.displayAlert(1,"Find By Id [Result]: Error Occured","Error",loadErrorHandler);
+					}else{
+						fp=event.result as Com_dspl_malkey_domain_Fpass;
+						loadUserDetails();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Find By Id [Error]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function loadUserDetails():void{
+				try{
+					lsSelEmpId=fp.empid;
+					txtEmpid.text=fp.empname;
+					txtUsername.text=fp.username;
+					ddUserType.selectedIndex=findIndex(crListAllFusertype.lastResult,"usertypeid",fp.usertypeid);
+					ddStatus.selectedIndex=findIndex(lacStatus,"id",fp.status);
+					setState(lsSelState);
+				}catch(error:Error){
+					Message.displayAlert(1,"loadUserDetails: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFindByIdFpass_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"FindById [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+
+			protected function crListUsers_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Users [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			private function loadFpass(userid:String):void
+			{
+				try
+				{
+					var obj:Object = FindItem(lacFpass,"userid",userid);
+					fp = obj as Com_dspl_malkey_domain_Fpass;
+					txtUsername.text = fp.username;
+					ddUserType.selectedItem = FindItem(crListAllFusertype.lastResult as ArrayCollection,"usertypeid",fp.usertypeid);
+				}
+				catch(error:Error)
+				{
+					Alert.show("loadFpass: " + error.message);
+				}
+			}
+			
+			private function findIndex(ac:ArrayCollection,keyfield:String,keyvalue:String):int{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return a;
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					//Message.displayAlert(1,"findIndex: " + error.message,"Error");
+				}
+				return -1;
+			}
+			
+			private function FindItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object
+			{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return o;
+					}
+				}catch(er:Error){
+					obj = null;
+					Alert.show("FindItem: " + er.message);
+				}
+				return obj;
+			}
+			
+			private function enableControls():void
+			{
+				txtUsername.enabled=true;
+				txtNewPass.enabled=true;
+				txtConPass.enabled=true;
+				ddUserType.enabled=true;
+			}
+
+			protected function fusertypelistAll_resultHandler(event:ResultEvent):void
+			{
+				ddUserType.selectedIndex=-1;
+			}
+
+			protected function fusertypelistAll_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("fusertypeListAllFault: " + event.fault.toString());
+			}
+
+
+			protected function createResult_resultHandler(event:ResultEvent):void{
+				if(event.result.toString()=="true"){
+					Message.displayAlert(3,"Save Successful","Successful",alertCloseEvent);
+				}else{
+					Message.displayAlert(1,"Error Occured While Saving [Error]","Error",null);
+				}
+			}
+			
+			private function alertCloseEvent(e:Event):void{
+				resetControls();
+				setState("Default");
+			}
+
+			protected function createResult_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"Error Occured While Saving [Fault]: " + event.fault.toString(),"Error",null);
+			}
+
+
+			protected function updateResult_resultHandler(event:ResultEvent):void{
+				if(event.result.toString()=="true"){
+					Message.displayAlert(3,"Update Successful","Successful",alertCloseEvent);
+				}else{
+					Message.displayAlert(1,"Error Occured Whlie Updating User","Error",null);
+				}
+			}
+
+			protected function updateResult_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"update Fault: " + event.fault.toString(),"Error",null);
+			}
+
+			protected function removeByIdResult_resultHandler(event:ResultEvent):void{
+				if(event.result.toString()=="true"){
+					Message.displayAlert(3,"Delete Successful","Successful",alertCloseEvent);
+				}else{
+					Message.displayAlert(1,"Error deleting user","Error",null);
+				}
+			}
+
+			protected function removeByIdResult_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Error Occured While Deleting User: " + event.fault.toString(),"Error",null);
+			}
+			
+			protected function lbtnSearchEmp_clickHandler(event:MouseEvent):void{
+				showEmpList();
+			}
+
+			/* protected function lbtnSearchEmp_clickHandler(event:MouseEvent):void{
+				if(currentState=="Edit" || currentState=="Delete"){
+					showPopUp(fpass,"userid","Login Name","username","Full Name","Select User","userSelectionEvent",uSelection);
+				}
+			} */
+			
+			private function uSelection(event:Event):void{
+				if(lpuPopup.grdSearch._strSelectedCode!="")
+				{
+					resetControls();
+					txtEmpid.text = lpuPopup.grdSearch._strSelectedCode;
+					selUser = FindItem(lacFpass,"userid",txtEmpid.text);
+					txtUsername.text = selUser["username"].toString();
+					loadFpass(txtEmpid.text);
+					if(currentState=="Edit"){
+						enableControls();
+					}
+				}
+			}
+
+			protected function callresponder1_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Get Employee List [Error]: " + event.result.toString(),"Error",errorCloseHandler);
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Employee List [Result]: " + event.result.toString(),"Error",errorCloseHandler);
+				}				
+			}
+
+			protected function callresponder1_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Employee List [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+			private function showEmpList():void{
+				try{
+					showPopUp(crGetEmpListFemployee.lastResult,"empid","Employee Id","name","Name","Select An Employee","employeeSelection",employeeSelection,false,"nicno","NIC No.",100);
+				}catch(error:Error){
+					Message.displayAlert(1,"showEmpList: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private var lsSelEmpId:String;
+			private function employeeSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						lsSelEmpId=crGetEmpListFemployee.lastResult.getItemAt(lpuPopup.grdSearch._nSelectedIndex).empid;
+						txtEmpid.text=crGetEmpListFemployee.lastResult.getItemAt(lpuPopup.grdSearch._nSelectedIndex).name;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"employeeSelection: " + error.message,"Error",null);
+				}
+			}
+
+
+			protected function controlbar1_creationCompleteHandler(event:FlexEvent):void{
+				setPermission();
+			}
+
+			protected function btnClose_clickHandler(event:MouseEvent):void{
+				closeForm();
+			}
+
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="Add"/>
+		<s:State name="Edit"/>
+		<s:State name="Delete"/>
+		<s:State name="Reset"/>
+	</s:states>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:StringValidator 
+			id="svEmpid" 
+			source="{txtEmpid}"
+			property="text"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator 
+			id="svUsername" 
+			source="{txtUsername}"
+			property="text"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator 
+			id="svNewPass" 
+			source="{txtNewPass}"
+			property="text"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator 
+			id="svConPass" 
+			source="{txtConPass}"
+			property="text"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator 
+			id="svUserType" 
+			source="{ddUserType}"
+			property="selectedItem"
+			triggerEvent=""
+			/>
+		
+		<mx:StringValidator
+			id="svStatus" 
+			source="{ddStatus}"
+			property="selectedItem"
+			triggerEvent=""
+			/>
+		
+		<s:CallResponder id="crListUsers"
+						 result="crListUsers_resultHandler(event)"
+						 fault="crListUsers_faultHandler(event)"
+						 />
+		
+		<s:CallResponder id="crFindByIdFpass"
+						 result="crFindByIdFpass_resultHandler(event)"
+						 fault="crFindByIdFpass_faultHandler(event)"
+						 />
+		
+		<services:FpassSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFpass" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		
+		<s:CallResponder id="crListAllFusertype"
+						 result="fusertypelistAll_resultHandler(event)"
+						 fault="fusertypelistAll_faultHandler(event)"
+						 />
+		<services:FusertypeSRV 
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFusertype" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		
+		<s:CallResponder id="createResult"
+						 result="createResult_resultHandler(event)"
+						 fault="createResult_faultHandler(event)"
+						 />
+		<s:CallResponder id="updateResult"
+						 result="updateResult_resultHandler(event)"
+						 fault="updateResult_faultHandler(event)"
+						 />
+		<s:CallResponder id="removeByIdResult"
+						 result="removeByIdResult_resultHandler(event)"
+						 fault="removeByIdResult_faultHandler(event)"
+						 />
+		<services:FemployeeSRV
+			id="srvFemployee"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		
+		<s:CallResponder
+			id="crGetEmpListFemployee"
+			result="callresponder1_resultHandler(event)"
+			fault="callresponder1_faultHandler(event)"
+			/>
+	</fx:Declarations>
+	
+	<mx:ControlBar x="0" y="0" horizontalGap="2" height="57" width="698" creationComplete="controlbar1_creationCompleteHandler(event)">
+		<mx:Button  id="btnNew" width="40" height="40"
+					toolTip="New"
+					click="btnNew_clickHandler(event)"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')" 
+					enabled="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false" enabled.Reset="false"/>
+		<mx:Button  id="btnEdit" width="40" height="40"
+					toolTip="Edit"
+					click="btnEdit_clickHandler(event)" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')" 
+					enabled="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false" enabled.Reset="false"/>
+		<mx:Button  id="btnChange" width="40" height="40" 
+					toolTip="Reset Password" 
+					click="btnReset_clickHandler(event)"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/resetD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reset.png')"
+					enabled="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false" enabled.Reset="false"/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					toolTip="Delete"
+					click="btnDelete_clickHandler(event)"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')"
+					enabled="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false" enabled.Reset="false"/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					toolTip="Undo"
+					click="btnUndo_clickHandler(event)"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					enabled="false" enabled.Add="true" enabled.Edit="true" enabled.Delete="true" enabled.Reset="true"/>
+		<mx:Button  id="btnSave" width="40" height="40" 
+					toolTip="Save"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')"  
+					enabled="false"
+					click="btnSave_clickHandler(event)" enabled.Add="true" enabled.Edit="true" enabled.Delete="true" enabled.Reset="true"/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					enabled="true"
+					click="btnClose_clickHandler(event)"
+					/>
+	</mx:ControlBar>
+	<mx:Form x="10" y="61">
+		<mx:FormItem label="Employee" fontWeight="bold" required="true" direction="horizontal">
+			<s:TextInput width="180" maxChars="10" id="txtEmpid" fontWeight="normal" enabled="false" enabled.Reset="false"/>
+			<mx:LinkButton 
+				paddingLeft="0" 
+				id="lbtnSearchEmp" 
+				label="Search"
+				color="#0A33BB"
+				enabled.Default="false"
+				enabled.Add="true"
+				enabled.Edit="true" 
+				enabled.Delete="false"
+				click="lbtnSearchEmp_clickHandler(event)"
+				 enabled.Reset="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Username" fontWeight="bold" required="true">
+			<s:TextInput restrict="a-zA-Z1-9" width="250" maxChars="30" enabled="false" id="txtUsername" fontWeight="normal" enabled.Add="true" enabled.Edit="false" enabled.Delete="false" enabled.Reset="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="New Password" fontWeight="bold" required="true">
+			<s:TextInput width="250" displayAsPassword="true" maxChars="{maxLength}" enabled="false" id="txtNewPass" fontWeight="normal" enabled.Add="true" enabled.Edit="false" enabled.Delete="false" enabled.Reset="true"/>
+		</mx:FormItem>
+		<mx:FormItem label="Confirm Password" fontWeight="bold" required="true">
+			<s:TextInput width="250" displayAsPassword="true" maxChars="{maxLength}" enabled="false" id="txtConPass" fontWeight="normal" enabled.Add="true" enabled.Edit="false" enabled.Delete="false" enabled.Reset="true"/>
+		</mx:FormItem>
+		<mx:FormItem label="User Type" fontWeight="bold" required="true">
+			<mx:ComboBox restrict="" dataProvider="{crListAllFusertype.lastResult}" labelField="description" fontWeight="normal" width="250" enabled="false" id="ddUserType" enabled.Add="true" enabled.Edit="true" editable.Edit="false" editable.Delete="false" enabled.Delete="false" editable.Reset="false" enabled.Reset="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Status" fontWeight="bold" required="true">
+			<mx:ComboBox restrict="" dataProvider="{lacStatus}" labelField="description" fontWeight="normal" width="175" enabled="false" id="ddStatus" enabled.Add="true" enabled.Edit="true" editable.Edit="false" editable.Delete="false" enabled.Delete="false" editable.Reset="false" enabled.Reset="false"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:HRule x="0" y="61" width="420"/>
+</s:TitleWindow>

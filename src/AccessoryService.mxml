@@ -1,0 +1,1144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:controls="com.dspl.efinac.components.common.controls.*" 
+		 xmlns:valueObjects="com.dspl.malkey.valueObjects.*"
+		 xmlns:services="com.dspl.malkey.services.*"
+		 width="100%" height="100%"
+		 enabled="{isEnable}"
+		 disabledAlpha="1"
+		 creationComplete="group1_creationCompleteHandler(event)"
+		  >
+	
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Metadata>
+		[Event(name="addAcc", type="flash.events.Event")]
+	</fx:Metadata>
+	
+	
+	
+	
+	<fx:Binding source="{stCurrent}" destination="currentState"/>
+	<s:states>
+		<s:State name="State1"   id="State1"/>
+		<s:State name="stDelete" id="stDelete"/>
+		<s:State name="stEdit" id="stEdit"/>
+		<s:State name="stNew"    id="stNew"/>
+		<s:State name="stView"  id="stView"/>
+		<s:State name="stUndo"  id="stUndo"/>
+	</s:states>
+	
+	
+	
+	<!--View Tier-->
+	<mx:Form
+		width="98%" height="95%"
+		borderAlpha="0.10"
+		paddingTop="20"
+		paddingLeft="20"
+		paddingRight="5"
+		paddingBottom="2"
+		borderColor="black"
+		borderStyle="solid"
+		borderVisible="true"
+		label="Accessories">
+		<s:Label text="Accessories" fontWeight="bold"/>
+	<s:VGroup enabled="{formEnable}" disabledAlpha=".7">
+		
+
+		<mx:FormItem label="Accessory" styleName="formItem" labelStyleName="formItemLabel" direction="horizontal"  required="true">
+			<!--<s:DropDownList width="172" dataProvider="{crFaccessoryListAll.lastResult}" labelField="accid"/>-->
+			<controls:_tiMasterFile id="txtAccessory"											
+									_acDataProvider="{acAccessoryListAll}"
+									text="@{com_dspl_malkey_domain_FresaccsPK.accid}"
+									_strKeyColumn="accid"
+									_strKeyColCaption="Accessory ID" 
+									_strDetailColumn="description" 
+									_strDetailColCaption="description"
+									_strWindowTitle="Select Accessories"
+									width="75"
+									editable="false"
+									_onReturnFromSearchGrid="txtAccessory__onReturnFromSearchGridHandler(event)"
+									tabIndex="0"
+									/>
+			<mx:TextInput 
+				id="lblAcc" 
+				text="{genericFunctions.getArrayCollection(acAccessoryListAll,'accid',txtAccessory.text).description}" 
+				width="100"  
+				editable="false"
+				tabIndex="1"
+				/>
+			<!--<mx:Label text="{txtAccessory.selectedItem.description}" id="lblAcc"/>-->
+			<mx:LinkButton 
+				id="lnkAccessory" 
+				label="Search" 
+				width="60" 
+				color="#0A33BB" 
+				textDecoration="underline" 
+				click="{txtAccessory.launchSearchGrid();}"
+				tabIndex="2"
+				/>
+			
+		</mx:FormItem>
+		<mx:FormItem label="Date From" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  required="true">
+			<mx:DateField width="100" id="dtDateFrom" 
+						  formatString="@Resource(key='dateFormat',bundle='resource')"
+						  selectedDate="@{com_dspl_malkey_domain_FresaccsPK.dfrom}"
+						  selectableRange="{{rangeStart : fromDate,rangeEnd :toDate}}"
+						  change="rateType_changeHandler()"
+						  tabIndex="3"/>
+			<mx:FormItem label="Num. Days" styleName="formItem" labelStyleName="formItemLabel" required="true" direction="horizontal">
+				<s:NumericStepper 
+					id="nsNumDays" 
+					maximum="{DateOperation.getDaysDifference(toDate,dtDateFrom.selectedDate)}" 
+					minimum="0" 
+					width="50"
+					value="{DateOperation.getDaysDifference(dtDateTo.selectedDate,dtDateFrom.selectedDate)}"
+					change="rateType_changeHandler()"
+					tabIndex="4"
+					/>
+			</mx:FormItem>
+		</mx:FormItem>
+
+		<mx:FormItem label="Date To"   direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  required="true">
+			<mx:DateField width="100" id="dtDateTo" selectedDate="{DateOperation.dateAdd('d', nsNumDays.value,dtDateFrom.selectedDate)}"
+						  selectableRange="{{rangeStart : dtDateFrom.selectedDate ,rangeEnd :toDate}}"
+						  change="rateType_changeHandler()"
+						  formatString="@Resource(key='dateFormat',bundle='resource')"
+						  tabIndex="5"
+						  />
+			<mx:FormItem label="Quantity" styleName="formItem" labelStyleName="formItemLabel"  required="true" >
+				<s:NumericStepper 
+					id="nsQtyAcc" 
+					maximum="10000" 
+					minimum="0"
+					width="50"
+					value="@{com_dspl_malkey_domain_Fresaccs.qty}"
+					tabIndex="6"
+					/>
+			</mx:FormItem>
+		</mx:FormItem>
+
+		
+		<mx:FormItem label="Rate Type" styleName="formItem" labelStyleName="formItemLabel" required="true" visible="true"  direction="horizontal">
+			<controls:_tiMasterFile id="txtRateType"											
+									_acDataProvider="{acRateType}"
+									text="{com_dspl_malkey_domain_Fresaccs.fresaccrate.id.ratetype}"
+									_strKeyColumn="ratetype"
+									_strKeyColCaption="Rate Type" 
+									_strDetailColumn="description" 
+									_strDetailColCaption="Description"
+									_strWindowTitle="Select Rate Type"
+									width="100"
+									editable="false" 
+									tabIndex="7"
+									/>
+			<s:TextInput 
+				text="{genericFunctions.getArrayCollection(acRateType,'ratetype',txtRateType.text).description}"
+				doubleClickEnabled="true"
+				doubleClick="txtRateType.launchSearchGrid();"
+				width="300"
+				id="txtRateTypeDescription"
+				tabIndex="8"
+				/>
+		</mx:FormItem>
+		
+		<mx:FormItem label="Old Rate" styleName="formItem" labelStyleName="formItemLabel" required="true" visible="false" includeInLayout="false"  direction="horizontal">
+			<mx:Label text=""  id="txtOldRateType" visible="{mode=='edit' ? true:false}"/>
+			<mx:Label text=""  id="txtOldRateTypeDesc" visible="{mode=='edit' ? true:false}"/>
+		</mx:FormItem>
+		
+		
+		<mx:FormItem label="Remarks"   direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  >
+			<s:TextArea id="txtRemarks" width="410"  height="25" text="@{com_dspl_malkey_domain_Fresaccs.remarks}" tabIndex="9"/>
+		</mx:FormItem>
+		
+	</s:VGroup>	
+		
+		
+		<mx:HBox horizontalAlign="center">
+			<s:Button id="btnAddAcc" 	label="Add" 	click="btnAddAcc_clickHandler(event)" 		enabled="{!btnUpdateAcc.enabled}" tabIndex="10"/>
+			<s:Button id="btnUpdateAcc" label="Edit" 	click="btnUpdateAcc_clickHandler(event)" 	enabled="{dgAccessory.selectedIndex !=-1 ? true : false}" tabIndex="11"/>
+			<s:Button id="btnDeleteAcc" label="Delete" 	click="btnDeleteAcc_clickHandler(event)" 	enabled="{dgAccessory.selectedIndex !=-1 ? true : false}" tabIndex="12"/>
+			<s:Button id="btnCancleAcc" label="Reset" 	click="btnCancleAcc_clickHandler(event)" 	enabled="{dgAccessory.selectedIndex !=-1 ? true : false}" tabIndex="13"/>
+			<s:Button 
+				id="lnkAccessoryImage" 
+				label="Photo" 
+				width="60" 
+				click="lnkAccessoryImage_clickHandler(event)"
+				/>
+		</mx:HBox>
+<!--		<mx:HBox horizontalAlign="center">
+			<s:Button id="btnAddAcc" 	label="Add" 	click="btnAddAcc_clickHandler(event)" 		enabled="{!btnUpdateAcc.enabled}" includeInLayout="{!btnUpdateAcc.enabled}" visible="{!btnUpdateAcc.enabled}"/>
+			<s:Button id="btnUpdateAcc" label="Edit" 	click="btnUpdateAcc_clickHandler(event)" 	enabled="{dgAccessory.selectedIndex !=-1 ? true : false}" includeInLayout="{dgAccessory.selectedIndex !=-1 ? true : false}" visible="{dgAccessory.selectedIndex !=-1 ? true : false}"/>
+			<s:Button id="btnDeleteAcc" label="Delete" 	click="btnDeleteAcc_clickHandler(event)" 	enabled="{dgAccessory.selectedIndex !=-1 ? true : false}" includeInLayout="{dgAccessory.selectedIndex !=-1 ? true : false}" visible="{dgAccessory.selectedIndex !=-1 ? true : false}"/>
+			<s:Button id="btnCancleAcc" label="Cancle" 	click="btnCancleAcc_clickHandler(event)" 	enabled="{dgAccessory.selectedIndex !=-1 ? true : false}" includeInLayout="{dgAccessory.selectedIndex !=-1 ? true : false}" visible="{dgAccessory.selectedIndex !=-1 ? true : false}"/>
+		</mx:HBox>-->
+		<mx:Spacer height="10"/>
+		
+		<mx:DataGrid 
+			id="dgAccessory" 
+			dataProvider="{acResAccessory}" 
+			width="97%" height="40%" 
+			dropShadowVisible="false" 
+			borderAlpha="0.28" 
+			borderVisible="true"  
+			verticalScrollPolicy="auto"
+			itemClick="dgAccessory_itemClickHandler(event)"
+			keyUp="dgAccessory_keyUpHandler(event)"
+			tabIndex="14"
+			>
+			<mx:columns>
+				<mx:DataGridColumn headerText="Accessory" 	dataField="id" 		labelFunction="Accessorylabel"/>
+				<mx:DataGridColumn headerText="From" 		dataField="dfrom"  	labelFunction="dateLabel"/>
+				<mx:DataGridColumn headerText="To" 			dataField="dto"   	labelFunction="dateLabel"/>
+				<mx:DataGridColumn headerText="Rate"  		dataField="rate"/>
+				<mx:DataGridColumn headerText="Quantity"  	dataField="qty"/>
+			</mx:columns>
+		</mx:DataGrid>
+		
+		<!--<mx:DataGridColumn headerText="Accessory" dataField="id.accid"/>-->
+		<!--<mx:DataGridColumn headerText="From" dataField="dfrom" itemRenderer="mx.controls.DateField" rendererIsEditor="true" labelFunction="dateLabel"/>
+			<mx:DataGridColumn headerText="To" dataField="dto"  itemRenderer="mx.controls.DateField" rendererIsEditor="true" labelFunction="dateLabel"/>-->
+		<!--<mx:DataGridColumn headerText="To Time" dataField="dto"   labelFunction="dateLabel"/>-->
+		
+	</mx:Form>
+<!--	<mx:Image id="imgAccessory" width="131" height="107" x="400" y="25" source="{getFulURL()}"/>-->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Model-->
+	
+	<fx:Binding destination="dgAccessory.dataProvider" source="acResAccessory" />
+	<fx:Binding destination="com_dspl_malkey_domain_FresaccsPK" source="com_dspl_malkey_domain_Fresaccs.id" twoWay="true"/>
+	<fx:Binding destination="dtDateTo.selectedDate" source="com_dspl_malkey_domain_FresaccsPK.dto" twoWay="true"/>
+	<fx:Binding destination="com_dspl_malkey_domain_Fresaccs.fresaccrate.id.ratetype" source="txtRateType.text"/>
+	<fx:Binding destination="nsNumDays.value" source="com_dspl_malkey_domain_Fresaccs.noofdays" twoWay="true"/>
+	
+	
+	
+	
+	
+	
+	<!--Declarations here-->
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<!--Validators-->
+		<mx:NumberValidator source="{nsNumDays}" 
+							property="value" 
+							integerError="Enter Integer value"
+							minValue="1" 
+							maxValue="1000" 
+							domain="int" 
+							trigger="{btnAddAcc}" 
+							triggerEvent="click"
+							id="nvNumDays"/>
+		<mx:NumberValidator source="{nsQtyAcc}" 
+							property="value" 
+							integerError="Enter Integer value"
+							minValue="1" 
+							maxValue="1000" 
+							domain="int" 
+							trigger="{btnAddAcc}" 
+							triggerEvent="click"
+							id="nvQtyAcc"/>
+		<mx:StringValidator id="svAccessoryId"
+							source="{txtAccessory}"
+							property="text"
+							trigger="{btnAddAcc}" 
+							triggerEvent="click"
+							/>
+		<mx:DateValidator  id="dvFrom"
+						   source="{dtDateFrom}"
+						   property="selectedDate"
+						   trigger="{btnAddAcc}"
+						   triggerEvent="click"
+						   />
+		
+		<!--Formatters here-->
+		<mx:DateFormatter id="dateFormatter" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+		
+		<!--valueObjects/domains here-->
+		<!--<valueObjects:Com_dspl_malkey_domain_Freservation id="com_dspl_malkey_domain_Freservation"/>-->
+		<valueObjects:Com_dspl_malkey_domain_Fresaccs 		id="com_dspl_malkey_domain_Fresaccs"/>
+		<valueObjects:Com_dspl_malkey_domain_FresaccsPK 	id="com_dspl_malkey_domain_FresaccsPK"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresaccrate 	id="com_dspl_malkey_domain_Fresaccrate"/>
+		<valueObjects:Com_dspl_malkey_domain_FresaccratePK 	id="com_dspl_malkey_domain_FresaccratePK"/>
+		<valueObjects:Com_dspl_malkey_domain_FaccratePK 	id="faccratePK"/>
+		
+		<!--CallResponders here-->
+		<s:CallResponder id="findByIDResult" result="findByIDResult_resultHandler(event)"/>
+		
+		<!--services here-->
+		<services:FaccrateSRV id="faccrateSRV" endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		
+	</fx:Declarations>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.util.DateOperation;
+			import com.dspl.malkey.util.RateType;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Faccessory;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Faccrate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FaccratePK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccrate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccratePK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccs;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccsPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.managers.SystemManager;
+			import mx.resources.ResourceManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			import mx.utils.StringUtil;
+			
+			import spark.events.IndexChangeEvent;
+			
+			
+			/*My Add  */
+			[Bindable]public var acResAccessory:ArrayCollection = new ArrayCollection();
+			[Bindable]public var clientType:String ="INDIVIDUAL";
+			[Bindable]public var formEnable:Boolean =true;
+			[Bindable]public var acAccessoryListAll:ArrayCollection = new ArrayCollection();
+			[Bindable]public var acRateType:ArrayCollection = new ArrayCollection();
+ 			[Bindable]private var session:Session = Session.getInstance(); 
+			[Bindable]private var genericFunctions:GenericFunctions=new GenericFunctions();	
+			[Bindable]public var isEnable:Boolean=false;
+			[Bindable]public var stCurrent:String;
+			[Bindable]public var mode:String;
+			[Bindable]public var fromDate:Date=new Date();
+			[Bindable]public var toDate:Date  =new Date();
+			
+			
+
+			
+			/***
+			 * Buttons event-handlers are following
+			 * Author:sanka
+			 *   */
+			protected function btnAddAcc_clickHandler(event:MouseEvent):void
+			{
+				mode="add";
+				if(clientType!=null)
+				{
+					if(nsNumDays.value>0 && nsQtyAcc.value>0 && StringUtil.trim(txtAccessory.text).length>0)
+					{
+						if(validateDateTime())
+						{
+							faccrateSRVFindByID();			
+						}
+					}
+					else
+					{
+						Alert.show("Please re-check the form and submit","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					}
+				}
+				else
+				{
+					Alert.show("Please Select the client First","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+			}
+			
+			
+			protected function btnDeleteAcc_clickHandler(event:MouseEvent):void
+			{
+				Alert.show("Are You sure,You want to delete Accessory ?","Warning",Alert.YES|Alert.NO,this,confirmAlert,genericFunctions.IconQuestion,Alert.OK);
+			}
+			
+			
+			protected function btnCancleAcc_clickHandler(event:MouseEvent):void
+			{
+				resetAccessoryForm();
+			}
+			
+			protected function btnUpdateAcc_clickHandler(event:MouseEvent):void
+			{
+				mode="edit";
+				if(btnUpdateAcc.label=="Edit")
+				{
+					btnUpdateAcc.label="Update";
+					dgAccessory.selectable=false;
+					lnkAccessory.enabled=false;
+					txtAccessory.enabled=false;
+					com_dspl_malkey_domain_Fresaccs=ObjectUtil.copy(acResAccessory.getItemAt(dgAccessory.selectedIndex)as Com_dspl_malkey_domain_Fresaccs) as Com_dspl_malkey_domain_Fresaccs;//dgAccessory.selectedItem as Com_dspl_malkey_domain_Fresaccs;
+					com_dspl_malkey_domain_FresaccsPK=com_dspl_malkey_domain_Fresaccs.id;
+					formEnable=true;
+				}
+				else//if(btnUpdateAcc.label="Update")
+				{
+					if(nsNumDays.value>0 && nsQtyAcc.value>0 && StringUtil.trim(txtAccessory.text).length>0)
+					{
+						formEnable=false;
+						btnUpdateAcc.label="Edit";
+						var selectedIndex:int=dgAccessory.selectedIndex;
+						acResAccessory.removeItemAt(selectedIndex);
+						com_dspl_malkey_domain_Fresaccs.fresaccrate.id.dfrom=dtDateFrom.selectedDate;
+						com_dspl_malkey_domain_Fresaccs.fresaccrate.id.dto=dtDateTo.selectedDate;
+						acResAccessory.addItemAt(com_dspl_malkey_domain_Fresaccs,selectedIndex);
+						//var tempRateType:String=nsChargeableDays.value !=0 ? (session.getAttribute('RateType').getRatetype(nsChargeableDays.value)) : '';
+						if(com_dspl_malkey_domain_Fresaccs.fresaccrate.id.ratetype!=txtOldRateType.text)
+						{
+							Alert.show("Rate Type has been changed.\n"+txtOldRateType.text+" to "+com_dspl_malkey_domain_Fresaccs.fresaccrate.id.ratetype+"\nDo you want to apply new rates?","Warning",Alert.YES|Alert.NO,this,confirmAlertRate,genericFunctions.IconQuestion,Alert.OK);
+/* 							Alert.show("Number Of date has been changed.\nDo You want to Apply new Rates?","Warning",Alert.YES|Alert.NO,this,confirmAlertRate,genericFunctions.IconQuestion,Alert.OK); */
+						}
+						else
+						{
+							dgAccessory.selectable=true;
+							resetAccessoryForm();
+							dispatchEvent(new Event("rateChange"));
+							dispatchEvent(new Event("addAcc"));
+						}
+					}
+					else
+					{
+						Alert.show("Please re-check the form and submit","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					}
+				}
+			}
+			
+			public function hasChangeDate():Boolean
+			{
+				var flagDirty:Boolean=true;
+				var original:Com_dspl_malkey_domain_Fresaccs=ObjectUtil.copy(acResAccessory.getItemAt(dgAccessory.selectedIndex)as Com_dspl_malkey_domain_Fresaccs) as Com_dspl_malkey_domain_Fresaccs;
+				com_dspl_malkey_domain_FresaccsPK
+				if(com_dspl_malkey_domain_FresaccsPK.dfrom.getTime()!=original.id.dfrom.getTime())
+				{
+					flagDirty=false;
+				}
+				else if(com_dspl_malkey_domain_FresaccsPK.dto.getTime()!=original.id.dto.getTime())
+				{
+					flagDirty=false;
+				}
+				else if(com_dspl_malkey_domain_Fresaccs.noofdays!=original.noofdays)
+				{
+					flagDirty=false;
+				}
+				else if(com_dspl_malkey_domain_Fresaccs.fresaccrate.id.ratetype!=txtOldRateType.text)
+				{
+					flagDirty=false;
+				}
+				return flagDirty;
+			}
+			
+			/***
+			 * this method fire when user select confirm state for hire status in new state.then system will ask user 
+			 * "do you  want to set confirm state with out deposite or adavace from client ..something like that.
+			 * 
+			 * */
+			public function confirmAlert(eventObj:CloseEvent):void
+			{
+				
+				if(eventObj.detail==Alert.YES)
+				{
+					acResAccessory.removeItemAt(dgAccessory.selectedIndex);
+					acResAccessory.refresh();
+					resetAccessoryForm();
+					dispatchEvent(new Event("rateChange"));
+					dispatchEvent(new Event("addAcc"));
+				}
+				else if(eventObj.detail==Alert.NO)
+				{
+				}
+				
+			}
+			
+			/***
+			 * this method fire when user select confirm state for hire status in new state.then system will ask user 
+			 * "do you  want to set confirm state with out deposite or adavace from client ..something like that.
+			 * 
+			 * */
+			public function confirmAlertRate(eventObj:CloseEvent):void
+			{
+				
+				if(eventObj.detail==Alert.YES)
+				{
+					faccrateSRVFindByID();
+/* 					dgAccessory.selectable=true;
+					resetAccessoryForm();
+					dispatchEvent(new Event("rateChange")); */
+				}
+				else if(eventObj.detail==Alert.NO)
+				{
+					com_dspl_malkey_domain_Fresaccs.fresaccrate.id.ratetype=txtOldRateType.text;
+					dgAccessory.selectable=true;
+					resetAccessoryForm();
+					dispatchEvent(new Event("rateChange"));
+					dispatchEvent(new Event("addAcc"));
+				}
+				
+			}
+			
+
+			/***
+			 * Add Accessory to datagrid 
+			 * Author:sanka
+			 *  */
+			private function addAccessory():void
+			{
+				
+				/***
+				 * Following code lines perform avoid adding duplicates
+				 * */
+				
+ 				var hasElement:Boolean=false;
+				for each(var tempFresaccs:Com_dspl_malkey_domain_Fresaccs in acResAccessory)
+				{
+					if(	tempFresaccs.id.accid == txtAccessory.text 
+						&& dateFormatter.format(tempFresaccs.id.dfrom) 	== dateFormatter.format(dtDateFrom.selectedDate)
+						&& dateFormatter.format(tempFresaccs.id.dto)	== dateFormatter.format(dtDateTo.selectedDate)
+						&& StringUtil.trim(txtAccessory.text).length>0)
+					{
+						Alert.show("Item Already Reserved In Selected Date Range","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return;
+					}
+				}
+				if(!hasElement)
+				{
+					acResAccessory.addItem(com_dspl_malkey_domain_Fresaccs);
+					acResAccessory.refresh();
+					resetAccessoryForm();
+					dispatchEvent(new Event("rateChange"));
+					dispatchEvent(new Event("addAcc"));
+				} 
+			}
+			
+			/*Reset Form and Datagrid */
+			public function resetAll():void
+			{
+				try
+				{
+				com_dspl_malkey_domain_Fresaccs=new Com_dspl_malkey_domain_Fresaccs();
+
+				com_dspl_malkey_domain_Fresaccs.qty=0;
+				com_dspl_malkey_domain_Fresaccs.rate="0";
+				com_dspl_malkey_domain_Fresaccs.remarks=" ";
+				com_dspl_malkey_domain_FresaccsPK=new Com_dspl_malkey_domain_FresaccsPK();
+				com_dspl_malkey_domain_FresaccsPK.dfrom=null;//new Date();
+				com_dspl_malkey_domain_FresaccsPK.dto=null;//new Date();
+				dgAccessory.selectedIndex=-1;
+				dgAccessory.selectable=true;
+				btnUpdateAcc.label="Edit";
+				lnkAccessory.enabled=true;
+				txtAccessory.enabled=true;
+				//imgAccessory.source=null;
+				//txtAccessory.selectedItem=null;
+				lblAcc.text="";
+				acResAccessory.removeAll();
+				dispatchEvent(new Event("rateChange"));
+				txtAccessory.errorString="";
+				dtDateFrom.errorString="";
+				dtDateTo.errorString="";
+				nsNumDays.errorString="";
+				nsQtyAcc.errorString="";
+				}
+				catch(e:Error)
+				{
+				trace(e.message);
+				}
+				
+			}
+			
+			/*Reset Form  */
+			private function resetAccessoryForm():void
+			{
+				com_dspl_malkey_domain_Fresaccs=new Com_dspl_malkey_domain_Fresaccs();
+
+				com_dspl_malkey_domain_Fresaccs.qty=0;
+				com_dspl_malkey_domain_Fresaccs.rate="0";
+				com_dspl_malkey_domain_Fresaccs.remarks=" ";
+				com_dspl_malkey_domain_FresaccsPK=new Com_dspl_malkey_domain_FresaccsPK();
+				com_dspl_malkey_domain_FresaccsPK.dfrom=null;//new Date();
+				com_dspl_malkey_domain_FresaccsPK.dto=null;//new Date();
+				nsNumDays.value=0;
+				nsQtyAcc.value=0;
+				dgAccessory.selectedIndex=-1;
+				dgAccessory.selectable=true;
+				btnUpdateAcc.label="Edit";
+				lnkAccessory.enabled=true;
+				txtAccessory.enabled=true;
+				//imgAccessory.source=null;
+				//txtAccessory.selectedItem=null;
+				lblAcc.text="";
+				
+				txtAccessory.errorString="";
+				dtDateFrom.errorString="";
+				dtDateTo.errorString="";
+				nsNumDays.errorString="";
+				nsQtyAcc.errorString="";
+				formEnable=true;
+				mode="add";
+				
+			}
+			
+			/*Manual Validation Form  */
+			private function manualValidateAccessoryForm():Boolean
+			{
+				return (nsNumDays.value>0 && nsQtyAcc.value>0 && StringUtil.trim(txtAccessory.text).length>0);
+			}
+			
+			
+			/*Lable Functions here  */
+			private function dateLabel(item:Object, column:DataGridColumn):String
+			{
+				return dateFormatter.format(item["id"][column.dataField]);
+			}
+			
+			
+			private function lblAccessory(item:Object, column:DataGridColumn):String
+			{
+				var tempVal:String="";
+				if((item as Com_dspl_malkey_domain_Fresaccs).id.accid !=null)
+				{
+					return (item as Com_dspl_malkey_domain_Fresaccs).id.accid;
+				}
+				return "";
+			}
+			
+			private function Accessorylabel(item:Object, column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAccessoryListAll,"accid",(item as Com_dspl_malkey_domain_Fresaccs).id.accid).description;
+			}
+			
+			
+
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				resetAccessoryForm();
+			//	singletonRateType=session.getAttribute("RateType");
+			}
+			
+			private function getFulURL():String
+			{
+				var urlFull:String
+				try{
+					urlFull=genericFunctions.getArrayCollection(acAccessoryListAll,"accid",txtAccessory.text).image;//ResourceManager.getInstance().getString("resource","url").replace('malkey_server/messagebroker/amf',txtAccessory.selectedItem.image);
+				}
+				catch(e:Error)
+				{
+					urlFull= "";
+				}
+				
+				return urlFull;
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+
+
+			protected function txtAccessory__onReturnFromSearchGridHandler(event:Event):void
+			{
+				//imgAccessory.source=getFulURL();
+			}
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/***
+			 * when user add accessory then this method will try to retrive data rates from  
+			 * 
+			 * */
+			//--------------------------------------------------------------------------------------------------------------------------------------------
+			protected function faccrateSRVFindByID():void
+			{
+				//var faccratePK:Com_dspl_malkey_domain_FaccratePK=new Com_dspl_malkey_domain_FaccratePK();
+				faccratePK.accid=txtAccessory.text;
+				faccratePK.clienttype=clientType;
+				faccratePK.ratetype=txtRateType.text;//session.getAttribute("RateType").getRatetype(nsNumDays.value);//singletonRateType.getRatetype(nsNumDays.value); //acRateType.getItemAt(txtRateType._nSelectedIndex).ratetype;
+				findByIDResult.token = faccrateSRV.findByID(faccratePK);
+			}
+			
+			
+
+			protected function findByIDResult_resultHandler(event:ResultEvent):void
+			{
+				try{
+					com_dspl_malkey_domain_Fresaccs.rate=(findByIDResult.lastResult as Com_dspl_malkey_domain_Faccrate).rate;
+					if(com_dspl_malkey_domain_Fresaccs.rate.toString()=="0E-8")
+					{
+						com_dspl_malkey_domain_Fresaccs.rate="0";
+					}
+					var tempRate:Com_dspl_malkey_domain_Fresaccrate=new Com_dspl_malkey_domain_Fresaccrate();
+					var tempRatePK:Com_dspl_malkey_domain_FresaccratePK=new Com_dspl_malkey_domain_FresaccratePK();
+					tempRate.rate=(findByIDResult.lastResult as Com_dspl_malkey_domain_Faccrate).rate;
+					if(tempRate.rate.toString()=="0E-8")
+					{
+						tempRate.rate="0";
+					}
+					tempRate.standardrate=(findByIDResult.lastResult as Com_dspl_malkey_domain_Faccrate).standardrate;
+					//com_dspl_malkey_domain_Fresaccs.ratetype=txtRateType.text;
+					//tempRate.fresaccrate.id.ratetype=txtRateType.text;				
+					tempRatePK=new Com_dspl_malkey_domain_FresaccratePK();
+					//tempRatePK.ratetype=session.getAttribute("RateType").getRatetype(nsNumDays.value);//txtRateType.text;
+					tempRatePK.accid=com_dspl_malkey_domain_Fresaccs.id.accid;
+					tempRatePK.clienttype=clientType;
+					tempRatePK.dfrom=com_dspl_malkey_domain_Fresaccs.id.dfrom;
+					tempRatePK.dto=com_dspl_malkey_domain_Fresaccs.id.dto;
+					tempRatePK.ratetype=faccratePK.ratetype;//txtRateType.text;//session.getAttribute("RateType").getRatetype(nsNumDays.value);
+					tempRate.adddate=new Date();
+					tempRate.addmach="";
+					tempRate.adduser="";
+					tempRate.discount="0.00";
+					if(mode=="edit")
+					{
+					tempRate.discount=com_dspl_malkey_domain_Fresaccs.fresaccrate.discount;
+					}
+					
+					tempRate.id=tempRatePK;
+					com_dspl_malkey_domain_Fresaccs.fresaccrate=tempRate;
+					com_dspl_malkey_domain_Fresaccs.noofdays=nsNumDays.value;
+					if(mode=="add"){
+					addAccessory();
+					}
+					else if(mode=="edit"){
+						dgAccessory.selectable=true;
+						resetAccessoryForm();
+						dispatchEvent(new Event("rateChange")); 
+						dispatchEvent(new Event("addAcc"));
+					}
+					
+					//acResAccessory.refresh();
+				}
+				catch(e:Error)
+				{
+					resetAccessoryForm();
+					Alert.show("Selected Accesory didn't have mention about the rates in database.\nPlease contact Database Admionistrator.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				
+			}
+			//--------------------------------------------------------------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+
+			
+			
+			
+			
+			
+			
+			
+			
+ 			[Bindable("rateChange")]
+			public function getResAccessoryRate():ArrayCollection
+			{
+				var acResAccessoryRate:ArrayCollection=new ArrayCollection();
+				for each(var tempFresaccs:Com_dspl_malkey_domain_Fresaccs in acResAccessory)
+				{
+					acResAccessoryRate.addItem(tempFresaccs.fresaccrate);
+				}
+				return acResAccessoryRate;
+			} 
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/***
+			 * This method dispatch the ratechnage event &
+			 *  wakeup for calculate rates
+			 * 
+			 * */
+			public function wakeup():void
+			{
+				dispatchEvent(new Event("rateChange"));
+			}
+			
+			
+			
+		
+			
+			
+			
+			
+			
+			
+			
+			
+
+			protected function dgAccessory_itemClickHandler(event:ListEvent):void
+			{
+				// Keep the original copy no dirty
+				com_dspl_malkey_domain_Fresaccs=ObjectUtil.copy(acResAccessory.getItemAt(event.rowIndex))  as Com_dspl_malkey_domain_Fresaccs;
+				//imgAccessory.source=getFulURL();
+				formEnable=false;
+				txtOldRateType.text=com_dspl_malkey_domain_Fresaccs.fresaccrate.id.ratetype;
+				txtOldRateTypeDesc.text=genericFunctions.getArrayCollection(acRateType,'ratetype',txtOldRateType.text).description;
+			}
+
+
+
+
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * This method perform delete items on datagrid by using keyboard delete key
+			 * 	
+			 *	
+			 * </br>
+			 * Author:sanka
+			 * */
+			protected function dgAccessory_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode==Keyboard.DELETE && btnDeleteAcc.enabled)
+				{
+					btnDeleteAcc_clickHandler(new MouseEvent(MouseEvent.CLICK));
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * RateType Change Handler
+			 * 
+			 * 
+			 * */
+			protected function rateType_changeHandler():void
+			{
+				txtRateType.text=nsNumDays.value !=0 ? (session.getAttribute('RateType').getRatetype(nsNumDays.value)) : '';
+			//	com_dspl_malkey_domain_Fresaccs.fresaccrate.id.ratetype=nsNumDays.value !=0 ? (session.getAttribute('RateType').getRatetype(nsNumDays.value)) : '';
+			//	com_dspl_malkey_domain_FresaccratePK.ratetype=nsNumDays.value !=0 ? (session.getAttribute('RateType').getRatetype(nsNumDays.value)) : '';
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * remove Driver Item to datagrid
+			 *
+			 * Author:sanka
+			 * */
+			public function validateAccesory_overAllocation(dateTo:Date,dateFrom:Date):Boolean
+			{
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				var tmpInDate:Date=new Date(dateTo.getTime());
+				var tmpOutDate:Date=new Date(dateFrom.getTime());
+				var hasElement:Boolean=false;
+				
+				for each(var tempFresaccs:Com_dspl_malkey_domain_Fresaccs in acResAccessory)
+				{
+					
+					//following code line check if there are any over allocation in driver allocation founfd on datagrid
+					//track the(out&in on) 10-20 reservation, check-in on 15th
+					//warning to delete over allocated drivers
+					if(tempFresaccs.id.dto.getTime() > tmpInDate.getTime())
+					{
+						var msg:String="Accessories has been over-allocated \nfor "+dateFormatter.format(tempFresaccs.id.dto)+".\nPlease update the Accessories allocation list to continue."
+						Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						//Alert.show("According to the new Checkin Date,\nOver Allocation found on Driver Allocation.Please enter the actual data.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return false;
+					} 
+					
+					
+					if(tempFresaccs.id.dfrom.getTime() < tmpOutDate.getTime())
+					{
+						var msg:String="Accessories has been over-allocated \nfor "+dateFormatter.format(tempFresaccs.id.dfrom)+".\nPlease update the Accessories allocation list to continue."
+						Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						//Alert.show("According to the new Checkin Date,\nOver Allocation found on Driver Allocation.Please enter the actual data.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return false;
+					} 
+					
+					
+				}//end of loop
+				
+				
+				return true;
+				
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 *set Date Item to datagrid
+			 *
+			 * Author:sanka
+			 * */
+ 			public function setDateAccesorry(dateTo:Date,dateFrom:Date):Boolean
+			{
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				var tmpInDate:Date=new Date(dateTo.getTime());
+				var tmpOutDate:Date=new Date(dateFrom.getTime());
+				var hasElement:Boolean=false;
+				var acItemToDel:ArrayCollection=new ArrayCollection();
+				for each(var tempFresaccs:Com_dspl_malkey_domain_Fresaccs in acResAccessory)
+				{
+					//--------------------------------------------------------
+					if(tempFresaccs.id.dfrom.getTime() <= tmpInDate.getTime())
+					{
+						if(tempFresaccs.id.dto.getTime() > tmpInDate.getTime())
+						{
+							tempFresaccs.id.dto=new Date(dateTo);
+							//tempFresaccs.id.dto.setTime(tmpInDate.getTime());
+						} 
+					}
+					else
+					{
+						acItemToDel.addItem(tempFresaccs);
+					}
+					//------------------------------------------------------
+					if(tempFresaccs.id.dto.getTime() >= tmpOutDate.getTime())
+					{					
+						if(tempFresaccs.id.dfrom.getTime() < tmpOutDate.getTime())
+						{
+							tempFresaccs.id.dfrom=new Date(dateFrom);
+							//tempFresaccs.id.dfrom.setTime(tmpOutDate.getTime());
+						} 
+					}
+					else
+					{
+						acItemToDel.addItem(tempFresaccs);
+					}
+					//-------------------------------------------------------
+					tempFresaccs.noofdays=DateOperation.getDaysDifference(tempFresaccs.id.dto,tempFresaccs.id.dfrom);
+					tempFresaccs.fresaccrate.id.dfrom=tempFresaccs.id.dfrom;
+					tempFresaccs.fresaccrate.id.dto=tempFresaccs.id.dto;
+					
+				}//end of loop
+				
+				//---------------------------------------------------------------
+				
+				for each(var obj:Com_dspl_malkey_domain_Fresaccs in acItemToDel)
+				{
+					var index:int=acResAccessory.getItemIndex(obj);
+					acResAccessory.removeItemAt(index);
+				}
+				acResAccessory.refresh();
+				dispatchEvent(new Event("rateChange")); 
+				dispatchEvent(new Event("addAcc"));
+				//---------------------------------------------------------------
+
+				
+				return true;
+				
+				
+			} 
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			private function validateDateTime():Boolean
+			{
+				for each(var tempAccService:Com_dspl_malkey_domain_Fresaccs in acResAccessory)
+				{
+					if(!valFunction( tempAccService))
+					{
+						return false;
+					}
+				}
+				return true;
+			}			
+			
+			
+			
+			
+			private function valFunction( tempAccService:Com_dspl_malkey_domain_Fresaccs):Boolean
+			{
+				var flag:Boolean=true;
+				//var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				var tmpInDate:Date=new Date(tempAccService.id.dto.getTime());
+				var tmpOutDate:Date=new Date(tempAccService.id.dfrom.getTime());
+				var curInDate:Date=new Date(dtDateTo.selectedDate.getTime());
+				var curOutDate:Date=new Date(dtDateFrom.selectedDate.getTime());
+				
+				var outTime:Number=tmpOutDate.getTime();
+				var curOutTime:Number=curOutDate.getTime();
+				var inTime:Number=tmpInDate.getTime();
+				var curInTime:Number=curInDate.getTime();
+				var msg:String="";
+				if(StringUtil.trim(txtAccessory.text).length>0)
+				{
+					if(tempAccService.id.accid == txtAccessory.text)
+					{
+					//1.new out date should not be within out & in date ~~~~~~ 
+					//2.new in date should not be within out & in date	~~~~~~
+					//3.NOT(new out date is before or equal &new in date is after or equal)
+					//4.????????
+					//10>5 20>11
+					
+					//code for 1 eg:5<10(outdateNew)<20
+					if((curOutTime<inTime && curOutTime>=outTime ))					
+					{
+						flag=false;
+						msg="Accessory Service Allocated Time is Overlapping with Existing Accessory Allocation.\nAccessory Service ID:"+tempAccService.id.accid;
+					}
+					//code for 2 eg:5(outdateExisting)<10(indateNew)<20(indateExisting)
+					if((curInTime<=inTime && curInTime>outTime ))					
+					{
+						flag=false;
+						msg="Accessory Service Allocated Time is Overlapping with Existing Accessory Allocation.\nAccessory Service ID:"+tempAccService.id.accid;
+					}
+					//code for 3 eg:1(outDateNew)=<5(outdateExisting) && 20(indateExisting)<=25(newInDate)
+					if(( curOutTime<=outTime && curInTime>=inTime))					
+					{
+						flag=false;
+						msg="Accessory Service Allocated Time is Overlapping with Existing Accessory Allocation.\nAccessory Service ID:"+tempAccService.id.accid;
+					}
+					}
+				}
+				if(msg.length>0){
+					Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				return flag;
+			}
+			
+			
+			
+			
+
+			protected function lnkAccessoryImage_clickHandler(event:MouseEvent):void
+			{
+				var p:ImagePopup =new ImagePopup();
+				p.imageList=getAccessoryImages();
+				p.titleText="Accessorry Viewer - "+txtAccessory.text;
+				PopUpManager.addPopUp(p,FlexGlobals.topLevelApplication as DisplayObject,true);
+				PopUpManager.centerPopUp(p);
+			}
+			
+			private function getAccessoryImages():ArrayCollection
+			{
+			var acAccImg:ArrayCollection=new ArrayCollection();
+			acAccImg.addItem(getFulURL());
+			return acAccImg;
+			}
+
+		]]>
+	</fx:Script>
+</s:Group>

@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="706" height="238"
+				creationComplete="initApp(event)"
+				close="closeForm()"
+				currentState="Default" xmlns:services="com.dspl.malkey.services.*"
+				title="Rate Type"
+				>
+
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="List"/>
+		<s:State name="Add"/>
+		<s:State name="Edit"/>
+		<s:State name="Delete"/>
+	</s:states>
+	<fx:Declarations>
+		
+		<!--Validators [Start]-->
+		<mx:StringValidator id="svID"
+							source="{txtRateType}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svDes"
+							source="{txtDes}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="nvMinDays"
+							source="{txtMinDays}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:NumberValidator id="nvMaxDays"
+							source="{txtMaxDays}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<!--Validators [End]-->
+		
+		<!--Service-->
+		<services:FratetypeSRV
+			id="srvFratetype"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder 
+			id="crFratetypeListAll"
+			result="crFratetypeListAll_resultHandler(event)"
+			fault="crFratetypeListAll_faultHandler(event)"
+			/>
+		
+		<s:CallResponder
+			id="crFratetypeSave"
+			result="crFratetypeSave_resultHandler(event)"
+			fault="crFratetypeSave_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crFratetypeUpdate"
+			result="crFratetypeUpdate_resultHandler(event)"
+			fault="crFratetypeUpdate_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crFratetypeRemove"
+			result="crFratetypeRemove_resultHandler(event)"
+			fault="crFratetypeRemove_faultHandler(event)"
+			/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.ErrorTipManager;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.util.Permission;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Faddcharge;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fratetype;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			import spark.events.TextOperationEvent;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+		
+			protected function crFratetypeListAll_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Loading Rate Types","Error",loadErrorHandler);
+					else{				
+						lacListMF = event.result as ArrayCollection;
+						crFratetypeListAll.token=null;
+						setNavigation();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"List Rate Type [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			private function setNavigation():void{
+				liMFCount=(lacListMF.length-1);
+				if(lsSelState=="Default"){
+					liCurIndex=0;
+					goFirst();
+				}else{
+					setCtrlVal(liCurIndex);
+					lsSelState="Default";
+					setState(lsSelState);
+				}
+			}
+						
+			protected function crFratetypeListAll_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Rate Type [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			private function successfulHandler(event:Event):void{
+				txtRateType.errorString="";
+				txtDes.errorString="";
+				loadRecords()
+			}
+			
+			protected function crFratetypeSave_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Saving","Error",loadErrorHandler);
+					else{				
+						crFratetypeSave.token=null;
+						Message.displayAlert(3,"Save Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Rate Type Save [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFratetypeSave_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Rate Type Save [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFratetypeUpdate_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Updating","Error",loadErrorHandler);
+					else{				
+						crFratetypeUpdate.token=null;
+						Message.displayAlert(3,"Update Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Update Rate Type [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFratetypeUpdate_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Update Rate Type [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFratetypeRemove_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Deleting","Error",loadErrorHandler);
+					else{				
+						crFratetypeUpdate.token=null;
+						Message.displayAlert(3,"Delete Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Delete Rate Type [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFratetypeRemove_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Delete Rate Type [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			//**** Result/Fault Handlers [End]
+			
+			//Variables
+			[Bindable]
+			public var lpuPopup:_tiMasterFile = new _tiMasterFile();
+			/* private var lacMasterList:ArrayCollection=new ArrayCollection();
+			//private var lbEditInit:Boolean;
+			private var loSelMF:Object;*/
+			private var lsSelState:String="";
+			 
+			[Bindable]
+			private var lacListMF:ArrayCollection;
+			private var liCurIndex:int=0;
+			private var liMFCount:int=0;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					registerValidators();
+					txtRateType.addEventListener(KeyboardEvent.KEY_DOWN,textInputKeyDown,true,0,false);
+					txtRateType.addEventListener(TextOperationEvent.CHANGE,textInputChange,true,0,false);
+					loadRecords();
+					lsSelState="Default";
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}/*  */
+			
+			public var gsCurTabName:String="";
+			public function parentTabChangedHandler(event:DataEvent):void{
+				if(gsCurTabName==event.data)
+					updateErrorTipVisibility();
+			}
+			
+			public function updateErrorTipVisibility():void{
+				if(currentState=="Add" || currentState=="Edit"){			
+					ErrorTipManager.showErrorTip(svID.source);
+					ErrorTipManager.showErrorTip(svDes.source);
+					ErrorTipManager.showErrorTip(nvMinDays.source);
+					ErrorTipManager.showErrorTip(nvMaxDays.source);
+				}
+			}
+			
+			private function registerValidators():void{
+				ErrorTipManager.registerValidator(svID);
+				ErrorTipManager.registerValidator(svDes);
+				ErrorTipManager.registerValidator(nvMinDays);
+				ErrorTipManager.registerValidator(nvMaxDays);
+			}
+			
+			private function removeFormErrorTips():void{
+				ErrorTipManager.removeErrorTip(svID.source,true);
+				ErrorTipManager.removeErrorTip(svDes.source,true);
+				ErrorTipManager.removeErrorTip(nvMinDays.source,true);
+				ErrorTipManager.removeErrorTip(nvMaxDays.source,true);
+			} 
+			
+			private function loadRecords():void{
+				try{
+					crFratetypeListAll.token=srvFratetype.listAll();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadRecords: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function textInputChange(e:TextOperationEvent):void{
+				try{
+					if(currentState=="Add"){
+						txtRateType.text = txtRateType.text.toString().toUpperCase();
+						txtRateType.selectRange(txtRateType.text.length,txtRateType.text.length+1);
+						txtRateType.setFocus();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"textInputChange: " + error.message,"Error",null);
+				}
+			}
+			
+			private function textInputKeyDown(e:KeyboardEvent):void{
+				try{
+					if(currentState=="Add"){
+						if(e.keyCode==32){
+							e.stopImmediatePropagation();
+							e.stopPropagation();
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"textInputKeydown: " + error.message,"Error",null);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function loadErrorHandler(event:Event):void{
+				//undoForm();
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function resetForm():void{
+				//lacListMF.removeAll();
+				//lsSelState=""; //Selected State
+				//liCurIndex=0; //Selected Index 
+				//liMFCount=0; //Master File Record Count
+				txtRateType.text="";
+				txtRateType.errorString="";
+				txtDes.text="";
+				txtDes.errorString="";
+				txtMinDays.text="";
+				txtMinDays.errorString="";
+				txtMaxDays.text="";
+				txtMaxDays.errorString="";
+				setModifiedByDet("");
+			}
+			
+			//Display Popup Window 
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function,useCloseEvent:Boolean=false,otherColumns:String="",otherColumnHeaders:String="",otherColumnWidth:int=180):void{
+				lpuPopup._acDataProvider = acDataProvider;								
+				lpuPopup._strKeyColumn = strKeyColumn;
+				lpuPopup._strKeyColCaption = strKeyColCaption; 
+				lpuPopup._strDetailColumn = strDetailColumn;
+				lpuPopup._strDetailColCaption = strDetailColCaption;
+				lpuPopup.otherColumns=otherColumns;
+				lpuPopup.otherColumnHeaderText=otherColumnHeaders;
+				lpuPopup.dgColWidth=otherColumnWidth;
+				lpuPopup._strWindowTitle = strWindowTitle;			
+				lpuPopup._sPostEventToRunPopUpExit = eventName;
+				lpuPopup.addEventListener(eventName,eventListener,false,0,false);
+				lpuPopup.launchSearchGrid(); 
+				lpuPopup.isPopUp=true;
+				if(useCloseEvent==true)
+					lpuPopup.grdSearch.addEventListener("twMFSearchClose",popUpCloseEvent,false,0,false);
+			}
+			
+			private function popUpCloseEvent(event:Event):void{
+				/* if(lbEditInit==true){
+					undoForm();
+				} */
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return o;
+					}
+				}catch(error:Error){
+					obj = null;
+					Message.displayAlert(1,"findItem: " + error.message,"Error");
+				}
+				return obj;
+			}
+			
+			private function findIndex(ac:ArrayCollection,keyfield:String,keyvalue:String):int{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return a;
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					//Message.displayAlert(1,"findIndex: " + error.message,"Error");
+				}
+				return -1;
+			}
+			
+			private function setState(state:String):void{
+ 				if(state=="Default"){
+					ErrorTipManager.hideAllErrorTips();
+					txtRateType.errorString="";
+					txtDes.errorString="";
+					txtMinDays.errorString="";
+					txtMaxDays.errorString="";
+					setCtrlVal(liCurIndex);
+				}else if(state=="Add")
+					resetForm();
+				currentState=state;
+			}
+			
+			private function deleteRecord(event:CloseEvent):void{
+				if(event.detail==Alert.YES){
+					crFratetypeRemove.token=srvFratetype.removeByID(txtRateType.text);
+				}
+			}
+			
+			/* private function loadMasterList():void{
+				try{
+					crFmasterlistListAll.token = srvFmasterlist.ListAll();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterList: " + error.message,"Error",errorCloseHandler);
+				}
+			} */
+			
+			private function closeForm():void{
+				removeFormErrorTips();
+				this.parent.parent.removeChild(this.parent);
+			}
+			
+			private function showRecordList():void{
+				try{
+					if(lacListMF.length<=0)
+						return;
+					if(lacListMF.length>0){
+						showPopUp(lacListMF,"ratetype","ID","description","Description","Select Record","recordSelection",recordSelection,true,"","",0);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"showRecordList: " + error.message,"Error",null);
+				}
+			}
+			
+			private function recordSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						liCurIndex=lpuPopup.grdSearch._nSelectedIndex;
+						setCtrlVal(liCurIndex);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"recordSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			//**** Control Button Events [Start]
+			protected function btnList_clickHandler(event:MouseEvent):void{	
+				/* showRecordList(); */
+			}
+			
+			protected function btnFind_clickHandler(event:MouseEvent):void{
+				showRecordList();
+			}
+			
+			protected function btnReload_clickHandler(event:MouseEvent):void{
+				loadRecords();
+			}
+			
+			protected function btnNew_clickHandler(event:MouseEvent):void{
+				lsSelState="Add";
+				setState(lsSelState);
+			}
+			
+			protected function btnEdit_clickHandler(event:MouseEvent):void{
+				lsSelState="Edit";
+				setState(lsSelState);
+			}
+			
+			protected function btnDelete_clickHandler(event:MouseEvent):void{
+				if(StringUtil.trim(txtRateType.text).length>0){
+					Message.displayAlert(4,"Are You Sure?","Delete Confirmation",deleteRecord);
+				}
+			}
+			
+			protected function btnUndo_clickHandler(event:MouseEvent):void{
+				setState("Default");
+			}
+			
+			private function goNext():void{
+				liCurIndex+=1;
+				if(liCurIndex>liMFCount)
+					liCurIndex=0;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function goBack():void{
+				liCurIndex-=1;
+				if(liCurIndex<0)
+					liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function setCtrlVal(index:int):void{
+				if(lacListMF.length>0){
+					var obj:Object=lacListMF.getItemAt(index);
+					txtRateType.text=obj["ratetype"].toString();
+					txtDes.text=obj["description"].toString();
+					txtMinDays.text=obj["mindays"].toString();
+					txtMaxDays.text=obj["maxdays"].toString();
+					setModifiedByDet(obj["adduser"].toString());
+				}
+			}
+			
+			protected function number_focusInHandler(event:FocusEvent):void{
+				event.currentTarget.setSelection(0,event.currentTarget.length);
+			}
+			
+			private function setModifiedByDet(val:String):void{
+				lblModifiedBy.text="Last Modified By: ";
+				lblModifiedBy.text+=val;
+			}
+			
+			private function goFirst():void{
+				liCurIndex=0;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function goLast():void{
+				liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex);
+			}
+			
+			protected function btnSave_clickHandler(event:MouseEvent):void{
+				save();
+			}
+			
+			protected function btnPrint_clickHandler(event:MouseEvent):void{
+				displayMFReport();
+			}
+			
+			//**** Control Button Events [End]
+			
+			private function validateForm():Boolean{
+				try{
+					txtMaxDays.errorString="";
+					var validationArray:Array = Validator.validateAll([
+						svID,
+						svDes,
+						nvMinDays,
+						nvMaxDays
+					]);
+					if(validationArray.length==0){
+						if(currentState=="Add"){
+							var obj:Object=findItem(lacListMF,"ratetype",txtRateType.text);
+							if(obj==null){
+								txtRateType.errorString="";
+							}else{
+								txtRateType.errorString="ID Already Exists";
+								updateErrorTipVisibility();
+								return false;
+							}
+						}
+						if(int(txtMaxDays.text)<int(txtMinDays.text)){
+							txtMaxDays.errorString="Maximum Days Cannot Be Less Than Minimum Days";
+							updateErrorTipVisibility();
+							return false;
+						}
+						return true;
+					}	 
+				}catch(error:Error){
+					Message.displayAlert(1,"validateForm: " + error.message,"Error",null);
+				}
+				return false;
+			}
+			
+			private function save():void{
+				try{
+					if(validateForm()==true){
+						var fratetype:Com_dspl_malkey_domain_Fratetype=lacListMF.getItemAt(liCurIndex) as Com_dspl_malkey_domain_Fratetype;
+						fratetype.ratetype=txtRateType.text;
+						fratetype.description=txtDes.text;
+						fratetype.mindays=int(txtMinDays.text);
+						fratetype.maxdays=int(txtMaxDays.text);
+						
+						if(lsSelState=="Add"){
+							crFratetypeSave.token=srvFratetype.create(fratetype);								
+						}else if(lsSelState=="Edit"){
+							crFratetypeUpdate.token=srvFratetype.update(fratetype);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"save: " + error.message,"Error",null);
+				}
+			}
+			
+			private function showSelectionPopup():void{
+				try{
+					showPopUp(lacListMF,"ratetype","ID","description","Description","Select ID","recordSelection",idSelection,true,"","",0);
+				}catch(error:Error){
+					Message.displayAlert(1,"showSelectionPopup: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function idSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						var obj:Object=findItem(lacListMF,"id",lpuPopup.grdSearch._strSelectedCode);
+						if(obj==null)
+							setState("Default")
+						else{
+							txtRateType.text=obj["id"].toString();
+							txtDes.text=obj["description"].toString();
+							setState(lsSelState);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"idSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function displayMFReport():void{
+				try{
+					//var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/MasterList.jsp?tn="+ gsMFName +"&kf=" + gsKeyField);
+					//request.method = URLRequestMethod.POST;
+					//navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,"printMF: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+
+			protected function controlbar1_creationCompleteHandler(event:FlexEvent):void{
+				setPermission();
+			}
+
+			protected function btnClose_clickHandler(event:MouseEvent):void{
+				closeForm();
+			}
+
+		]]>
+	</fx:Script>
+	<mx:ControlBar x="0" y="0"  horizontalGap="2" height="57" width="691"
+				   creationComplete="controlbar1_creationCompleteHandler(event)"
+				   >
+		<mx:Button  id="btnNew" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					toolTip="New"
+					click="btnNew_clickHandler(event)"
+					/>
+		<mx:Button  id="btnEdit" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')" 
+					toolTip="Edit"
+					click="btnEdit_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')" 
+					toolTip="Delete" 
+					click="btnDelete_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					toolTip="Undo" 
+					click="btnUndo_clickHandler(event)"
+					enabled="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnTop" width="40" height="40" 
+					toolTip="GoTop" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+					click="goFirst()"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnBack" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+					toolTip="goBack" 
+					click="goBack()" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnNext" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+					toolTip="goNext" 
+					click="goNext()"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnBottom" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+					toolTip="goBottom" 
+					click="goLast()"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<!--<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					click="btnPrint_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>-->
+		<!--<mx:Button  id="btnFilter" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filter22D.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filter22.png')" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>-->
+		<!--<mx:Button  id="btnSort" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/sortD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/sort.png')" 
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>-->
+		<mx:Button  id="btnFind" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/findD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+					toolTip="Find" 
+					click="btnFind_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnReload" width="40" height="40" 
+					toolTip="Refresh" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					click="btnReload_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/> 
+		<!--<mx:Button  id="btnList" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/viewD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/view.png')" 
+					toolTip="View"
+					click="btnList_clickHandler(event)"
+					enabled="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>-->
+		<mx:Button  id="btnSave" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					toolTip="Save"
+					click="btnSave_clickHandler(event)"
+					enabled="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					enabled.Delete="false"
+					enabled.List="false"
+					/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					enabled="true"
+					click="btnClose_clickHandler(event)"
+					/>
+	</mx:ControlBar>
+	<mx:Form x="10" y="55" width="688" height="124"
+			 borderColor="#C0C0C0"
+			 borderAlpha="20"
+			 borderVisible="true"
+			 borderStyle="solid"
+			 paddingLeft="0"
+			 paddingBottom="0"
+			 paddingTop="5"
+			 >
+		<mx:FormItem label="ID" required="true">
+			<s:TextInput enabled="false" id="txtRateType"
+						 width="150"
+						 maxChars="10"
+						 restrict="0-9a-zA-Z"
+						 enabled.Add="true" enabled.Edit="false" enabled.Delete="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Description" required="true">
+			<s:TextInput width="565" enabled="false" id="txtDes"
+						 maxChars="254"
+						 enabled.Add="true" enabled.Edit="true" enabled.Delete="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Minimum Days" required="true">
+			<mx:TextInput
+				focusIn="number_focusInHandler(event)"
+				textAlign="right"
+				width="85" enabled="false" id="txtMinDays"
+				enabled.Add="true" enabled.Edit="true" enabled.Delete="false"
+				maxChars="4"
+				restrict="0-9"
+				/>
+		</mx:FormItem>
+		<mx:FormItem label="Maximum Days" required="true">
+			<mx:TextInput
+				textAlign="right"
+				focusIn="number_focusInHandler(event)"
+				width="85" enabled="false" id="txtMaxDays"
+				enabled.Add="true" enabled.Edit="true" enabled.Delete="false"
+				maxChars="4"
+				restrict="0-9"
+				/>
+		</mx:FormItem>
+	</mx:Form>
+	<s:Label x="13" y="187"  text="Last Modified By:" id="lblModifiedBy"/>
+	<mx:HRule x="0" y="50" width="706"/>
+</s:TitleWindow>

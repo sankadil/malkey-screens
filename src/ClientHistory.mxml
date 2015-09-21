@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:components="com.dspl.malkey.components.*" 
+			   xmlns:controls="com.dspl.efinac.components.common.controls.*"
+			   xmlns:services="com.dspl.malkey.services.*"
+			   minWidth="955" minHeight="600" height="450" width="1045" title="{title_text}" 
+			   close="titlewindow1_closeHandler(event)"
+			   creationComplete="creationCompleteHandler(event)"
+			    >
+
+	<!--View Tier-->
+		<mx:HRule x="0" y="61" width="1043"/>
+		<mx:Button 
+			id="lnkSearch" 
+			label="Search" 
+			width="95" 
+			color="#0A33BB" 
+			click="search()" 
+			x="934" y="13" chromeColor="#FFFFFF"/>
+		<mx:DataGrid x="8" y="68" width="1025" height="339" dataProvider="{acSearchDetails}" 
+					 doubleClickEnabled="true"
+					 itemDoubleClick="dgSearchDetails_itemDoubleClickHandler(event)"
+					 id="dgSearchDetails">
+				<mx:columns>
+						<mx:DataGridColumn headerText="Hed Agreement" 	dataField="agrno"	width="100"/>
+						<mx:DataGridColumn headerText="Sub Agreement" 	dataField="resno" width="100"/>
+						<mx:DataGridColumn headerText="Date Out" 		dataField="dout" labelFunction="lblfDout" width="110"/>
+						<mx:DataGridColumn headerText="Date In" 		dataField="din"  labelFunction="lblfDin" width="110"/>
+						<mx:DataGridColumn headerText="Hire Type" 		dataField="hiretypeid" width="80" />
+						<mx:DataGridColumn headerText="Hire Status" 	dataField="cohirestsid" width="100" />
+						<mx:DataGridColumn headerText="Vehicle" 		dataField="regno" width="100"/>
+				</mx:columns>
+		</mx:DataGrid>
+	
+
+	
+	
+	
+	
+	
+	
+	
+	<!--METADATA here-->
+	<fx:Metadata>
+		[Event(name="selectHed",type="flash.events.Event")]
+		[Event(name="selectDet",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	
+	<!--Bindings Here-->
+	<fx:Declarations>
+		<!--Formatters here-->
+		<mx:DateFormatter id="dateFormatter" formatString="YYYY.MM.DD"/>
+		<mx:DateFormatter id="dateFormatterView" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+
+
+		<!--Validators-->
+		
+		<!--CallResponders here-->
+		<s:CallResponder id="crAdvanceSearch" result="advanceSearchResult_resultHandler(event)"/>
+		<!--services here-->
+		<services:FreservationSRV id="freservationSRV" endpoint="@Resource(key='url',bundle='resource')"  showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace controls "com.dspl.efinac.components.common.controls.*";
+		@namespace services "services.*";
+		
+		.formItems
+		{
+			label-width:60;
+		}
+		.formItem
+		{
+			label-width:80;
+		}
+		
+		.formItemL
+		{
+			label-width:120;
+		}
+		.formItemXL
+		{
+			label-width:180;
+		}
+		
+		.formItemLabel
+		{
+			text-align:left;
+		}
+		
+		
+		
+		
+	</fx:Style>
+
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.StringUtil;
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.events.DeleteCommentEvent;
+			import com.dspl.malkey.util.HireStatus;
+			import com.dspl.malkey.util.RateType;
+			import com.dspl.malkey.util.Session;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.StateChangeEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] 	private var session:Session = Session.getInstance();
+			[Bindable] 	private var genericFunctions:GenericFunctions = new GenericFunctions();
+			[Bindable] 	private var acSearchDetails:ArrayCollection = new ArrayCollection();
+			[Bindable] 	private var title_text:String = "Client Recent Activity";
+			[Bindable] 	private var msg_text:String = "Client Has "+acSearchDetails.length+" Agreements.";
+			public var debzode:String = "";
+
+			
+			protected function search():void
+			{
+				advanceSearch(debzode);
+			}
+
+
+
+			
+			protected function advanceSearch(debcode:String):void
+			{
+				crAdvanceSearch.token = freservationSRV.loadClientHistory(debcode);
+			}
+			
+
+			protected function advanceSearchResult_resultHandler(event:ResultEvent):void
+			{
+				if(crAdvanceSearch.lastResult.length==0)
+				{
+					PopUpManager.removePopUp(this);
+				}
+				acSearchDetails=crAdvanceSearch.lastResult;
+				title_text="Customer Recent Agreements  - "+crAdvanceSearch.lastResult.length+" Agreements Found.";
+			}
+
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			/*Lable Functions here  */
+			//---------------------------------------------------------------------------------------	
+			private function lblfDout(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return dateFormatterView.format(item.dout)+" "+item.timeout;
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+			private function lblfDin(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return dateFormatterView.format(item.din)+" "+item.timein;
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+			private function lblfDebname(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return item.debcode;
+/* 					return genericFunctions.getArrayCollection(session.getAttribute("acClient"),'debcode',item.debcode).debname +"-"+item.debcode; */
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+
+			private function lblfhireStatusDescription(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return genericFunctions.getArrayCollection(session.getAttribute("acHireStatus"),"hirestsid",item.cohirestsid).description+" ("+item.cohirestsid+")";
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+
+			private function lblfhireTypeDescription(item:Object, column:DataGridColumn):String
+			{
+				try{
+					return genericFunctions.getArrayCollection(session.getAttribute("acHireType"),"hiretypeid",item.hiretypeid).description+" ("+item.hiretypeid+")";
+				}
+				catch(e:Error)
+				{
+					
+				}
+				return "";
+			}
+			//END label function-----------------------------------------------------------------------------------------------------------------
+			
+			
+			
+			
+			//select date----------------------------------------------------------------------------
+
+
+			//----------------------------------------------------------------------------------------------------------------
+			/***
+			 * select item
+			 * 
+			 * */
+			protected function dgSearchDetails_itemDoubleClickHandler(event:ListEvent):void
+			{
+				var dataEvent:DataEvent=new  DataEvent("selectHed");
+				dataEvent.data= acSearchDetails.getItemAt(event.rowIndex).agrno;
+				dispatchEvent(dataEvent);
+				var dataEvent2:DataEvent=new  DataEvent("selectDet");
+				dataEvent2.data= acSearchDetails.getItemAt(event.rowIndex).resno;
+				dispatchEvent(dataEvent2);
+				PopUpManager.removePopUp(this);
+				PopUpManager.removePopUp(this);
+			}
+			
+			
+			//---------------------------------------------------------------------------------------
+			//load methods here
+			//---------------------------------------------------------------------------------------
+			//service call methods here			
+			
+			
+
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				search();
+			}
+
+
+
+
+		]]>
+	</fx:Script>
+</s:TitleWindow>

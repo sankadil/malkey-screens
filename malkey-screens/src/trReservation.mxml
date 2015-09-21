@@ -1,0 +1,2832 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" xmlns:local="*"
+				creationComplete="application1_creationCompleteHandler(event)"
+				initialize="titlewindow1_initializeHandler(event)"
+				title="Reservation/Check-Out/Check-In"
+				width="1250" height="600"
+				close="titlewindow1_closeHandler(event)"				
+				xmlns:services="com.dspl.malkey.services.*" 
+				xmlns:controls="com.dspl.efinac.components.common.controls.*" 
+				xmlns:valueObjects="com.dspl.malkey.valueObjects.*" 
+				xmlns:snk="snk.*"
+				currentStateChange="currentStateChangeHandler(event)"
+				currentState="stUndo" 
+				xmlns:components="com.dspl.malkey.components.*" 
+				xmlns:util="com.dspl.malkey.util.*"
+				>
+	
+	<!--width="1250" height="600"-->
+	<!--width="91.508%" height="78.125%"-->
+	
+	
+	<s:states>
+		<s:State name="State1"   	id="State1"/>
+		<s:State name="stDelete" 	id="stDelete"/>
+		<s:State name="stEdit" 		id="stEdit"/>
+		<s:State name="stNew"    	id="stNew"/>
+		<s:State name="stView"  	id="stView"/>
+		<s:State name="stUndo"  	id="stUndo"/>
+	</s:states>
+	
+	
+	
+
+
+	
+	
+	<fx:Declarations>
+		
+		<!--Validators-->
+		<mx:NumberValidator source="{nsNumDays}" 
+							property="value" 
+							integerError="Enter Integer value"
+							minValue="1" 
+							maxValue="1000" 
+							domain="int" 
+							id="nvNumDays"/>
+		
+		<mx:NumberValidator source="{nsChargeableDays}" 
+							property="value" 
+							integerError="Enter Integer value"
+							minValue="1" 
+							maxValue="1000" 
+							domain="int" 
+							id="nvQtyAcc"/>
+		
+		<mx:StringValidator id="svAccessoryId"
+							source="{txtHireType}"
+							property="text"
+							/>
+		
+		<mx:DateValidator  id="dvOut"
+						   source="{dtDateOut}"
+						   property="selectedDate"
+						   />
+		
+		<mx:DateValidator  id="dvIn"
+						   source="{dtDateIn}"
+						   property="selectedDate"
+						   />
+		
+
+		
+		<!--RadioButtonGroups here-->
+<!--		<mx:RadioButtonGroup id="CDrivers"/>
+		<mx:RadioButtonGroup id="MDrivers"/>-->
+		<mx:RadioButtonGroup id="transactionType" />
+		
+		<!--Formatters here-->
+		<mx:DateFormatter id="dateFormatter" formatString="DD-MMM-YYYY"/>
+		
+		<!--valueObjects/domains here-->
+		<valueObjects:Com_dspl_malkey_domain_Freservation id="com_dspl_malkey_domain_Freservation"/>
+		<valueObjects:Com_dspl_malkey_domain_Fdebtor id="com_dspl_malkey_domain_Fdebtor"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresvehicle id="com_dspl_malkey_domain_Fresvehicle"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicle id="com_dspl_malkey_domain_Fvehicle"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresdriver id="com_dspl_malkey_domain_Fresdriver"/>
+		
+		
+		<!--<valueObjects:Com_dspl_malkey_domain_Fresaccs id="com_dspl_malkey_domain_Fresaccs"/>
+		<valueObjects:Com_dspl_malkey_domain_FresaccsPK id="com_dspl_malkey_domain_FresaccsPK"/>-->
+		
+		<!--CallResponders here-->
+		<s:CallResponder id="crFhiretypeSRVListAll"/>
+		<s:CallResponder id="crFaccessoryListAll"/>
+		<s:CallResponder id="crFothersrvSRVListAll"/>
+		<s:CallResponder id="crfdebtorSRVListAll"/>
+		<s:CallResponder id="crFguarantorSRVListAll"/>
+		<s:CallResponder id="crFvehicleclassSRVListAll"/>
+		<s:CallResponder id="crFvehicleSRVListAll"/>
+		<s:CallResponder id="crFvehicletransSRVListAll"/>
+		<s:CallResponder id="crFvehicletypeSRVListAll"/>
+		<s:CallResponder id="crFvehiclemakeSRVListAll"/>
+		<s:CallResponder id="crFvehiclemodelSRVListAll"/>
+		<s:CallResponder id="crFclienttypeSRVListAll"/>
+		<s:CallResponder id="crDriverListAllResult" result="crDriverListAllResult_resultHandler(event)"/>
+		<s:CallResponder id="crFclientdriverSRVListAll"/>
+		<s:CallResponder id="crFclientdriverSRVlistByClientid"/>
+		<s:CallResponder id="crFaddchargeSRVListAll"/>
+		<s:CallResponder id="crFpaytypeSRVListAll"/>
+		<s:CallResponder id="crFratetypeSRVlistAll" 			result="crFratetypeSRVlistAll_resultHandler(event)"/>
+		<s:CallResponder id="crFdriverrateSRVListAll"/>
+		<s:CallResponder id="crFreservationSRVcreate" 			result="crFreservationSRVcreate_resultHandler(event)"/>
+		<s:CallResponder id="crFhirestatusSRVListAll"/>
+		<s:CallResponder id="crFreservationSRVListAll" 			result="crFreservationSRVListAll_resultHandler(event)"/>
+		<s:CallResponder id="crFresvehicleSRVlistByResNo" 		result="crFresvehicleSRVlistByResNo_resultHandler(event)"/>
+		<s:CallResponder id="crFresaccsSRVlistAllByresNo" 		result="crFresaccsSRVlistAllByresNo_resultHandler(event)"/>
+		<s:CallResponder id="crFresothsrvSRVlistByResNo" 		result="crFresothsrvSRVlistByResNo_resultHandler(event)"/>
+		<s:CallResponder id="crFresdriverSRVlistByResno" 		result="crFresdriverSRVlistByResno_resultHandler(event)"/>
+		<s:CallResponder id="crFresdriverrateSRVfindByResno" 	result="crFresdriverrateSRVfindByResno_resultHandler(event)"/>
+		<s:CallResponder id="crFreservationSRVremoveByID"		result="crFreservationSRVremoveByID_resultHandler(event)"/>
+		<s:CallResponder id="crFresothersrvrateSRVlistByResno"/>
+		<s:CallResponder id="crFresvehiclerateSRVlistByResno" result="crFresvehiclerateSRVlistByResno_resultHandler(event)"/>
+		<s:CallResponder id="updateResult" result="updateResult_resultHandler(event)"/>
+		<s:CallResponder id="crFresaccrateSRVlistAllByResno" result="crFresaccrateSRVlistAllByResno_resultHandler(event)"/>
+		<s:CallResponder id="crfresaddchargeSRVlistByresno" result="crfresaddchargeSRVlistByresno_resultHandler(event)"/>
+		<s:CallResponder id="crfresvehinvSRVlistByResno" result="crfresvehinvSRVlistByResno_resultHandler(event)"/>
+		<s:CallResponder id="crfvinventrylistSRVListAll"/>
+		<!--<s:CallResponder id="crVehicleDamage" result="crVehicleDamage_resultHandler(event)"/>-->
+		<s:CallResponder id="crfvehicleinventrySRVlistByRegNo" result="listByRegNoResult_resultHandler(event)"/>
+		<s:CallResponder id="crFvehicledamageSRVlistByRegNo" result="crFvehicledamageSRVlistByRegNo_resultHandler(event)"/>		
+		<s:CallResponder id="crFresvehicledamageSRVlistByRegNo" result="crFresvehicledamageSRVlistByRegNo_resultHandler(event)"/>
+		<s:CallResponder id="changeStatusResult" result="changeStatusResult_resultHandler(event)" fault="changeStatusResult_faultHandler(event)"/>
+		<s:CallResponder id="crVehiclesearchSRVsearchVehicles" result="crVehiclesearchSRVsearchVehicles_resultHandler(event)"/>
+		
+		<!--services here-->
+		<services:FhiretypeSRV 			id="fhiretypeSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FaccessorySRV 		id="faccessorySRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FothersrvSRV 			id="fothersrvSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FdebtorSRV 			id="fdebtorSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FguarantorSRV 		id="fguarantorSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FvehicleclassSRV 		id="fvehicleclassSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FvehicleSRV 			id="fvehicleSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FvehicletransSRV 		id="fvehicletransSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FvehicletypeSRV 		id="fvehicletypeSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FvehiclemakeSRV 		id="fvehiclemakeSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FvehiclemodelSRV 		id="fvehiclemodelSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FclienttypeSRV 		id="fclienttypeSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FemployeeSRV 			id="femployeeSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FclientdriverSRV 		id="fclientdriverSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FaddchargeSRV 		id="faddchargeSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FpaytypeSRV 			id="fpaytypeSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FaccrateSRV 			id="faccrateSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FratetypeSRV 			id="fratetypeSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FdriverrateSRV 		id="fdriverrateSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FreservationSRV 		id="freservationSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FhirestatusSRV 		id="fhirestatusSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FvehiclerateSRV 		id="fvehiclerateSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FresvehicleSRV 		id="fresvehicleSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FresothsrvSRV 		id="fresothsrvSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FresaccsSRV 			id="fresaccsSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FresdriverSRV 		id="fresdriverSRV" 		endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FresdriverrateSRV 	id="fresdriverrateSRV" 	endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FresaccrateSRV 		id="fresaccrateSRV" 	endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FresothersrvrateSRV 	id="fresothersrvrateSRV" 	endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FresvehiclerateSRV 	id="fresvehiclerateSRV" 	endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FresaddchargeSRV 		id="fresaddchargeSRV" 		endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FresvehinvSRV 		id="fresvehinvSRV" 			endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FvinventrylistSRV 	id="fvinventrylistSRV" 		endpoint="@Resource(key='url', bundle='resource')" 	showBusyCursor="true"/>
+		<services:FvehicledamageSRV 	id="fvehicledamageSRV"  	endpoint="@Resource(key='url',bundle='resource')" 	showBusyCursor="true"/>
+		<services:FvehicleinventrySRV 	id="fvehicleinventrySRV" 	endpoint="@Resource(key='url',bundle='resource')" 	showBusyCursor="true"/>
+		<services:FresvehicledamageSRV 	id="fresvehicledamageSRV" 	endpoint="@Resource(key='url',bundle='resource')" 	showBusyCursor="true"/>
+		<services:VehiclesearchSRV 		id="vehiclesearchSRV" 		endpoint="@Resource(key='url',bundle='resource')" 	showBusyCursor="true"/>
+
+		<!--Keep the time values-->
+		<s:ArrayCollection id="acTime">
+			<fx:String>00:00:00</fx:String>
+			<fx:String>00:30:00</fx:String>
+			<fx:String>01:30:00</fx:String>
+			<fx:String>01:30:00</fx:String>
+			<fx:String>02:00:00</fx:String>
+			<fx:String>02:30:00</fx:String>
+			<fx:String>03:00:00</fx:String>
+			<fx:String>03:30:00</fx:String>
+			<fx:String>04:00:00</fx:String>
+			<fx:String>04:30:00</fx:String>
+			<fx:String>05:00:00</fx:String>
+			<fx:String>05:30:00</fx:String>
+			<fx:String>06:00:00</fx:String>
+			<fx:String>06:30:00</fx:String>
+			<fx:String>07:00:00</fx:String>
+			<fx:String>07:30:00</fx:String>
+			<fx:String>08:00:00</fx:String>
+			<fx:String>08:30:00</fx:String>
+			<fx:String>09:00:00</fx:String>
+			<fx:String>09:30:00</fx:String>
+			<fx:String>10:00:00</fx:String>
+			<fx:String>10:30:00</fx:String>
+			<fx:String>11:00:00</fx:String>
+			<fx:String>11:30:00</fx:String>
+			<fx:String>12:00:00</fx:String>
+			<fx:String>12:30:00</fx:String>
+			<fx:String>13:00:00</fx:String>
+			<fx:String>13:30:00</fx:String>
+			<fx:String>14:00:00</fx:String>
+			<fx:String>14:30:00</fx:String>
+			<fx:String>15:00:00</fx:String>
+			<fx:String>15:30:00</fx:String>
+			<fx:String>16:00:00</fx:String>
+			<fx:String>16:30:00</fx:String>
+			<fx:String>17:00:00</fx:String>
+			<fx:String>17:30:00</fx:String>
+			<fx:String>18:00:00</fx:String>
+			<fx:String>18:30:00</fx:String>
+			<fx:String>19:00:00</fx:String>
+			<fx:String>19:30:00</fx:String>
+			<fx:String>20:00:00</fx:String>
+			<fx:String>20:30:00</fx:String>
+			<fx:String>21:00:00</fx:String>
+			<fx:String>21:30:00</fx:String>
+			<fx:String>22:00:00</fx:String>
+			<fx:String>22:30:00</fx:String>
+			<fx:String>23:00:00</fx:String>
+			<fx:String>23:30:00</fx:String>
+		</s:ArrayCollection>
+
+	</fx:Declarations>
+	
+
+	
+	
+	<!--Bindings Here-->
+	<fx:Binding destination="dtDateIn.selectedDate" 				source="com_dspl_malkey_domain_Freservation.din" 		twoWay="true"/>
+	<fx:Binding destination="nsChargeableDays.value" 				source="com_dspl_malkey_domain_Freservation.chargdays" 	twoWay="true"/>
+	<fx:Binding destination="nsNumDays.value" 						source="com_dspl_malkey_domain_Freservation.noofday" 	twoWay="true"/>
+	<fx:Binding destination="com_dspl_malkey_domain_Fresdriver" 	source="cmpRates.com_dspl_malkey_domain_Fresdriver"/>
+	<!--<fx:Binding destination="com_dspl_malkey_domain_Fresvehicle" source="cmpRates.com_dspl_malkey_domain_Fresvehicle"/>-->
+	
+	
+	
+	
+	<!--Metadata Here-->
+	<fx:Metadata>
+		[Event(name="changeRate",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	
+	
+	
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace controls "com.dspl.efinac.components.common.controls.*";
+		@namespace services "services.*";
+		
+		.formItem
+		{
+			label-width:80;
+		}
+		
+		.formItemL
+		{
+			label-width:120;
+		}
+		
+		.formItemLabel
+		{
+			text-align:left;
+		}
+		
+	
+		
+		
+	</fx:Style>
+	
+	
+	
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.events.CustomerSelectionEvent;
+			import com.dspl.malkey.events.DeleteCommentEvent;
+			import com.dspl.malkey.services.FdebtorSRV;
+			import com.dspl.malkey.util.DateOperation;
+			import com.dspl.malkey.util.RateType;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_CommMF;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdebtor;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriverrate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicle;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicledamage;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehiclerate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehinv;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresvehinvPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicleinventry;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.effects.Move;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.EffectEvent;
+			import mx.events.FlexEvent;
+			import mx.events.IndexChangedEvent;
+			import mx.events.StateChangeEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			import mx.utils.StringUtil;
+			
+			import org.hamcrest.mxml.collection.Array;
+			
+			
+			
+			/*My Add  */
+			[Bindable]	private var acAccessory:ArrayCollection = new ArrayCollection();
+			[Bindable]	private var session:Session = Session.getInstance();
+			[Bindable]	private var genericFunctions:GenericFunctions=new GenericFunctions();
+			[Bindable]	private var btnCode:String="";
+
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				try
+				{
+					tabNavigator.createComponentsFromDescriptors();
+					listAll();
+					resetForm();
+				}
+				catch(error:Error)
+				{
+					Alert.show("initApp: " + error.message);
+				}
+			}
+			
+			private function filterRates(item:Object):Boolean
+			{
+				if(txtHireType._nSelectedIndex<0)
+				{
+					return false;
+				}
+				else
+				{
+					if(txtHireType._acDataProvider.getItemAt(txtHireType._nSelectedIndex).hiretypeid==item["id"])
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+			}
+			
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+
+
+			
+			/*Following are the service calls for the listing functions
+			cr-prefix for calresponders*/
+			protected function listAllFhiretypeSRV():void
+			{
+				crFhiretypeSRVListAll.token = fhiretypeSRV.ListAll();
+			}
+			
+			protected function listAllFaccessorySRV():void
+			{
+				crFaccessoryListAll.token = faccessorySRV.ListAll();
+			}
+			
+			protected function listAllFothersrvSRV():void
+			{
+				crFothersrvSRVListAll.token = fothersrvSRV.ListAll();
+			}
+			
+			protected function listAllFclientSRV():void
+			{
+				crfdebtorSRVListAll.token = fdebtorSRV.ListAll();
+			}
+			
+			
+			protected function listAllFguarantorSRV():void
+			{
+				crFguarantorSRVListAll.token = fguarantorSRV.ListAll();
+			}
+			/*Vehicle tab data loading  */
+			protected function listAllFvehicleclassSRV():void
+			{
+				crFvehicleclassSRVListAll.token = fvehicleclassSRV.ListAll();
+			}
+			protected function listAllFvehicleSRV():void
+			{
+				crFvehicleSRVListAll.token = fvehicleSRV.listAll();
+			}
+			protected function listAllFvehicletransSRV():void
+			{
+				crFvehicletransSRVListAll.token = fvehicletransSRV.ListAll();
+			}
+			protected function listAllFvehicletypeSRV():void
+			{
+				crFvehicletypeSRVListAll.token = fvehicletypeSRV.ListAll();
+			}
+			protected function listAllFvehiclemakeSRV():void
+			{
+				crFvehiclemakeSRVListAll.token = fvehiclemakeSRV.ListAll();
+			}
+			
+			
+			protected function listAllFvehiclemodelSRV():void
+			{
+				crFvehiclemodelSRVListAll.token = fvehiclemodelSRV.ListAll();
+			}
+			protected function listAllFclienttypeSRVListAll():void
+			{
+				crFclienttypeSRVListAll.token = fclienttypeSRV.ListAll();
+			}
+			protected function driverListAll():void
+			{
+				crDriverListAllResult.token = femployeeSRV.DriverListAll();
+			}
+			protected function listAllFclientdriverSRV():void
+			{
+				crFclientdriverSRVListAll.token = fclientdriverSRV.ListAll();
+			}
+			protected function listByClientidFclientdriverSRV(arg0:String):void
+			{
+				crFclientdriverSRVlistByClientid.token = fclientdriverSRV.listByClientid(arg0);
+			}
+			protected function listAllFaddchargeSRV():void
+			{
+				crFaddchargeSRVListAll.token = faddchargeSRV.ListAll();
+			}
+			protected function listAllFpaytypeSRV():void
+			{
+				crFpaytypeSRVListAll.token = fpaytypeSRV.ListAll();
+			}
+
+			protected function listAllFratetypeSRV():void
+			{
+				crFratetypeSRVlistAll.token = fratetypeSRV.listAll();
+			}
+			
+			protected function listAllFdriverrateSRV():void
+			{
+				crFdriverrateSRVListAll.token = fdriverrateSRV.ListAll();
+			}
+			
+			protected function listAllFhirestatusSRV():void
+			{
+				crFhirestatusSRVListAll.token = fhirestatusSRV.ListAll();
+			}
+			
+			protected function listAllFreservationSRV():void
+			{
+				crFreservationSRVListAll.token = freservationSRV.ListAll();
+			}
+			
+			protected function listByResNoFresvehicleSRV(key:String):void
+			{
+				crFresvehicleSRVlistByResNo.token = fresvehicleSRV.listByResNo(key);
+			}
+			
+			protected function listFresothsrvSRVByResNo(key:String):void
+			{
+				crFresothsrvSRVlistByResNo.token = fresothsrvSRV.listByResNo(key);
+			}
+			
+			
+			protected function listFresaccsSRVByresNo(key:String):void
+			{
+				crFresaccsSRVlistAllByresNo.token = fresaccsSRV.listAllByresNo(key);
+			}
+			
+			
+
+			protected function createFreservationSRV(arg0:Com_dspl_malkey_domain_Freservation, arg1:ArrayCollection, arg2:ArrayCollection, arg3:ArrayCollection, arg4:ArrayCollection, arg5:Com_dspl_malkey_domain_Fresvehiclerate, arg6:ArrayCollection, arg7:Com_dspl_malkey_domain_Fresdriverrate, arg8:ArrayCollection, arg9:ArrayCollection):void
+			{
+				crFreservationSRVcreate.token = freservationSRV.create(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,arg9);
+			}
+			
+			protected function listByResnoFresdriverSRV(arg0:String):void
+			{
+				crFresdriverSRVlistByResno.token = fresdriverSRV.listByResno(arg0);
+			}
+			
+			protected function fresdriverrateSRVFindByResno(arg0:String):void
+			{
+				crFresdriverrateSRVfindByResno.token = fresdriverrateSRV.findByResno(arg0);
+			}
+			
+			protected function removeByIDFreservationSRV(arg0:String):void
+			{
+				crFreservationSRVremoveByID.token = freservationSRV.removeByID(arg0);
+			}
+			
+			protected function update(arg0:Com_dspl_malkey_domain_Freservation, arg1:ArrayCollection, arg2:ArrayCollection, arg3:ArrayCollection, arg4:ArrayCollection, arg5:Com_dspl_malkey_domain_Fresvehiclerate, arg6:ArrayCollection, arg7:Com_dspl_malkey_domain_Fresdriverrate, arg8:ArrayCollection, arg9:ArrayCollection):void
+			{
+				updateResult.token = freservationSRV.update(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,arg9);
+			}
+			
+			protected function listAllByResnoFresaccrateSRV(arg0:String):void
+			{
+				crFresaccrateSRVlistAllByResno.token = fresaccrateSRV.listAllByResno(arg0);
+			}
+			
+			
+			protected function listByResnoFresothersrvrateSRV(arg0:String):void
+			{
+				crFresothersrvrateSRVlistByResno.token = fresothersrvrateSRV.listByResno(arg0);
+			}
+			
+			
+			protected function listByResnoFresvehiclerateSRV(arg0:String):void
+			{
+				crFresvehiclerateSRVlistByResno.token = fresvehiclerateSRV.listByResno(arg0);
+			}
+			protected function listByResnoFresvehinvSRV(arg0:String):void
+			{
+				crfresvehinvSRVlistByResno.token = fresvehinvSRV.listByResno(arg0);
+			}
+			protected function listAllFvinventrylistSRV():void
+			{
+				crfvinventrylistSRVListAll.token = fvinventrylistSRV.ListAll();
+			}
+			protected function listByRegNoFvehicleinventrySRV(arg0:String):void
+			{
+				crfvehicleinventrySRVlistByRegNo.token = fvehicleinventrySRV.listByRegNo(arg0);
+			}
+			protected function listByRegNoFvehicledamageSRV(arg0:String):void
+			{
+				crFvehicledamageSRVlistByRegNo.token = fvehicledamageSRV.listByRegNo(arg0);
+			}
+			protected function listByRegNoFresvehicledamageSRV(arg0:String,arg1:String):void
+			{
+				crFresvehicledamageSRVlistByRegNo.token = fresvehicledamageSRV.listByRegNo(arg0,arg1);
+			}
+			protected function changeStatus(arg0:Com_dspl_malkey_domain_Freservation, arg1:ArrayCollection, arg2:ArrayCollection, arg3:ArrayCollection, arg4:ArrayCollection, arg5:Com_dspl_malkey_domain_Fresvehiclerate, arg6:ArrayCollection, arg7:Com_dspl_malkey_domain_Fresdriverrate, arg8:ArrayCollection, arg9:ArrayCollection, arg10:ArrayCollection, arg11:ArrayCollection):void
+			{
+				changeStatusResult.token = freservationSRV.changeStatus(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
+			}
+			protected function searchVehicles(arg0:String, arg1:String, arg2:ArrayCollection, arg3:Boolean):void
+			{
+				crVehiclesearchSRVsearchVehicles.token = vehiclesearchSRV.searchVehicles(arg0, arg1, arg2, arg3);
+			}
+			protected function listAll():void
+			{
+				listAllFguarantorSRV();
+				listAllFclientSRV(); 
+				listAllFothersrvSRV();listAllFaccessorySRV();
+				listAllFhiretypeSRV();listAllFvehicleSRV();listAllFvehicleclassSRV();listAllFvehicletransSRV();
+				listAllFvehicletypeSRV();listAllFvehiclemakeSRV();listAllFvehiclemodelSRV();listAllFclienttypeSRVListAll();
+				driverListAll();listAllFclientdriverSRV();listAllFaddchargeSRV();listAllFpaytypeSRV();
+				listAllFdriverrateSRV();listAllFhirestatusSRV();listAllFreservationSRV();
+				listAllFvinventrylistSRV();
+			}
+			
+
+			/*End Of service calls  */
+			
+
+
+
+			
+			
+
+			
+
+			
+			
+
+
+			
+			/***
+			 * result handlers here
+			 * 
+			 * */
+			
+			protected function crFresdriverSRVlistByResno_resultHandler(event:ResultEvent):void
+			{
+			//	cmpDriverDetails.dgMalkeyDrivers.dataProvider=event.result;
+				cmpDriverDetails.acResMalkeyDrivers=event.result as ArrayCollection;
+				cmpDriverDetails.priority=(event.result as ArrayCollection).length+1;
+				
+				//fresdriverrateSRVFindByResno(com_dspl_malkey_domain_Freservation.resno);
+			}
+			
+			protected function crFreservationSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				
+			}
+			
+			/***
+			 * Deleted success
+			 * 
+			 * 
+			 * */
+			protected function crFreservationSRVremoveByID_resultHandler(event:ResultEvent):void
+			{
+				if(event.result as Boolean)
+				{
+				this.setCurrentState("stUndo",true);
+				Alert.show("Delete Successfully","Success",Alert.OK,null,null,genericFunctions.IconInformation,Alert.OK,null);
+				}
+				else
+				{
+					Alert.show("Delete Failed","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+			}
+			/***
+			 * Saved Success
+			 * 
+			 * */
+			protected function crFreservationSRVcreate_resultHandler(event:ResultEvent):void
+			{
+				this.setCurrentState("stUndo",true);
+				//currentState="stUndo";
+				//resetForm();
+				Alert.show("Reserved Successfully\nRef-No:"+event.result as String,"Success",Alert.OK,null,null,genericFunctions.IconInformation,Alert.OK,null);
+			}
+			
+			/***
+			 * Following method will display according to follwoing logic
+			BOOKED 		:If not checked out :then current state should display 
+			CHECKOUT	:If not checked in 	:then current checked out state should display 
+			CHECKIN		:If  checked in 	:then current checked in state will display
+			*/
+			protected function crFresvehicleSRVlistByResNo_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					cmpVehicleDetails.acResVehicle=event.result as ArrayCollection;
+					cmpVehicleDetails.com_dspl_malkey_domain_Fresvehicle.priority=(event.result as ArrayCollection).length+1;
+					//listByResnoFresvehiclerateSRV(txtRefNo.text);//load saved rates
+					cmpVehicleDetails.wakeup();
+					cmpRates.wakeup();
+					cmpRates.doCalculate();
+					//set fuel levels & millage after recieving resvehicles
+					cmpCheckOut.setVehicleStatus();
+					
+					/*
+					
+					BOOKED 		:(If not checked out & If not checked in):then current state should display 
+					CHECKOUT	:If not checked in 	:then current checked out state should display 
+					CHECKIN		:If checked in 	:then current checked in state will display
+					
+					*/
+					
+					if(isNotCheckIn())//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+					{
+						
+						com_dspl_malkey_domain_Freservation.cimileage=com_dspl_malkey_domain_Freservation.comileage;
+						com_dspl_malkey_domain_Freservation.cifuellevel=com_dspl_malkey_domain_Freservation.cofuellevel;
+						cmpCheckIn.setVehicleStatus();
+						
+					} 
+/* 					if(	currentState=="stEdit" && com_dspl_malkey_domain_Freservation.cohirestsid== "BOOKED")
+					{
+						//this mean haven't saved data includeed.bcz checkout operaton has not been perfored.this code set virtual data and show this is the cuurent status of vehicle
+						cmpVehicleDetails_changeHandler(event);
+					} */
+
+					if(com_dspl_malkey_domain_Freservation.cohirestsid== "CHECKOUT" || com_dspl_malkey_domain_Freservation.cohirestsid== "CHECKIN" || com_dspl_malkey_domain_Freservation.cohirestsid== "COMPLETED"|| com_dspl_malkey_domain_Freservation.cohirestsid== "NOSHOW"|| com_dspl_malkey_domain_Freservation.cohirestsid== "CONFIRMED")
+					{
+						//this is the option view state -->stView that mean retrive resVehicleInventory.
+						var tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle=(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle);
+						listByRegNoFresvehicledamageSRV(tempFresvehicle.id.regno,com_dspl_malkey_domain_Freservation.resno);
+						listByResnoFresvehinvSRV(com_dspl_malkey_domain_Freservation.resno);
+					}
+					if(	(com_dspl_malkey_domain_Freservation.cohirestsid== "BOOKED") || (com_dspl_malkey_domain_Freservation.cohirestsid== "CHECKOUT") )
+					{
+						//this mean haven't saved data includeed.bcz checkout operaton has not been perfored.this code set virtual data and show this is the cuurent status of vehicle
+						cmpVehicleDetails_changeHandler(event);
+					}
+					
+				}
+				catch(e:Error)
+				{
+					Alert.show("Messege\n"+e.message);
+				}
+			}
+			
+			protected function crFresaccsSRVlistAllByresNo_resultHandler(event:ResultEvent):void
+			{
+				cmpAccessoryService.acResAccessory=event.result as ArrayCollection;
+				//listAllByResnoFresaccrateSRV(txtRefNo.text);//load saved rates
+				cmpAccessoryService.wakeup();
+				cmpRates.wakeup();
+				cmpRates.doCalculate();
+			}
+			
+			
+			protected function crFresothsrvSRVlistByResNo_resultHandler(event:ResultEvent):void
+			{
+				//var actemp:ArrayCollection=event.result as ArrayCollection;
+				cmpOtherService.acResothsrv=event.result as ArrayCollection;
+			//	listByResnoFresothersrvrateSRV(txtRefNo.text);//load saved rates
+				cmpOtherService.wakeup();
+				cmpRates.wakeup();
+				cmpRates.doCalculate();
+
+			}
+			
+			protected function crFresvehiclerateSRVlistByResno_resultHandler(event:ResultEvent):void
+			{
+				cmpVehicleDetails.com_dspl_malkey_domain_Fresvehiclerate=(event.result.getItemAt(0)) as Com_dspl_malkey_domain_Fresvehiclerate;
+				cmpVehicleDetails.com_dspl_malkey_domain_Fresvehicle.fresvehiclerate=null;
+				cmpVehicleDetails.wakeup();
+				cmpRates.wakeup();
+				cmpRates.doCalculate();
+				
+			}
+			
+			protected function crFresaccrateSRVlistAllByResno_resultHandler(event:ResultEvent):void
+			{
+				/*
+				This method should set values to FResAcc collection from saved rate table
+				*/
+				var acFresaccsRate:ArrayCollection=event.result as ArrayCollection;
+				for(var i:int=0 ; i<cmpAccessoryService.acResAccessory.length ; i++ )
+				{
+				}
+				cmpAccessoryService.wakeup();
+				cmpRates.wakeup();
+				cmpRates.doCalculate();
+			}
+			
+			protected function crFratetypeSRVlistAll_resultHandler(event:ResultEvent):void
+			{
+				session.setAttribute("RateType",new RateType(crFratetypeSRVlistAll.lastResult)); 
+			}
+			
+			/***
+			 * Fault handlers here
+			 * 
+			 * 
+			 * */
+			protected function crFreservationSRVcreate_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Vehicle Reserved Failed","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+			}
+			
+			/***
+			 * Update result handler
+			 * 
+			 * 
+			 * 
+			 * */
+			protected function updateResult_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("event result"+event.result);
+			}
+			
+			
+			protected function crDriverListAllResult_resultHandler(event:ResultEvent):void
+			{
+			}
+			
+			protected function crFresdriverrateSRVfindByResno_resultHandler(event:ResultEvent):void
+			{
+				setRates_onDriver();
+				
+			}
+			
+			
+			protected function listByresnoFresaddchargeSRV(arg0:String):void
+			{
+				crfresaddchargeSRVlistByresno.token = fresaddchargeSRV.listByresno(arg0);
+			}
+			
+			
+			protected function crfresaddchargeSRVlistByresno_resultHandler(event:ResultEvent):void
+			{
+				//	Following code set the selection of Additionalcharges list in rates tab
+				cmpRates.acResAdditionalCharges=event.result as ArrayCollection;
+				cmpRates.setAdditionalRatesOnGrid();
+			}
+			
+			
+			protected function crfresvehinvSRVlistByResno_resultHandler(event:ResultEvent):void
+			{
+				cmpCheckOut.setVehicleInventory=crfresvehinvSRVlistByResno.lastResult;
+				if(isNotCheckIn())//if not checkin then :suggetion for checkin //LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+				{
+					//cmpCheckIn.setVehicleInventory=crfresvehinvSRVlistByResno.lastResult;
+					var acInventoryCheckIn:ArrayCollection=ObjectUtil.copy(crfresvehinvSRVlistByResno.lastResult) as ArrayCollection;//KEEP A SEPEREATE COPY FOR CHECKIN COMPONENT
+					for each(var tempFresvehinv:Com_dspl_malkey_domain_Fresvehinv in acInventoryCheckIn)
+					{
+						tempFresvehinv.checkin=1;
+					} 
+					cmpCheckIn.setVehicleInventory=acInventoryCheckIn;//set data to view
+					
+				}
+				else//if checkin : actual checkin data loading
+				{
+					var acInventoryCheckIn1:ArrayCollection=ObjectUtil.copy(crfresvehinvSRVlistByResno.lastResult) as ArrayCollection;//KEEP A SEPEREATE COPY FOR CHECKIN COMPONENT
+/* 					trace("came here");
+					for each(var x:Com_dspl_malkey_domain_Fresvehinv in acInventoryCheckIn)
+					{
+					
+					} */
+					cmpCheckIn.setVehicleInventory=acInventoryCheckIn1;//set data to view
+				}
+			}
+			
+			
+			
+			
+			
+
+			
+			protected function listByRegNoResult_resultHandler(event:ResultEvent):void
+			{
+				var acFresVehicleInventory:ArrayCollection=new ArrayCollection();
+				for each(var temp:Com_dspl_malkey_domain_Fvehicleinventry in  crfvehicleinventrySRVlistByRegNo.lastResult )
+				{
+					var resvehinv:Com_dspl_malkey_domain_Fresvehinv=new Com_dspl_malkey_domain_Fresvehinv();
+					var resvehinvPK:Com_dspl_malkey_domain_FresvehinvPK=new Com_dspl_malkey_domain_FresvehinvPK();
+					resvehinvPK.invid=temp.id.invid;
+					resvehinvPK.regno=temp.id.regno;
+					resvehinvPK.resno=com_dspl_malkey_domain_Freservation.resno;
+					resvehinv.id=resvehinvPK;
+					resvehinv.checkout=1;
+					resvehinv.checkin=0;
+					acFresVehicleInventory.addItem(resvehinv);
+				}
+				cmpCheckOut.setVehicleInventory=acFresVehicleInventory;//when call set method setSelectedInventory mehotd also called
+				if(isNotCheckIn())//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+				{
+					//should set current value to checkin value 1
+					var acInventoryCheckIn:ArrayCollection=ObjectUtil.copy(acFresVehicleInventory) as ArrayCollection;//KEEP A SEPEREATE COPY FOR CHECKIN COMPONENT
+					for each(var tempFresvehinv:Com_dspl_malkey_domain_Fresvehinv in acInventoryCheckIn)
+					{
+						tempFresvehinv.checkin=1;
+					} 
+					cmpCheckIn.setVehicleInventory=acInventoryCheckIn;//when call set method setSelectedInventory mehotd also called
+					
+				//	cmpCheckIn.setVehicleInventory=acInventoryCheckIn;//when call set method setSelectedInventory mehotd also called
+				}
+				
+				
+
+				
+				
+			}
+			
+			protected function crFvehicledamageSRVlistByRegNo_resultHandler(event:ResultEvent):void
+			{
+				cmpCheckOut.setVehicleDamage=crFvehicledamageSRVlistByRegNo.lastResult;
+				
+				if(isNotCheckIn())//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+				{
+					var acDamageCheckIn:ArrayCollection=ObjectUtil.copy(crFvehicledamageSRVlistByRegNo.lastResult) as ArrayCollection;//send cop[y to CHECKIN
+					cmpCheckIn.setVehicleDamage=acDamageCheckIn;//test sanka-------------
+					
+				}
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			protected function crFresvehicledamageSRVlistByRegNo_resultHandler(event:ResultEvent):void
+			{
+				cmpCheckOut.setVehicleDamage=crFresvehicledamageSRVlistByRegNo.lastResult;
+				if(isNotCheckIn())//IF NOT CHECKIN : LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+				{
+					var acDamageCheckIn:ArrayCollection=ObjectUtil.copy(crFresvehicledamageSRVlistByRegNo.lastResult) as ArrayCollection;//KEEP A SEPEREATE COPY FOR CHECKIN COMPONENT
+					for each(var loVehiDamage:Com_dspl_malkey_domain_Fresvehicledamage in acDamageCheckIn)
+					{
+						loVehiDamage.ioflag=0;
+						//trace("loVehiDamage.ioflag=0;");
+					} 
+					cmpCheckIn.setVehicleDamage=acDamageCheckIn;//test sanka------------
+				}
+				else
+				{
+					var acDamageCheckIn:ArrayCollection=ObjectUtil.copy(crFresvehicledamageSRVlistByRegNo.lastResult) as ArrayCollection;//KEEP A SEPEREATE COPY FOR CHECKIN COMPONENT
+/* 					for each(var loVehiDamage:Com_dspl_malkey_domain_Fresvehicledamage in acDamageCheckIn)
+					{
+						loVehiDamage.ioflag=0;
+					}  */
+					cmpCheckIn.setVehicleDamage=acDamageCheckIn;//test sanka------------
+				}
+				
+				
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			protected function changeStatusResult_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("Saved Successfully\nRef-No:"+event.result as String,"Success",Alert.OK,null,null,genericFunctions.IconInformation,Alert.OK,null);
+				currentState="stUndo";
+			}
+			
+			
+			protected function changeStatusResult_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("fault :"+event.fault as String);
+			}
+			
+			protected function crVehiclesearchSRVsearchVehicles_resultHandler(event:ResultEvent):void
+			{
+				/* // TODO Auto-generated method stub
+				//Alert.show("search length :"+crVehiclesearchSRVsearchVehicles.lastResult.length);
+								for each(var vehicle:Com_dspl_malkey_domain_Fvehicle in crVehiclesearchSRVsearchVehicles.lastResult)
+				{
+				trace("regno:"+vehicle.regno+"	description:"+vehicle.description+"	engineno:"+vehicle.engineno+" fuellevel:"+vehicle.fuellevel);
+				} */
+			}
+			
+			
+			/*End of result fault handlers  */
+			
+			
+
+			
+			
+
+			
+
+			
+
+
+
+			
+			
+			
+			
+
+			
+			
+
+			
+			
+
+			
+			//Start :Custom compontes event handlers
+
+			
+			/***
+			 * This is the event listner of CustomerSelect event in CustoemrDetailds.mxml compnent
+			 * Event will fire when the client select the client from popup window
+			 * method will get data from event and put in to tempory variable called :com_dspl_malkey_domain_Fclient
+			 * Author:Sanka
+			 * */
+			protected function customer_changeHandler(event:CustomerSelectionEvent):void
+			{
+				com_dspl_malkey_domain_Fdebtor=event.customer as Com_dspl_malkey_domain_Fdebtor;
+				setClientToDriverDetails();
+				
+			}
+
+			/***
+			 * This method get the value from tempory variable called :com_dspl_malkey_domain_Fclient
+			 * And put it into CmpDriverDetails component,try catch use for If component havent created yet.
+			 * Author:Sanka
+			 * */
+			protected function setClientToDriverDetails():void
+			{
+				try{
+					if(com_dspl_malkey_domain_Freservation.hiretypeid=='SD')
+					{
+						//cmpDriverDetails.txtSearchCustomer.text=com_dspl_malkey_domain_Fdebtor.debcode;
+						cmpDriverDetails.filter();
+					}
+				}
+				catch(e:Error)
+				{
+					trace("Nullpointer Exception cmpDriverDetails havent created yet");
+					//when the user select the customer/client/debtor  drverDetails component havent created yet.
+				}
+			
+			}
+
+			/***
+			 * This method fire when component createdComplete
+			 * called method :setClientToDriverDetails()
+			 * Author:Sanka
+			 * */
+			protected function cmpDriverDetails_creationCompleteHandler(event:FlexEvent):void
+			{
+				setClientToDriverDetails();
+			}
+
+			
+			
+			//End :Custom compontes event handlers
+			
+
+			/***
+			 * This method will fire when user select hire type
+			 * Author:Sanka
+			 * 
+			 * */
+			protected function txtHireType__onReturnFromSearchGridHandler(event:Event):void
+			{
+				setClientToDriverDetails();
+			}
+
+
+			
+			/***
+			 * In here I retrive the rate types from DB and put into session
+			 * Components are retrive those RateType Class Object in session from the session
+			 * @Problem:occured with creation compleate events.childs are create before parents
+			 * @Authir Sanka
+			 * */
+			protected function titlewindow1_initializeHandler(event:FlexEvent):void
+			{
+				listAllFratetypeSRV();
+			}
+			
+			
+			/***
+			 * Tab nsavigator change event is following
+			 * 
+			 * 
+			 * */
+			protected function tabNavigator_changeHandler(event:IndexChangedEvent):void
+			{
+			//	onTabChange(event);//animation effect
+				if(event.newIndex==5 || event.newIndex==8)
+				{
+					cmpRates.doCalculate();
+				}
+			}
+			
+
+			/***
+			 * Following code get from the internet not checked
+			 * 
+			 * */
+			public function onTabChange(event:IndexChangedEvent):void
+			{
+				var oldTab:DisplayObject = tabNavigator.getChildAt(event.oldIndex);
+				var newTab:DisplayObject = tabNavigator.getChildAt(event.newIndex);            
+				
+				var moveEffect:Move = new Move();
+				moveEffect.target = oldTab;
+				var moveEffect2:Move = new Move();
+				moveEffect2.target = newTab;
+				if(event.oldIndex > event.newIndex)
+				{
+					//Moving old Tab out to the right, new tab in from the left                    
+					oldTab.x = 0;
+					moveEffect.xTo = oldTab.width + 100;    
+					moveEffect.yFrom = oldTab.y;
+					moveEffect.yTo = oldTab.y;                                
+					newTab.x = -oldTab.width;
+					moveEffect2.xTo = 0;        
+					moveEffect2.yFrom = oldTab.y;
+					moveEffect2.yTo = oldTab.y;                        
+				}
+				else
+				{
+					//Moving old Tab out to the left, new tab in from the right    
+					oldTab.x = 0;
+					moveEffect.xTo = -oldTab.width;            
+					moveEffect.yFrom = oldTab.y;
+					moveEffect.yTo = oldTab.y;                                                                        
+					newTab.x = oldTab.width + 100;
+					moveEffect2.xTo = 0;    
+					moveEffect2.yFrom = oldTab.y;
+					moveEffect2.yTo = oldTab.y;                                                                        
+				}
+				oldTab.visible = true;
+				newTab.visible = true;
+				moveEffect2.play();    
+				moveEffect.addEventListener(EffectEvent.EFFECT_END,tabOffScreen);
+				moveEffect.play();        
+			}
+			
+			private function tabOffScreen(event:EffectEvent):void
+			{
+				event.target.removeEventListener(EffectEvent.EFFECT_END,tabOffScreen);
+				event.target.target.visible = false;    
+			}
+
+			//end of copied code from internet
+			
+
+			
+
+			/***
+			 * reset the form
+			 * 
+			 * 
+			 * */
+			
+			protected function resetForm():void
+			{
+				try{
+				tabNavigator.selectedIndex=0;
+				dtDateOut.enabled=true;
+				dtDateIn.enabled=true;
+				btnNext.visible=true;
+				btnEdit.visible=false;
+				//tabNavigator.creationPolicy="all";
+				//tabNavigator.creationPolicy="all";
+				//createComponentsFromDescriptors()
+				com_dspl_malkey_domain_Freservation=new Com_dspl_malkey_domain_Freservation();
+				com_dspl_malkey_domain_Fdebtor=new Com_dspl_malkey_domain_Fdebtor();
+				com_dspl_malkey_domain_Freservation.dout=null;//new Date();
+				com_dspl_malkey_domain_Freservation.din=null;//new Date();
+				com_dspl_malkey_domain_Freservation.deposit="0.00";
+				com_dspl_malkey_domain_Freservation.advance="0.00";
+				crVehiclesearchSRVsearchVehicles.lastResult=null;
+				/* com_dspl_malkey_domain_Freservation.chargdays */
+ 				cmpCustomerDetails.resetCustomerDetailsForm();
+				cmpVehicleDetails.resetAll();
+				cmpAccessoryService.resetAll();
+				cmpOtherService.resetAll();
+				cmpDriverDetails.resetAll();
+				cmpRates.resetAdditionalRatesGrid();
+				cmpCheckOut.resetAll();
+				cmpCheckIn.resetAll();
+				//txtHiretype.text="";
+				}
+				catch(e:Error)
+				{
+				}
+				
+				
+			}
+
+			
+			
+
+			
+			
+
+			
+			/***
+			 * when change the reservation this method will fire
+			 * 
+			 * 
+			 * */
+			protected function onSelectReservation(event:Event):void
+			{
+				
+				//Start :set status according to the button code
+				//btncode will set according to click event
+				if(btnCode=="stEdit")
+				{
+					currentState="stEdit";
+				}
+				if(btnCode=="stView")
+				{
+					currentState="stView";
+				}
+				if(	btnCode=="stDelete")
+				{
+					currentState="stDelete";
+				}
+				//END :set status according to the button code
+
+				com_dspl_malkey_domain_Freservation =new Com_dspl_malkey_domain_Freservation();
+				//create a copy of object
+				com_dspl_malkey_domain_Freservation=ObjectUtil.copy(txtRefNo._acDataProvider.getItemAt(txtRefNo._nSelectedIndex)) as Com_dspl_malkey_domain_Freservation;
+
+				
+				if(currentState=="stDelete")
+				{
+					var deleteReason:DeleteReason=new DeleteReason();
+					deleteReason.addEventListener("cancel",cancel);
+					deleteReason.addEventListener("undo",undo);
+					PopUpManager.addPopUp(deleteReason,this,true);
+					PopUpManager.centerPopUp(deleteReason);
+				}
+				else//in here what happening is,doesn't delete 
+				{
+
+/* 					com_dspl_malkey_domain_Freservation =new Com_dspl_malkey_domain_Freservation();
+					//create a copy of object
+					com_dspl_malkey_domain_Freservation=ObjectUtil.copy(txtRefNo._acDataProvider.getItemAt(txtRefNo._nSelectedIndex)) as Com_dspl_malkey_domain_Freservation;
+ */					listByResNoFresvehicleSRV(com_dspl_malkey_domain_Freservation.resno);//retrive the details tables 	:resvehicle//and after that it will call resvehicle damage
+					listFresaccsSRVByresNo(com_dspl_malkey_domain_Freservation.resno);//retrive the details tables 		:resaccs
+					listFresothsrvSRVByResNo(com_dspl_malkey_domain_Freservation.resno);//retrive the details tables 	:resothersrv
+					listByResnoFresdriverSRV(com_dspl_malkey_domain_Freservation.resno);//retrive the details tables 	:resdriver
+					listByresnoFresaddchargeSRV(com_dspl_malkey_domain_Freservation.resno);
+					cmpCustomerDetails.selectCustomer();//should be after select reservation & customer
+					//cmpCheckOut.setFuelLevel(cmpVehicleDetails.ac.fuellevel.toString());
+					setTransactionStatus();//set enable the windows
+					//trace("4");
+					cmpRates.doCalculate();
+					
+				}
+				
+			}
+
+
+
+			
+			
+
+
+
+
+
+
+			
+
+			
+			/***
+			 * This function perform get rates from fresdriverrates & set rates on rateview object using getRate method in driverdetails custom component.
+			 * 
+			 * 
+			 * */
+			protected function setRates_onDriver():void
+			{
+				if(cmpDriverDetails.acResMalkeyDrivers.length !=0 && crFresdriverrateSRVfindByResno.lastResult !=null)
+				{
+					cmpDriverDetails.wakeup();
+					cmpRates.wakeup();
+					cmpRates.doCalculate();
+				}
+			}
+
+			
+			
+			protected function manualValidation():Boolean
+			{
+				var flagIsValied:Boolean=true;
+				if(cmpVehicleDetails.acResVehicle.length==0)
+				{
+					flagIsValied=false;
+					Alert.show("Please Select a Vehicle.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				if(StringUtil.trim(com_dspl_malkey_domain_Freservation.hiretypeid).length == 0)
+				{
+					flagIsValied=false;
+					Alert.show("Please Select a Hire Type.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				if(cmpDriverDetails.acResMalkeyDrivers.length==0 && com_dspl_malkey_domain_Freservation.hiretypeid!="SD")
+				{
+					flagIsValied=false;
+					Alert.show("Please Select a Driver.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				if((com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKIN" || com_dspl_malkey_domain_Freservation.cohirestsid=="NOSHOW"|| com_dspl_malkey_domain_Freservation.cohirestsid=="COMPLETED") && cmpCheckIn.getSelectedInventory().length > cmpCheckOut.getSelectedInventory().length)
+				{
+					flagIsValied=false;
+					Alert.show("Checkin inventory contain more than Checkout","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKIN")
+				{
+					flagIsValied=false;
+					Alert.show("Please Select the Hire Status in CheckIn Tab.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				return flagIsValied;
+			}
+
+			
+
+
+			
+			
+			//Delete comment componts event handlers
+			/***
+			 * DeleteComment components delete event
+			 * 
+			 * */
+			protected function cancel(event:DeleteCommentEvent):void
+			{
+				removeByIDFreservationSRV(txtRefNo.text);
+			}
+			
+			
+			/***
+			 * DeleteComment components undo event
+			 * 
+			 * */
+			protected function undo(event:DeleteCommentEvent):void
+			{
+				currentState='stUndo';
+			}
+			
+			
+			
+
+
+
+
+/* 			protected function dtDateOut_creationCompleteHandler(event:FlexEvent):void
+			{
+				dtDateOut.selectableRange={rangeStart : new Date()};
+			}
+
+
+			protected function dtDateIn_creationCompleteHandler(event:FlexEvent):void
+			{
+				dtDateIn.selectableRange={rangeStart : dtDateOut.selectedDate};
+				//selectableRange="{{rangeStart : dtDateOut.selectedDateTime}}"
+			} */
+
+			
+			
+
+			/***
+			 * when the hire staus change this method will fire
+			 * 
+			 * 
+			 * */
+			protected function textinput1_keyUpHandler(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(event.keyCode.toString()=='119')
+				{txtHireStatus.launchSearchGrid();}
+				setTransactionStatus();
+				cmpVehicleDetails_changeHandler(event);
+			}
+			
+			
+			/***
+			 * when the hire staus change this method will fire
+			 * 
+			 * 
+			 * */
+			private function setTransactionStatus():void
+			{
+				switch(txtHireStatus.text)
+				{
+				case "BOOKED":
+					if(currentState=="stNew" || currentState=="stEdit" )
+					{
+						cmpCheckOut.isEnable=false;
+						cmpCheckIn.isEnable=false;
+					}
+					break;
+				case "CANCELLED":
+					trace("Monday");
+					break;
+				case "CHECKIN":
+					if(currentState=="stEdit")
+					{
+						cmpCheckOut.isEnable=true;
+						cmpCheckIn.isEnable=true;
+					}
+					break;
+				case "CHECKOUT":
+					if(currentState=="stNew" || currentState=="stEdit" )
+					{
+						cmpCheckOut.isEnable=true;
+						cmpCheckIn.isEnable=false;
+					}
+					break;
+				case "COMPLETED":
+					if(currentState=="stNew" || currentState=="stEdit" )
+					{
+						cmpCheckOut.isEnable=true;
+						cmpCheckIn.isEnable=true;
+					}
+					break;
+				case "CONFIRMED":
+					trace("Friday");
+					break;
+				case "INQUIRY":
+					trace("Saturday");
+					break;
+				case "NOSHOW":
+					if(currentState=="stNew" || currentState=="stEdit" )
+					{
+						cmpCheckOut.isEnable=true;
+						cmpCheckIn.isEnable=true;
+					}
+					break;
+				case "PREPARED":
+					trace("Saturday");
+					break;
+				case "QUOTE":
+					trace("Saturday");
+					break;
+				default:
+					trace("Out of range");
+					break;
+				}
+				
+
+				
+			}
+			
+			
+
+			/***
+			 * this method fire on change the vehicle
+			 * BOOKED 		:(If not checked out & If not checked in)	:then current state should display 
+			 * CHECKOUT		:If not checked in 							:then current checked out state should display 
+			 * CHECKIN		:If checked in 								:then current checked in state will display
+			 * 
+			 * */
+			protected function cmpVehicleDetails_changeHandler1(event:Event):void
+			{
+				if(currentState=="stNew" || ( currentState=="stEdit"))
+				{
+					if(cmpVehicleDetails.acResVehicle.length>0)
+					{
+						
+						var tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle=(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle);
+						if(com_dspl_malkey_domain_Freservation.cohirestsid=="BOOKED" || (com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKOUT" && currentState=="stNew") )
+						{
+							com_dspl_malkey_domain_Freservation.cofuellevel=genericFunctions.getArrayCollection(crFvehicleSRVListAll.lastResult,'regno',tempFresvehicle.id.regno).fuellevel;//com_dspl_malkey_domain_Fvehicle.fuellevel;
+							com_dspl_malkey_domain_Freservation.comileage=genericFunctions.getArrayCollection(crFvehicleSRVListAll.lastResult,'regno',tempFresvehicle.id.regno).curmileage;//com_dspl_malkey_domain_Fvehicle.curmileage;
+							if(tempFresvehicle.id.regno.length >0)
+							{
+								//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+								listByRegNoFvehicleinventrySRV(tempFresvehicle.id.regno);//retrive inventory items of vehicle not in reservation
+								listByRegNoFvehicledamageSRV(tempFresvehicle.id.regno);//retrive damages of vehicle not in reservation
+							}
+						}
+						cmpCheckOut.setVehicleStatus();//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+						if(isNotCheckIn())//IF NOT CHECKIN THEN LOAD CURRENT-CHECKOUT STATUS OF VEHICLE FOR EASY FOR USER
+						{
+							com_dspl_malkey_domain_Freservation.cimileage=com_dspl_malkey_domain_Freservation.comileage;
+							com_dspl_malkey_domain_Freservation.cifuellevel=com_dspl_malkey_domain_Freservation.cofuellevel;
+							cmpCheckIn.setVehicleStatus();//test sanka-------------
+						}						
+
+						
+					}//end vehicle details
+					else
+					{
+						cmpCheckOut.resetAll();
+						if(isNotCheckIn())//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+						{
+							cmpCheckIn.resetAll();//test sanka-------------
+						}
+					}//end else
+				}//end first if
+			}
+			
+			/***
+			 * this method fire on change the vehicle
+			 * BOOKED 		:(If not checked out & If not checked in)	:then current state should display 
+			 * CHECKOUT		:If not checked in 							:then current checked out state should display 
+			 * CHECKIN		:If checked in 								:then current checked in state will display
+			 * 
+			 * */
+			protected function cmpVehicleDetails_changeHandler(event:Event):void
+			{
+				if(currentState=="stNew" || ( currentState=="stEdit")|| ( currentState=="stView"))
+				{
+					if(cmpVehicleDetails.acResVehicle.length>0)
+					{
+						
+						var tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle=(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle);
+						
+						if(com_dspl_malkey_domain_Freservation.cohirestsid=="BOOKED")//not CHECKOUT & not CHECKIN
+						{
+							com_dspl_malkey_domain_Freservation.cofuellevel=genericFunctions.getArrayCollection(crFvehicleSRVListAll.lastResult,'regno',tempFresvehicle.id.regno).fuellevel;//com_dspl_malkey_domain_Fvehicle.fuellevel;
+							com_dspl_malkey_domain_Freservation.comileage=genericFunctions.getArrayCollection(crFvehicleSRVListAll.lastResult,'regno',tempFresvehicle.id.regno).curmileage;//com_dspl_malkey_domain_Fvehicle.curmileage;
+							com_dspl_malkey_domain_Freservation.cimileage=com_dspl_malkey_domain_Freservation.comileage;
+							com_dspl_malkey_domain_Freservation.cifuellevel=com_dspl_malkey_domain_Freservation.cofuellevel;
+							if(tempFresvehicle.id.regno.length >0)
+							{
+								//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+								listByRegNoFvehicleinventrySRV(tempFresvehicle.id.regno);//retrive inventory items of vehicle not in reservation
+								listByRegNoFvehicledamageSRV(tempFresvehicle.id.regno);//retrive damages of vehicle not in reservation
+							}
+						}
+						
+						else if(com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKOUT")// not CHECKIN
+						{
+
+							if(currentState=="stNew")// (CHECKOUT && stNew) mean direct add CHECKOUT 
+							{
+								com_dspl_malkey_domain_Freservation.cofuellevel=genericFunctions.getArrayCollection(crFvehicleSRVListAll.lastResult,'regno',tempFresvehicle.id.regno).fuellevel;//com_dspl_malkey_domain_Fvehicle.fuellevel;
+								com_dspl_malkey_domain_Freservation.comileage=genericFunctions.getArrayCollection(crFvehicleSRVListAll.lastResult,'regno',tempFresvehicle.id.regno).curmileage;//com_dspl_malkey_domain_Fvehicle.curmileage;
+								if(tempFresvehicle.id.regno.length >0)
+								{
+									//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+									listByRegNoFvehicleinventrySRV(tempFresvehicle.id.regno);//retrive inventory items of vehicle not in reservation
+									listByRegNoFvehicledamageSRV(tempFresvehicle.id.regno);//retrive damages of vehicle not in reservation
+								}
+							}
+							
+							com_dspl_malkey_domain_Freservation.cimileage=com_dspl_malkey_domain_Freservation.comileage;
+							com_dspl_malkey_domain_Freservation.cifuellevel=com_dspl_malkey_domain_Freservation.cofuellevel;
+						}
+						
+/* 						else if(com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKIN")//not COMPLETE
+						{
+							
+						} */
+						cmpCheckOut.setVehicleStatus();//LOAD CURRENT STATUS OF VEHICLE FOR EASY FOR USER
+						cmpCheckIn.setVehicleStatus();//test sanka-------------
+
+						
+					}//end vehicle details
+					else
+					{
+						cmpCheckOut.resetAll();
+						cmpCheckIn.resetAll();
+					}//end else
+				}//end first if
+			}
+			
+
+			private function isNotCheckIn():Boolean
+			{
+				return (com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKOUT" || com_dspl_malkey_domain_Freservation.cohirestsid=="CONFIRMED" || com_dspl_malkey_domain_Freservation.cohirestsid=="BOOKED" || com_dspl_malkey_domain_Freservation.cohirestsid=="PREPARED")
+			}
+
+			
+			/***
+			 * when the state change this method will fire
+			 * 
+			 * 
+			 * */
+			protected function currentStateChangeHandler(event:StateChangeEvent):void
+			{
+				if(event.newState=='stDelete')
+				{
+					//listAll();
+					resetForm();
+					tabNavigator.enabled=true;
+					cmpRates.isEnable=false;
+					cmpCheckOut.isEnable=false;
+					cmpCheckIn.isEnable=false;
+					cmpVehicleDetails.isEnable=false;
+					cmpCustomerDetails.isEnable=false;
+					cmpDriverDetails.isEnable=false;
+					cmpAccessoryService.isEnable=false;
+					cmpOtherService.isEnable=false;
+				}
+				if(event.newState=='stNew')
+				{
+					//listAll();
+					//tabNavigator.createComponentsFromDescriptors();
+					resetForm();	
+					tabNavigator.enabled=true;
+					cmpRates.isEnable=true;
+					cmpCheckOut.isEnable=true;
+					cmpCheckIn.isEnable=true;
+					cmpVehicleDetails.isEnable=true;
+					cmpCustomerDetails.isEnable=true;
+					cmpDriverDetails.isEnable=true;
+					cmpAccessoryService.isEnable=true;
+					cmpOtherService.isEnable=true;
+					//popupDatePicker();
+					
+				}
+				if(event.newState=='stUndo')
+				{
+					listAll();
+					resetForm();	
+					tabNavigator.enabled=false;
+				}
+				if(event.newState=='stView')
+				{
+					//listAll();
+					resetForm();
+					cmpRates.isEnable=false;
+					cmpCheckOut.isEnable=false;
+					cmpCheckIn.isEnable=false;
+					cmpVehicleDetails.isEnable=false;
+					cmpCustomerDetails.isEnable=false;
+					cmpDriverDetails.isEnable=false;
+					cmpAccessoryService.isEnable=false;
+					cmpOtherService.isEnable=false;
+					
+					tabNavigator.enabled=true;
+					try{
+					nvb.recordIndex=0;
+					nvb_commonHandler(event);
+					}catch(e:Error){
+						Alert.show("Error Occured While Retriving Data.\nPlease Refresh The Page.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					}
+					
+				}
+				if(event.newState=='stEdit')
+				{
+					//listAll();
+					resetForm();
+					tabNavigator.enabled=true;
+					cmpRates.isEnable=true;
+					cmpCheckOut.isEnable=true;
+					cmpCheckIn.isEnable=true;
+					cmpVehicleDetails.isEnable=true;
+					cmpCustomerDetails.isEnable=true;
+					cmpDriverDetails.isEnable=true;
+					cmpAccessoryService.isEnable=true;
+					cmpOtherService.isEnable=true;
+				}
+			}
+			
+
+			
+
+			public var datePicker:DatePicker;		
+			protected function popupDatePicker():void
+			{
+				//var datePicker:DatePicker=new DatePicker();
+				datePicker=new DatePicker();
+				datePicker.addEventListener("select",selectDate);
+				datePicker.com_dspl_malkey_domain_Freservation=com_dspl_malkey_domain_Freservation;
+				datePicker.acTime=acTime;
+				//PopUpManager.centerPopUp(datePicker);
+				PopUpManager.addPopUp(datePicker,this,false);
+				PopUpManager.centerPopUp(datePicker);
+				//createPopUp
+			}
+			
+			protected function selectDate(event:Event):void
+			{
+				//Alert.show("Date:"+datePicker.dtDateIn.selectedDate.toString() +"\nValue:"+datePicker.nsNumDays.value.toString());
+				dtDateIn.selectedDate=datePicker.dtDateIn.selectedDate;
+				dtDateOut.selectedDate=datePicker.dtDateOut.selectedDate;
+				nsNumDays.value=datePicker.nsNumDays.value;
+				cmbTimeOut.selectedIndex=datePicker.cmbTimeOut.selectedIndex;
+				cmbTimeIn.selectedIndex=datePicker.cmbTimeIn.selectedIndex;
+				PopUpManager.removePopUp(datePicker);
+			}
+			
+			
+			
+			/***
+			 * Following are the navigation bar event handler methods
+			 * 
+			 * 
+			 * */
+			
+			
+			protected function nvb_undoHandler(event:Event):void
+			{
+				btnCode="stUndo";
+				currentState="stUndo";
+			}
+			
+			
+			protected function nvb_listHandler(event:Event):void
+			{
+				currentState="stView";
+				btnCode="stView";				
+			}
+
+			
+			protected function nvb_commonHandler(event:Event):void
+			{
+				txtRefNo._nSelectedIndex=nvb.recordIndex;
+				onSelectReservation(event);
+			}
+	
+			
+			protected function nvb_closeHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+			
+			protected function nvb_findHandler(event:Event):void
+			{
+				btnCode="stView";
+				//currentState="stView";
+				txtRefNo.launchSearchGrid();
+			}
+		
+			
+			protected function nvb_editHandler(event:Event):void
+			{
+				btnCode="stEdit";
+				txtRefNo.launchSearchGrid();
+			}
+			
+			protected function nvb_edit_view_Handler(event:Event):void
+			{
+				btnCode="stView";
+				txtRefNo.launchSearchGrid();
+				currentState="stEdit";
+			}
+		
+			
+			protected function nvb_printHandler(event:Event):void
+			{
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/rentagreement.jsp");
+				request.data =new URLVariables();
+				request.data.resno=txtRefNo.text;
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request);
+				
+			}
+			
+			
+			protected function nvb_newHandler(event:Event):void
+			{
+				btnCode="stNew";
+				currentState="stNew";
+			}
+			
+			
+			protected function nvb_deleteHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				//currentState="stDelete";
+				btnCode="stDelete";
+				txtRefNo.launchSearchGrid();
+				
+			}
+			
+			
+			protected function nvb_viewHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				btnCode="stView";
+				currentState="stView";
+				
+			}
+			
+			
+			protected function nvb_updateHandler(event:Event):void
+			{
+				
+				com_dspl_malkey_domain_Freservation.debcode =cmpCustomerDetails.txtClient.text;
+				com_dspl_malkey_domain_Freservation.paytypeid=cmpRates.txtPaymentType.text;
+				com_dspl_malkey_domain_Freservation.deposit=cmpRates.txtDeposit.text;
+				com_dspl_malkey_domain_Freservation.advance=cmpRates.txtAdvance.text;
+				com_dspl_malkey_domain_Freservation.cohirestsid=txtHireStatus.text;
+				com_dspl_malkey_domain_Freservation.itinerary=txtItinerary.text;
+				com_dspl_malkey_domain_Freservation.hiretypeid=txtHireType.text;
+				
+				
+				com_dspl_malkey_domain_Freservation.coinspectby="sanka";
+				//	com_dspl_malkey_domain_Freservation.comileage=0;
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKIN" || com_dspl_malkey_domain_Freservation.cohirestsid=="NOSHOW"|| com_dspl_malkey_domain_Freservation.cohirestsid=="COMPLETED")
+				{
+/* 					com_dspl_malkey_domain_Freservation.cidamage="0";
+					com_dspl_malkey_domain_Freservation.ciother="0";
+					com_dspl_malkey_domain_Freservation.cidetenhrsrs="0"; 
+					com_dspl_malkey_domain_Freservation.cifueldiff="0.00";
+					com_dspl_malkey_domain_Freservation.cinightoutrs="0.0";
+					com_dspl_malkey_domain_Freservation.cixsmileage=0;
+					com_dspl_malkey_domain_Freservation.cixsmileagers="0";
+					com_dspl_malkey_domain_Freservation.cidetenhrs=0; */
+					com_dspl_malkey_domain_Freservation.cifuellevel=cmpCheckIn.getCurrentFuelMeterLevel();
+					cmpCheckIn.getBind()
+				}
+				else if(com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKOUT")
+				{
+					com_dspl_malkey_domain_Freservation.ciother="0";
+					com_dspl_malkey_domain_Freservation.cidetenhrsrs="0"; 
+					com_dspl_malkey_domain_Freservation.cifueldiff="0.00";
+					com_dspl_malkey_domain_Freservation.cinightoutrs="0.0";
+					com_dspl_malkey_domain_Freservation.cixsmileage=0;
+					com_dspl_malkey_domain_Freservation.cixsmileagers="0";
+					com_dspl_malkey_domain_Freservation.cidetenhrs=0;
+					com_dspl_malkey_domain_Freservation.cofuellevel=cmpCheckOut.getCurrentFuelMeterLevel();
+				}
+				com_dspl_malkey_domain_Freservation.quoteno="";
+				com_dspl_malkey_domain_Freservation.addmach="sanka";
+				com_dspl_malkey_domain_Freservation.adduser="snk";
+				com_dspl_malkey_domain_Freservation.timeout=cmbTimeOut.selectedItem;
+				com_dspl_malkey_domain_Freservation.timein=cmbTimeIn.selectedItem;
+				//set the values from checkout 
+				(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).lstFresvehinv=cmpCheckOut.getSelectedInventory();
+				trace("reach here1");
+				(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).lstFvehicledamage=cmpCheckOut.getVehicleDamage;//this is check out damages
+				//(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).lstFvehicledamage=cmpCheckIn.getVehicleDamage;//this is check in damages
+				trace("reach here2");
+				
+				
+				if(manualValidation())
+				{
+					changeStatus(
+						com_dspl_malkey_domain_Freservation,
+						cmpVehicleDetails.acResVehicle, 
+						cmpAccessoryService.acResAccessory, 
+						cmpDriverDetails.acResMalkeyDrivers,
+						cmpOtherService.acResothsrv,
+						cmpVehicleDetails.acResVehicle.getItemAt(0).fresvehiclerate, 
+						cmpAccessoryService.getResAccessoryRate(),
+						cmpDriverDetails.getResDriverRate(),
+						cmpOtherService.getResOtherServiceRate(),
+						cmpRates.getAdditionalRates(),
+						cmpCheckIn.getVehicleDamage,/*checkin damages*/
+						cmpCheckIn.getSelectedInventory()/*checkin inventory*/); 
+				}	
+				
+/* 				com_dspl_malkey_domain_Freservation.debcode =cmpCustomerDetails.txtClient.text;
+				com_dspl_malkey_domain_Freservation.paytypeid=cmpRates.txtPaymentType.text;
+				com_dspl_malkey_domain_Freservation.deposit=cmpRates.txtDeposit.text;
+				com_dspl_malkey_domain_Freservation.advance=cmpRates.txtAdvance.text;
+				com_dspl_malkey_domain_Freservation.cohirestsid=txtHireStatus.text;
+				com_dspl_malkey_domain_Freservation.itinerary=txtItinerary.text;
+				com_dspl_malkey_domain_Freservation.hiretypeid=txtHireType.text; */
+						
+				
+				//changeStatus(arg0:Com_dspl_malkey_domain_Freservation, arg1:ArrayCollection, arg2:ArrayCollection, arg3:ArrayCollection, arg4:ArrayCollection, arg5:Com_dspl_malkey_domain_Fresvehiclerate, arg6:ArrayCollection, arg7:Com_dspl_malkey_domain_Fresdriverrate, arg8:ArrayCollection, arg9:ArrayCollection)
+				
+			}
+			
+			
+			protected function nvb_saveHandler(event:Event):void
+			{
+				
+				/* 				var acAccessoryService:ArrayCollection=cmpAccessoryService.dgAccessory.dataProvider as ArrayCollection;
+				for each(var accessory:Com_dspl_malkey_domain_Fresaccs in acAccessoryService)
+				{
+				trace("accid :"+accessory.id.accid);
+				trace("resno :"+accessory.id.resno);
+				trace("qty :"+accessory.qty);
+				trace("dfrom :"+accessory.id.dfrom);
+				trace("dto :"+accessory.id.dto);
+				}
+				var acOther:ArrayCollection=cmpOtherService.dgOtherService.dataProvider as ArrayCollection;
+				for each(var otherSerivce:Com_dspl_malkey_domain_Fresothsrv in acOther)
+				{
+				trace("otherSerivce.id.resno "+otherSerivce.id.resno);
+				trace("srvid "+otherSerivce.id.srvid);
+				trace("dfrom "+otherSerivce.dfrom);
+				trace("dto "+otherSerivce.dto);
+				trace("noofdays "+otherSerivce.noofdays);
+				trace("rate "+otherSerivce.rate);
+				trace("remarks "+otherSerivce.remarks);
+				}
+				var acVehicle:ArrayCollection=cmpVehicleDetails.dgVehicle.dataProvider as ArrayCollection;
+				for each(var vehicle:Com_dspl_malkey_domain_Fresvehicle in acVehicle)
+				{
+				trace("regno:"+vehicle.id.regno);
+				trace("resno:"+vehicle.id.resno);
+				trace("priority:"+vehicle.priority);
+				} */
+				
+				com_dspl_malkey_domain_Freservation.debcode =cmpCustomerDetails.txtClient.text;
+				com_dspl_malkey_domain_Freservation.paytypeid=cmpRates.txtPaymentType.text;
+				com_dspl_malkey_domain_Freservation.deposit=cmpRates.txtDeposit.text;
+				com_dspl_malkey_domain_Freservation.advance=cmpRates.txtAdvance.text;
+				com_dspl_malkey_domain_Freservation.cohirestsid=txtHireStatus.text;
+				com_dspl_malkey_domain_Freservation.itinerary=txtItinerary.text;
+				com_dspl_malkey_domain_Freservation.hiretypeid=txtHireType.text;
+				
+				com_dspl_malkey_domain_Freservation.cidamage="0";
+				com_dspl_malkey_domain_Freservation.coinspectby="sanka";
+				//	com_dspl_malkey_domain_Freservation.comileage=0;
+				com_dspl_malkey_domain_Freservation.ciother="0";
+				com_dspl_malkey_domain_Freservation.cidetenhrsrs="0"; 
+				com_dspl_malkey_domain_Freservation.cifueldiff="0.00";
+				com_dspl_malkey_domain_Freservation.cinightoutrs="0.0";
+				com_dspl_malkey_domain_Freservation.cixsmileage=0;
+				com_dspl_malkey_domain_Freservation.cixsmileagers="0";
+				com_dspl_malkey_domain_Freservation.cidetenhrs=0;
+				com_dspl_malkey_domain_Freservation.quoteno="";
+				com_dspl_malkey_domain_Freservation.addmach="sanka";
+				com_dspl_malkey_domain_Freservation.adduser="snk";
+				com_dspl_malkey_domain_Freservation.timeout=cmbTimeOut.selectedItem;
+				com_dspl_malkey_domain_Freservation.timein=cmbTimeIn.selectedItem;
+				//com_dspl_malkey_domain_Freservation.comileage
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=="CHECKOUT")
+				{
+					//set the values from checkout 
+					(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).lstFresvehinv=cmpCheckOut.getSelectedInventory();
+					(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).lstFvehicledamage=cmpCheckOut.getVehicleDamage;
+					//Alert.show("length:"+(cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle).lstFvehicledamage.length);
+					com_dspl_malkey_domain_Freservation.cofuellevel=cmpCheckOut.getCurrentFuelMeterLevel();
+				}
+				if(manualValidation())
+				{
+					createFreservationSRV(com_dspl_malkey_domain_Freservation,cmpVehicleDetails.acResVehicle, cmpAccessoryService.acResAccessory, 
+						cmpDriverDetails.acResMalkeyDrivers, cmpOtherService.acResothsrv, cmpVehicleDetails.acResVehicle.getItemAt(0).fresvehiclerate, 
+						cmpAccessoryService.getResAccessoryRate(), cmpDriverDetails.getResDriverRate(), cmpOtherService.getResOtherServiceRate(),cmpRates.getAdditionalRates()); 
+				}				
+				
+			}
+			
+			
+
+
+
+
+
+
+			protected function dtDateOut_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				cmpVehicleDetails.resetAll();
+			}
+
+			
+
+			
+
+
+			
+			/***
+			 * Date fixing buttons
+			 * 
+			 * */
+			protected function btnNext_clickHandler(event:MouseEvent):void
+			{
+				searchVehicles(dateFormatter.format(dtDateOut.selectedDate), dateFormatter.format(dtDateIn.selectedDate), new ArrayCollection(), true);
+				dtDateOut.enabled=false;
+				dtDateIn.enabled=false;
+				//btnEdit.visible=true;
+				btnNext.visible=false;
+			}
+
+
+			protected function btnEdit_clickHandler(event:MouseEvent):void
+			{
+				dtDateOut.enabled=true;
+				dtDateIn.enabled=true;
+				btnEdit.visible=false;
+				//btnNext.visible=true;
+			}
+
+			
+			
+
+
+
+		]]>
+	</fx:Script>
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--<s:Panel id="panel" x="19" y="21" width="910" height="507" title="Reservation/Check-Out/Check-In">-->
+	<mx:HBox>
+		<!--edit.stView="nvb_edit_view_Handler(event)"-->
+	<local:NavigationBar
+		id="nvb"
+		recordIndex="{txtRefNo._nSelectedIndex}"
+		maxRecord="{txtRefNo._acDataProvider.length-1}"
+		new="nvb_newHandler(event)"
+		edit="nvb_editHandler(event)"
+		
+		delete="nvb_deleteHandler(event)"
+		view="nvb_viewHandler(event)"
+		save="nvb_saveHandler(event)"
+		save.stEdit="nvb_updateHandler(event)"
+		undo="nvb_undoHandler(event)"
+		list="nvb_listHandler(event)"
+		next="nvb_commonHandler(event)"
+		back="nvb_commonHandler(event)"
+		previous="nvb_commonHandler(event)"
+		top="nvb_commonHandler(event)"
+		bottom="nvb_commonHandler(event)"
+		find="nvb_findHandler(event)"
+		print="nvb_printHandler(event)"
+		refresh="listAll();"
+		close="nvb_closeHandler(event)"
+		menuMode="1"
+		stCurrent="{this.currentState}"
+		horizontalAlign="center"			
+		/>
+	<s:Label text="{currentState}"/>
+	<s:Label text="{com_dspl_malkey_domain_Freservation.resno}"/>
+		
+<!--		<mx:HBox>
+			<mx:RadioButton id="radioButton1" label="Booking" 			group="{transactionType}"  	value="booking"/>
+			<mx:RadioButton id="radioButton2" label="Check-Out" 		group="{transactionType}" 	value="checkout"/>
+			<mx:RadioButton id="radioButton2" label="Check-Out Booking" 		group="{transactionType}" 	value="checkout"/>
+			<mx:RadioButton id="radioButton3" label="Check-In" 			group="{transactionType}" 	value="checkin"/>
+			<mx:RadioButton id="radioButton4" label="Accept Payment" 	group="{transactionType}" 	value="accept"/>
+		</mx:HBox>-->
+		
+	</mx:HBox>
+
+
+	
+
+	
+	
+	
+	<mx:HRule x="0" y="50" width="100%" height="3"/>
+		<mx:TabNavigator 
+			id="tabNavigator" 
+			x="11" y="59" 
+			width="100%" height="500" 
+			creationPolicy="all" 
+			change="tabNavigator_changeHandler(event)"
+			disabledOverlayAlpha="0"
+			>
+
+			<!--Hire types and quatation details-->	
+			<s:NavigatorContent label="Hire Details" width="100%" height="100%">	
+									
+					<mx:Form height="100%" x="5" y="0"
+							 borderAlpha="0.10"
+							 paddingTop="5"
+							 paddingLeft="5"
+							 paddingRight="5"
+							 paddingBottom="2"
+							 borderColor="black"
+							 borderStyle="solid"
+							 borderVisible="true" 
+							 width="1000"
+							 label="Rental Details" 
+							 >
+<!--						<s:Label text="comileage{com_dspl_malkey_domain_Freservation.comileage}" fontWeight="bold"/>
+						<s:Label text="cofuellevel {com_dspl_malkey_domain_Freservation.cofuellevel}" fontWeight="bold"/>-->
+						<s:Label text="Rental Details" fontWeight="bold"/>
+								<mx:FormItem label="Ref No #" direction="horizontal"  styleName="formItemL" labelStyleName="formItemLabel"  enabled.stNew="false"  enabled.stEdit="false">
+									<controls:_tiMasterFile id="txtRefNo"											
+															_acDataProvider="{crFreservationSRVListAll.lastResult}"
+															text="@{com_dspl_malkey_domain_Freservation.resno}"
+															_strKeyColumn="resno"
+															_strKeyColCaption="Ref No" 
+															_strDetailColumn="dout"
+															otherColumns="din,hiretypeid,cohirestsid"
+															otherColumnHeaderText="Date In,Hire Type,Status"
+															_strDetailColCaption="Date-out"
+															_strWindowTitle="Select Reservation"
+															width="171"
+															editable="false" 
+															_onReturnFromSearchGrid="onSelectReservation(event)"															
+															/>
+									<mx:LinkButton label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtRefNo.launchSearchGrid();}"/>
+								</mx:FormItem>
+<!--								<mx:FormItem label="Quotation #" direction="horizontal"  styleName="formItemL" labelStyleName="formItemLabel">
+									<s:TextInput width="171"></s:TextInput>
+									<mx:LinkButton label="Search" width="60" color="#0A33BB" textDecoration="underline"/>
+								</mx:FormItem>-->
+								
+							<!--</mx:VBox>
+							<mx:VBox>-->
+								<mx:Spacer/>
+								<mx:HRule width="700"/>
+						
+						<s:VGroup >
+							
+								
+										<mx:FormItem label="Date Out" direction="horizontal" width="100%"  styleName="formItemL" labelStyleName="formItemLabel"  required="true">
+											<mx:DateField width="150" id="dtDateOut" 
+														  selectedDate="@{com_dspl_malkey_domain_Freservation.dout}"
+														  selectableRange="{{rangeStart : new Date()}}"
+														  change="dtDateOut_changeHandler(event)"
+														  />
+											
+		<!--									
+											<s:NumericStepper 
+												id="nsDateOutHour" 
+												maximum="23" 
+												minimum="0" 
+												width="100"
+												/>
+											<mx:Label text=":"/>
+											<s:NumericStepper 
+												id="nsDateOutMinute" 
+												maximum="60" 
+												minimum="0" 
+												width="100"
+												/>-->
+											
+											<mx:Label  text="  Time :"/>
+											<s:ComboBox id="cmbTimeOut" dataProvider="{acTime}" selectedIndex="{acTime.getItemIndex(com_dspl_malkey_domain_Freservation.timeout)}" width="100"/>
+											<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+											
+											<!--<util:DateTimeField id="dtDateOut" 
+															   selectedDateTime="@{com_dspl_malkey_domain_Freservation.dout}" 
+															   showTime="{true}" 
+															   is24Hour="{false}"
+															   creationComplete="dtDateOut_creationCompleteHandler(event)"
+															   />-->
+											
+		
+										</mx:FormItem>
+								
+								<mx:FormItem label="Num. Days" styleName="formItemL" labelStyleName="formItemLabel"  required="true">
+									<s:NumericStepper 
+										id="nsNumDays" 
+										maximum="366" 
+										minimum="0" 
+										width="150"
+										value="{DateOperation.getDaysDifference(dtDateIn.selectedDate,dtDateOut.selectedDate)}"
+										/>
+								</mx:FormItem>
+								
+										<mx:FormItem label="Date In" direction="horizontal"  styleName="formItemL" labelStyleName="formItemLabel"  required="true">
+											<mx:DateField width="150" id="dtDateIn" 
+														  selectedDate="{DateOperation.dateAdd('d', nsNumDays.value,dtDateOut.selectedDate)}"
+														  selectableRange="{{rangeStart : dtDateOut.selectedDate}}"
+														  />
+											<mx:Label  text="  Time :"/>
+											<s:ComboBox id="cmbTimeIn" dataProvider="{acTime}" selectedIndex="{acTime.getItemIndex(com_dspl_malkey_domain_Freservation.timein)}"  width="100"/>
+											<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+		<!--			<source="{DateOperation.dateAdd('d', nsNumDays.value,dtDateOut.selectedDateTime)}" destination="{dtDateIn.dtDateField.}"/>		-->				
+											<!--selectedDateTime="{DateOperation.dateAdd('d', nsNumDays.value,dtDateOut.selectedDateTime)}" -->
+											<!--<util:DateTimeField id="dtDateIn" 
+																selectedDateTime="{DateOperation.dateAdd('d', nsNumDays.value,dtDateOut.selectedDateTime)}"
+																showTime="{false}" 
+																is24Hour="{false}"
+																creationComplete="dtDateIn_creationCompleteHandler(event)"
+																/>-->
+											
+<!--											<mx:Button id="btnNext" label="Fix Date"/>
+											<mx:Button id="btnEdit" label="Change Date"/>-->
+											<mx:LinkButton id="btnNext" label="Fix Date" 	color="#0A33BB" textDecoration="underline" click="btnNext_clickHandler(event)" visible="{!btnEdit.visible}"/>
+											<mx:LinkButton id="btnEdit" label="Change Date" color="#0A33BB" textDecoration="underline" click="btnEdit_clickHandler(event)" visible="{!btnNext.visible}"/>
+										</mx:FormItem>
+						</s:VGroup>
+							<mx:HRule width="700"/>
+						
+						
+						
+						<mx:FormItem label="Chargeable Days" styleName="formItemL" labelStyleName="formItemLabel"  required="true">
+							<s:NumericStepper 
+								id="nsChargeableDays" 
+								maximum="366" 
+								minimum="0" 
+								width="150"
+								value="{DateOperation.getDaysDifference(dtDateIn.selectedDate,dtDateOut.selectedDate)}"
+								/>
+						</mx:FormItem>
+<!--						<mx:FormItem label="Hire Status" styleName="formItemL" labelStyleName="formItemLabel">
+							<s:TextInput id="txtHireStatus" width="171"  contentBackgroundColor="#8FFE8C" text="{com_dspl_malkey_domain_Freservation.hirestsid}"/>
+						</mx:FormItem>-->
+						<!--Blue 	contentBackgroundColor="#C6CCFA"-->
+						<!--RED 	contentBackgroundColor="#FE8C8C"-->
+						<!--GREEN 	contentBackgroundColor="#8FFE8C"-->		
+						
+						
+						<mx:FormItem label="Hire Type"  styleName="formItemL" labelStyleName="formItemLabel" direction="horizontal" required="true">
+							<controls:_tiMasterFile id="txtHireType"											
+													_acDataProvider="{crFhiretypeSRVListAll.lastResult}"
+													text="@{com_dspl_malkey_domain_Freservation.hiretypeid}"
+													_strKeyColumn="hiretypeid"
+													_strKeyColCaption="Ref Code" 
+													_strDetailColumn="description" 
+													_strDetailColCaption="description"
+													_strWindowTitle="Select Hire Type"
+													width="100"
+													editable="false" 
+													_onReturnFromSearchGrid="txtHireType__onReturnFromSearchGridHandler(event)"
+													/>
+							
+							<s:TextInput 
+								text="{genericFunctions.getArrayCollection(txtHireType._acDataProvider,'hiretypeid',com_dspl_malkey_domain_Freservation.hiretypeid).description}"
+								keyDown="{txtHireType.launchSearchGrid();}"
+								width="300"
+								id="txtHiretype"
+								/>
+							
+							<!--keyUp="{if(event.keyCode.toString()=='119'){txtHireType.launchSearchGrid();}}"-->
+							<mx:LinkButton label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtHireType.launchSearchGrid()}"/>
+						</mx:FormItem>
+
+						
+						<mx:FormItem label="Hire Status"  styleName="formItemL" labelStyleName="formItemLabel" direction="horizontal">
+							<controls:_tiMasterFile id="txtHireStatus"											
+													_acDataProvider="{crFhirestatusSRVListAll.lastResult}"
+													text="@{com_dspl_malkey_domain_Freservation.cohirestsid}"
+													_strKeyColumn="hirestsid"
+													_strKeyColCaption="Hire Status" 
+													_strDetailColumn="description" 
+													_strDetailColCaption="description"
+													_strWindowTitle="Select Hire Status"
+													width="100"
+													editable="false" 
+													_onReturnFromSearchGrid="setTransactionStatus();"
+													/>
+							<s:TextInput text="{genericFunctions.getArrayCollection(txtHireStatus._acDataProvider,'hirestsid',com_dspl_malkey_domain_Freservation.cohirestsid).description}" 
+										 keyUp="textinput1_keyUpHandler(event)"
+										 width="300"
+										 />
+							
+							<mx:LinkButton label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtHireStatus.launchSearchGrid();setTransactionStatus()}"/>
+						</mx:FormItem>
+						<mx:FormItem label="Remarks"   styleName="formItemL" labelStyleName="formItemLabel" >
+							<s:TextArea width="614" height="64" id="txtRemarks" text="@{com_dspl_malkey_domain_Freservation.remarks}"/>
+						</mx:FormItem>
+						<mx:FormItem label="Report Address"   styleName="formItemL" labelStyleName="formItemLabel" >
+							<s:TextArea width="614" height="64" id="txtItinerary" text="{com_dspl_malkey_domain_Freservation.itinerary}"/>
+						</mx:FormItem>
+						
+<!--							</mx:VBox>
+						</mx:HBox>-->
+					</mx:Form>
+		</s:NavigatorContent>
+			<!--Hire types and quatation details-->			
+
+			
+			<!--Tab1	Customer-->
+			<s:NavigatorContent label="Customer" width="100%" height="100%">
+				<local:CustomerDetails 
+					id="cmpCustomerDetails"
+					acClientListAll="{crfdebtorSRVListAll.lastResult}"
+					acClientTypeListAll="{crFclienttypeSRVListAll.lastResult}"
+					acGuarantorListAll="{crFguarantorSRVListAll.lastResult}"
+					com_dspl_malkey_domain_Freservation="{com_dspl_malkey_domain_Freservation}"
+					change="customer_changeHandler(event)"
+					 x="0" y="10"/>
+			</s:NavigatorContent>
+			
+			
+			<!--Tab2	Vehicle-->
+			<s:NavigatorContent label="Vehicle" width="100%" height="100%">
+
+
+
+						
+						<local:VehicleDetails 
+							id="cmpVehicleDetails"
+							acVehicleAll="{crFvehicleSRVListAll.lastResult}"
+							acVehicleClassAll="{crFvehicleclassSRVListAll.lastResult}"
+							acVehicleTransAll="{crFvehicletransSRVListAll.lastResult}"
+							acVehicleTypeAll="{crFvehicletypeSRVListAll.lastResult}"
+							acVehicleMake="{crFvehiclemakeSRVListAll.lastResult}"
+							acVehicleModelAll="{crFvehiclemakeSRVListAll.lastResult}"
+							acVehicleAvailableAll="{crVehiclesearchSRVsearchVehicles.lastResult}"
+							com_dspl_malkey_domain_Freservation="{com_dspl_malkey_domain_Freservation}"
+							clientType="{com_dspl_malkey_domain_Fdebtor.clienttype}"
+							stCurrent="{currentState}"
+							width="100%"
+							height="100%"
+							verticalCenter="0"
+							horizontalCenter="0"
+							change="cmpVehicleDetails_changeHandler(event)"
+							/>
+				
+			</s:NavigatorContent>
+			
+			
+			<!--Tab3	Rental-->
+			<s:NavigatorContent label="Accessories/Other-Services" width="100%" height="100%">
+				
+				
+				<local:AccessoryService 
+					id="cmpAccessoryService"
+					acAccessoryListAll="{crFaccessoryListAll.lastResult}"
+					clientType="{com_dspl_malkey_domain_Fdebtor.clienttype}"
+					x="4" y="0"
+					width="590"
+					height="100%"
+					acRateType="{crFratetypeSRVlistAll.lastResult}"
+					/>
+				
+				<local:OtherService
+					id="cmpOtherService"
+					acOtherService="{crFothersrvSRVListAll.lastResult}"
+					x="600" y="0"
+					width="100%"
+					height="100%"
+					clientType="{com_dspl_malkey_domain_Fdebtor.clienttype}"
+					acRateType="{crFratetypeSRVlistAll.lastResult}"
+					acTime="{acTime}"
+					/>
+				
+			</s:NavigatorContent>
+
+			
+			<!--Tab4	Driver-->
+			<s:NavigatorContent label="Driver" width="100%" height="100%">
+				
+				<local:DriverDetails
+					id="cmpDriverDetails"
+					acCustomerDrivers="{crFclientdriverSRVListAll.lastResult}"
+					acMalkeyDrivers="{crDriverListAllResult.lastResult}"
+					acClientListAll="{crfdebtorSRVListAll.lastResult}"
+					com_dspl_malkey_domain_Freservation="{com_dspl_malkey_domain_Freservation}"
+					creationComplete="cmpDriverDetails_creationCompleteHandler(event)"
+					acDriverRate="{crFdriverrateSRVListAll.lastResult}"
+					clientType="{com_dspl_malkey_domain_Fdebtor.clienttype}"
+					com_dspl_malkey_domain_Fresdriverrate="{crFresdriverrateSRVfindByResno.lastResult}"
+					stCurrent="{currentState}"
+					width="100%"
+					height="100%"
+					/>
+				
+
+			</s:NavigatorContent>
+	
+			<!--Tab5	Rates-->
+			<s:NavigatorContent label="Rates" width="100%" height="100%">
+
+				<local:Rates 
+					id="cmpRates"
+					acAddchgs="{crFaddchargeSRVListAll.lastResult}" 
+					acPaymentType="{crFpaytypeSRVListAll.lastResult}"
+					acRatesAccessory="{cmpAccessoryService.acResAccessory}"
+					acRatesOthersrv="{cmpOtherService.acResothsrv}"
+					acAccessoryListAll="{crFaccessoryListAll.lastResult}"
+					acMalkeyDrivers="{crDriverListAllResult.lastResult}"
+					acOtherServiceListAll="{crFothersrvSRVListAll.lastResult}"
+					com_dspl_malkey_domain_Fresvehicle="{cmpVehicleDetails.acResVehicle.length!=0 ? (cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle) : null }"
+					com_dspl_malkey_domain_Fresdriver="{cmpDriverDetails.acResMalkeyDrivers.length!=0 ? (cmpDriverDetails.acResMalkeyDrivers.getItemAt(0) as Com_dspl_malkey_domain_Fresdriver) : null }"
+					isMalkeyDriver="{com_dspl_malkey_domain_Freservation.hiretypeid == 'SD' ? false : true}"
+					clientType="{com_dspl_malkey_domain_Fdebtor.clienttype}"
+					acVehicleAll="{crFvehicleSRVListAll.lastResult}"
+					com_dspl_malkey_domain_Freservation="{com_dspl_malkey_domain_Freservation}"
+					width="100%"
+					/>
+				<!--driver="{cmpDriverDetails.rbgMDrivers.selectedValue as Com_dspl_malkey_domain_Femployee}"-->
+			</s:NavigatorContent>
+		
+			<!--Tab6	Check-Out-->
+			<s:NavigatorContent id="ncCO" label="Check-Out" width="100%" height="100%">
+				<local:CheckOut 
+					id="cmpCheckOut"
+					x="21" y="10"
+					stCurrent="{currentState}"
+					acVehicleTypeAll="{crFvehicletypeSRVListAll.lastResult}"
+					acVehicleAll="{crFvehicleSRVListAll.lastResult}"
+					acVehicleMake="{crFvehiclemakeSRVListAll.lastResult}"
+					acFvinventrylist="{crfvinventrylistSRVListAll.lastResult}"
+					com_dspl_malkey_domain_Freservation="@{com_dspl_malkey_domain_Freservation}"
+					com_dspl_malkey_domain_Fresvehicle="{cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle}"
+					
+					/>
+			</s:NavigatorContent>
+		
+			<!--Tab7	Check-In-->
+			<s:NavigatorContent id="ncCI" label="Check-In" width="100%" height="100%" >
+				<!--excludeFrom="stNew"-->
+				<local:CheckIn
+					id="cmpCheckIn"
+					x="21" y="10"
+					stCurrent="{currentState}"
+					acVehicleTypeAll="{crFvehicletypeSRVListAll.lastResult}"
+					acVehicleAll="{crFvehicleSRVListAll.lastResult}"
+					acVehicleMake="{crFvehiclemakeSRVListAll.lastResult}"
+					acFvinventrylist="{ObjectUtil.copy(crfvinventrylistSRVListAll.lastResult) as ArrayCollection}"
+					acFhirestatus="{crFhirestatusSRVListAll.lastResult}"
+					com_dspl_malkey_domain_Freservation="@{com_dspl_malkey_domain_Freservation}"
+					com_dspl_malkey_domain_Fresvehicle="{cmpVehicleDetails.acResVehicle.getItemAt(0) as Com_dspl_malkey_domain_Fresvehicle}"
+					com_dspl_malkey_domain_Fresdriver="{cmpDriverDetails.acResMalkeyDrivers.length!=0 ? (cmpDriverDetails.acResMalkeyDrivers.getItemAt(0) as Com_dspl_malkey_domain_Fresdriver) : null }"
+					/>
+
+				
+			</s:NavigatorContent>
+		
+			<!--Tab8	Summary-->
+			<s:NavigatorContent label="Summary" width="100%" height="100%">
+				<mx:Form  x="5" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 height="408" width="554">
+					<mx:FormItem label="Hire Type" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput width="305" id="txtSummaryHireType" 
+									 text="{genericFunctions.getArrayCollection(txtHireType._acDataProvider,'hiretypeid',com_dspl_malkey_domain_Freservation.hiretypeid).description}"
+									 editable="false"
+									 />
+					</mx:FormItem>
+					<mx:FormItem label="From" direction="horizontal" styleName="formItemL"  labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="100" 
+							id="txtSummaryFrom" 
+							text="{dateFormatter.format( com_dspl_malkey_domain_Freservation.dout.toDateString())}"
+							editable="false"
+							/>
+						<!--<mx:FormItem label="To" >-->
+							<mx:Label text="To"/>
+							<s:TextInput 
+								width="100"  
+								id="txtSummaryTo"  
+								text="{dateFormatter.format( DateOperation.dateAdd('d', nsNumDays.value,dtDateOut.selectedDate).toDateString())}"
+								editable="false"
+								/>
+					<!--	</mx:FormItem>-->
+					</mx:FormItem>
+					<mx:FormItem label="Extended From" direction="horizontal" styleName="formItemL"  labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="100"  
+							id="txtSummaryExtendedFrom"
+							editable="false"
+							/>
+						<!--<mx:FormItem label="To">-->
+						<mx:Label text="To"/>
+							<s:TextInput 
+								width="100"  
+								id="txtSummaryExtendedTo"
+								editable="false"
+								/>
+						<!--</mx:FormItem>-->
+					</mx:FormItem>
+					<mx:FormItem label="Rental" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="305"   
+							id="txtSummaryRental"
+							editable="false"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Tax" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="305"    
+							id="txtSummaryTax"
+							editable="false"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Ref Deposit" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="305"    
+							id="txtSummaryRefDeposit"  
+							text="{com_dspl_malkey_domain_Freservation.deposit}"
+							editable="false"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Allocated Mileage" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput  
+							width="50"    
+							id="txtSummaryAllocatedMileage" 
+							text="{cmpRates.com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.allotedkms}" 
+							toolTip="Allocated Killo Meeters Per Day"
+							editable="false"
+							/>
+						<s:Label text="x" height="18" verticalAlign="bottom"/>
+						<s:TextInput 
+							width="50"    
+							id="txtSummaryAllocatedMileageDays" 
+							text="{cmpRates.com_dspl_malkey_domain_Freservation.chargdays}" 
+							toolTip="Number of Days"
+							editable="false"
+							/>
+						<s:Label text="=" height="18" verticalAlign="bottom"/>
+						<s:TextInput 
+							width="100"    
+							id="txtSummaryAllocatedMileageTotal"  
+							toolTip="(Total Allocated Killo Metters) = (Allocated Killo Meeters Per Day) x (Number of Days)"
+							text="{cmpRates.com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.allotedkms * cmpRates.com_dspl_malkey_domain_Freservation.chargdays}"
+							editable="false"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Completed Mileage" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="50"    
+							id="txtSummaryUsedMileageCheckIn"  
+							toolTip="CheckIn Meeter Reading" 
+							text="{com_dspl_malkey_domain_Freservation.cimileage}"
+							editable="false"
+							/>
+						<s:Label text="-" height="18" verticalAlign="bottom"/>
+						<s:TextInput 
+							width="50"    
+							id="txtSummaryUsedMileageCheckOut" 
+							text="{com_dspl_malkey_domain_Freservation.comileage}"   
+							toolTip="CheckOut Meeter Reading"
+							editable="false"
+							/>
+						<s:Label text="=" height="18" verticalAlign="bottom"/>
+						<s:TextInput 
+							width="100"    
+							id="txtSummaryUsedMileageTotal"
+							toolTip="(Total Used Mileage) = (CheckIn Meeter Reading) - (CheckIn Meeter Reading)"
+							text="{com_dspl_malkey_domain_Freservation.cimileage - com_dspl_malkey_domain_Freservation.comileage}"
+							editable="false"
+							/>
+					</mx:FormItem>
+					
+
+					<mx:FormItem label="Excess Mileage" direction="horizontal" width="100%" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="50" 
+							id="txtSummaryExcessMileage" 
+							text="{com_dspl_malkey_domain_Freservation.cixsmileage}"
+							toolTip="(Used Mileage - Allocated Mileage) = {txtSummaryUsedMileageTotal.text} - {txtSummaryAllocatedMileageTotal.text}"
+							editable="false"
+							/>
+						<s:Label text="@ Rs" height="18" verticalAlign="bottom" width="44"/>
+						<s:TextInput 
+							width="50"     
+							id="txtSummaryExcessMileageRate" 
+							text="{cmpRates.com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.xsmilerate}"
+							editable="false"
+							/>
+						<s:Label text="per KM"  height="18" width="50"  verticalAlign="bottom"/>
+						<s:Label text="=" height="18" verticalAlign="bottom"/>
+						<s:TextInput 
+							width="100"     
+							id="txtSummaryExcessMileageRateTotal" 
+							text="{(new Number(cmpRates.com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.xsmilerate) * com_dspl_malkey_domain_Freservation.cixsmileage).toFixed(2)}"
+							contentBackgroundColor="#E9FCE9"
+							editable="false"
+							textAlign="right"
+							/>
+						
+					</mx:FormItem>
+<!--					<mx:FormItem label="Excess Mileage(Amt)" direction="horizontal" width="420">
+						<s:TextInput width="100"     id="txtSummaryExcessMileageAmt" text="{com_dspl_malkey_domain_Freservation.cixsmileagers}"/>
+					</mx:FormItem>-->
+					<mx:FormItem label="Detention" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="50" 
+							id="txtSummaryDetention" 
+							text="{com_dspl_malkey_domain_Freservation.cidetenhrs}"
+							editable="false"
+							/>
+						<s:Label text="@ Rs" height="18" verticalAlign="bottom" width="44"/>
+						<s:TextInput 
+							width="50"  
+							id="txtSummaryDetentionRs" 
+							text="{cmpRates.com_dspl_malkey_domain_Fresdriver.fresdriverrate.otrate}"
+							editable="false"
+							/>
+						<s:Label text="per Hour" height="18" width="50" verticalAlign="bottom"/>
+						<s:Label text="=" height="18" verticalAlign="bottom"/>
+						<s:TextInput 
+							width="100"  
+							id="txtSummaryDetentionRsTotal" 
+							text="{(new Number(cmpRates.com_dspl_malkey_domain_Fresdriver.fresdriverrate.otrate) * com_dspl_malkey_domain_Freservation.cidetenhrs).toFixed(2)}"
+							contentBackgroundColor="#E9FCE9"
+							editable="false"
+							textAlign="right"
+							/>
+						
+					</mx:FormItem>
+					<!--com_dspl_malkey_domain_Fresvehicle.fresvehiclerate-->
+<!--					<mx:FormItem label="Night Out" direction="horizontal">
+						<s:TextInput width="91"  id="txtSummaryNightOut"/>
+						<s:Label text="@ Rs" height="18" verticalAlign="bottom" width="44"/>
+						<s:TextInput width="87"/>
+						<s:Label text="per Day" height="18" verticalAlign="bottom"/>
+					</mx:FormItem>-->
+					<mx:FormItem label="Out of Colombo" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="50"   
+							id="txtSummaryOutofColombo" 
+							text="{com_dspl_malkey_domain_Freservation.cinightout}"
+							editable="false"
+							/>
+						<s:Label text="@ Rs" height="18" verticalAlign="bottom" width="44"/>
+						<s:TextInput 
+							width="50" 
+							id="txtSummaryOutofColomboRs" 
+							text="{cmpRates.com_dspl_malkey_domain_Fresdriver.fresdriverrate.nightoutrate}"
+							editable="false"
+							/>
+						<s:Label text="per Day" height="18" width="50" verticalAlign="bottom"/>
+						
+						<s:Label text="=" height="18" verticalAlign="bottom"/>
+						<s:TextInput 
+							width="100" 
+							id="txtSummaryOutofColomboRsTotal" 
+							text="{(new Number(cmpRates.com_dspl_malkey_domain_Fresdriver.fresdriverrate.nightoutrate) * com_dspl_malkey_domain_Freservation.cinightout).toFixed(2)}"
+							contentBackgroundColor="#E9FCE9"
+							editable="false"
+							textAlign="right"
+							/>
+						
+					</mx:FormItem>
+					<mx:FormItem label="Other (Rs)" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="91"  
+							id="txtSummaryOther" 
+							text="{com_dspl_malkey_domain_Freservation.ciother}"
+							contentBackgroundColor="#E9FCE9"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Damage (Rs)" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="91"   
+							id="txtSummaryDamage" 
+							text="{com_dspl_malkey_domain_Freservation.cidamage}"
+							contentBackgroundColor="#E9FCE9"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					
+					<mx:FormItem label="Sub Total" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							id="txtSubTotalClaimAmt"  
+							contentBackgroundColor="#C6CCFA"
+							editable="false"
+							text="{(new Number(txtSummaryExcessMileageRateTotal.text)+
+							new Number(txtSummaryDetentionRsTotal.text)+
+							new Number(txtSummaryOutofColomboRsTotal.text)+
+							new Number(txtSummaryDamage.text)+
+							new Number(txtSummaryOther.text)).toFixed(2)}"
+							textAlign="right"
+							width="91"   
+							/>
+					</mx:FormItem>
+					
+				</mx:Form>
+				<mx:Form height="120" x="578" y="210"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="426">
+					<s:Label text="Summary of Charges" fontWeight="bold"/>
+					<mx:FormItem label="Total Payable" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="137"
+							id="txtTotalPayable"
+							text="{(
+							(new Number(cmpRates.com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.xsmilerate) * com_dspl_malkey_domain_Freservation.cixsmileage)+
+							(new Number(cmpRates.com_dspl_malkey_domain_Fresdriver.fresdriverrate.otrate) * com_dspl_malkey_domain_Freservation.cidetenhrs)+
+							(new Number(cmpRates.com_dspl_malkey_domain_Fresdriver.fresdriverrate.nightoutrate) * com_dspl_malkey_domain_Freservation.cinightout)+
+							new Number(com_dspl_malkey_domain_Freservation.ciother)+
+							new Number(com_dspl_malkey_domain_Freservation.cidamage)+
+							new Number(cmpRates.txtVehicleTotal.text)+
+							new Number(cmpRates.txtDriverTotal.text)+
+							new Number(cmpRates.txtTotalAccesories.text)+
+							new Number(cmpRates.txtTotalOther.text)+
+							new Number(cmpRates.txtTotalAddCharge.text)).toFixed(2)
+							}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Amount Paid" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="137" 
+							text="{com_dspl_malkey_domain_Freservation.advance}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Balance Payable" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+						<s:TextInput 
+							width="137" 
+							text="{ (new Number(txtTotalPayable.text)-new Number(com_dspl_malkey_domain_Freservation.advance)).toFixed(2)}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					
+				</mx:Form>
+				
+				<mx:Form height="200" x="578" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 label="Amounts Summury"
+						 width="300" >
+					<s:Label text="Summary of Charges" fontWeight="bold"/>
+					<mx:FormItem label="Driver Services" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144"  
+							text="{cmpRates.txtDriverTotal.text}" 
+							editable="false"
+							textAlign="right"
+							/>
+						<!--						<s:TextInput width="144"  text="{cmpRates.txtDriverDiscount.text}"/>-->
+					</mx:FormItem>
+					<mx:FormItem label="Vehicle Services" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144"  
+							text="{cmpRates.txtVehicleTotal.text}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Accessories" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144" 
+							text="{cmpRates.txtTotalAccesories.text}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Other Services" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144"  
+							text="{cmpRates.txtTotalOther.text}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Additional Charges" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144"  
+							text="{cmpRates.txtTotalAddCharge.text}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Sub Total" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							id="txtSubTotalChargesAmt"  
+							contentBackgroundColor="#C6CCFA"
+							editable="false"
+							text="{(new Number(cmpRates.txtDriverTotal.text)+
+							new Number(cmpRates.txtVehicleTotal.text)+
+							new Number(cmpRates.txtTotalAccesories.text)+
+							new Number(cmpRates.txtTotalOther.text)+
+							new Number(cmpRates.txtTotalAddCharge.text)).toFixed(2)}"
+							width="144"  
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					
+
+					
+				</mx:Form>
+				
+				<!--Discounts-->
+				<mx:Form height="170" x="888" y="0"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="304">
+					<s:Label text="Summary of Discounts Charges" fontWeight="bold"/>
+					<mx:FormItem label="Accessories" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144" 
+							text="{cmpRates.txtTotalDiscountAccesories.text}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Other Services" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144"  
+							text="{cmpRates.txtTotalDiscountOther.text}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Driver Services" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144"  
+							text="{cmpRates.txtDriverDiscount.text}" 
+							editable="false"
+							textAlign="right"
+							/>
+<!--						<s:TextInput width="144"  text="{cmpRates.txtDriverDiscount.text}"/>-->
+					</mx:FormItem>
+					<mx:FormItem label="Vehicle Services" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							width="144"  
+							text="{cmpRates.txtVehicleDiscountAmt.text}"
+							editable="false"
+							textAlign="right"
+							/>
+					</mx:FormItem>
+					<mx:FormItem label="Sub Total" styleName="formItemL" labelStyleName="formItemLabel">
+						<!--should chage direct access of copmponenet-->
+						<s:TextInput 
+							id="txtSubTotalDiscountAmt"  
+							contentBackgroundColor="#C6CCFA"
+							editable="false"
+							text="{(new Number(cmpRates.txtTotalDiscountAccesories.text)+
+							new Number(cmpRates.txtTotalDiscountOther.text)+
+							new Number(cmpRates.txtDriverDiscount.text)+
+							new Number(cmpRates.txtVehicleDiscountAmt.text)).toFixed(2)}"
+							textAlign="right"
+							width="144"  
+							/>
+					</mx:FormItem>
+				</mx:Form>
+				
+			</s:NavigatorContent>
+		
+		</mx:TabNavigator>
+<!--		<s:Label x="14" y="524" text="Last Modified By:{com_dspl_malkey_domain_Freservation.adduser}" visible.stNew="false" visible.stUndo="false"/>
+		-->
+	<mx:FormItem x="14" y="545" width="500" direction="horizontal"   visible.stNew="false" visible.stUndo="false">
+		<s:Label text="Last Modified By: {com_dspl_malkey_domain_Freservation.adduser}"/>
+		<mx:Spacer width="30%"/>
+		<s:Label text="On: {dateFormatter.format(com_dspl_malkey_domain_Freservation.adddate)}"/>
+	</mx:FormItem>
+	
+	<!--</s:Panel>-->
+</s:TitleWindow>

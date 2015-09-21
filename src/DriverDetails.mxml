@@ -1,0 +1,2404 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Project: 	malkey-screens	
+File:		DriverDetails.mxml	
+Date:		Apr 8, 2011	
+Author:		Sanka Senavirathna-Administrator
+-->
+
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:valueObjects="com.dspl.malkey.valueObjects.*"
+		 xmlns:controls="com.dspl.efinac.components.common.controls.*" 
+		 xmlns:services="com.dspl.malkey.services.*"
+		 width="100%" height="100%" 
+		creationComplete="group1_creationCompleteHandler(event)"
+		initialize="group1_initializeHandler(event)"
+		 disabledAlpha="1"
+		  >
+
+<!--	enabled="{isEnable}"-->
+	<!--METADATA here-->
+	<fx:Metadata>
+		[Event(name="dateChange",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<fx:Binding source="{stCurrent}" destination="currentState"/>
+	<s:states>
+		<s:State name="State1"   id="State1"/>
+		<s:State name="stDelete" id="stDelete"/>
+		<s:State name="stEdit" id="stEdit"/>
+		<s:State name="stNew"    id="stNew"/>
+		<s:State name="stView"  id="stView"/>
+		<s:State name="stUndo"  id="stUndo"/>
+	</s:states>
+	
+	
+	<!--View Tier-->
+<!--	<mx:HBox height="100%" horizontalGap="20">-->
+		<mx:VBox width="72%" height="95%" paddingLeft="20" >
+			<mx:TabNavigator  
+				id="vsDriver" 
+				selectedIndex="{com_dspl_malkey_domain_Freservation.hiretypeid == 'SD' ? 1 : 0}"
+				height="100%"
+				width="100%"
+				creationPolicy="all"
+				disabledOverlayAlpha="0"
+				borderAlpha="0.10"
+				>
+	
+		
+				
+					<s:NavigatorContent  label="Malkey Driver Allocation" >
+						
+								<mx:Form height="90%" 
+										 borderAlpha="0.10"
+										 paddingTop="5"
+										 paddingLeft="5"
+										 paddingRight="5"
+										 paddingBottom="2"
+										 borderColor="black"
+										 borderStyle="solid"
+										 borderVisible="true" 
+										 width="100%"
+										 enabled="{isEnable}"
+										 disabledOverlayAlpha="0"
+										 >
+									
+					
+									
+									
+									<!--<s:Label text="Malkey Driver Details" fontWeight="bold"/>-->
+					
+									<s:VGroup enabled="{formEnable}" disabledAlpha=".7">					
+									<mx:FormItem label="Allocate For" 	direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel"  required="true" label.State1="Hire/Other Service">
+										<s:RadioButton  label="Hire" 			groupName="rbgIsOtherSerice" value="false" tabIndex="0"/>
+										<s:RadioButton  label="Other Service" 	groupName="rbgIsOtherSerice" value="true" tabIndex="1"/>
+										<mx:FormItem label="Other Service" 		direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel" horizontalGap="0" required="true" visible="{rbgIsOtherSerice.selectedValue}">
+											<controls:_tiMasterFile id="txtOtherSrv"											
+																	_acDataProvider="{acResothsrv }"
+																	text="{com_dspl_malkey_domain_Fresdriver.srvid}"
+																	_strKeyColumn="id.srvid"
+																	_strKeyColCaption="Service" 
+																	_strDetailColumn="id.dfrom" 
+																	_strDetailColCaption="From Date"
+																	_strWindowTitle="Select Other Service"
+																	otherColumns="id.timeout,id.dto,id.timein,rate"
+																	otherColumnHeaderText="From Time,To Date,To Time,Rate"
+																	editable="false"
+																	width="0"
+																	visible="false"
+																	_onReturnFromSearchGrid="txtOtherSrv__onReturnFromSearchGridHandler(event)"
+																	/>
+											<s:TextInput text="{ genericFunctions.getArrayCollection(acOtherService,'srvid',(txtOtherSrv.text)).description}" 
+														 keyUp="if(event.keyCode.toString()=='119'){txtOtherSrv.launchSearchGrid();}" 
+														 tabIndex="2"
+														 />
+											<mx:LinkButton id="lnkOtherSrv" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtOtherSrv.launchSearchGrid();}"/>
+										</mx:FormItem>	
+									</mx:FormItem>	
+					
+									
+									<mx:FormItem label="Date Out" direction="horizontal" width="100%"  styleName="formItemL" labelStyleName="formItemLabel"  required="true" disabledOverlayAlpha="0.9">
+										<mx:DateField width="100" id="dtDateOut" 
+													  selectedDate="{startDate}"
+													  selectableRange="{{rangeStart :startDate,rangeEnd :endDate}}"
+													  enabled="false"
+													  formatString="@Resource(key='dateFormat',bundle='resource')"
+													  />
+					<!--					<mx:DateField width="100" id="dtDateOut" 
+													  selectedDate="{com_dspl_malkey_domain_Freservation.dout}"
+													  selectableRange="{{rangeStart :com_dspl_malkey_domain_Freservation.dout,rangeEnd :com_dspl_malkey_domain_Freservation.din}}"
+													  enabled="false"
+													  />-->
+										
+										<!--<mx:FormItem label="Time :" direction="horizontal" width="100%"  styleName="formItemL" labelStyleName="formItemLabel"  required="true" disabledOverlayAlpha="0.9">-->
+														
+										<mx:Label  text="  Time :"/>
+										<s:ComboBox 
+											id="cmbTimeOut" 
+											dataProvider="{acTime}" 
+											selectedIndex="{acTime.getItemIndex(startTime)}" 
+											width="75" 
+											enabled="false"
+											restrict="0-9,:"
+											/>
+										<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+										
+										
+										<mx:FormItem label="Num. Days" styleName="formItemL" labelStyleName="formItemLabel"  required="true">
+											<s:NumericStepper 
+												id="nsNumDays" 
+												maximum="366" 
+												minimum="0" 
+												width="100"
+												enabled="false"
+												/>
+										</mx:FormItem>
+										<!--</mx:FormItem>-->
+									</mx:FormItem>
+									
+					
+									
+									<mx:FormItem label="Date In" direction="horizontal"  styleName="formItemL" labelStyleName="formItemLabel"  required="true"  disabledOverlayAlpha="0.9">
+										<mx:DateField width="100" id="dtDateIn" 
+													  enabled="false"
+													  formatString="@Resource(key='dateFormat',bundle='resource')"
+													  />
+										<!--<mx:FormItem label="Time :" direction="horizontal"  styleName="formItemL" labelStyleName="formItemLabel"  required="true"  disabledOverlayAlpha="0.9">-->
+
+										<mx:Label  text="  Time :"/>
+										<s:ComboBox 
+											id="cmbTimeIn" 
+											dataProvider="{acTime}" 
+											selectedIndex="{acTime.getItemIndex(endTime)}"  
+											width="75" 
+											enabled="false"
+											restrict="0-9,:"
+											/>
+										<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+										<mx:LinkButton id="btnNext" label="Fix Date" 	color="#0A33BB" textDecoration="underline"  visible="{!btnEdit.visible}"/>
+										<mx:LinkButton id="btnEdit" label="Change Date" color="#0A33BB" textDecoration="underline"  visible="{!btnNext.visible}" click="popupDatePicker();"/>
+									</mx:FormItem>
+									<!--</mx:FormItem>-->
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									<mx:FormItem label="Malkey Out Date" direction="horizontal"  styleName="formItemL" labelStyleName="formItemLabel"  required="true"  disabledOverlayAlpha="0.9">
+										<mx:DateField width="100" id="dtDateOutM" 
+													  enabled="true"
+													  formatString="@Resource(key='dateFormat',bundle='resource')"
+													  />
+										<!--<mx:FormItem label="Time :" direction="horizontal"  styleName="formItemL" labelStyleName="formItemLabel"  required="true"  disabledOverlayAlpha="0.9">-->
+										<mx:Label  text="  Time :"/>
+										<s:ComboBox 
+											id="cmbTimeOutM" 
+											dataProvider="{acTime}" 
+											selectedIndex="{acTime.getItemIndex(com_dspl_malkey_domain_Fresdriver.timemalkeyout)}"  
+											width="75" 
+											enabled="true"
+											restrict="0-9,:"
+											/>
+										<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+									</mx:FormItem>
+									<!--</mx:FormItem>-->
+									
+									
+									
+									
+									
+									<mx:FormItem label="Driver" 		direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel" horizontalGap="0" required="true">
+										<controls:_tiMasterFile id="txtDriver"											
+																_acDataProvider="{/*acAvailableDrivers *//*acMalkeyDrivers*/crDriverListAllResult.lastResult }"
+																text="{com_dspl_malkey_domain_Femployee.empid}"
+																_strKeyColumn="empid"
+																_strKeyColCaption="Employee" 
+																_strDetailColumn="name" 
+																_strDetailColCaption="Name"
+																_strWindowTitle="Select Driver"
+																otherColumns="nicno,dlno"
+																otherColumnHeaderText="NIC No,DLNO"
+																editable="false"
+																width="100"
+																visible="true"
+																_onReturnFromSearchGrid="txtDriver__onReturnFromSearchGridHandler(event)"
+																/>
+										<mx:TextInput text="{com_dspl_malkey_domain_Femployee.name}" 
+													 doubleClick="{driverListAllProxy();}" 
+													 doubleClickEnabled="true"
+													 id="txtDriverDetails"	
+													 tabIndex="3"
+													 editable="false"
+													 />
+										<mx:LinkButton id="lnkDriver" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{driverListAllProxy();}"/>
+									</mx:FormItem>
+									<mx:FormItem label="NIC" 			direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+										<s:TextInput text="{com_dspl_malkey_domain_Femployee.nicno}" editable="false" width="100" tabIndex="4"/>
+										<mx:FormItem label="Licence No" 	direction="horizontal" styleName="formItem" labelStyleName="formItemLabel">
+											<s:TextInput text="{com_dspl_malkey_domain_Femployee.dlno}" editable="false" width="100"/>
+										</mx:FormItem>
+										<mx:FormItem label="Mobile No" 	direction="horizontal" styleName="formItems" labelStyleName="formItemLabel">
+											<s:TextInput text="{com_dspl_malkey_domain_Femployee.mobilephone1}" editable="false" width="100"/>
+										</mx:FormItem>
+									</mx:FormItem>
+									<mx:FormItem label="Licence Expire Date" 	direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+										<mx:TextInput text="{dateFormatter.format(com_dspl_malkey_domain_Femployee.dldexp)}" width="100" editable="false"/> 
+										<mx:TextInput 
+											text="Licence Expired" 
+											width="100"  
+											visible="false" 
+											color="red"
+											borderVisible="false"
+											id="txtLEXP"
+											editable="false"/> 
+										<!--<mx:FormItem label="Remarks" 	direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">-->
+										<mx:Label text="Remarks"/>
+											<mx:TextInput id="txtRemarks" text="{com_dspl_malkey_domain_Fresdriver.remarks}" width="400" editable="true"/> 
+										<!--</mx:FormItem>-->
+									</mx:FormItem>
+									
+
+					
+					
+									</s:VGroup>									
+					
+									
+									<mx:FormItem >
+										<mx:HBox horizontalAlign="center">
+											<s:Button id="btnAddMalkeyDriver" 			label="Add" 	 	enabled="{!btnCancleMalkeyDriver.enabled}" 						click="btnAddMalkeyDriver_clickHandler(event)"	tabIndex="5"/>
+											<s:Button id="btnEditMalkeyDriver" 			label="Edit" 	 	enabled="{dgMalkeyDrivers.selectedIndex !=-1 ? true : false}" 	click="btnEditMalkeyDriver_clickHandler(event)"	tabIndex="6"/>
+											<s:Button id="btnSetPriorityMalkeyDriver" 	label="Set to Top" 	enabled="{dgMalkeyDrivers.selectedIndex !=-1 ? true : false}"	click="btnSetPriorityMalkeyDriver_clickHandler(event)"	tabIndex="7"/>
+											<s:Button id="btnDeleteMalkeyDriver" 		label="Delete" 	 	enabled="{dgMalkeyDrivers.selectedIndex !=-1 ? true : false}"	click="btnDeleteMalkeyDriver_clickHandler(event)"	tabIndex="8"/>
+											<s:Button id="btnCancleMalkeyDriver" 		label="Reset" 	 	enabled="{dgMalkeyDrivers.selectedIndex !=-1 ? true : false}"   click="btnCancleMalkeyDriver_clickHandler(event)"	tabIndex="9"/>
+											<s:Button id="lnkDriverImg" label="Photo" width="60"  click="lnkDriverImg_clickHandler(event)"/>
+										</mx:HBox>
+									</mx:FormItem>
+									
+<!--									<mx:ProgressBar id="bar" labelPlacement="bottom" chromeColor="Gray"
+													minimum="0" visible="true" maximum="100" label="Current Driver Allocation With Time for Hire 0%" 
+													direction="right" mode="manual" width="100%"/>-->
+									<!--acMalkeyDrivers-->
+									<mx:DataGrid 
+										id="dgMalkeyDrivers" 
+										editable="true" 
+										dataProvider="{acResMalkeyDrivers}" 
+										width="100%" height="150"  
+										verticalScrollPolicy="auto"
+										itemClick="dgMalkeyDrivers_itemClickHandler(event)"
+										keyUp="dgDriver_keyUpHandler(event)"
+										tabIndex="10"
+										>
+										<mx:columns>
+											<!--modification Date Fields-->
+											<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="From" 			width="130" 	labelFunction="lblfDateOut"/>
+											<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="To" 			width="130" 	labelFunction="lblfDateIn"/>
+											<mx:DataGridColumn dataField="id" editable="false" 	headerText="Time Out" 	width="100" 	labelFunction="lblfTimeOut"/>
+											<mx:DataGridColumn dataField="id" editable="false" 	headerText="Time In" 	width="100" 	labelFunction="lblfTimeIn"/>
+											<!--modification Date Fields-->
+											<mx:DataGridColumn dataField="priority" editable="false" 	headerText="Priority" 		width="80" 		/>
+											<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="Name" 			width="170" 	labelFunction="lblfEmployeName"/>
+											<mx:DataGridColumn dataField="id" 		editable="false"  	headerText="NIC " 			width="170" 	labelFunction="lblfEmployeNIC"/>
+											<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="License Number" width="150" 	labelFunction="lblfEmployeDlno"/>
+											<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="T.P(Mobile)" 	width="150" 	labelFunction="lblfEmployeMobilephone"/>
+											<mx:DataGridColumn dataField="srvid" 	editable="false" 	headerText="Service" 		width="150" 	labelFunction="lblfService"/>
+											<mx:DataGridColumn dataField="dispatch" editable="false" 	headerText="Dispatch Status" width="150" 	labelFunction="lblfDispatch"/>
+										<!--<mx:DataGridColumn dataField="isavailabile" editable="false" 	headerText="Availability" 	width="150" 	labelFunction="lblfAvailability"/>-->
+					
+										</mx:columns>
+									</mx:DataGrid>
+					
+									
+					<!-- 				<mx:AdvancedDataGrid 
+										id="treeAdg" 
+										width="100%" 
+										height="100"
+										folderClosedIcon="{null}" 
+										folderOpenIcon="{null}" 
+										defaultLeafIcon="{null}"
+										
+										>
+										<mx:dataProvider>
+											<mx:HierarchicalData source="{acResMalkeyDrivers}" childrenField="priority"/>
+										</mx:dataProvider>
+										<mx:columns>
+											<mx:AdvancedDataGridColumn dataField="id.dout"/>
+											<mx:AdvancedDataGridColumn dataField="id.din"/>
+											<mx:AdvancedDataGridColumn dataField="priority"/>
+											<mx:AdvancedDataGridColumn dataField="id.empid"/>
+											<mx:AdvancedDataGridColumn dataField="id.timeout"/>
+											<mx:AdvancedDataGridColumn dataField="id.timein"/>
+										</mx:columns>
+									</mx:AdvancedDataGrid>-->
+							
+								</mx:Form>
+						
+								
+					</s:NavigatorContent>		
+								
+				<s:NavigatorContent label="Client Driver Allocation" >
+				
+										<mx:Form height="90%" 
+												 borderAlpha="0.10"
+												 paddingTop="5"
+												 paddingLeft="5"
+												 paddingRight="5"
+												 paddingBottom="2"
+												 borderColor="black"
+												 borderStyle="solid"
+												 borderVisible="true" 
+												 width="100%"
+												 enabled="{isEnable}"
+												 disabledOverlayAlpha="0">
+											<s:Label text="Customer Driver Details" fontWeight="bold"/>
+											<s:Label id="txtMsg" fontWeight="bold" color="#FF0000"/>
+											
+											
+											<mx:DataGrid 
+												id="dgCustomerDrivers" 
+												height="220" width="100%" 
+												dataProvider="{acCustomerDrivers}" 
+												editable="true"
+												itemClick="dgCustomerDrivers_itemClickHandler(event)"
+												>
+												<mx:columns>
+													<mx:DataGridColumn dataField="drivername" 	headerText="Name"	editable="false" 	 width="300"/>
+													<!--<mx:DataGridColumn dataField="clientid" 	headerText="clientid" 	width="300"/>-->
+													<mx:DataGridColumn dataField="dlno" 		headerText="License Number"	editable="false"   width="100"/>
+													<mx:DataGridColumn dataField="isSelected" 	editable="true" 	headerText="Selection" 		width="100" rendererIsEditor="true"   editorDataField="selected">
+														<mx:itemRenderer>
+															<fx:Component> 
+																<mx:CheckBox  selected="{data.isSelected}"  textAlign="center" buttonMode="true">
+																	
+																</mx:CheckBox>
+															</fx:Component>
+														</mx:itemRenderer>
+													</mx:DataGridColumn>
+							
+												</mx:columns>
+											</mx:DataGrid>
+										</mx:Form>
+						</s:NavigatorContent>	
+			</mx:TabNavigator>
+		</mx:VBox>
+		
+ 		<mx:VBox  width="20%" height="100%" x="930">
+			<s:Label  text="Front" width="48"/>
+			<mx:Image id="image1" width="300" height="143" />
+			<s:Label  text="Back" width="48"/>
+			<mx:Image id="image0" width="300" height="143"  />
+		</mx:VBox>
+		
+<!--	</mx:HBox>-->
+	
+	
+	
+	
+	<!--Bindings here-->
+	<fx:Binding source="dgMalkeyDrivers.dataProvider as ArrayCollection" destination="acResMalkeyDrivers"/>
+	<fx:Binding source="genericFunctions.getArrayCollection(acAllDrivers,'empid',txtDriver.text) as Com_dspl_malkey_domain_Femployee" destination="com_dspl_malkey_domain_Femployee"/>
+
+	
+	
+	
+	
+	
+	<!--Controller-->
+	<fx:Declarations>
+		
+		<services:FclientdriverSRV 		id="fclientdriverSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FemployeeSRV 			id="femployeeSRV" 		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<s:CallResponder id="crFclientdriverSRVListAll"		result="crFclientdriverSRVListAll_resultHandler(event)"/>
+		<s:CallResponder id="crDriverListAllResult" 		result="crDriverListAllResult_resultHandler(event)"/>
+		<s:CallResponder id="crDriverListByResnoResult" 		result="crDriverListByResnoResult_resultHandler(event)"/>
+		
+		<!--Validators-->
+		
+		<mx:StringValidator id="svDriver"
+							source="{txtDriverDetails}"
+							property="text"
+							trigger="{btnAddMalkeyDriver}" 
+							triggerEvent="click"
+							/>
+		<mx:DateValidator  id="dvFrom"
+						   source="{dtDateOut}"
+						   property="selectedDate"
+						   trigger="{btnAddMalkeyDriver}"
+						   triggerEvent="click"
+						   />
+		<mx:DateValidator  id="dvFromM"
+						   source="{dtDateOutM}"
+						   property="selectedDate"
+						   trigger="{btnAddMalkeyDriver}"
+						   triggerEvent="click"
+						   />
+		<mx:NumberValidator id="svTimeFrom"
+							source="{cmbTimeOut}"
+							property="selectedIndex"
+							trigger="{btnAddMalkeyDriver}" 
+							triggerEvent="click"
+							minValue="0" 
+							maxValue="50" 
+							domain="int" 
+							lowerThanMinError="Required Field"
+							/>
+		<mx:NumberValidator id="svTimeFromM"
+							source="{cmbTimeOutM}"
+							property="selectedIndex"
+							trigger="{btnAddMalkeyDriver}" 
+							triggerEvent="click"
+							minValue="0" 
+							maxValue="50" 
+							domain="int" 
+							lowerThanMinError="Required Field"
+							/>
+		<mx:NumberValidator id="svTimeTo"
+							source="{cmbTimeIn}"
+							property="selectedIndex"
+							trigger="{btnAddMalkeyDriver}" 
+							triggerEvent="click"
+							minValue="0" 
+							maxValue="50" 
+							domain="int"
+							lowerThanMinError="Required Field"
+							/>
+		
+		
+		
+		<!--Formatters here-->
+		<mx:DateFormatter id="dateFormatter" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+		
+		<!--valueObjects/domains here-->
+		<valueObjects:Com_dspl_malkey_domain_Freservation id="com_dspl_malkey_domain_Freservation"/>
+		<valueObjects:Com_dspl_malkey_domain_Fdebtor id="com_dspl_malkey_domain_Fdebtor"/>
+		<valueObjects:Com_dspl_malkey_domain_Femployee id="com_dspl_malkey_domain_Femployee"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresdriver id="com_dspl_malkey_domain_Fresdriver"/>
+		<valueObjects:Com_dspl_malkey_domain_FresdriverPK id="com_dspl_malkey_domain_FresdriverPK"/>
+		
+		<valueObjects:Com_dspl_malkey_domain_Fresothsrv id="com_dspl_malkey_domain_Fresothsrv"/>
+		<valueObjects:Com_dspl_malkey_domain_FresothsrvPK id="com_dspl_malkey_domain_FresothsrvPK"/>
+		
+		<mx:ArrayCollection id="acResMalkeyDrivers"/>
+		<mx:ArrayCollection id="acAvailableDrivers"/>
+		<mx:ArrayCollection id="acAllDrivers"/>
+		<mx:ArrayCollection id="acMalkeyDrivers"/>
+		<mx:ArrayCollection id="acTime"/>
+		<mx:ArrayCollection id="acOtherService"/>
+		<mx:ArrayCollection id="acResothsrv"/>
+		<s:RadioButtonGroup id="rbgIsOtherSerice" selectedValue="{com_dspl_malkey_domain_Fresdriver.issrv}" change="rbgIsOtherSerice_changeHandler(event)"/>
+		
+	</fx:Declarations>
+	
+	
+	<!--Model:Bussiness Logic Here/ActionScript Here-->
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.DateUtil;
+			import com.dspl.efinac.components.common.controls._cbMasterFile;
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.util.DateOperation;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fclientdriver;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdriverrate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Femployee;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresclientdriverPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriverrate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverratePK;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.formatters.Formatter;
+			import mx.managers.PopUpManager;
+			import mx.resources.ResourceManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			import spark.components.supportClasses.Range;
+			
+			
+			
+			
+			
+			
+			
+			
+			[Bindable]public var stCurrent:String;
+			[Bindable]public var acCustomerDrivers:ArrayCollection=new ArrayCollection();
+			/* [Bindable]public var acMalkeyDrivers:ArrayCollection=new ArrayCollection(); */
+			[Bindable]public var acClientListAll:ArrayCollection = new ArrayCollection();
+			[Bindable]public var selectedItem:*=new Object();
+			[Bindable]private var genericFunctions:GenericFunctions=new GenericFunctions();
+			//[Bindable]public var priority:int=1;
+			[Bindable]private var session:Session = Session.getInstance(); 			
+			[Bindable]public var isEnable:Boolean=false;
+			[Bindable]public var startDate:Date=new Date();
+			[Bindable]public var endDate:Date=new Date();
+			[Bindable]public var startTime:String=new String();
+			[Bindable]public var endTime:String=new String();
+			[Bindable]	private var myValidators:Array;
+			[Bindable]public var formEnable:Boolean =true;
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			public function loadData():void
+			{
+				listAllFclientdriverSRV();
+				driverListAll();
+			}
+			
+			
+			protected function listAllFclientdriverSRV():void
+			{
+				if(session.getAttribute("reshed").debcode == null || StringUtil.trim((session.getAttribute("reshed").debcode)).length ==0)
+				{
+					txtMsg.text="Please Select The Client Frist";
+					crFclientdriverSRVListAll.token = fclientdriverSRV.ListAll();
+				}
+				else
+				{
+					if(session.getAttribute("reshed")!=null && session.getAttribute("reshed").debcode!=null){
+					crFclientdriverSRVListAll.token = fclientdriverSRV.findByDebcode(session.getAttribute("reshed").debcode);
+					}
+					else
+					{
+					Message.displayAlert(2,"Please Select Customer","Unable to find Customer");
+					}
+				}
+			}
+			protected function driverListAllProxy():void
+			{
+				if(crDriverListAllResult.lastResult !=null && (crDriverListAllResult.lastResult as ArrayCollection).length>0)
+				{
+					txtDriver.launchSearchGrid();
+				}
+				else
+				{
+					driverListAll();
+				}
+			}
+			protected function driverListAll():void
+			{
+				crDriverListAllResult.token = femployeeSRV.DriverListAll();
+			}
+			
+			protected function crFclientdriverSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				session.setAttribute("acClientdriver",crFclientdriverSRVListAll.lastResult);
+				acCustomerDrivers=crFclientdriverSRVListAll.lastResult;//load all client drivers
+				setClientToDriverDetails();//set client's drivers
+			}
+			protected function crDriverListAllResult_resultHandler(event:ResultEvent):void
+			{
+				session.setAttribute("acDriver",crDriverListAllResult.lastResult);
+				acMalkeyDrivers=crDriverListAllResult.lastResult;
+				acAllDrivers=crDriverListAllResult.lastResult;
+				txtDriver.launchSearchGrid();
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				listAllFclientdriverSRV();
+				//driverListAll();//after call listAllFclientdriverSRV();
+				myValidators = [svDriver,dvFrom,svTimeFrom,svTimeTo,dvFromM,svTimeFromM];
+				// TODO Auto-generated method stub
+				//myValidators = [svDriver,dvFrom,svTimeFrom,svTimeTo,dvFromM,svTimeFromM];
+				//loadData();
+			}
+			
+			
+			
+			/***
+			 * This method get the value from tempory variable called :com_dspl_malkey_domain_Fclient
+			 * And put it into CmpDriverDetails component,try catch use for If component havent created yet.
+			 * Author:Sanka
+			 * */
+			protected function setClientToDriverDetails():void
+			{
+				try{
+					if(com_dspl_malkey_domain_Freservation.hiretypeid=='SD')
+					{
+						//cmpDriverDetails.txtSearchCustomer.text=com_dspl_malkey_domain_Fdebtor.debcode;
+						filter();
+					}
+				}
+				catch(e:Error)
+				{
+					trace("Nullpointer Exception cmpDriverDetails havent created yet");
+					//when the user select the customer/client/debtor  drverDetails component havent created yet.
+				}
+				
+			}
+			
+			
+			
+			
+			//filtering functions
+			//---------------------------------------------------------------------------------------
+			/***
+			 * Original source reference:http://www.flex-blog.com/arraycollection-filter-example/
+			 * ArrayCollection Filter Function
+			 * Author:sanka
+			 * */
+			private var firstTime:Boolean = true;
+			
+			public function filter():void {
+				acCustomerDrivers.filterFunction = filteracCustomerDrivers;
+				acCustomerDrivers.refresh();
+			}
+			
+			private function filteracCustomerDrivers(item:Object):Boolean {
+				if(session.getAttribute("reshed").debcode == null || StringUtil.trim((session.getAttribute("reshed").debcode)).length ==0)
+				{
+					txtMsg.text="Please Select The Client Frist";
+					return false;
+				}
+				else{
+				var searchString:String = session.getAttribute("reshed").debcode.toLowerCase();
+				var itemName:String = (item.debcode as String).toLowerCase();
+				txtMsg.text="";
+				return itemName==searchString;
+				}
+			}
+			
+			private function clearSearchBar():void {
+				
+				if (firstTime == true )
+				{
+					firstTime = false;
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			//---------------------------------------------------------------------------------------
+			private function getSiteLoadURL():String
+			{
+				var trialURLString :String = ResourceManager.getInstance().getString("resource","url");
+				var ar:Array=trialURLString.split('messagebroker/amf');
+				if(ar.length>0)
+				{
+					
+					Alert.show("url:"+ar[0]);
+					var imgUrl:String=ar[0];
+					return imgUrl;
+				
+				}
+				else
+					return null;
+				
+				
+			}
+			
+			
+			private function getLoadImageURL(isfront:Boolean,driver:*):String
+			{
+				var url:String="";
+				if(driver is Com_dspl_malkey_domain_Femployee)
+				{
+					if(isfront){url=driver.dlfrontimage;}
+					else{url=driver.dlbackimage;}
+				}
+				if(driver is Com_dspl_malkey_domain_Fclientdriver)
+				{
+					if(isfront){url=driver.dlfontimage;}
+					else{url=driver.dlbackimage;}
+				}			
+				return url;
+			}
+			
+			private function getFulURL(isfront:Boolean,driver:*):String
+			{
+				var urlFull:String
+				try{
+				urlFull=getLoadImageURL(isfront,driver);
+				}
+				catch(e:Error)
+				{
+					urlFull= "";
+				}
+				
+				return urlFull;
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+
+			//---------------------------------------------------------------------------------------
+			public function getSelectedClientDrivers():ArrayCollection
+			{
+				var acSelectedCustomerDrivers:ArrayCollection=new ArrayCollection();
+				for(var index:int=0; index<acCustomerDrivers.length;index++)
+				{
+					//####################################################################
+							if(acCustomerDrivers.getItemAt(index)["isSelected"])
+							{
+								var tmpFresclientdriver:Com_dspl_malkey_domain_Fresclientdriver=new Com_dspl_malkey_domain_Fresclientdriver();
+								var tmpFresclientdriverPK:Com_dspl_malkey_domain_FresclientdriverPK=new Com_dspl_malkey_domain_FresclientdriverPK();
+								tmpFresclientdriverPK.driverid=(acCustomerDrivers.getItemAt(index) as Com_dspl_malkey_domain_Fclientdriver).recordid;
+								tmpFresclientdriverPK.resno=com_dspl_malkey_domain_Freservation.resno;
+								tmpFresclientdriver.id=tmpFresclientdriverPK;
+								acSelectedCustomerDrivers.addItem(tmpFresclientdriver);
+							}
+					//####################################################################
+				}
+				return acSelectedCustomerDrivers;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+
+
+
+			//---------------------------------------------------------------------------------------
+			public function autoSelectClientDriver(acCDList:ArrayCollection):void
+			{
+				resetClientDriver();
+				for each(var resclientdriver:Com_dspl_malkey_domain_Fresclientdriver in acCDList)
+				{
+					for each(var clientdriver:Com_dspl_malkey_domain_Fclientdriver in acCustomerDrivers)
+					{
+						if(resclientdriver.id.driverid==clientdriver.recordid)
+						{
+								dgCustomerDrivers.selectedIndex=acCustomerDrivers.getItemIndex(clientdriver);
+								clientdriver["isSelected"]=true;
+								image0.source=getFulURL(false,clientdriver);
+								image1.source=getFulURL(true,clientdriver);
+						}
+					}
+				}
+				dgCustomerDrivers.invalidateDisplayList();
+				dgCustomerDrivers.invalidateList();
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			//---------------------------------------------------------------------------------------
+			protected function resetClientDriver():void
+			{
+				for each(var clientdriver:Com_dspl_malkey_domain_Fclientdriver in acCustomerDrivers)
+				{
+					clientdriver["isSelected"]=false;
+				}
+				dgCustomerDrivers.invalidateDisplayList();
+				dgCustomerDrivers.invalidateList();
+			}
+			//---------------------------------------------------------------------------------------
+			protected function doSelectClientDriver(index:int):void
+			{
+				if(acCustomerDrivers.getItemAt(index)["isSelected"])
+				{
+					acCustomerDrivers.getItemAt(index)["isSelected"]=false;
+				}
+				else{
+					var o:Object;
+					/*for(var i:int=0;i<acCustomerDrivers.length;i++)
+					{
+						o=acCustomerDrivers.getItemAt(i);
+						o["isSelected"]=false;
+					}*/
+					
+					o=acCustomerDrivers.getItemAt(index);
+					o["isSelected"]=true;
+					dgCustomerDrivers.invalidateDisplayList();
+					dgCustomerDrivers.invalidateList();
+					//selectedItem=o; no need
+					image0.source=getFulURL(false,o);
+					image1.source=getFulURL(true,o);
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+/* 			public function getResDriver():Com_dspl_malkey_domain_Fresdriver
+			{
+				var fresdriver:Com_dspl_malkey_domain_Fresdriver=new Com_dspl_malkey_domain_Fresdriver();
+				var fresdriverPK:Com_dspl_malkey_domain_FresdriverPK=new Com_dspl_malkey_domain_FresdriverPK();
+				if((dgMalkeyDrivers.dataProvider as ArrayCollection).length >0){
+				fresdriverPK.empid=((dgMalkeyDrivers.dataProvider as ArrayCollection).getItemAt(0) as Com_dspl_malkey_domain_Fresdriver).id.empid;}
+				fresdriver.id=fresdriverPK;
+				return fresdriver;
+			} */
+			
+/* 			public function setResDriver(fresdriver:Com_dspl_malkey_domain_Fresdriver):void
+			{
+				var o:Com_dspl_malkey_domain_Femployee;
+				for(var i:int=0;i<acMalkeyDrivers.length;i++)
+				{
+					o=acMalkeyDrivers.getItemAt(i) as Com_dspl_malkey_domain_Femployee;
+					if(fresdriver.id.empid==o.empid)
+					{
+						o.isSelected=true;
+						return;
+					}
+				}
+			} */
+			
+
+	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * Factory method
+			 * input :Com_dspl_malkey_domain_Femployee Object
+			 * output:Com_dspl_malkey_domain_Fresdriver Object
+			 * */
+			private function driverFactory(emp:Com_dspl_malkey_domain_Femployee):Com_dspl_malkey_domain_Fresdriver
+			{
+				//com_dspl_malkey_domain_Fresdriver.priority=nsPriority.value;
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				//var nextDay:Date = new Date("Mon May 1 2006 11:30:00 AM");
+				//var testDate:Date=new Date(dtDateOut.selectedDate.getTime()+millisecondsPerDay*(cmbTimeOut.selectedIndex)*(1/48));
+				//Alert.show("time:"+testDate.getTime()+"\n"+"timeold:"+dtDateOut.selectedDate.getTime());
+				
+				com_dspl_malkey_domain_Fresdriver.issrv=rbgIsOtherSerice.selectedValue;
+				com_dspl_malkey_domain_Fresdriver.srvid=txtOtherSrv.text;
+				com_dspl_malkey_domain_Fresdriver.isavailabile=1;
+				com_dspl_malkey_domain_Fresdriver.remarks=txtRemarks.text;
+				var pk:Com_dspl_malkey_domain_FresdriverPK=new Com_dspl_malkey_domain_FresdriverPK();
+				pk.empid=com_dspl_malkey_domain_Femployee.empid;
+				pk.resno="";
+				pk.dout=new Date(dtDateOut.selectedDate.getTime()+millisecondsPerDay*(cmbTimeOut.selectedIndex)*(1/48));//dtDateOut.selectedDate;
+				pk.din=new Date(dtDateIn.selectedDate.getTime()+millisecondsPerDay*(cmbTimeIn.selectedIndex)*(1/48));//dtDateIn.selectedDate;
+				if(dtDateOutM.selectedDate!=null && cmbTimeOutM.selectedIndex!=-1){
+				com_dspl_malkey_domain_Fresdriver.dmalkeyout= new Date(dtDateOutM.selectedDate.getTime()+millisecondsPerDay*(cmbTimeOutM.selectedIndex)*(1/48));//dtDateIn.selectedDate;
+				com_dspl_malkey_domain_Fresdriver.timemalkeyout=acTime.getItemAt(cmbTimeOutM.selectedIndex) as String;
+				}
+				pk.timein=acTime.getItemAt(cmbTimeIn.selectedIndex) as String;
+				pk.timeout=acTime.getItemAt(cmbTimeOut.selectedIndex)  as String;
+				com_dspl_malkey_domain_Fresdriver.id=pk;
+				return com_dspl_malkey_domain_Fresdriver;
+			}
+			
+			//---------------------------------------------------------------------------------------
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//lable functions here
+			//---------------------------------------------------------------------------------------
+			private function lblfService(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				var tempVal:String="";
+				try{
+				if(item!=null && item.srvid !=null && acOtherService!=null && genericFunctions!=null)
+				{
+					if(item.srvid.length>0)
+					{
+						tempVal= genericFunctions.getArrayCollection(acOtherService,"srvid",(item).srvid).description;
+					}
+				}
+				}catch(e:Error)
+				{
+				
+				}
+				return tempVal;
+			}
+			private function lblfAvailability(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return (item.isavailabile == 1 ? "available" : "unavailable");
+			}
+			private function lblfTimeIn(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return item.id.timein;
+			}
+			private function lblfTimeOut(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return item.id.timeout;
+			}
+			private function lblfDateOut(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return dateFormatter.format(item.id.dout);
+			}
+			private function lblfDateIn(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return dateFormatter.format(item.id.din);
+			}
+			private function lblfEmployeName(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				trace("lblfEmployeName");
+				trace("acAllDrivers.length:"+acAllDrivers.length);
+				return genericFunctions.getArrayCollection(acAllDrivers,"empid",item.id.empid).name;
+			}
+			private function lblfEmployeNIC(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAllDrivers,"empid",item.id.empid).nicno;
+			}
+			private function lblfEmployeDlno(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAllDrivers,"empid",item.id.empid).dlno;
+			}
+			private function lblfEmployeMobilephone(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAllDrivers,"empid",item.id.empid).mobilephone1;
+			}
+			private function lblfDispatch(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				var labelText:String="";
+				switch (item.dispatch)
+				{
+					case 0: labelText="BOOKED";break;
+					case 1: labelText="CHECKOUT";break;
+					case 2: labelText="CHECKIN";break;
+					default: labelText="else";break;
+				}
+			//	trace(labelText+":"+item.dispatch);
+				return labelText;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//flex events
+			//---------------------------------------------------------------------------------------
+			protected function dgMalkeyDrivers_itemClickHandler(event:ListEvent):void
+			{
+				com_dspl_malkey_domain_Femployee=(genericFunctions.getArrayCollection(acAllDrivers,"empid",acResMalkeyDrivers.getItemAt(event.rowIndex).id.empid))  as Com_dspl_malkey_domain_Femployee;
+				//Alert.show(com_dspl_malkey_domain_Femployee.empid +"==="+acResMalkeyDrivers.getItemAt(event.rowIndex).id.empid,com_dspl_malkey_domain_Femployee.nicno);
+				setDateFromReservation(
+					acResMalkeyDrivers.getItemAt(event.rowIndex).id.din,
+					acResMalkeyDrivers.getItemAt(event.rowIndex).id.dout,
+					acTime.getItemIndex(acResMalkeyDrivers.getItemAt(event.rowIndex).id.timeout),
+					acTime.getItemIndex(acResMalkeyDrivers.getItemAt(event.rowIndex).id.timein),
+					DateOperation.getDaysDifference(acResMalkeyDrivers.getItemAt(event.rowIndex).id.din,acResMalkeyDrivers.getItemAt(event.rowIndex).id.dout)
+				);
+				image0.source=getFulURL(false,com_dspl_malkey_domain_Femployee);
+				image1.source=getFulURL(true,com_dspl_malkey_domain_Femployee);
+				//nsPriority.value=acResMalkeyDrivers.getItemAt(event.rowIndex).priority;
+				com_dspl_malkey_domain_Fresdriver=acResMalkeyDrivers.getItemAt(event.rowIndex) as Com_dspl_malkey_domain_Fresdriver;
+				cmbTimeOutM.selectedIndex=acTime.getItemIndex(com_dspl_malkey_domain_Fresdriver.timemalkeyout);
+				dtDateOutM.selectedDate=acResMalkeyDrivers.getItemAt(event.rowIndex).dmalkeyout;
+				txtLEXP.visible=com_dspl_malkey_domain_Femployee.dldexp.getTime() <= new Date().getTime()  ? true : false;
+				formEnable=false;
+			}
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * This method perform delete items on datagrid by using keyboard delete key
+			 * 	
+			 *	
+			 * </br>
+			 * Author:sanka
+			 * */
+			protected function dgDriver_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode==Keyboard.DELETE && btnDeleteMalkeyDriver.enabled)
+				{
+					btnDeleteMalkeyDriver_clickHandler(new MouseEvent(MouseEvent.CLICK));
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			protected function dgCustomerDrivers_itemClickHandler(event:ListEvent):void
+			{
+				doSelectClientDriver(event.rowIndex);
+			}
+			
+			
+			protected function txtDriver__onReturnFromSearchGridHandler(event:Event):void
+			{
+				try{
+				com_dspl_malkey_domain_Femployee=(crDriverListAllResult.lastResult as ArrayCollection).getItemAt(txtDriver._nSelectedIndex) as Com_dspl_malkey_domain_Femployee;
+				if(com_dspl_malkey_domain_Femployee !=null){
+				image0.source=getFulURL(false,com_dspl_malkey_domain_Femployee);
+				image1.source=getFulURL(true,com_dspl_malkey_domain_Femployee);
+				if(com_dspl_malkey_domain_Femployee!=null && com_dspl_malkey_domain_Femployee.dldexp!=null)
+				{
+					if( com_dspl_malkey_domain_Femployee.dldexp.getTime() <= new Date().getTime())
+					{
+						Alert.show("Driving licence expeired.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					}
+					txtLEXP.visible=com_dspl_malkey_domain_Femployee.dldexp.getTime() < new Date().getTime()  ? true :false ;
+				}
+				}
+				}
+				catch(e:Error){
+				//error occured
+					Alert.show("unable to load driver image");
+				}
+			}
+			
+			
+			protected function txtOtherSrv__onReturnFromSearchGridHandler(event:Event):void
+			{
+				com_dspl_malkey_domain_Fresothsrv=acResothsrv.getItemAt(txtOtherSrv._nSelectedIndex) as Com_dspl_malkey_domain_Fresothsrv;
+				com_dspl_malkey_domain_FresothsrvPK=com_dspl_malkey_domain_Fresothsrv.id;
+				setDateFromReservation(
+					com_dspl_malkey_domain_FresothsrvPK.dto,
+					com_dspl_malkey_domain_FresothsrvPK.dfrom,
+					acTime.getItemIndex(com_dspl_malkey_domain_FresothsrvPK.timeout),
+					acTime.getItemIndex(com_dspl_malkey_domain_FresothsrvPK.timein),
+					DateOperation.getDaysDifference(com_dspl_malkey_domain_FresothsrvPK.dto,com_dspl_malkey_domain_FresothsrvPK.dfrom)
+				);
+			}
+			
+			
+			
+			protected function rbgIsOtherSerice_changeHandler(event:Event):void
+			{
+				
+				//other_service=true
+				if(!rbgIsOtherSerice.selectedValue)//hire =false
+				{
+					
+					setDateFromReservation(
+						com_dspl_malkey_domain_Freservation.din,
+						com_dspl_malkey_domain_Freservation.dout,
+						acTime.getItemIndex(com_dspl_malkey_domain_Freservation.timeout),
+						acTime.getItemIndex(com_dspl_malkey_domain_Freservation.timein),
+						DateOperation.getDaysDifference(com_dspl_malkey_domain_Freservation.din,com_dspl_malkey_domain_Freservation.dout)
+					);
+					com_dspl_malkey_domain_Fresothsrv=new Com_dspl_malkey_domain_Fresothsrv();
+					com_dspl_malkey_domain_FresothsrvPK=new Com_dspl_malkey_domain_FresothsrvPK();
+					
+				}
+			}
+			
+			
+			
+			
+			
+			protected function lnkDriverImg_clickHandler(event:MouseEvent):void
+			{
+				if(txtDriverDetails.text.length>0)//if driver is selected
+				{
+					var p:ImagePopup =new ImagePopup();
+					p.imageList=getDriverImages();
+					p.titleText="Driver Viewer - "+txtDriverDetails.text;
+					PopUpManager.addPopUp(p,FlexGlobals.topLevelApplication as DisplayObject,true);
+					PopUpManager.centerPopUp(p);
+				}
+			}
+
+			
+			private function getDriverImages():ArrayCollection
+			{
+				var acDriverImg:ArrayCollection=new ArrayCollection();
+				if(getFulURL(true,com_dspl_malkey_domain_Femployee)!=null)
+				acDriverImg.addItem(getFulURL(true,com_dspl_malkey_domain_Femployee));
+				if(getFulURL(false,com_dspl_malkey_domain_Femployee)!=null)
+				acDriverImg.addItem(getFulURL(false,com_dspl_malkey_domain_Femployee));
+				if(com_dspl_malkey_domain_Femployee.nicimage!=null)
+				acDriverImg.addItem(com_dspl_malkey_domain_Femployee.nicimage);
+				if(com_dspl_malkey_domain_Femployee.ppimage!=null)
+				acDriverImg.addItem(com_dspl_malkey_domain_Femployee.ppimage);
+				if(com_dspl_malkey_domain_Femployee.photo!=null)
+				acDriverImg.addItem(com_dspl_malkey_domain_Femployee.photo);
+				return acDriverImg;
+			}
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+	
+			
+			
+			
+			
+			
+			
+			//button events
+			//---------------------------------------------------------------------------------------
+			/***
+			 * Add button clickHandler
+			 * 
+			 * 
+			 * */
+			protected function btnAddMalkeyDriver_clickHandler(event:MouseEvent):void
+			{
+				if(isValidateAll())
+				{
+				
+							if(
+								StringUtil.trim(txtDriver.text).length>0 
+								&& 
+								(rbgIsOtherSerice.selectedValue==true && txtOtherSrv.text.length>0 || (rbgIsOtherSerice.selectedValue==false && com_dspl_malkey_domain_Freservation.hiretypeid !="SD") )
+								&&
+								dtDateOut.selectedDate!=null
+								&&
+								dtDateIn.selectedDate!=null
+							)
+							{
+								try
+								{
+									addDriver();
+									setPriority();
+									//setUpdateProgress();
+								}
+								catch(e:Error)
+								{
+									Alert.show(e.message);
+								}
+							}//end of neseted if
+					
+					
+				
+				}//end of if
+/* 				else
+				{
+					Alert.show("Requeired Field Missing.\nPlease re-check the form and submit.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				} */
+				
+			}
+			
+			
+			
+			
+			/***
+			 * This method set priority of datagrid that contain malkey drivers
+			 * 
+			 * 
+			 * 
+			 * */
+			protected function btnSetPriorityMalkeyDriver_clickHandler(event:MouseEvent):void
+			{
+				if(dgMalkeyDrivers.selectedIndex==0)//if frist then no point of doing this
+					return;
+				
+				if(dgMalkeyDrivers.selectedItem.isavailabile==0)
+				{
+					Alert.show("Sorry,\nDriver already allocated for another hire.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					return;
+				}
+				var tempRemoveItemIndex:int=dgMalkeyDrivers.selectedIndex;//get the selected index
+				var tempRemoveItem:Object=acResMalkeyDrivers.removeItemAt(dgMalkeyDrivers.selectedIndex);//get the removed item to tempary variable
+				acResMalkeyDrivers.addItemAt(tempRemoveItem,0);//add the removed item into frist lement of arrayCollection
+				setPriority();
+			}
+
+
+			
+			
+			/***
+			 * this method delete the selected driver from datagrid and reset the priority
+			 * 
+			 * 
+			 * 
+			 * */
+			protected function btnDeleteMalkeyDriver_clickHandler(event:MouseEvent):void
+			{
+				Alert.show("Are you sure,You want to delete driver ?","Warning",Alert.YES|Alert.NO,this,confirmAlert,genericFunctions.IconQuestion,Alert.OK);
+			}
+
+			
+			
+			/***
+			 * this method fire when user select confirm state for hire status in new state.then system will ask user 
+			 * "do you  want to set confirm state with out deposite or adavace from client ..something like that.
+			 * 
+			 * */
+			public function confirmAlert(eventObj:CloseEvent):void
+				
+			{
+				
+				if(eventObj.detail==Alert.YES)
+				{
+					var tmpSelectedIndex:int=dgMalkeyDrivers.selectedIndex;
+					acResMalkeyDrivers.removeItemAt(tmpSelectedIndex);
+					acResMalkeyDrivers.refresh();
+					//setUpdateProgress();
+					resetDriverForm();
+					if(acResMalkeyDrivers.length>0)
+					{
+						setPriority();
+					}
+					
+				}
+					
+				else if(eventObj.detail==Alert.NO)
+					
+				{
+					
+				}
+				
+			}
+			
+			
+			
+			/***
+			 * this method reset the form and nselecte the datagrid item selection
+			 * 
+			 * 
+			 * 
+			 * */
+			protected function btnCancleMalkeyDriver_clickHandler(event:MouseEvent):void
+			{
+				resetDriverForm();
+			}
+			
+			/***
+			 * 
+			 * 
+			 * 
+			 * */
+			protected function btnEditMalkeyDriver_clickHandler(event:MouseEvent):void
+			{
+				if(btnEditMalkeyDriver.label=="Update")
+				{
+					btnEditMalkeyDriver.label="Edit";
+					com_dspl_malkey_domain_Fresdriver=dgMalkeyDrivers.selectedItem as Com_dspl_malkey_domain_Fresdriver;
+					var tmpSelectedIndex:int=dgMalkeyDrivers.selectedIndex;
+					acResMalkeyDrivers.removeItemAt(tmpSelectedIndex);
+					addDriverToIndex(tmpSelectedIndex);
+					resetDriverForm();
+				}
+				else
+				{
+					btnEditMalkeyDriver.label="Update";
+					txtDriver.enabled=false;
+					lnkDriver.enabled=false;
+					txtDriverDetails.enabled=false;
+					formEnable=true;
+					dgMalkeyDrivers.selectable=false;
+				}
+			}
+
+			
+			
+			protected function btnAdd_clickHandler(event:MouseEvent):void
+			{
+				popupDatePicker();
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * Reset Form  is following</br>
+			 * Author:sanka
+			 */
+			private function resetDriverForm():void
+			{
+				com_dspl_malkey_domain_Femployee=new Com_dspl_malkey_domain_Femployee();
+				com_dspl_malkey_domain_Fresdriver=new Com_dspl_malkey_domain_Fresdriver();
+				dgMalkeyDrivers.selectedIndex=-1;
+				txtOtherSrv._nSelectedIndex=-1;
+				txtOtherSrv.text="";
+				dgMalkeyDrivers.selectable=true;
+				lnkDriver.enabled=true;
+				txtDriver.enabled=true;
+				image0.source=null;
+				image1.source=null;
+				txtDriverDetails.errorString="";
+				dtDateOut.errorString="";
+				dtDateOutM.errorString="";
+				dtDateIn.errorString="";
+				cmbTimeOut.errorString="";
+				cmbTimeOutM.errorString="";
+				cmbTimeIn.errorString="";
+				nsNumDays.errorString="";
+				rbgIsOtherSerice_changeHandler(new Event(Event.CHANGE));
+				txtDriver.enabled=true;
+				lnkDriver.enabled=true;
+				txtDriverDetails.enabled=true;
+				txtLEXP.visible=false;
+				formEnable=true;
+				btnEditMalkeyDriver.label="Edit";
+				dgMalkeyDrivers.selectable=true;
+				//com_dspl_malkey_domain_Femployee.dldexp=new Date();
+
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * Reset Form & Datagrid is following</br>
+			 * Author:sanka
+			 */
+			public function resetAll():void
+			{
+				try
+				{
+				resetDriverForm();
+				acResMalkeyDrivers.removeAll();
+				}
+				catch(e:Error)
+				{
+					trace(e.message);
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			
+			
+			/***
+			 * Following method validate the entier form of freservation file.
+			 * validated & required fields are company & client codes.
+			 * 
+			 * 
+			 * */
+			private function isValidateAll():Boolean {
+				var errors:Array = Validator.validateAll(myValidators);
+				if (errors.length == 0) {
+					return true;
+				}
+				else
+				{
+					Alert.show("Invalid data.\nPlease re-check the form and submit again.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					return false;
+				}
+			}
+			
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------		
+			/***
+			 * This method perform setting the prority of vehicle reservation acording to the index order of datagrid
+			 * 	Following steps perform the function of reset the prority of each an every item.
+			 *	assumpson priority=index of datagrid
+			 * </br>
+			 * Author:sanka
+			 * */
+		private function setPriority():void
+			{
+				var dic:Dictionary=new Dictionary(); // keep user session
+				for (var loc:int=0; loc<acResMalkeyDrivers.length ; loc++)
+				{
+					var tempFresdriver:Com_dspl_malkey_domain_Fresdriver = acResMalkeyDrivers.getItemAt(loc) as Com_dspl_malkey_domain_Fresdriver;
+					var tempKey:String=dateFormatter.format(tempFresdriver.id.dout)+":"+tempFresdriver.id.timeout+":"+tempFresdriver.srvid;
+					var hasElement:Boolean=false;
+					for (var key:Object in dic)
+					{
+						if(key==tempKey)//if has  element then increase value
+						{
+							var val:Number=new Number(dic[key]);
+							val+=1;
+							dic[key]=val;
+							hasElement=true;
+							break; 
+						}
+
+					}
+					if(!hasElement)
+					{
+						dic[tempKey]=1;//if hasn't element then add a value
+					}
+					
+						tempFresdriver.priority=dic[tempKey];//finally set the priority to element
+				}
+				acResMalkeyDrivers.refresh();
+				dgMalkeyDrivers.validateNow();
+			} 
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * 
+			 * Functional proceedure:remove Driver Item from datagrid according to otherservice updateion,
+			 * when user delete other service from other service tab,immediately other service driver allocation will discard and show an alert message.
+			 *
+			 * technical proceedure : get the driver allocation one by one and compare with all the otherservice which user request.
+			 * If there any driver allocation that for non-existing service then that paticular item will put into separate arraycollection and delete.
+			 * Author:sanka
+			 * */
+			public function validateDriverAllocation_overAllocation_forservice_delete():Boolean
+			{
+					
+					//-----------------------------------------------------------------------------------------
+					
+					var acTobeDel:ArrayCollection=new ArrayCollection();
+					var hasElementToDel:Boolean=false;
+					for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+					{
+						if(tempFresdriver.issrv==true)//only for the other service
+						{
+							var hasElement:Boolean=false;
+							for each(var tempOtherSrv:Com_dspl_malkey_domain_Fresothsrv in acResothsrv)
+							{
+								if(tempOtherSrv.id.srvid==tempFresdriver.srvid)
+								{
+									hasElement=true;
+								}
+							}//end of for loop
+							if(!hasElement)
+							{
+							hasElementToDel=true;
+							acTobeDel.addItem(tempFresdriver);
+							}
+						}
+							
+					}//end of loop
+					//-----------------------------------------------------------------------------------------
+					
+					if(hasElementToDel)
+					{
+						for each(var tempFresdriverToDel:Com_dspl_malkey_domain_Fresdriver in acTobeDel)
+						{
+							var tmpIndexTobeDel:int=acResMalkeyDrivers.getItemIndex(tempFresdriverToDel);
+							acResMalkeyDrivers.removeItemAt(tmpIndexTobeDel);
+						} 
+						setPriority();
+						var msg:String="Driver had been allocated for deleted service and those allocation will be discarded."
+						Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					}
+					
+					//-----------------------------------------------------------------------------------------
+				
+				
+				
+				return true;
+				
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * this method check is there over allocation in driver allocation for other servicees.
+			 * If is ther then return false and tell user to edit it.
+			 *
+			 * Author:sanka
+			 * */
+			public function validateDriverAllocation_overAllocation_forservice():Boolean
+			{
+				//var acSrv:ArrayCollection=acOtherService;
+				for each(var tempOtherSrv:Com_dspl_malkey_domain_Fresothsrv in acResothsrv)
+				{
+					
+					//-----------------------------------------------------------------------------------------
+					var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+					var tmpInDate:Date=new Date(tempOtherSrv.id.dto+millisecondsPerDay*(acTime.getItemIndex(tempOtherSrv.id.timein))*(1/48));
+					var tmpOutDate:Date=new Date(tempOtherSrv.id.dfrom+millisecondsPerDay*(acTime.getItemIndex(tempOtherSrv.id.timeout))*(1/48));
+					var hasElement:Boolean=false;
+					for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+					{
+						
+						if(tempOtherSrv.id.srvid==tempFresdriver.srvid && tempFresdriver.issrv==true)
+						{
+							if(tempFresdriver.id.din.getTime() > tmpInDate.getTime() && tempFresdriver.id.dout.getTime() < tmpOutDate.getTime())
+							{
+								var msg:String="Driver has been over-allocated \nfor "+dateFormatter.format(tempFresdriver.id.din)+" Or "+dateFormatter.format(tempFresdriver.id.dout)+".\nPlease update the driver allocation list to continue."
+								Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+								hasElement=true;
+								return false;
+							}
+						}
+							
+					}//end of loop
+					//-----------------------------------------------------------------------------------------
+				
+				
+				}
+				return true;
+				
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * remove Driver Item to datagrid
+			 *this is design for earlier checkin only ,should implement late checkout also
+			 * Author:sanka
+			 * */
+			public function validateDriverAllocation_overAllocation(date:Date,timeOutiIndex:int,timeInIndex:int):Boolean
+			{
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				var tmpInDate:Date=new Date(date.getTime()+millisecondsPerDay*(timeInIndex)*(1/48));
+				var hasElement:Boolean=false;
+				for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+				{
+					
+					//following code line check if ther eare any over allocation in driver allocation founfd on datagrid
+					//track the(out&in on) 10-20 reservation, check-in on 15th
+					//warning to delete over allocated drivers
+					if(tempFresdriver.id.din.getTime() > tmpInDate.getTime())
+					{
+						var msg:String="Driver has been over-allocated \nfor "+dateFormatter.format(tempFresdriver.id.din)+".\nPlease update the driver allocation list to continue."
+						Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						//Alert.show("According to the new Checkin Date,\nOver Allocation found on Driver Allocation.Please enter the actual data.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return false;
+					} 
+						
+				}//end of loop
+
+				
+				return true;
+				
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * remove Driver Item to datagrid
+			 *this is design for implement late checkout also
+			 * Author:sanka
+			 * */
+			public function validateDriverAllocation_overAllocation_isbefore_out(date:Date,timeOutIndex:int):Boolean
+			{
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				var tmpInDate:Date=new Date(date.getTime()+millisecondsPerDay*(timeOutIndex)*(1/48));
+				var hasElement:Boolean=false;
+				for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+				{
+					if(tempFresdriver.id.dout.getTime() < tmpInDate.getTime())
+					{
+						var msg:String="Driver has been over-allocated \nfor "+dateFormatter.format(tempFresdriver.id.dout)+".\nPlease update the driver allocation list to continue."
+						Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return false;
+					} 
+				}//end of loop
+				return true;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * remove Driver Item to datagrid
+			 *
+			 * Author:sanka
+			 * */
+			public function validateDriverAllocation_minusAllocation(date:Date,timeOutiIndex:int,timeInIndex:int):Boolean
+			{
+					var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+					var tmpOutDate:Date=new Date(date.getTime()+millisecondsPerDay*(timeInIndex)*(1/48));
+					
+					
+					//following code check unAllocated time period available or not
+					//--------------------------------------------------------------------------------------------------
+					for(var dateNumber:int=0; dateNumber<com_dspl_malkey_domain_Freservation.noofday;dateNumber++)//loop from dout to din
+					{
+							var hasElement:Boolean=false;
+							var hasAllocatedForLastDate:Boolean=false;
+							for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)//check whether is it available the currentInstanceDate in resdriver list
+							{
+									//suppose allocation 10-15 then loop 10,11,12,13,14,15
+									var _tmpDateIn:Date=new Date(tempFresdriver.id.din.toDateString());
+									var _tmpDateOut:Date=new Date(tempFresdriver.id.dout.toDateString());
+									var _tmpDateDiff:int=DateOperation.getDaysDifference(_tmpDateIn,_tmpDateOut);
+									for(var dateIndex:int=0;dateIndex<_tmpDateDiff;dateIndex++)//loop from dout to din
+									{
+										if(dateFormatter.format(_tmpDateOut) == dateFormatter.format(tmpOutDate))
+										{
+											hasElement=true;
+											break;//end the loop
+										}
+										_tmpDateOut=DateOperation.dateAdd("d",2,_tmpDateOut);
+									}
+									if(hasElement)
+									{
+										break;//end the loop
+									}
+								
+							}//end of loop
+							if(!hasElement)
+							{
+								var msg:String="Driver has not been allocated \nfor "+dateFormatter.format(tmpOutDate)+".\nPlease update the driver allocation list to continue."
+								Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+								//Alert.show("Driver Un-Allocation Found On\n Date "+dateFormatter.format(tmpOutDate)+"\nPlease Update the Driver Allocaiton.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+							return false;//finnaly return boolean that says there is non allocated date
+							}
+							tmpOutDate=DateOperation.dateAdd("d",2,tmpOutDate);
+					}//end of outer loop
+					//--------------------------------------------------------------------------------------------------
+					return true;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * remove Driver Item to datagrid
+			 *
+			 * Author:sanka
+			 * */
+			public function validateDriverAllocation_minusAllocation_otherService(acResOtherService:ArrayCollection):Boolean
+			{
+				//date:Date,timeOutiIndex:int,timeInIndex:int
+
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+					for each(var tempFresOtherService:Com_dspl_malkey_domain_Fresothsrv in acResOtherService)//loop from dout to din
+					{		
+						
+						var timeInIndex:int=acTime.getItemIndex(tempFresOtherService.id.timeout);
+						var tmpOutDate:Date=new Date(tempFresOtherService.id.dfrom+millisecondsPerDay*(timeInIndex)*(1/48));
+						
+						
+							//following code check unAllocated time period available or not
+							//--------------------------------------------------------------------------------------------------
+							for(var dateNumber:int=0; dateNumber<tempFresOtherService.noofdays;dateNumber++)//loop from dout to din
+							{
+									var hasElement:Boolean=false;
+									var hasAllocatedForLastDate:Boolean=false;
+									for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)//check whether is it available the currentInstanceDate in resdriver list
+									{
+										if(tempFresdriver.issrv==true && tempFresdriver.srvid==tempFresOtherService.id.srvid){
+											//suppose allocation 10-15 then loop 10,11,12,13,14,15
+											var _tmpDateIn:Date=new Date(tempFresdriver.id.din.toDateString());
+											var _tmpDateOut:Date=new Date(tempFresdriver.id.dout.toDateString());
+											var _tmpDateDiff:int=DateOperation.getDaysDifference(_tmpDateIn,_tmpDateOut);
+											for(var dateIndex:int=0;dateIndex<_tmpDateDiff;dateIndex++)//loop from dout to din
+											{
+												if(dateFormatter.format(_tmpDateOut) == dateFormatter.format(tempFresOtherService.id.dfrom))
+												{
+													hasElement=true;
+													break;//end the loop
+												}
+												_tmpDateOut=DateOperation.dateAdd("d",2,_tmpDateOut);
+											}
+											if(hasElement)
+											{
+												break;//end the loop
+											}
+										}
+										
+									}//end of loop
+									if(!hasElement)
+									{
+										var msg:String="Driver has not been allocated \nfor other service @"+dateFormatter.format(tempFresOtherService.id.dfrom)+".\nPlease update the driver allocation list to continue."
+										Alert.show(msg,"Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+										//Alert.show("Driver Un-Allocation Found On\n Date "+dateFormatter.format(tmpOutDate)+"\nPlease Update the Driver Allocaiton.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									return false;//finnaly return boolean that says there is non allocated date
+									}
+									tmpOutDate=DateOperation.dateAdd("d",2,tmpOutDate);
+							}//end of outer loop
+							//--------------------------------------------------------------------------------------------------
+					}
+					return true;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * Add Driver Item to datagrid
+			 * validation:avoid duplicate</br>
+			 * Author:sanka
+			 * */
+			private function addDriver():void
+			{
+
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				var tmpOutDate:Date=new Date(dtDateOut.selectedDate.getTime()+millisecondsPerDay*(cmbTimeOut.selectedIndex)*(1/48));
+				var tmpInDate:Date=new Date(dtDateIn.selectedDate.getTime()+millisecondsPerDay*(cmbTimeIn.selectedIndex)*(1/48));
+				
+				
+				var hasElement:Boolean=false;
+				for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+				{
+					
+					if(tempFresdriver.id.dout.getTime()==tmpOutDate.getTime()&& tempFresdriver.id.timeout==cmbTimeOut.selectedItem && tempFresdriver.id.din.getTime()==tmpInDate.getTime() && tempFresdriver.id.timein==cmbTimeIn.selectedItem && tempFresdriver.id.empid==txtDriver.text)//check is it available the same record
+					{
+						Alert.show("Sorry!,\nDriver already reserved.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return;
+					} 
+					
+
+						
+					if( 
+						(tempFresdriver.issrv==true && tempFresdriver.srvid==txtOtherSrv.text  && rbgIsOtherSerice.selectedValue==true)//compare current entered value of "srvid" existing value of "srvid" wherether is it an existing otherservice or not
+						|| //OR
+						(tempFresdriver.issrv==false && tempFresdriver.srvid=="" && rbgIsOtherSerice.selectedValue==false)//compare current entered value of "srvid" existing value of "srvid" :this mean hire and ...
+						|| //OR
+						tempFresdriver.id.empid==com_dspl_malkey_domain_Femployee.empid //service and hire same driver cannot allocated in same date range
+					)
+					{	
+						
+								//old reservation november 5-10 :new reservation november 1-11.
+								//check new allocations dout date is before existing reservation and after it's din date.
+								if((tempFresdriver.id.dout.getTime()> tmpOutDate.getTime() && tempFresdriver.id.din.getTime() <= tmpInDate.getTime()))//check new dateout is before date-out of existing reservation & new date-in after or on existing reservation
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+								//old reservation november 5-10 :new reservation november 1-7.
+								//check new allocations dout date is before existing reservation and after it's dout date.
+								if((tempFresdriver.id.dout.getTime()> tmpOutDate.getTime() && tempFresdriver.id.dout.getTime() < tmpInDate.getTime()))//check new dateout is before date-out of existing reservation & new date-in after or on existing reservation
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+								//old reservation november 5-10 :new reservation november 7 : 5<7>10
+								if(tempFresdriver.id.dout.getTime()< tmpOutDate.getTime() && tempFresdriver.id.din.getTime() > tmpOutDate.getTime())//following code check new dateout is middle of the existing reservation
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+								//old reservation november 5-10 :new reservation november 7-9. : 5<7 && 9<10
+								if(tempFresdriver.id.dout.getTime()< tmpInDate.getTime() && tempFresdriver.id.din.getTime() > tmpInDate.getTime())//following code check new dateIn is middle of the existing reservation
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+								//old reservation november 5-10 tout=10:00:00 :new reservation november 5-x tout=10:00:00.  : 
+								if(tempFresdriver.id.dout.getTime()==tmpOutDate.getTime()&& tempFresdriver.id.timeout==cmbTimeOut.selectedItem && tempFresdriver.id.empid==com_dspl_malkey_domain_Femployee.empid )//check is it available the same record
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+						//}//end of else
+
+					}//end of if
+						
+				}//end of loop
+				
+				if(!hasElement)
+				{
+					acResMalkeyDrivers.addItem(driverFactory(com_dspl_malkey_domain_Femployee));
+					acResMalkeyDrivers.refresh();
+					//runit();
+					resetDriverForm(); 
+					
+				} 
+				
+				
+				
+				
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			/***
+			 * Add Driver Item to datagrid
+			 * validation:avoid duplicate</br>
+			 * Author:sanka
+			 * */
+			private function addDriverToIndex(index:int):void
+			{
+
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				var tmpOutDate:Date=new Date(dtDateOut.selectedDate.getTime()+millisecondsPerDay*(cmbTimeOut.selectedIndex)*(1/48));
+				var tmpInDate:Date=new Date(dtDateIn.selectedDate.getTime()+millisecondsPerDay*(cmbTimeIn.selectedIndex)*(1/48));
+				
+				
+				var hasElement:Boolean=false;
+				for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+				{
+					
+					if(tempFresdriver.id.dout.getTime()==tmpOutDate.getTime()&& tempFresdriver.id.timeout==cmbTimeOut.selectedItem && tempFresdriver.id.din.getTime()==tmpInDate.getTime() && tempFresdriver.id.timein==cmbTimeIn.selectedItem && tempFresdriver.id.empid==txtDriver.text)//check is it available the same record
+					{
+						Alert.show("Sorry!,\nDriver already reserved.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return;
+					} 
+					
+
+						
+					if( 
+						(tempFresdriver.issrv==true && tempFresdriver.srvid==txtOtherSrv.text  && rbgIsOtherSerice.selectedValue==true)//compare current entered value of "srvid" existing value of "srvid" wherether is it an existing otherservice or not
+						|| //OR
+						(tempFresdriver.issrv==false && tempFresdriver.srvid=="" && rbgIsOtherSerice.selectedValue==false)//compare current entered value of "srvid" existing value of "srvid" :this mean hire and ...
+					)
+					{	
+						
+								//old reservation november 5-10 :new reservation november 1-11.
+								//check new allocations dout date is before existing reservation and after it's din date.
+								if((tempFresdriver.id.dout.getTime()> tmpOutDate.getTime() && tempFresdriver.id.din.getTime() <= tmpInDate.getTime()))//check new dateout is before date-out of existing reservation & new date-in after or on existing reservation
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+								//old reservation november 5-10 :new reservation november 7 : 5<7>10
+								if(tempFresdriver.id.dout.getTime()< tmpOutDate.getTime() && tempFresdriver.id.din.getTime() > tmpOutDate.getTime())//following code check new dateout is middle of the existing reservation
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+								//old reservation november 5-10 :new reservation november 7-9. : 5<7 && 9<10
+								if(tempFresdriver.id.dout.getTime()< tmpInDate.getTime() && tempFresdriver.id.din.getTime() > tmpInDate.getTime())//following code check new dateIn is middle of the existing reservation
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+								//old reservation november 5-10 tout=10:00:00 :new reservation november 5-x tout=10:00:00.  : 
+								if(tempFresdriver.id.dout==tmpOutDate&& tempFresdriver.id.timeout==cmbTimeOut.selectedItem)//check is it available the same record
+								{
+									Alert.show("Sorry!,\nSelected date range is clash with existing date range.\nPlease change the date range to continue.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+									hasElement=true;
+									return;
+								}
+						//}//end of else
+
+					}//end of if
+						
+				}//end of loop
+				
+				if(!hasElement)
+				{
+					acResMalkeyDrivers.addItemAt(driverFactory(com_dspl_malkey_domain_Femployee),index);
+					acResMalkeyDrivers.refresh();
+					//runit();
+					resetDriverForm(); 
+					
+				} 
+				
+				
+				
+				
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+//
+			
+			/***
+			 * Following method calculate the driver allocation persentage with time and set the progress bar
+			 * 
+			 * */
+/* 			public function setUpdateProgress():void
+			{
+				
+				var j:Number = 0;
+				var part:Number = 0;
+				var allocatedDatesForHire:int=0;
+				for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+				{
+					var tmp_date_out:Date=new Date(tempFresdriver.id.dout);
+					var tmp_date_in:Date=new Date(tempFresdriver.id.din);
+					if(tempFresdriver.issrv==false && tempFresdriver.priority==1)
+					{
+						trace("diff="+ (DateOperation.getDaysDifference(tmp_date_in,tmp_date_out)-1));
+						allocatedDatesForHire+=(DateOperation.getDaysDifference(tmp_date_in,tmp_date_out)-1);
+						trace("_____________"+allocatedDatesForHire);
+					}
+				}
+				
+				trace("allocatedDatesForHire:"+allocatedDatesForHire);
+				part=(new Number(allocatedDatesForHire)/new Number(com_dspl_malkey_domain_Freservation.noofday))*100;
+				if (j < 100) {
+					j += part;
+				} else if (j >= 100) {
+					j = 0;
+				}
+				bar.setProgress(j, 100);
+				bar.label = "Current Driver Allocation With Time for Hire: " + j + "%";
+				
+			} 
+			
+			private function currentAllocatedDate():int
+			{
+				//com_dspl_malkey_domain_Freservation.noofday
+				var allocatedDatesForHire:int=0;
+				for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+				{
+					if(tempFresdriver.issrv==false && tempFresdriver.priority==1)
+					{
+						allocatedDatesForHire+=DateOperation.getDaysDifference(tempFresdriver.id.din,tempFresdriver.id.dout);
+					}
+				}
+				return allocatedDatesForHire;
+			}
+			
+			private function currentAllocatedDatePercentage():Number
+			{
+				//com_dspl_malkey_domain_Freservation.noofday
+				var allocatedDatesForHire:int=currentAllocatedDate();
+				return allocatedDatesForHire/com_dspl_malkey_domain_Freservation.noofday;
+			}
+			*/
+			
+			private function setPriority1():void
+			{	
+				var keylist:ArrayCollection=new ArrayCollection();
+				for(var a:int=0;a<acResMalkeyDrivers.length;a++){
+					var tempFresdriver:Com_dspl_malkey_domain_Fresdriver = acResMalkeyDrivers.getItemAt(a) as Com_dspl_malkey_domain_Fresdriver;
+					var tempKey:String=dateFormatter.format(tempFresdriver.id.dout)+":"+tempFresdriver.id.timeout;
+					var hasKey:Boolean=false;
+					for(var b:int=0;b<keylist.length;b++){
+						var obj:Object=keylist.getItemAt(b);
+						if(tempKey==obj["key"].toString()){
+							hasKey=true;
+							break;
+						}
+					}				
+					if(hasKey==false){
+						var o:Object=new Object();
+						o["key"]=tempKey;
+						keylist.addItem(o);
+					}
+				}
+				
+				if(keylist.length==0){
+					var tempFresdriver:Com_dspl_malkey_domain_Fresdriver = acResMalkeyDrivers.getItemAt(0) as Com_dspl_malkey_domain_Fresdriver;
+					tempFresdriver.priority=1;
+				}else{
+					for(var a:int=0;a<keylist.length;a++){
+						var val:int=1;
+						var key:String=keylist.getItemAt(a).key;
+						for(var b:int=0;b<acResMalkeyDrivers.length;b++){
+							var tempFresdriver:Com_dspl_malkey_domain_Fresdriver = acResMalkeyDrivers.getItemAt(b) as Com_dspl_malkey_domain_Fresdriver;
+							var tempKey:String=dateFormatter.format(tempFresdriver.id.dout)+":"+tempFresdriver.id.timeout;
+							if(key==tempKey){
+								tempFresdriver.priority=val;
+								val+=1;
+							}
+						}
+					}
+				}
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/***
+			 * This method perform setting the prority of vehicle reservation acording to the index order of datagrid
+			 * 	Following steps perform the function of reset the prority of each an every item.
+			 *	assumpson priority=index of datagrid
+			 * </br>
+			 * Author:sanka
+			 * */
+/* 			private function setPriority1():void
+			{
+				var index:int=1;
+				for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+				{
+					tempFresdriver.priority=index;
+					index++;
+				}
+				acResMalkeyDrivers.refresh();
+			} */
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+
+			//Date selection realated codes
+			//---------------------------------------------------------------------------------------
+			public var datePicker:DatePickerDriver;		
+			protected function popupDatePicker():void
+			{
+				datePicker=new DatePickerDriver();
+				datePicker.addEventListener("select",selectDate);
+				datePicker.startDate=startDate;
+				datePicker.endDate=endDate;
+				datePicker.startTime=startTime;
+				datePicker.endTime=endTime;
+				datePicker.acTime=acTime;
+				PopUpManager.addPopUp(datePicker,this,true);
+				PopUpManager.centerPopUp(datePicker);
+				setDateToDatePicker()
+				/* dispatchEvent(new Event("dateChange")); */
+			}
+			
+			protected function selectDate(event:Event):void
+			{
+				setDateFromReservation(datePicker.dtDateIn.selectedDate,datePicker.dtDateOut.selectedDate,datePicker.cmbTimeOut.selectedIndex,datePicker.cmbTimeIn.selectedIndex,datePicker.nsNumDays.value);
+				PopUpManager.removePopUp(datePicker);
+				dispatchEvent(new Event("dateChange"));
+				//txtDriver.text="";
+			}
+			
+			public function setDateFromReservation(din:Date,dout:Date,timeout:int,timein:int,noofday:Number):void
+			{
+				dtDateIn.selectedDate=din;
+				dtDateOut.selectedDate=dout;
+				dtDateOutM.selectedDate=dout;
+				nsNumDays.value=noofday;
+				cmbTimeOut.selectedIndex=timeout;
+				cmbTimeOutM.selectedIndex=timeout;
+				cmbTimeIn.selectedIndex=timein;
+			}
+			
+			protected function setDateToDatePicker():void
+			{
+				datePicker.dtDateOut.selectedDate=dtDateOut.selectedDate;
+				datePicker.dtDateIn.selectedDate=dtDateIn.selectedDate;
+				datePicker.cmbTimeIn.selectedIndex=cmbTimeIn.selectedIndex;
+				datePicker.cmbTimeOut.selectedIndex=cmbTimeOut.selectedIndex;
+				datePicker.nsNumDays.value=nsNumDays.value;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+
+
+
+			
+			
+			
+			//---------------------------------------------------------------------------------------
+			private function getMilSec(param:String):Number
+			{
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				return millisecondsPerDay*(acTime.getItemIndex(param))*(1/48);
+			}
+			//---------------------------------------------------------------------------------------
+			/***
+			 * set Date Item to datagrid
+			 *
+			 * Author:sanka
+			 * */
+			public function setDateDriverAllocation(dateTo:Date,dateFrom:Date,timeout:String,timein:String):Boolean
+			{
+				//+millisecondsPerDay*(acTime.getItemIndex(tempOtherService.id.timein))*(1/48)
+				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
+				var tmpInDate:Date=new Date(dateTo.getTime()+getMilSec(timein));
+				var tmpOutDate:Date=new Date(dateFrom.getTime()+getMilSec(timeout));
+				var hasElement:Boolean=false;
+				var acItemToDel:ArrayCollection=new ArrayCollection();
+				for each(var tempFresdriver:Com_dspl_malkey_domain_Fresdriver in acResMalkeyDrivers)
+				{
+					
+					//--------------------------------------------------------
+					if(tempFresdriver.id.dout.getTime() < tmpInDate.getTime())//if(tempFresdriver.id.dout.getTime() <= tmpInDate.getTime())
+					{
+						if(tempFresdriver.id.din.getTime() > tmpInDate.getTime())
+						{
+							tempFresdriver.id.din.setTime(tmpInDate.getTime());
+						} 
+					}
+					else
+					{
+						acItemToDel.addItem(tempFresdriver);
+					}
+					//------------------------------------------------------
+					if(tempFresdriver.id.din.getTime() > tmpOutDate.getTime())//if(tempFresdriver.id.din.getTime() >= tmpOutDate.getTime())
+					{						
+						if(tempFresdriver.id.dout.getTime() < tmpOutDate.getTime())
+						{
+							tempFresdriver.id.dout.setTime(tmpOutDate.getTime());
+						} 
+					}
+					else
+					{
+						acItemToDel.addItem(tempFresdriver);
+					}
+					//-------------------------------------------------------
+					//tempFresdriver.noofdays=DateOperation.getDaysDifference(tempFresdriver.id.din,tempFresdriver.id.dout);
+					//tempFresdriver.fresdriverrate.id.dout=tempFresdriver.id.dout;
+					//tempFresdriver.fresdriverrate.id.din=tempFresdriver.id.din;
+
+				}//end of loop
+				
+				//---------------------------------------------------------------
+				
+				for each(var obj:Com_dspl_malkey_domain_Fresdriver in acItemToDel)
+				{
+					var index:int=acResMalkeyDrivers.getItemIndex(obj);
+					acResMalkeyDrivers.removeItemAt(index);
+				}
+				acResMalkeyDrivers.refresh();
+				dispatchEvent(new Event("dateChange"));
+				//---------------------------------------------------------------
+				return true;
+				
+				
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+
+
+
+
+
+
+
+
+
+
+
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				//crDriverListByResnoResult.token = femployeeSRV.getDriversByResNo(com_dspl_malkey_domain_Freservation.resno);
+			}
+
+
+			protected function crDriverListByResnoResult_resultHandler(event:ResultEvent):void
+			{
+				acAllDrivers=crDriverListByResnoResult.lastResult;
+			}
+
+		]]>
+	</fx:Script>
+	
+	
+</s:Group>
+

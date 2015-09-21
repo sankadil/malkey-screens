@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fxpProperties abbreviated="false" authoringTool="Flex Builder" parentProject="5e886da4-d52f-447c-a42b-2866dbbb003b" projectUUID="5e886da4-d52f-447c-a42b-2866dbbb003b" sdkVersion="4.1.0" uuid="e70a6dec-7706-4592-b9a6-bd2d184553c2" version="4">
+  <projects/>
+  <src/>
+  <swc>
+    <linked location="sdkPlaceHolder" path="sdkPlaceHolder" position="0" uuid="e70a6dec-7706-4592-b9a6-bd2d184553c2"/>
+    <linked location="E:/e/workspace/malkey/malkey-screens/libs" path="/libs" position="1" uuid="5cff62e6-236e-4540-84c8-e14cb5b1d978"/>
+    <linked location="${DCD_LIB_LOCATION}" path="${DCD_LIB_LOCATION}" position="2" uuid="5cff62e6-236e-4540-84c8-e14cb5b1d978"/>
+    <linked location="${DCD_LOCALE_LOCATION}" path="${DCD_LOCALE_LOCATION}" position="3" uuid="5cff62e6-236e-4540-84c8-e14cb5b1d978"/>
+    <linked location="${DCD_FIBER_LOCATION}/fiber.swc" path="${DCD_FIBER_LOCATION}/fiber.swc" position="4" uuid="5cff62e6-236e-4540-84c8-e14cb5b1d978"/>
+    <linked location="${DCD_FIBER_LOCALE_LOCATION}/fiber_rb.swc" path="${DCD_FIBER_LOCALE_LOCATION}/fiber_rb.swc" position="5" uuid="5cff62e6-236e-4540-84c8-e14cb5b1d978"/>
+    <linked location="${DCD_FIBER_LOCATION}/playerfds.swc" path="${DCD_FIBER_LOCATION}/playerfds.swc" position="6" uuid="5cff62e6-236e-4540-84c8-e14cb5b1d978"/>
+  </swc>
+  <misc/>
+  <theme/>
+</fxpProperties>

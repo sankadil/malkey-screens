@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project		:	malkey-screens
+Package		:	com/dspl/malkey/email
+Component	:	EmailInbox.mxml
+Description	:	Displays received/ sent/ drafted emails
+Module		:	Email Correspondence	
+Author		:	Fuzuli Hameed
+Created On	:	Jun 9, 2011
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   width="1250" height="600" minWidth="916" minHeight="516"
+			   xmlns:services="com.dspl.malkey.services.*"
+			   creationComplete="init()"
+			   close="unload()"
+			   title="Email Correspondence">
+	
+	<!-- Properties of the parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="Inbox"/>
+		<s:State name="Draft"/>
+		<s:State name="Sent"/>
+		<s:State name="Trash"/>
+	</s:states>
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	
+	<!-- Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.DateTimeField;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdebtor;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Femails;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			
+			private static const IEMAIL_FOLDER_TYPE_INBOX:int = 0;
+			private static const IEMAIL_FOLDER_TYPE_DRAFT:int = 1;
+			private static const IEMAIL_FOLDER_TYPE_SENT:int = 2;
+			private static const IEMAIL_FOLDER_TYPE_TRASH:int = 3;
+			private static const SEMAIL_ADDRESS_HIDDEN:String = "UNDISCLOSED-RECIPIENTS:";
+						
+			[Bindable]
+			private var iTotalEmails:int = 0;
+			[Bindable]
+			private var iMinIndex:int = 0;
+			[Bindable]
+			private var iMaxIndex:int = 0;
+			[Bindable]
+			private var acFolders:ArrayCollection;
+			[Bindable]
+			private var iUnreadInboxMails:int = 0;
+			[Bindable]
+			private var iUnreadDraftMails:int = 0;
+			[Bindable]
+			private var iSelectedFolderType:int = 0;
+			
+			private var voComposeMsg:Com_dspl_malkey_domain_Femails;
+			private var voOriginalEmailMsg:Com_dspl_malkey_domain_Femails;			
+			
+			private var iEmailsToDisplay:int = 50;
+			private var iUnreadMailFolderType:int = 0;
+			private var oEmailMsg:emailMsg;
+			private var oComposeMsg:composeMsg;
+			private var bRefreshEmailAfterUnreadCount:Boolean = false;
+			private var bCalledFromBtnRefresh:Boolean = false;
+			private var bResetMinMaxIndex:Boolean = true;
+			private var sOwnerEmailID:String = "fuzuli@datamation.lk";
+			private var mPopup:Menu;
+			
+			protected function init():void
+			{
+				iMinIndex = 1;
+				iMaxIndex = iEmailsToDisplay;				
+				iSelectedFolderType = IEMAIL_FOLDER_TYPE_INBOX;			// Display Inbox at Startup
+				currentState = "Inbox";
+				btnInbox.selected = true;
+				bRefreshEmailAfterUnreadCount = true;
+				bResetMinMaxIndex = true;
+				getEmailCountForInbox();
+				
+				// Bring down Email Addresses of related individuals
+				crFDebtorEmailID.token = srvFemails.listDebtorEmailID();
+				crFEmployeeEmailID.token = srvFemails.listEmployeeEmailID();
+				crFSupplierEmailID.token = srvFemails.listSupplierEmailID(); 
+			}
+
+			protected function unload():void
+			{
+				PopUpManager.removePopUp(this);		// Close this screen when clicked on the "x" button of this
+			}
+			
+			protected function crFemailsCount_resultHandler(event:ResultEvent):void
+			{
+				iTotalEmails = int(event.result);
+				
+				if (iTotalEmails > 0 && iMinIndex > iTotalEmails && iMinIndex != iTotalEmails)
+					btnNewer_clickHandler();
+				else
+					if (iMaxIndex>iTotalEmails)
+						iMaxIndex = iTotalEmails;
+					// Bring down the data (Server method is called even if there ain't mails to ensure the 'lstMailbox' is refreshed with the latest data collection)
+					crFemails.token = srvFemails.listOnFolderType(iSelectedFolderType, iMinIndex-1, iEmailsToDisplay);				
+			}
+			
+			protected function crFemails_resultHandler(event:ResultEvent):void
+			{
+				refreshFormProperties();
+			}
+			
+			protected function crFemailsUnreadCount_resultHandler(event:ResultEvent):void
+			{
+				var liUnreadEmails:int = int(event.result);
+				
+				if (iUnreadMailFolderType==0){
+					iUnreadInboxMails = liUnreadEmails;
+					getEmailCountForDrafts();
+				}
+				else {
+					iUnreadDraftMails = liUnreadEmails;
+					
+					if (bRefreshEmailAfterUnreadCount == true){
+						bRefreshEmailAfterUnreadCount = false;
+						refreshEmails();				// Display the latest emails
+					}
+				}
+			}
+			
+			protected function crFemailsMoveToTrash_resultHandler(event:ResultEvent):void
+			{
+				bCalledFromBtnRefresh = true;
+				bResetMinMaxIndex = true;
+				refreshEmails();
+			}
+						
+			protected function crFemailsCreate_resultHandler(event:ResultEvent):void
+			{
+				bCalledFromBtnRefresh = true;
+				bResetMinMaxIndex = true;
+				refreshEmails();
+			}
+						
+			protected function crFemailsUpdate_resultHandler(event:ResultEvent):void
+			{
+				bCalledFromBtnRefresh = true;
+				bResetMinMaxIndex = true;
+				refreshEmails();
+			}
+			
+			protected function crFemailsDeleteForever_resultHandler(event:ResultEvent):void
+			{
+				bCalledFromBtnRefresh = true;
+				bResetMinMaxIndex = true;
+				refreshEmails();
+			}
+			
+			protected function crUpdateSelectedEmailsReadStatus_resultHandler(event:ResultEvent):void
+			{
+				bCalledFromBtnRefresh = true;
+				bResetMinMaxIndex = true;
+				refreshEmails();
+			}
+			
+			
+			protected function crMoveEmailsToFolder_resultHandler(event:ResultEvent):void
+			{
+				bCalledFromBtnRefresh = true;
+				bResetMinMaxIndex = true;
+				refreshEmails();
+			}
+			
+			protected function btnNew_clickHandler(event:MouseEvent):void
+			{
+				// Create a new Email
+				voComposeMsg = new Com_dspl_malkey_domain_Femails();
+				voComposeMsg.emailid = "";
+				voComposeMsg.fromemail = sOwnerEmailID;
+				voComposeMsg.date = new Date();
+				voComposeMsg.readstatus = 1;		// Mark As Unread
+				voComposeMsg.foldertype = -1;		// New Message is composed
+				voComposeMsg.sentstatus = 1;		// Not Sent yet
+				voComposeMsg.dsynched = new Date();
+				voComposeMsg.tsynched = formatTimeToString.format(new Date());
+				voComposeMsg.adddate = new Date();
+				voComposeMsg.adduser = "FUZULI";
+				voComposeMsg.addmach = "";
+				voComposeMsg.movedfrom = -1;		// Indicates that this mail is not moved from any other folder
+				
+				// Launch the "Compose Message" screen
+				oComposeMsg = new composeMsg();
+				oComposeMsg._oSourceRecord = voComposeMsg;
+				oComposeMsg._acDebtor = crFDebtorEmailID.lastResult;
+				oComposeMsg._acSupplier = crFSupplierEmailID.lastResult;
+				oComposeMsg._acEmployee = crFEmployeeEmailID.lastResult;
+				oComposeMsg.addEventListener('_sPostEventToRunPopUpExit', unloadComposeMsg);
+				PopUpManager.addPopUp(oComposeMsg,this,true,null,null);
+				PopUpManager.centerPopUp(oComposeMsg); 
+			}
+
+			protected function btnRefresh_clickHandler(event:MouseEvent):void
+			{
+				bCalledFromBtnRefresh = true;
+				bResetMinMaxIndex = true;
+				refreshEmails();
+			}
+						
+			
+			protected function btnNewer_clickHandler():void
+			{
+				if (iMinIndex>1){
+					iMinIndex -= iEmailsToDisplay;
+										
+					if ((iMaxIndex % iEmailsToDisplay)==0)
+						iMaxIndex -= iEmailsToDisplay;
+					else
+						iMaxIndex -= (iMaxIndex % iEmailsToDisplay);	// Only reduce the balance amount
+											
+					// If 'iMaxIndex' happens to be less than 1 then set it to 1 since minimum value this can be assigned is 1  
+					if (iMinIndex<1){
+						iMinIndex = 1;
+						iMaxIndex = iEmailsToDisplay;
+					} 
+					
+					crFemails.token = srvFemails.listOnFolderType(iSelectedFolderType, iMinIndex-1, iEmailsToDisplay);
+				}
+			}
+			
+			protected function btnOlder_clickHandler():void
+			{
+				if (iMaxIndex<iTotalEmails){
+					iMinIndex += iEmailsToDisplay;
+					iMaxIndex += iEmailsToDisplay;
+					
+					// If 'iMaxIndex' happens to be greater 'iTotalEmails' then set it to 'iTotalEmails' since maximum No emails would be always the Total No of Emails
+					if (iMaxIndex>iTotalEmails)
+						iMaxIndex = iTotalEmails;
+										
+					crFemails.token = srvFemails.listOnFolderType(iSelectedFolderType, iMinIndex-1, iEmailsToDisplay);
+				}
+			}
+			
+			
+			private function refreshEmails():void
+			{
+				if (bResetMinMaxIndex == true){
+					bResetMinMaxIndex = false;
+					iMinIndex = 1;
+					iMaxIndex = iEmailsToDisplay;
+				}
+				
+				if (bCalledFromBtnRefresh == true){
+					bCalledFromBtnRefresh = false;
+					bRefreshEmailAfterUnreadCount = true;
+					getEmailCountForInbox();					
+				} else
+					crFemailsCount.token = srvFemails.countOnFolderType(iSelectedFolderType);
+			}
+			
+			private function refreshFormProperties():void
+			{
+				if (iTotalEmails < iEmailsToDisplay)
+					iMaxIndex = iTotalEmails;
+				
+				if (iTotalEmails==0){		// Nothing to display					
+					iMinIndex = 0;
+					iMaxIndex = 0;
+				}
+				
+				if (iMinIndex == iMaxIndex)
+					iMaxIndex = iTotalEmails;
+
+				btnNewer.enabled = (iMinIndex>1 ? true : false);
+				btnOlder.enabled = (iMaxIndex<iTotalEmails ? true : false);
+				chkSelectAll.selected = false;
+			}
+			
+			private function getEmailCountForInbox():void
+			{
+				// Inbox Folder
+				iUnreadMailFolderType = 0;
+				crFemailsUnreadCount.token = srvFemails.countUnreadOnFolderType(iUnreadMailFolderType);		
+			}
+
+			private function getEmailCountForDrafts():void
+			{
+				// Outbox Folder
+				iUnreadMailFolderType = 1;
+				crFemailsUnreadCount.token = srvFemails.countUnreadOnFolderType(iUnreadMailFolderType);
+			}
+			
+			public function lstMailbox_clickHandler():void
+			{
+				if (iSelectedFolderType==IEMAIL_FOLDER_TYPE_DRAFT){
+					// Drafts
+					voComposeMsg = crFemails.lastResult.getItemAt(lstMailbox.selectedIndex);
+					oComposeMsg = new composeMsg();
+					oComposeMsg._oSourceRecord = voComposeMsg;
+					oComposeMsg._acDebtor = crFDebtorEmailID.lastResult;
+					oComposeMsg._acSupplier = crFSupplierEmailID.lastResult;
+					oComposeMsg._acEmployee = crFEmployeeEmailID.lastResult;
+					oComposeMsg.addEventListener('_sPostEventToRunPopUpExit', unloadComposeMsg);
+					PopUpManager.addPopUp(oComposeMsg,this,true,null,null);
+					PopUpManager.centerPopUp(oComposeMsg);
+				} else {
+					// If the selected mail is Un-read, mark it as read (For Inbox mails only)
+					if (iSelectedFolderType==IEMAIL_FOLDER_TYPE_INBOX && crFemails.lastResult[lstMailbox.selectedIndex].readstatus>0){
+						crFemails.lastResult[lstMailbox.selectedIndex].readstatus = 0;
+						srvFemails.updateReadStatus(0, crFemails.lastResult[lstMailbox.selectedIndex].recordid);
+						getEmailCountForInbox();
+					}
+					
+					oEmailMsg = new emailMsg();
+					oEmailMsg._iSelectedIndex = lstMailbox.selectedIndex;
+					oEmailMsg._oDataprovider = crFemails.lastResult;
+					oEmailMsg.addEventListener('_sPostEventToRunPopUpExit', unloadEmailMsg);
+					PopUpManager.addPopUp(oEmailMsg,this,true,null,null);
+					PopUpManager.centerPopUp(oEmailMsg);
+				}
+			}
+			
+			public function unloadEmailMsg(event:Event):void
+			{
+				var lbLaunchComposeMsg:Boolean = false;
+				
+				// "oEmailMsg._iResponseType" : Indicates the the reponse type for the current message
+				// -1	-	No action required, message is just closed
+				// 0	-	Reply to this message
+				// 1	-	ReplyAll to this message
+				// 2	-	Forward this message
+				// 3	-	Discard this message (Move to Trash)
+				// 4	-	Delete forever this message
+				
+				switch (oEmailMsg._iResponseType)
+				{
+					case 0:			// Reply
+						voComposeMsg = new Com_dspl_malkey_domain_Femails();
+						var oOrginalMail:Com_dspl_malkey_domain_Femails = crFemails.lastResult.getItemAt(lstMailbox.selectedIndex);
+						var lsMsgPrefix:String = ""; //"\r\n\r\n"+ "On " + formatDateToString.format(oOrginalMail.date) + ", " + oOrginalMail.fromemail + " wrote;" + "\r\n\r\n";
+						
+						voComposeMsg.emailid = "";
+						voComposeMsg.date = new Date();
+						voComposeMsg.toemail = oOrginalMail.fromemail;
+						voComposeMsg.ccemail = "";			// As this is REPLY mail needs to be initiated with only TO 
+						voComposeMsg.fromemail = sOwnerEmailID;
+						voComposeMsg.subject = "Re: " + oOrginalMail.subject;
+						voComposeMsg.htmlbody = lsMsgPrefix + oOrginalMail.htmlbody;
+						voComposeMsg.body = lsMsgPrefix + oOrginalMail.body;
+						voComposeMsg.attachment = "";		// Don't add any attachment files as this is a REPLY
+						voComposeMsg.attnames = "";
+						voComposeMsg.readstatus = 1;		// Mark As Unread
+						voComposeMsg.foldertype = -1;		// New Message is composed
+						voComposeMsg.sentstatus = 1;		// Not Sent yet
+						voComposeMsg.dsynched = new Date();
+						voComposeMsg.tsynched = formatTimeToString.format(new Date());
+						voComposeMsg.adddate = new Date();
+						voComposeMsg.adduser = "FUZULI";
+						voComposeMsg.addmach = "";
+						voComposeMsg.movedfrom = -1;		// Indicates that this mail is not moved from any other folder
+						
+						lbLaunchComposeMsg = true;
+						break;
+
+					case 1:			// ReplyAll
+						voComposeMsg = new Com_dspl_malkey_domain_Femails();
+						var oOrginalMail:Com_dspl_malkey_domain_Femails = crFemails.lastResult.getItemAt(lstMailbox.selectedIndex);
+						var lsMsgPrefix:String = ""; //"\r\n\r\n"+ "On " + formatDateToString.format(oOrginalMail.date) + ", " + oOrginalMail.fromemail + " wrote;" + "\r\n\r\n";
+						var lsCcRecipeints:String = ""
+						
+						// Remove the owner's email address
+						var lsToEmails:String = StringUtil.trim(oOrginalMail.toemail.replace(sOwnerEmailID+"; ", ""));
+						var lsCcEmails:String = StringUtil.trim(oOrginalMail.ccemail.replace(sOwnerEmailID+"; ", ""));
+						// Check if either To/ CC email address is listed as "undisclosed-recipient"
+						if (lsToEmails.toUpperCase()!=SEMAIL_ADDRESS_HIDDEN && lsToEmails.length>0)
+							lsCcRecipeints = lsToEmails;
+
+						if (lsCcEmails.toUpperCase()!=SEMAIL_ADDRESS_HIDDEN && lsCcEmails.length>0){
+							if (lsCcRecipeints.length==0)
+								lsCcRecipeints = lsCcEmails;
+							else
+								lsCcRecipeints += "; " + lsCcEmails
+						}
+						
+						voComposeMsg.emailid = "";
+						voComposeMsg.date = new Date();
+						voComposeMsg.toemail = oOrginalMail.fromemail;
+						voComposeMsg.ccemail = lsCcRecipeints; 
+						voComposeMsg.fromemail = sOwnerEmailID;
+						voComposeMsg.subject = "Re: " + oOrginalMail.subject;
+						voComposeMsg.htmlbody = lsMsgPrefix + oOrginalMail.htmlbody;
+						voComposeMsg.body = lsMsgPrefix + oOrginalMail.body;
+						voComposeMsg.attachment = "";		// Don't add any attachment files as this is a REPLY
+						voComposeMsg.attnames = "";
+						voComposeMsg.readstatus = 1;		// Mark As Unread
+						voComposeMsg.foldertype = -1;		// New Message is composed
+						voComposeMsg.sentstatus = 1;		// Not Sent Yet
+						voComposeMsg.dsynched = new Date();
+						voComposeMsg.tsynched = formatTimeToString.format(new Date());
+						voComposeMsg.adddate = new Date();
+						voComposeMsg.adduser = "FUZULI";
+						voComposeMsg.addmach = "";
+						voComposeMsg.movedfrom = -1;		// Indicates that this mail is not moved from any other folder
+						
+						lbLaunchComposeMsg = true;
+						break;
+
+					case 2:			// Forward
+						voComposeMsg = new Com_dspl_malkey_domain_Femails();
+						var oOrginalMail:Com_dspl_malkey_domain_Femails = crFemails.lastResult.getItemAt(lstMailbox.selectedIndex);
+						var lsMsgPrefix:String = "\r\n\r\n"+ "---------- Forwarded message ----------" + "\r\n" +
+													"From: " + oOrginalMail.fromemail + "\r\n" +
+													"Date: " + formatDate.format(oOrginalMail.date) + "\r\n" +
+													"Subject: " + oOrginalMail.subject + "\r\n" + 
+													"To: " + oOrginalMail.toemail + "\r\n" +
+													(oOrginalMail.ccemail.length==0 ? "\r\n" : "Cc: " + oOrginalMail.ccemail + "\r\n\r\n");
+						
+						voComposeMsg.emailid = "";
+						voComposeMsg.date = new Date();
+						voComposeMsg.toemail = "";
+						voComposeMsg.ccemail = "";			// As this is REPLY mail needs to be initiated with only TO 
+						voComposeMsg.fromemail = sOwnerEmailID;
+						voComposeMsg.subject = "Fwd: " + oOrginalMail.subject;
+						voComposeMsg.htmlbody = lsMsgPrefix + oOrginalMail.htmlbody;
+						voComposeMsg.body = lsMsgPrefix + oOrginalMail.body;
+						voComposeMsg.attachment = oOrginalMail.attachment;
+						voComposeMsg.attnames = oOrginalMail.attnames;
+						voComposeMsg.readstatus = 1;		// Mark As Unread
+						voComposeMsg.foldertype = -1;		// New Message is composed
+						voComposeMsg.sentstatus = 1;		// Not Sent Yet
+						voComposeMsg.dsynched = new Date();
+						voComposeMsg.tsynched = formatTimeToString.format(new Date());
+						voComposeMsg.adddate = new Date();
+						voComposeMsg.adduser = "FUZULI";
+						voComposeMsg.addmach = "";
+						voComposeMsg.movedfrom = -1;		// Indicates that this mail is not moved from any other folder
+						
+						lbLaunchComposeMsg = true;
+						break;
+
+					case 3:		// Move to Trahs
+						crFemailsMoveToTrash.token = srvFemails.moveToTrash(crFemails.lastResult[lstMailbox.selectedIndex].foldertype, crFemails.lastResult[lstMailbox.selectedIndex].recordid);
+						break;
+					
+					case 4:		// Delete forever
+						crFemails.lastResult[lstMailbox.selectedIndex].isdeleted = true;
+						deleteForever();
+				}
+					
+				PopUpManager.removePopUp(oEmailMsg);
+				
+				if (lbLaunchComposeMsg==true)
+				{
+					// Launch the "Compose Message" screen
+					oComposeMsg = new composeMsg();
+					oComposeMsg._oSourceRecord = voComposeMsg;
+					oComposeMsg._acDebtor = crFDebtorEmailID.lastResult;
+					oComposeMsg._acSupplier = crFSupplierEmailID.lastResult;
+					oComposeMsg._acEmployee = crFEmployeeEmailID.lastResult;
+					oComposeMsg.addEventListener('_sPostEventToRunPopUpExit', unloadComposeMsg);
+					PopUpManager.addPopUp(oComposeMsg,this,true,null,null);
+					PopUpManager.centerPopUp(oComposeMsg);
+				}
+			}
+			
+			
+			public function unloadComposeMsg(event:Event):void
+			{
+				// "oComposeMsg._iResponseType" : Indicates the the reponse type for the current message
+				// -1	-	No action required, message is just closed
+				// 0	-	Save this message
+				// 1	-	Send to this message
+				// 2	-	Discard/ Delete this message
+				switch (oComposeMsg._iResponseType)
+				{
+					case 0:
+						// Save as draft
+						voComposeMsg.foldertype=1;				// Save under Drafts
+						if (voComposeMsg.recordid==0)			// 0 means that the contents have not yet been saved
+							crFemailsCreate.token = srvFemails.create(voComposeMsg, oComposeMsg._acAttach);	// Update the server table with the New Email
+						else
+							crFemailsUpdate.token = srvFemails.update(voComposeMsg, oComposeMsg._acAttach);
+						
+						break;
+
+					case 1:
+						// Send the mail
+						voComposeMsg.foldertype=2;				// Save under Sent Items
+						voComposeMsg.sentstatus=1;				// Sechdule this mail to be sent using Auto-Scheduler in the backend
+						
+						if (voComposeMsg.recordid==0)			// 0 means that the contents have not yet been saved
+							crFemailsCreate.token = srvFemails.create(voComposeMsg, oComposeMsg._acAttach);	// Update the server table with the New Email
+						else
+							crFemailsUpdate.token = srvFemails.update(voComposeMsg, oComposeMsg._acAttach);
+						
+						break;
+
+					case 2:
+						// Move to Trash
+						if (voComposeMsg.foldertype==-1)		// -1 means that the contents have not yet been saved
+							voComposeMsg = null;				// Just ignore the contents
+						else {
+							crFemailsMoveToTrash.token = srvFemails.moveToTrash(voComposeMsg.foldertype, voComposeMsg.recordid);
+						}
+						
+						break;
+					
+					default:
+						if (iSelectedFolderType==IEMAIL_FOLDER_TYPE_DRAFT)
+							// Re-set the mail record to its original status
+							refreshEmails();
+				}
+				
+				PopUpManager.removePopUp(oComposeMsg);
+			}
+			
+
+			// Different folder selection buttons
+			 protected function btnInbox_clickHandler(event:MouseEvent):void
+			{
+				btnDrafts.selected = false;
+				btnSentItems.selected = false;
+				btnTrash.selected = false;
+				bResetMinMaxIndex = true;
+				iSelectedFolderType = IEMAIL_FOLDER_TYPE_INBOX;
+				currentState = "Inbox";
+				refreshEmails();
+			}
+			protected function btnDrafts_clickHandler(event:MouseEvent):void
+			{
+				btnInbox.selected = false;
+				btnSentItems.selected = false;
+				btnTrash.selected = false;
+				bResetMinMaxIndex = true;
+				iSelectedFolderType = IEMAIL_FOLDER_TYPE_DRAFT;
+				currentState = "Draft";
+				refreshEmails();
+			}
+			protected function btnSentItems_clickHandler(event:MouseEvent):void
+			{
+				btnInbox.selected = false;
+				btnDrafts.selected = false;
+				btnTrash.selected = false;
+				bResetMinMaxIndex = true;
+				iSelectedFolderType = IEMAIL_FOLDER_TYPE_SENT;
+				currentState = "Sent";
+				refreshEmails();
+			}
+			protected function btnTrash_clickHandler(event:MouseEvent):void
+			{
+				btnInbox.selected = false;
+				btnDrafts.selected = false;
+				btnSentItems.selected = false;
+				bResetMinMaxIndex = true;
+				iSelectedFolderType = IEMAIL_FOLDER_TYPE_TRASH;
+				currentState = "Trash";
+				refreshEmails();
+			}
+			
+			private function deleteForever():void
+			{
+				// Emails in either Outbox or trash should be deleted permanently
+				var lasEmails:ArrayCollection = new ArrayCollection();
+				// Seperate the "checked" mail records and delete them permanently
+				for each (var loEmail:Com_dspl_malkey_domain_Femails in crFemails.lastResult){
+					if (loEmail.isdeleted){
+						var loMsgToDelete:Com_dspl_malkey_domain_Femails = new Com_dspl_malkey_domain_Femails();
+						loMsgToDelete.attnames = loEmail.attnames;
+						loMsgToDelete.foldertype = loEmail.foldertype;
+						loMsgToDelete.movedfrom = IEMAIL_FOLDER_TYPE_TRASH;			// Move to Trash
+						loMsgToDelete.uniqattfld = loEmail.uniqattfld;
+						loMsgToDelete.recordid = loEmail.recordid;
+						lasEmails.addItem(loMsgToDelete);
+					}
+				}
+				
+				// NOTE: In the above for each, only specific fields of each email record is updated without copying all the fields
+				// 			to avoid transmitting un-necessary data to the server side. If any additional fields are referred on the
+				// 			server side method update them appropriately.
+				if (lasEmails.length>0){
+					if (iSelectedFolderType==IEMAIL_FOLDER_TYPE_INBOX || iSelectedFolderType==IEMAIL_FOLDER_TYPE_SENT)		
+						crMoveEmailsToFolder.token = srvFemails.moveToFolder(lasEmails);			// from Inbox/ Sent
+					else
+						crFemailsDeleteForever.token = srvFemails.deleteForever(lasEmails);			// from Outbox/ Trash
+				}
+			}
+
+			protected function chkSelectAll_clickHandler(event:MouseEvent):void
+			{
+				// Mark all the mail records based on the "chkSelectAll" selected property
+				for each (var loEmail:Com_dspl_malkey_domain_Femails in crFemails.lastResult){
+					loEmail.isdeleted = chkSelectAll.selected;
+				}
+			}
+
+			protected function btnMarkAs_clickHandler(event:MouseEvent):void
+			{
+				mPopup = Menu.createMenu(null, MarkAsMenuData, false);
+				mPopup.addEventListener(MenuEvent.ITEM_CLICK, markAsPopupMenuItemClick, false, 0, false);
+				mPopup.labelField = "@label";
+				mPopup.show(event.stageX, event.stageY);
+			}
+			
+			private function markAsPopupMenuItemClick(event:MenuEvent):void
+			{
+				var liReadSts:int;
+				
+				if (event.label.toString()=="Mark as Read")
+						liReadSts = 0;
+				else // "Mark as Unread" is selecte
+						liReadSts = 1;
+				
+				// Emails in either Outbox or trash should be deleted permanently
+				var lasEmails:ArrayCollection = new ArrayCollection();
+				// Seperate the "checked" mail records and delete them permanently
+				for each (var loEmail:Com_dspl_malkey_domain_Femails in crFemails.lastResult){
+					if (loEmail.isdeleted){
+						var loMsgToDelete:Com_dspl_malkey_domain_Femails = new Com_dspl_malkey_domain_Femails();
+						loMsgToDelete.recordid = loEmail.recordid;
+						lasEmails.addItem(loMsgToDelete);
+					}
+				}
+				
+				// NOTE: In the above for each, only specific fields of each email record is updated without copying all the fields
+				// 			to avoid transmitting un-necessary data to the server side. If any additional fields are referred on the
+				// 			server side method update them appropriately .  
+				
+				if (lasEmails.length>0)
+					crUpdateSelectedEmailsReadStatus.token = srvFemails.updateSelectedEmailsReadStatus(lasEmails, liReadSts);
+			}
+
+
+			protected function btnRestore_clickHandler(event:MouseEvent):void
+			{
+				if (iSelectedFolderType != IEMAIL_FOLDER_TYPE_TRASH)
+					return;				// This feature is only available when in Trash folder
+				
+				// Restore the selected Emails in trash to their original folders (either Inbox/ Sent)
+				var lasEmails:ArrayCollection = new ArrayCollection();
+				// Seperate the "checked" mail and update source arraylist (to be sent) with necessary Email info
+				for each (var loEmail:Com_dspl_malkey_domain_Femails in crFemails.lastResult){
+					if (loEmail.isdeleted){
+						var loMsgToRestore:Com_dspl_malkey_domain_Femails = new Com_dspl_malkey_domain_Femails();
+						loMsgToRestore.foldertype = loEmail.foldertype;
+						loMsgToRestore.movedfrom = loEmail.movedfrom;						// The original folder, from where it was moved to trash
+						loMsgToRestore.recordid = loEmail.recordid;
+						lasEmails.addItem(loMsgToRestore);
+					}
+				}
+				
+				if (lasEmails.length>0)
+					crMoveEmailsToFolder.token = srvFemails.moveToFolder(lasEmails);		// from Trash to Inbox/ Sent
+			}
+
+		]]>
+	</fx:Script>
+		
+	<!-- Declarations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Declarations>
+		<!-- Femails -->
+		<services:FemailsSRV id="srvFemails"
+							 fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							 showBusyCursor="true"
+							 endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crFemails" result="crFemails_resultHandler(event)"/>
+		<s:CallResponder id="crFemailsCount" result="crFemailsCount_resultHandler(event)"/>
+		<s:CallResponder id="crFemailsUnreadCount" result="crFemailsUnreadCount_resultHandler(event)"/>
+		<s:CallResponder id="crFemailsMoveToTrash" result="crFemailsMoveToTrash_resultHandler(event)"/>
+		<s:CallResponder id="crFemailsCreate" result="crFemailsCreate_resultHandler(event)"/>
+		<s:CallResponder id="crFemailsUpdate" result="crFemailsUpdate_resultHandler(event)"/>
+		<s:CallResponder id="crFDebtorEmailID"/>
+		<s:CallResponder id="crFEmployeeEmailID"/>
+		<s:CallResponder id="crFSupplierEmailID"/>
+		<s:CallResponder id="crFemailsDeleteForever" result="crFemailsDeleteForever_resultHandler(event)"/>
+		<s:CallResponder id="crUpdateSelectedEmailsReadStatus" result="crUpdateSelectedEmailsReadStatus_resultHandler(event)"/>
+		<s:CallResponder id="crMoveEmailsToFolder" result="crMoveEmailsToFolder_resultHandler(event)"/>
+		
+		<!-- Use below to format the DATETIME as: 08/12/2011 -->
+		<mx:DateFormatter id="formatDate" formatString="DD/MM/YYYY"/>
+		<!-- Use below to format the DATETIME as: Tuesday, December 8, 2011 -->
+		<mx:DateFormatter id="formatDateToString" formatString="EEEE, MMMM, YYYY"/>		
+		<!-- Use below to format the DATETIME to get only the time in 24 Hours: 13:15 -->
+		<mx:DateFormatter id="formatTimeToString" formatString="H:NN"/>
+		<!-- Use below to format the DATETIME as: Tuesday, Dec. 8, 2005 at 1:26:012 PM -->
+		<mx:DateFormatter id="formatDateTimeToString" formatString="EEEE, MMM. D, YYYY at L:NN:QQQ A"/>
+		
+		<!-- Pop menu when clicked on btnMarkAs -->
+		<fx:XML format="e4x" id="MarkAsMenuData">
+			<root>
+				<menuitem label="Mark as Read"/>
+				<menuitem label="Mark as Unread"/>
+			</root>
+		</fx:XML>
+	</fx:Declarations>
+
+	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->	
+	<mx:HBox height="100%" width="100%" verticalGap="5" horizontalGap="5" paddingTop="5" paddingLeft="5" paddingBottom="5" paddingRight="5">
+		<s:VGroup height="100%" width="10%">
+			<mx:ControlBar width="100%">
+				<mx:Button id="btnNew" label="Compose mail" toolTip="Compose mail"
+						   click="btnNew_clickHandler(event)"/>
+			</mx:ControlBar>
+			
+			<s:ToggleButton id="btnInbox" width="120%" useHandCursor="true" buttonMode="true"
+							label="Inbox {iUnreadInboxMails==0 ? '' : ' (' + iUnreadInboxMails + ')'}"
+							fontWeight="{iUnreadInboxMails==0 ? 'normal' : 'bold'}"
+							click="btnInbox_clickHandler(event)"/>
+			<s:ToggleButton id="btnDrafts" width="120%" useHandCursor="true" buttonMode="true"
+							label="Drafts"
+							fontWeight="{iUnreadDraftMails==0 ? 'normal' : 'bold'}"
+							click="btnDrafts_clickHandler(event)"/>
+			<s:ToggleButton id="btnSentItems" width="120%" useHandCursor="true" buttonMode="true"
+							label="Sent"
+							click="btnSentItems_clickHandler(event)"/>
+			<s:ToggleButton id="btnTrash" width="120%" useHandCursor="true" buttonMode="true"
+							label="Trash"
+							click="btnTrash_clickHandler(event)"/>
+		</s:VGroup>
+
+		
+		<s:VGroup height="100%" width="90%">
+			<mx:ControlBar width="100%">
+				<s:CheckBox id="chkSelectAll" selected="false"
+							click="chkSelectAll_clickHandler(event)"/>
+				<s:Button id="btnRefresh" label="Refresh" 
+						   click="btnRefresh_clickHandler(event)"/>
+				<s:Button id="btnDelete" label="Discard"
+						  label.Inbox="Move to Trash" label.Sent="Move to Trash" label.Draft="Delete forever" label.Trash="Delete forever"
+						  click="deleteForever()"/>
+				<!--<s:Button id="btnMarkAs" label="Mark As"
+						  click="btnMarkAs_clickHandler(event)" 
+						  visible.Inbox="true" visible.Draft="false" visible.Sent="false" visible.Trash="false"/>
+				<s:Button id="btnRestore" label="Restore" toolTip="Restore email to original folder (Inbox or Sent)"
+						  click="btnRestore_clickHandler(event)"
+						  visible.Inbox="false" visible.Draft="false" visible.Sent="false" visible.Trash="true"
+						  x="{btnMarkAs.x}" y="{btnMarkAs.y}"/>-->
+				
+				<s:Button id="btnMarkAs"
+						  label.Inbox="Mark As" label.Sent="Mark As" label.Draft="Mark As" label.Trash="Restore"
+						  toolTip.Inbox="Mark selected as Read/ Unread" toolTip.Draft="" toolTip.Sent="" toolTip.Trash="Restore email to original folder (Inbox or Sent)"
+						  click.Inbox="btnMarkAs_clickHandler(event)" click.Draft="" click.Sent="" click.Trash="btnRestore_clickHandler(event)" 
+						  visible.Inbox="true" visible.Draft="false" visible.Sent="false" visible.Trash="true"/>
+								
+				<mx:Spacer width="100%"/>
+				
+				<s:Button id="btnNewer" label="&lt; Newer"
+						  click="btnNewer_clickHandler()"/>
+				<s:Label fontWeight="bold" verticalAlign="middle"
+						 text=" {iMinIndex} - {iMaxIndex} of {iTotalEmails} "/>
+				<s:Button id="btnOlder" label="Older &gt;"
+						  click="btnOlder_clickHandler()"/>
+			</mx:ControlBar>
+			
+			<s:List id="lstMailbox" height="95%" width="100%"
+					dataProvider="{crFemails.lastResult}"
+					alternatingItemColors="[#edf0fa, white]"
+					horizontalCenter="0" verticalCenter="0"
+					itemRenderer="com.dspl.malkey.email.emailListItemRenderer">
+				<s:layout>
+					<s:VerticalLayout horizontalAlign="justify" gap="0" requestedRowCount="20"/>
+				</s:layout>
+			</s:List>
+		</s:VGroup>
+	</mx:HBox>
+</s:TitleWindow>

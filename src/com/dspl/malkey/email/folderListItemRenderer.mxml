@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				autoDrawBackground="true"
+				click="itemrenderer1_clickHandler(event)">
+
+	<!-- Properties of the parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<s:layout>
+		<s:HorizontalLayout verticalAlign="middle"
+							paddingLeft="5" paddingRight="5"
+							paddingTop="5" paddingBottom="5" />
+	</s:layout>
+	
+	<!-- Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Script>
+		<![CDATA[
+			protected function itemrenderer1_clickHandler(event:MouseEvent):void
+			{
+				parentDocument.parentDocument.lstFolder_clickHandler();	// Execute the corresponding method in the parent module
+			}
+		]]>
+	</fx:Script>
+
+	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<mx:VBox height="100%">
+	<s:Label maxDisplayedLines="1" showTruncationTip="true" buttonMode="true" useHandCursor="true"
+			 text="{data.foldername + ' (' + data.unreadmails + ')'}"
+			 fontWeight="{data.unreadmails==0 ? 'normal' : 'bold'}"
+			 visible="{data.foldertype==0 ? true : false}"/>
+	<s:Label maxDisplayedLines="1" showTruncationTip="true" buttonMode="true" useHandCursor="true"
+			 text="{data.foldername}"
+			 fontWeight="{data.unreadmails==0 ? 'normal' : 'bold'}"
+			 visible="{data.foldertype==1 ? true : false}"/>
+	<s:Label text="{data.foldername}"
+			 maxDisplayedLines="1" showTruncationTip="true"
+			 buttonMode="true" useHandCursor="true"
+			 visible="{data.foldertype==2 ? true : false}"/>		
+	</mx:VBox>
+
+</s:ItemRenderer>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="360" height="108"
+			   title="Reservation History"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			   >
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.data.events.DataConflictEvent;
+			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			[Bindable]
+			[Bindable]
+			private var lacStatus:ArrayCollection=new ArrayCollection([
+				{id:"A",description:"All"},
+				{id:"O",description:"Out"},
+				{id:"I",description:"In"}
+			]);
+			
+			//RD: Reservation Diary
+			//WD: Daily Hire Bookings With Driver
+			//SD: Daily Hire Bookings Without Driver
+			public var gsType:String;
+			public var gsTitle:String;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					var curDate:Date=new Date();
+					dfDateFrom.selectedDate=curDate;
+					dfDateTo.selectedDate=curDate;
+					this.title=gsTitle;
+					//setPermission();					
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}catch(error:Error){
+					Message.displayAlert(1,"closeForm: " + error.message,"Error",errorCloseHandler);	
+				}
+			}
+
+			protected function btnView_clickHandler(event:MouseEvent):void{
+				try{
+					if(dfDateFrom.selectedDate>dfDateTo.selectedDate){
+						Message.displayAlert(2,"Date To Cannot Be Less Than Date From","Warning",null);
+					}else{
+						var dateFrom:String=getDateString(dfDateFrom.selectedDate);
+						var dateTo:String=getDateString(dfDateTo.selectedDate);
+						var request:URLRequest;
+							request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/AgrHistory.jsp?df="+ dateFrom+"&dt="+dateTo);
+						request.method = URLRequestMethod.POST;
+						navigateToURL(request);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			
+			private function getDateString(dt:Date):String{
+				var year:String=dt.getFullYear().toString();
+				var month:String=(dt.getMonth()+1).toString();
+				var date:String=dt.getDate().toString();
+				if(StringUtil.trim(month).length<2)
+					month="0"+month;
+				if(StringUtil.trim(date).length<2)
+					date="0"+date;
+				return year+"."+month+"."+date;
+			}
+
+		]]>
+	</fx:Script>
+	<mx:Form
+		paddingLeft="0"
+		paddingRight="0"
+		paddingTop="0"
+		paddingBottom="0"
+		x="10" y="10" width="250" height="62">
+		<mx:FormItem label="Date From" direction="horizontal">
+			<mx:DateField
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				id="dfDateFrom"
+				width="148"
+				enabled="{btnView.enabled}"
+				/>
+		</mx:FormItem>
+		<mx:FormItem label="Date To">
+			<mx:DateField
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				id="dfDateTo"
+				width="148"
+				enabled="{btnView.enabled}"
+				/>
+		</mx:FormItem>
+	</mx:Form>
+	<s:Button
+		id="btnView"
+		click="btnView_clickHandler(event)"
+		x="268" y="10" label="View" height="29" width="78"
+		enabled="true"
+		/>
+</s:TitleWindow>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   width="412" height="96"
+			   title="{titleLabel}"
+			   close="titlewindow1_closeHandler(event)"
+			   creationComplete="titlewindow1_creationCompleteHandler(event)">
+	
+	
+	<!--View Tier-->
+	<mx:Form x="4" y="4" width="402" borderVisible="true" borderColor="black" borderStyle="solid" borderAlpha="0.10">
+		<mx:FormItem label="{label}" direction="horizontal" styleName="formItemXL" labelStyleName="formItemLabel">
+			<s:TextInput text="{text}" width="90" id="txtInput"  restrict="{restrict}" enter="txtInput_enterHandler(event)" keyUp="txtInput_keyUpHandler(event)"/>
+			<s:Button label="OK" width="70" click="btnEnter_clickHandler(event)" id="btnEnter"/>
+		</mx:FormItem>
+	</mx:Form>
+	
+	
+	
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Metadata>
+		[Event(name="enter", type="com.dspl.malkey.events.TextBoxEvent")]
+	</fx:Metadata>
+	
+	
+	
+	
+	<!--Model:Bussiness Logic Here/ActionScript Here-->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.events.TextBoxEvent;
+			
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]public var titleLabel:String ="";
+			[Bindable]public var label:String="";
+			[Bindable]public var text:String="";
+			[Bindable]public var restrict:String="0-9.";
+			
+
+			/***
+			 * Following method fire when user enter values and press enter button
+			 * 
+			 * */
+			protected function btnEnter_clickHandler(event:MouseEvent):void
+			{
+				dispatchEnterEvent();
+			}
+
+			/***
+			 * Following method fire when user enter values and press enter key
+			 * 
+			 * */
+			protected function txtInput_enterHandler(event:FlexEvent):void
+			{
+				dispatchEnterEvent();
+			}
+			
+			/***
+			 * Following method dispatch enter event for listerners
+			 * 
+			 * */
+			protected function dispatchEnterEvent():void
+			{
+				var textBoxEvent:TextBoxEvent=new TextBoxEvent("enter",txtInput.text);
+				textBoxEvent.text=txtInput.text;
+				dispatchEvent(textBoxEvent);
+				PopUpManager.removePopUp(this);
+			}
+			
+
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+
+
+			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			{
+				txtInput.selectAll();
+				txtInput.setFocus();
+			}
+
+
+			protected function txtInput_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode==Keyboard.ESCAPE)
+				{
+					PopUpManager.removePopUp(this);
+				}
+			}
+			public function setEnableNegative():void
+			{
+				restrict="-0-9.";
+			}
+
+		]]>
+	</fx:Script>
+	
+	
+	
+	
+	<!--Controller-->
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace controls "com.dspl.efinac.components.common.controls.*";
+		@namespace services "services.*";
+		
+		.formItems
+		{
+			label-width:60;
+		}
+		.formItem
+		{
+			label-width:80;
+		}
+		
+		.formItemL
+		{
+			label-width:120;
+		}
+		.formItemXL
+		{
+			label-width:180;
+		}
+		
+		.formItemLabel
+		{
+			text-align:left;
+		}
+		
+		
+		
+		
+	</fx:Style>
+	
+	
+	
+</s:TitleWindow>

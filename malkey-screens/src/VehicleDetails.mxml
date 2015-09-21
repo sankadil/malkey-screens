@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.dspl.efinac.components.common.controls.*" 
+		 xmlns:valueObjects="com.dspl.malkey.valueObjects.*"
+		 xmlns:services="com.dspl.malkey.services.*"
+		 width="100%" height="100%" 
+		 enabled="{isEnable}"
+		 disabledAlpha="1"
+		 creationComplete="group1_creationCompleteHandler(event)"
+		  >
+	
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<!--View Tier-->
+	
+	<mx:VBox width="100%" height="100%" >
+		<mx:Form 
+			borderAlpha="0.10"
+			paddingTop="5"
+			paddingLeft="5"
+			paddingRight="5"
+			paddingBottom="2"
+			borderColor="black"
+			borderStyle="solid"
+			borderVisible="true"
+			height="50%"
+			width="100%"
+			label="Vehicle Details"
+			>
+			<s:Label text="Vehicle Details" fontWeight="bold"/>
+		<!--	v.regno,c.description [vehiclassid],y.description [vehitypeid],k.description [vehimakeid],m.description [vehimodelid],t.description [vehitransid],f.description [fueltypeid],o.description [colourid]-->
+			<mx:FormItem label="Vehicle" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  required="true">
+				<controls:_tiMasterFile id="txtVehicle"											
+										_acDataProvider="{acVehicleAvailableAll}"
+										text="@{com_dspl_malkey_domain_FresvehiclePK.regno}"
+										_strKeyColumn="regno"
+										_strKeyColCaption="Reg: No" 
+										_strDetailColumn="vehimodelid" 
+										_strDetailColCaption="model"
+										_strWindowTitle="Select Vehicle"
+										otherColumns="vehimakeid,vehiclassid,fueltypeid,vehitypeid,colourid"
+										otherColumnHeaderText="Make,Class,Fuel,Type,Colour"
+										editable="false"
+										width="100"
+										/>
+				<mx:TextInput id="lblVehicleDescription" text="{genericfunctions.getArrayCollection(acVehicleAll,'regno',txtVehicle.text).description}" width="300"  editable="false"/>
+				<mx:LinkButton id="lnkVehicle" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtVehicle.launchSearchGrid();}"/>
+			</mx:FormItem>
+			<mx:FormItem label="Class" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel">
+				<s:TextInput 
+					id="txtClass"
+					text="{com_dspl_malkey_domain_Fvehicleclass.description}"
+					width="300"
+					editable="false"/>
+			</mx:FormItem>
+			<mx:FormItem label="Transmission">
+				<s:TextInput 
+					id="txtTransmission"
+					text="{com_dspl_malkey_domain_Fvehicletrans.description}"
+					width="300"
+					editable="false"/>
+			</mx:FormItem>
+			<mx:FormItem label="Vehicle Type" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel">
+				<s:TextInput id="txtVehicleType" text="{com_dspl_malkey_domain_Fvehicletype.description}" width="300" editable="false"/>
+			</mx:FormItem>
+			<mx:FormItem label="Priority" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel">
+				<s:NumericStepper 
+					id="nsPriority" 
+					maximum="10" 
+					minimum="1"
+					width="100"
+					value="@{com_dspl_malkey_domain_Fresvehicle.priority}"
+					enabled="false"
+					/>
+				<mx:Label id="lblPriority" text="{dgVehicle.dataProvider.length == 0 ? ' First chioce' : ' Alternatives'}" width="200"/>				
+			</mx:FormItem>
+			<mx:FormItem >
+				<mx:HBox horizontalAlign="center">
+					<s:Button id="btnAddVehicle" 	label="Add" 	 			click="btnAdd_clickHandler(event)" 					enabled="{!btnCancleVehicle.enabled}"/>
+					<s:Button id="btnSetPriorityVehicle" label="Set to Top" 	click="btnSetPriorityVehicle_clickHandler(event)" 	enabled="{dgVehicle.selectedIndex !=-1 ? true : false}"/>
+				<!--	<s:Button id="btnUpdateVehicle" label="Edit" 	 		click="btnUpdateVehicle_clickHandler(event)"		enabled="{dgVehicle.selectedIndex !=-1 ? true : false}"/>-->
+					<s:Button id="btnDeleteVehicle" label="Delete" 	 			click="btnDeleteVehicle_clickHandler(event)"		enabled="{dgVehicle.selectedIndex !=-1 ? true : false}"/>
+					<s:Button id="btnCancleVehicle" label="Cancle" 	 			click="btnCancleVehicle_clickHandler(event)"		enabled="{dgVehicle.selectedIndex !=-1 ? true : false}"/>
+					<!--<s:Button id="btnDetails" label="Details" click="btnDetails_clickHandler(event)"/>-->
+				</mx:HBox>
+			</mx:FormItem>
+		</mx:Form>
+		
+		<mx:DataGrid 
+			id="dgVehicle"
+			dataProvider="{acResVehicle}"
+			width="100%" height="150" 
+			dropShadowVisible="false" 
+			borderAlpha="0.28" 
+			borderVisible="true" 
+			verticalScrollPolicy="auto"
+			keyUp="dgVehicle_keyUpHandler(event)"
+			itemClick="dgVehicle_itemClickHandler(event)"
+			dragEnabled="true"
+			>
+			<mx:columns>
+				<mx:DataGridColumn dataField="priority" 	headerText="PRIORITY"/>
+				<mx:DataGridColumn dataField="id.regno" 	headerText="REGNO"/>
+				<mx:DataGridColumn dataField="id"  			headerText="DESCRIPTION"	labelFunction="vehicleDescription"/>
+				<mx:DataGridColumn dataField="id"  			headerText="Class"			labelFunction="vehicleClass"/>
+				<mx:DataGridColumn dataField="id"  			headerText="Type"			labelFunction="vehicleType"/>
+				<mx:DataGridColumn dataField="id"  			headerText="Made By"		labelFunction="vehicleMade"/>
+				<!--<mx:DataGridColumn dataField="fresvehiclerate.rate"  			headerText="Rate"		/>-->
+				<!--<mx:DataGridColumn dataField="id"  			headerText="Model"			labelFunction="vehicleModel"/>-->
+			</mx:columns>
+		</mx:DataGrid>
+		
+
+		
+	</mx:VBox>
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Bindings here-->
+	<fx:Binding destination="com_dspl_malkey_domain_Fresvehiclerate" source="acResVehicle.getItemAt(0).fresvehiclerate" />
+	<fx:Binding destination="dgVehicle.dataProvider" source="acResVehicle" />
+	<fx:Binding source="{genericfunctions.getArrayCollection(acVehicleAll,'regno',com_dspl_malkey_domain_FresvehiclePK.regno) as Com_dspl_malkey_domain_Fvehicle}" 					destination="com_dspl_malkey_domain_Fvehicle"/>
+	<fx:Binding source="{genericfunctions.getArrayCollection(acVehicleClassAll,'vehiclassid',com_dspl_malkey_domain_Fvehicle.vehiclassid) as Com_dspl_malkey_domain_Fvehicleclass}" destination="com_dspl_malkey_domain_Fvehicleclass"/>
+	<fx:Binding source="{genericfunctions.getArrayCollection(acVehicleTransAll,'vehitransid',com_dspl_malkey_domain_Fvehicle.vehitransid) as Com_dspl_malkey_domain_Fvehicletrans}" destination="com_dspl_malkey_domain_Fvehicletrans"/>
+	<fx:Binding source="{genericfunctions.getArrayCollection(acVehicleTypeAll,'vehitypeid',com_dspl_malkey_domain_Fvehicle.vehitypeid) as Com_dspl_malkey_domain_Fvehicletype}" 	destination="com_dspl_malkey_domain_Fvehicletype"/>
+	<fx:Binding destination="com_dspl_malkey_domain_Fresvehicle.id" source="com_dspl_malkey_domain_FresvehiclePK" />
+	<fx:Binding source="{stCurrent}" destination="currentState"/>
+	<s:states>
+		<s:State name="State1"   id="State1"/>
+		<s:State name="stDelete" id="stDelete"/>
+		<s:State name="stEdit" id="stEdit"/>
+		<s:State name="stNew"    id="stNew"/>
+		<s:State name="stView"  id="stView"/>
+		<s:State name="stUndo"  id="stUndo"/>
+	</s:states>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Declarations here-->
+	<fx:Declarations>
+		<!--Effect-->
+
+		
+		<!--Validators-->
+		<mx:StringValidator id="svClientId"
+							source="{txtVehicle}"
+							property="text"
+							/>
+		<!--Formatters here-->
+		
+		<!--valueObjects/domains here-->
+		<valueObjects:Com_dspl_malkey_domain_Fresvehicle 	id="com_dspl_malkey_domain_Fresvehicle"/>
+		<valueObjects:Com_dspl_malkey_domain_FresvehiclePK 	id="com_dspl_malkey_domain_FresvehiclePK"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicle 		id="com_dspl_malkey_domain_Fvehicle"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicleclass 	id="com_dspl_malkey_domain_Fvehicleclass"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicletrans 	id="com_dspl_malkey_domain_Fvehicletrans"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicletype 	id="com_dspl_malkey_domain_Fvehicletype"/>
+		<valueObjects:Com_dspl_malkey_domain_Freservation	id="com_dspl_malkey_domain_Freservation"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresvehiclerate	id="com_dspl_malkey_domain_Fresvehiclerate"/>
+		
+		<!--CallResponder Here-->
+		<s:CallResponder 			id="crFvehiclerateSRVFindByID" result="crFvehiclerateSRVFindByID_resultHandler(event)"/>
+
+		
+		<!--Services here-->
+		<services:FvehiclerateSRV 	id="fvehiclerateSRV" 	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	
+	
+	
+	
+	
+	<!--Metadata Here-->
+	
+	<fx:Metadata>
+		[Event(name="change",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--ActionScripts here-->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.util.DateOperation;
+			import com.dspl.malkey.util.RateType;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehiclerate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehiclerate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FvehicleratePK;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			
+			
+			[Bindable]	public var acVehicleAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleAvailableAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleClassAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleTransAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleTypeAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acResVehicle:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleModelAll:ArrayCollection = new ArrayCollection();
+			[Bindable]	public var acVehicleMake:ArrayCollection = new ArrayCollection();
+			[Bindable]  private var genericfunctions:GenericFunctions = new GenericFunctions();
+			[Bindable] 	private var session:Session = Session.getInstance(); 
+		//	[Bindable]	public var singletonRateType:RateType;
+			[Bindable]	public var clientType:String ="INDIVIDUAL";
+			[Bindable]public var stCurrent:String;
+
+			[Bindable]public var isEnable:Boolean=false;
+			
+			/***
+			 * Reset Form  is following</br>
+			 * Author:sanka
+			 */
+			public function resetAll():void
+			{
+				var tmpPriority:int= com_dspl_malkey_domain_Fresvehicle.priority;
+				com_dspl_malkey_domain_Fresvehicle=new Com_dspl_malkey_domain_Fresvehicle();
+				com_dspl_malkey_domain_FresvehiclePK=new Com_dspl_malkey_domain_FresvehiclePK();
+				com_dspl_malkey_domain_Fvehicle=new Com_dspl_malkey_domain_Fvehicle();
+				com_dspl_malkey_domain_Fvehicleclass=new Com_dspl_malkey_domain_Fvehicleclass();
+				com_dspl_malkey_domain_Fvehicletrans=new Com_dspl_malkey_domain_Fvehicletrans();
+				com_dspl_malkey_domain_Fvehicletype=new Com_dspl_malkey_domain_Fvehicletype();
+				com_dspl_malkey_domain_Fresvehicle.priority=tmpPriority;
+				dgVehicle.selectedIndex=-1;
+				dgVehicle.selectable=true;
+				lblVehicleDescription.text="";
+				//btnUpdateVehicle.label="Edit";
+				lnkVehicle.enabled=true;
+				txtVehicle.enabled=true;
+				(dgVehicle.dataProvider as ArrayCollection).removeAll();
+				nsPriority.value=1;
+				//dispatchEvent(new Event("rateChange"));
+				dispatchEvent(new Event("change")); 
+			}
+			
+			
+			
+			/***
+			 * Reset Form  is following</br>
+			 * Author:sanka
+			 */
+			private function resetVehicleForm():void
+			{
+				var tmpPriority:int= com_dspl_malkey_domain_Fresvehicle.priority;
+				com_dspl_malkey_domain_Fresvehicle=new Com_dspl_malkey_domain_Fresvehicle();
+				com_dspl_malkey_domain_FresvehiclePK=new Com_dspl_malkey_domain_FresvehiclePK();
+				com_dspl_malkey_domain_Fvehicle=new Com_dspl_malkey_domain_Fvehicle();
+				com_dspl_malkey_domain_Fvehicleclass=new Com_dspl_malkey_domain_Fvehicleclass();
+				com_dspl_malkey_domain_Fvehicletrans=new Com_dspl_malkey_domain_Fvehicletrans();
+				com_dspl_malkey_domain_Fvehicletype=new Com_dspl_malkey_domain_Fvehicletype();
+				com_dspl_malkey_domain_Fresvehicle.priority=tmpPriority;
+				dgVehicle.selectedIndex=-1;
+				dgVehicle.selectable=true;
+				lblVehicleDescription.text="";
+				//btnUpdateVehicle.label="Edit";
+				lnkVehicle.enabled=true;
+				txtVehicle.enabled=true;
+			}
+			
+			
+			
+			
+			
+			/***
+			 * This method perform setting the prority of vehicle reservation acording to the index order of datagrid
+			 * 	Following steps perform the function of reset the prority of each an every item.
+			 *	assumpson priority=index of datagrid
+			 * </br>
+			 * Author:sanka
+			 * */
+			private function setPriority():void
+			{
+				var index:int=1;
+				for each(var tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle in acResVehicle)
+				{
+					tempFresvehicle.priority=index;
+					index++;
+				}
+				acResVehicle.refresh();
+				dispatchEvent(new Event("change")); 
+			}
+
+
+
+			
+			
+			/***
+			 * Buttons event-handlers are following</br>
+			 * Author:sanka
+			*/
+			protected function btnAdd_clickHandler(event:MouseEvent):void
+			{
+				findByIDFvehiclerateSRV();
+			}
+			
+						
+			protected function btnSetPriorityVehicle_clickHandler(event:MouseEvent):void
+			{
+				if(dgVehicle.selectedIndex==0)//if frist then no point of doing this
+					return;
+				
+				var tempRemoveItemIndex:int=dgVehicle.selectedIndex;//get the selected index
+				var tempRemoveItem:Object=acResVehicle.removeItemAt(dgVehicle.selectedIndex);//get the removed item to tempary variable
+				acResVehicle.addItemAt(tempRemoveItem,0);//add the removed item into frist lement of arrayCollection
+				setPriority();
+				
+			//	dispatchEvent(new Event("change")); 
+				//dispatchEvent(new Event("rateChange"));
+			}
+			
+			protected function btnDeleteVehicle_clickHandler(event:MouseEvent):void
+			{
+				var tempPriority:int=acResVehicle.length;//maintain the priority
+				acResVehicle.removeItemAt(dgVehicle.selectedIndex);
+				acResVehicle.refresh();
+				resetVehicleForm();
+				nsPriority.value=tempPriority;//maintain the priority
+				setPriority();
+				//dispatchEvent(new Event("rateChange"));
+				//dispatchEvent(new Event("change")); 
+			}
+
+			protected function btnCancleVehicle_clickHandler(event:MouseEvent):void
+			{
+				resetVehicleForm();
+			}
+			/***
+			 * Buttons event-handlers are above</br>
+			 * 
+			 */
+			
+			
+			
+			
+			
+			/*Lable Functions here  */
+			private function vehicleDescription(item:Object, column:DataGridColumn):String
+			{
+				return genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).description;
+			}
+			private function vehicleClass(item:Object, column:DataGridColumn):String
+			{
+				var temp:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehiclassid;
+				return genericfunctions.getArrayCollection(acVehicleClassAll,"vehiclassid",temp).description;
+			}
+			
+			private function vehicleType(item:Object, column:DataGridColumn):String
+			{
+				var temp:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehitypeid;
+				return genericfunctions.getArrayCollection(acVehicleTypeAll,"vehitypeid",temp).description;
+			}
+			
+			private function vehicleModel(item:Object, column:DataGridColumn):String
+			{
+				/***
+				 * Error occured in following code
+				 * 
+				 * */
+				var temp:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehimodelid;
+				var tempIndex:int= genericfunctions.getArrayCollectionIndex(acVehicleModelAll,"id.vehimodelid",temp);
+				return acVehicleModelAll.getItemAt(tempIndex).description;
+			}
+			
+			private function vehicleMade(item:Object, column:DataGridColumn):String
+			{
+				var temp:String=genericfunctions.getArrayCollection(acVehicleAll,"regno",item["id"].regno).vehimakeid;
+				return genericfunctions.getArrayCollection(acVehicleMake,"vehimakeid",temp).description;
+			}
+			/*End :Lable Functions here  */
+			
+			 
+			
+			//test method
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				resetVehicleForm();
+				//singletonRateType=session.getAttribute("RateType");
+				
+			}
+			
+			/***
+			 * 
+			 * This method execute service call for get rate for selected vehicle ratetype hiretype combination
+			 *   */
+			protected function findByIDFvehiclerateSRV():void
+			{
+				
+				var vehicleratePK:Com_dspl_malkey_domain_FvehicleratePK=new Com_dspl_malkey_domain_FvehicleratePK();
+				vehicleratePK.clienttype=clientType;
+				vehicleratePK.hiretypeid=com_dspl_malkey_domain_Freservation.hiretypeid;
+				vehicleratePK.ratetype=session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+				vehicleratePK.vehimodelid=com_dspl_malkey_domain_Fvehicle.vehimodelid;
+				crFvehiclerateSRVFindByID.token = fvehiclerateSRV.findByID(vehicleratePK);
+				
+			}
+			
+			/***
+			 * This method desgin for apply Rates for given vehicle
+			 * design for apply old rates for newly changes vehicle
+			 * */
+			public function applyRates(tempFresvehiclerate:Com_dspl_malkey_domain_Fresvehiclerate,tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle):Com_dspl_malkey_domain_Fresvehicle
+			{
+				tempFresvehicle.fresvehiclerate=tempFresvehiclerate;
+				return tempFresvehicle;
+			}
+			//com_dspl_malkey_domain_Fresvehiclerate
+			
+			
+			/***
+			 * service call will fire when the user add each an every vehicle into datagrid
+			 * 
+			 * */
+			/*Set the rate for domain  */
+			protected function crFvehiclerateSRVFindByID_resultHandler(event:ResultEvent):void
+			{
+				if(crFvehiclerateSRVFindByID.lastResult !=null)
+				{
+					var tempVehiclerate:Com_dspl_malkey_domain_Fvehiclerate=crFvehiclerateSRVFindByID.lastResult as Com_dspl_malkey_domain_Fvehiclerate;
+ 					var tempFresvehiclerate:Com_dspl_malkey_domain_Fresvehiclerate=new Com_dspl_malkey_domain_Fresvehiclerate();
+					tempFresvehiclerate.rate=tempVehiclerate.rate;
+					tempFresvehiclerate.xsmilerate=tempVehiclerate.xsmilerate;
+					tempFresvehiclerate.allotedkms=new Number(tempVehiclerate.allotedkms);
+					//tempFresvehiclerate.allotedkms=new Number(tempVehiclerate.allotedkms); 
+					tempFresvehiclerate.clienttype=clientType;
+					tempFresvehiclerate.hiretypeid=com_dspl_malkey_domain_Freservation.hiretypeid;
+					tempFresvehiclerate.ratetype=session.getAttribute("RateType").getRatetype(com_dspl_malkey_domain_Freservation.chargdays);
+					tempFresvehiclerate.vehimodelid=com_dspl_malkey_domain_Fvehicle.vehimodelid;
+					tempFresvehiclerate.addmach="snk";
+					tempFresvehiclerate.adduser="snk";
+					tempFresvehiclerate.adddate=new Date();
+					tempFresvehiclerate.discount="0.00";
+				 	com_dspl_malkey_domain_Fresvehicle.fresvehiclerate=tempFresvehiclerate;
+					// tem comment by sanka com_dspl_malkey_domain_Fresvehicle.fvehicle=com_dspl_malkey_domain_Fvehicle;
+					//com_dspl_malkey_domain_Fresvehicle.rate=new Number(tempVehiclerate.rate);
+					addVehicle();
+				}
+				else
+				{
+					//selected vehicle is not allowed for hiretype
+					Alert.show("Sorry,\nSelected vehicle is not allowed for given Hire-Type.","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+					resetVehicleForm();
+				}
+			}
+
+			
+			/***
+			 * Add vehicle Item to datagrid
+			 * validation:avoid duplicate</br>
+			 * Author:sanka
+			 * */
+			private function addVehicle():void
+			{
+				/***
+				 * initially zero for some othe cercumstanceses
+				 * */
+				if(com_dspl_malkey_domain_Fresvehicle.priority==0)
+				{
+					com_dspl_malkey_domain_Fresvehicle.priority=1;
+					Alert.show("issue tester");
+				}
+				
+				var hasElement:Boolean=false;
+				for each(var tempFresvehicle:Com_dspl_malkey_domain_Fresvehicle in acResVehicle)
+				{
+					if(tempFresvehicle.id.regno==txtVehicle.text && StringUtil.trim(txtVehicle.text).length>0)
+					{
+						Alert.show("Vehicle Already Reserved","Warning",Alert.OK,null,null,genericfunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return;
+					}
+				}
+				if(!hasElement)
+				{
+					var tempPriority:int=com_dspl_malkey_domain_Fresvehicle.priority;//maintain the priority
+					acResVehicle.addItem(com_dspl_malkey_domain_Fresvehicle);
+					acResVehicle.refresh();
+					resetVehicleForm(); 
+					nsPriority.value=tempPriority+1;//maintain the priority
+					
+					dispatchEvent(new Event("change")); 
+					//dispatchEvent(new Event("rateChange"));
+				} 
+				
+				
+			}
+			
+
+			
+			public function setStatus():void
+			{
+				com_dspl_malkey_domain_Freservation.cofuellevel=com_dspl_malkey_domain_Fvehicle.fuellevel;
+				com_dspl_malkey_domain_Freservation.comileage=com_dspl_malkey_domain_Fvehicle.curmileage;
+			}
+			
+
+			
+			/***
+			 * This method dispatch the ratechnage event &
+			 *  wakeup for calculate rates
+			 * 
+			 * */
+			public function wakeup():void
+			{
+				//dispatchEvent(new Event("rateChange"));
+				dispatchEvent(new Event("change")); 
+			}
+
+			
+			
+
+			/***
+			 * This method perform delete items on datagrid by using keyboard delete key
+			 * 	
+			 *	
+			 * </br>
+			 * Author:sanka
+			 * */
+			protected function dgVehicle_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode==Keyboard.DELETE && btnDeleteVehicle.enabled)
+				{
+					btnDeleteVehicle_clickHandler(new MouseEvent(MouseEvent.CLICK));
+				}
+			}
+			
+
+			
+
+			
+
+
+
+			protected function dgVehicle_itemClickHandler(event:ListEvent):void
+			{
+				com_dspl_malkey_domain_FresvehiclePK.regno=(acResVehicle.getItemAt(event.rowIndex) as Com_dspl_malkey_domain_Fresvehicle).id.regno;
+			}
+
+		]]>
+	</fx:Script>
+</s:Group>

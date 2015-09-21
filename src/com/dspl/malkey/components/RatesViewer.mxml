@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="806" height="416"
+			   close="closeForm()"
+			   creationComplete="initApp(event)" xmlns:services="com.dspl.malkey.services.*"
+			   >
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			public var vehimodelid:String;
+			
+			[Bindable]
+			private var lacRateList:ArrayCollection;
+			
+			[Bindable]
+			private var laClientType:Array;
+			[Bindable]
+			private var laHireType:Array;
+			[Bindable]
+			private var laRateType:Array;
+			
+			private var lsClientType:String="";
+			private var lsHireType:String="";
+			private var lsRateType:String="";
+
+			protected function closeForm():void{
+				cursorManager.removeBusyCursor();
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+
+			protected function initApp(event:FlexEvent):void{
+				try{
+					cursorManager.setBusyCursor();
+					crGetRateList.token=srvFvehiclerate.getRateList(vehimodelid);
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crGetRateList_resultHandler(event:ResultEvent):void
+			{
+				try{
+					if(event.result==null)
+						displayErrorMessage("Error Occured");
+					else{
+						lacRateList=event.result as ArrayCollection;
+						populateData();
+					}
+				}catch(error:Error){
+					displayErrorMessage("GetRateList : " + error.message);	
+				}				
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function populateData():void{
+				try{
+					var deviceArrayHashMap:Object = new Object();
+					var len:uint = lacRateList.length;
+					
+					laClientType=new Array();
+					laHireType=new Array();
+					laRateType=new Array();
+					
+					for(var i:int = 0; i<len; i++){
+						if(deviceArrayHashMap[lacRateList[i].id.clienttype] == undefined){
+							deviceArrayHashMap[lacRateList[i].id.clienttype] = new Object();
+							laClientType.push(lacRateList[i].id.clienttype);
+						}
+						
+						if(deviceArrayHashMap[lacRateList[i].id.hiretypeid] == undefined){
+							deviceArrayHashMap[lacRateList[i].id.hiretypeid] = new Object();
+							laHireType.push(lacRateList[i].id.hiretypeid);
+						}
+						
+						if(deviceArrayHashMap[lacRateList[i].id.ratetype] == undefined){
+							deviceArrayHashMap[lacRateList[i].id.ratetype] = new Object();
+							laRateType.push(lacRateList[i].id.ratetype);
+						}
+					}
+					laClientType.sort();
+					laClientType.unshift("All");
+					cbClientType.selectedIndex=0;
+					
+					laHireType.sort();
+					laHireType.unshift("All");
+					cbHireType.selectedIndex=0;
+					
+					laRateType.sort();
+					laRateType.unshift("All");
+					cbRateType.selectedIndex=0;
+					
+					lacRateList.filterFunction=filterRates;
+					lacRateList.refresh();
+					
+				}catch(error:Error){
+					Message.displayAlert(1,"populateData: " + error.message,"Error",errorCloseHandler); 
+				}
+			}
+
+			protected function crGetRateList_faultHandler(event:FaultEvent):void{
+				displayErrorMessage("GetRateList [Fault]: " + event.fault.toString());
+			}
+			
+			private function displayErrorMessage(message:String):void{
+				Message.displayAlert(1,message,"Error",errorCloseHandler);	
+			}
+
+			protected function cbClientType_changeHandler(event:ListEvent):void{
+				if(cbClientType.selectedIndex<1)
+					lsClientType="";
+				else
+					lsClientType=cbClientType.selectedItem.toString();
+				lacRateList.refresh();
+			}
+
+			protected function cbHireType_changeHandler(event:ListEvent):void{
+				if(cbHireType.selectedIndex<1)
+					lsHireType="";
+				else
+					lsHireType=cbHireType.selectedItem.toString();
+				lacRateList.refresh();
+			}
+
+			protected function cbRateType_changeHandler(event:ListEvent):void{
+				if(cbRateType.selectedIndex<1)
+					lsRateType="";
+				else
+					lsRateType=cbRateType.selectedItem.toString();
+				lacRateList.refresh();
+			}
+			
+			private function filterRates(item:Object):Boolean{
+				var val:Boolean=true;
+				
+				if(lsClientType.length>0 && lsClientType!=item.id.clienttype)
+					val=false;
+				
+				if(lsHireType.length>0 && lsHireType!=item.id.hiretypeid)
+					val=false;
+				
+				if(lsRateType.length>0 && lsRateType!=item.id.ratetype)
+					val=false;
+				
+				return val;
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<services:FvehiclerateSRV
+			id="srvFvehiclerate"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<s:CallResponder
+			id="crGetRateList"
+			result="crGetRateList_resultHandler(event)"
+			fault="crGetRateList_faultHandler(event)"
+			/>
+	</fx:Declarations>
+	<mx:DataGrid x="8" y="49" width="786" height="320" dataProvider="{lacRateList}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Client Type" dataField="id.clienttype"/>
+			<mx:DataGridColumn headerText="Hire Type" dataField="id.hiretypeid"/>
+			<mx:DataGridColumn headerText="Rate Type" dataField="id.ratetype"/>
+			<mx:DataGridColumn headerText="Rate (Rs.)" dataField="standardrate"/>
+			<mx:DataGridColumn headerText="Excess Mileage Rate (Rs.)" dataField="xsmilerate"/>
+			<mx:DataGridColumn headerText="Alloted Mileage" dataField="allotedkms"/>
+			<mx:DataGridColumn dataField="xhourrate" headerText="Excess Hour Rate (Rs.)"/>
+			<mx:DataGridColumn dataField="allotedhours" headerText="Alloted Hours"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:FormItem label="Client Type" x="8" y="10">
+		<mx:ComboBox id="cbClientType" x="50" y="17" width="150" dataProvider="{laClientType}" change="cbClientType_changeHandler(event)"/>	
+	</mx:FormItem>
+	<mx:FormItem label="Hire Type" x="277" y="10" width="242">
+		<mx:ComboBox id="cbHireType" x="50" y="17" width="168" dataProvider="{laHireType}" change="cbHireType_changeHandler(event)"/>	
+	</mx:FormItem>
+	<mx:FormItem label="Rate Type" x="549" y="10">
+		<mx:ComboBox id="cbRateType" x="50" y="17" width="171" dataProvider="{laRateType}" change="cbRateType_changeHandler(event)"/>	
+	</mx:FormItem>
+	
+</s:TitleWindow>

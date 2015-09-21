@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project		:	malkey-screens
+Package		:	
+Component	:	VehicleRateMaster.mxml
+Description	:	
+Module		:	
+Author		:	Fuzuli Hameed
+Created On	:	Nov 21, 2011
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:components="com.dspl.malkey.components.*"
+		 xmlns:services="com.dspl.malkey.services.*"
+		 width="720" height="510" minWidth="715" minHeight="510"
+		 creationComplete="initApp()"
+		 title="Vehicle Rate Master File"
+		 close="twVehicleRateMaster_closeHandler(event)">
+	
+	<!-- Properties of the parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="Edit"/>
+	</s:states>		
+
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	
+	<!-- Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fclienttype;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fhiretype;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehiclerate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FvehicleratePK;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			
+			// Class and variable used in User access level  
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			[Bindable] 
+			private var sVehicleMake:String = "";
+			[Bindable] 
+			private var sVehicleModel:String = "";
+			[Bindable] 
+			private var sVehiModelID:String = "";
+			
+			private var lCreateNewVehiRate:Boolean;
+			private var sVehicleMakeID:String = "";
+			private var sHireType:String = "";
+			private var sClientType:String = "";
+			private var oVRate:Object;
+			private var lLoadMasterFilesButtonClicked:Boolean = false;
+			
+			private var oGenFunctions:GenericFunctions = new GenericFunctions();
+			
+			private function initApp():void
+			{
+				loadMasterFiles();
+				
+				cboMake.setFocus();
+			}
+			
+			// Start: Bring all Master File data
+			private function loadMasterFiles():void
+			{
+				crVehicleMake.token = srvFvehiclemake.ListAll();
+				crVehicleModel.token = srvFvehiclemodel.ListAll();
+				crClientType.token = srvFclienttype.ListAll();
+				crClientTypeOrg.token = srvFclienttype.ListAll();
+				crHireType.token = srvFhiretype.ListAll();
+				crHireTypeOrg.token = srvFhiretype.ListAll();
+				crRateType.token = srvFratetype.listAll();
+			}
+
+			// Start: Vehicle Rate New/ Edit/ Delete related code
+			protected function btnVehiRateNew_clickHandler(event:MouseEvent):void
+			{
+				if (sVehicleMakeID.length==0 || sVehiModelID.length==0){
+					Alert.show("Select a Vechile Make and Model combination to edit.", title, Alert.OK, this, null, oGenFunctions.IconWarning);
+				} else {
+					lCreateNewVehiRate = true;
+					launchVehicleRatePopUp()
+				}
+			}
+			
+			protected function btnVehiRateEdit_clickHandler(event:MouseEvent):void
+			{
+				if (dgVehiRate.selectedIndex == -1)
+					Alert.show("Select a record to edit.", title, Alert.OK, this, null, oGenFunctions.IconWarning);
+				else {
+					Alert.show("Editing vehicle rate would affect all the vehicle(s) of Model ‘" + StringUtil.trim(sVehiModelID) + "’. Continue editing?", 
+						title, Alert.YES | Alert.NO, this, editVehicleRate_closeHandler, oGenFunctions.IconQuestion);
+				}
+			}
+			
+			private function editVehicleRate_closeHandler(event:CloseEvent):void
+			{
+				if (event.detail==Alert.YES){
+					lCreateNewVehiRate = false;
+					launchVehicleRatePopUp()
+				}
+			}
+			
+			protected function btnVehiRateDel_clickHandler(event:MouseEvent):void
+			{
+				if (dgVehiRate.selectedIndex == -1)
+					Alert.show("Select a record to delete!", title, Alert.OK, this, null, oGenFunctions.IconInformation);
+				else 
+					Alert.show("Do you want to delete this vehicle rate entry?", title, Alert.YES | Alert.NO, this, vehicleRateDel_closeHandler, oGenFunctions.IconQuestion);
+			}
+			
+			private function vehicleRateDel_closeHandler(event:CloseEvent):void
+			{
+				if (event.detail==Alert.YES)
+					crVehicleRate.lastResult.removeItemAt(dgVehiRate.selectedIndex);
+			}
+			
+			private function launchVehicleRatePopUp():void
+			{
+				crVehicleRate.lastResult.filterFunction = null;					// Remove the active filters 
+				crVehicleRate.lastResult.refresh(); 
+				
+				var app:DisplayObject = DisplayObject(FlexGlobals.topLevelApplication);
+				oVRate = PopUpManager.createPopUp(app, VehicleRate, true);
+				oVRate.gaVehicleRate = crVehicleRate.lastResult;
+				oVRate.gaClientType = crClientTypeOrg.lastResult;
+				oVRate.gaHireType = crHireTypeOrg.lastResult;
+				oVRate.gaRateType = crRateType.lastResult;
+				oVRate.addEventListener("closeVehicleRatePopUp", closeVehicleRatePopUp);		// Link with this method upon closure of the pop-up
+				
+				var lcWindowTitleSuffix:String = "Edit";
+				
+				if (lCreateNewVehiRate==true){
+					lcWindowTitleSuffix = "New";
+					
+					var oVehicleRatePK:Com_dspl_malkey_domain_FvehicleratePK = new Com_dspl_malkey_domain_FvehicleratePK();					 
+					oVehicleRatePK.vehimodelid = crVehicleModel.lastResult[cboModel.selectedIndex].id;
+					oVehicleRatePK.clienttype = cboClientType.selectedIndex>-1 ? crClientType.lastResult[cboClientType.selectedIndex].clienttype : "";
+					oVehicleRatePK.hiretypeid = cboHireType.selectedIndex>-1 ? crHireType.lastResult[cboHireType.selectedIndex].hiretypeid : "";
+					oVehicleRatePK.ratetype = "";
+					
+					oVRate.gfTmpVehicleRate = new Com_dspl_malkey_domain_Fvehiclerate();
+					oVRate.gfTmpVehicleRate.id = oVehicleRatePK;
+					oVRate.gfTmpVehicleRate.recordid = 0;
+					oVRate.gfTmpVehicleRate.standardrate = "0.00";
+					oVRate.gfTmpVehicleRate.xsmilerate = "0.00";
+				} else {
+					oVRate.gfTmpVehicleRate = crVehicleRate.lastResult[dgVehiRate.selectedIndex];			
+				}
+				
+				oVRate.title = "Vehicle Rates - " +  lcWindowTitleSuffix;
+				
+				PopUpManager.centerPopUp(IFlexDisplayObject(oVRate));
+			}
+			
+			private function closeVehicleRatePopUp(event:Event):void
+			{
+				if (oVRate.glBtnSaveClicked==true){		// Save button is clicked
+					if (lCreateNewVehiRate==true)		
+						// A new record is being created, add the record to the existing collection 
+						crVehicleRate.lastResult.addItem(oVRate.gfTmpVehicleRate);
+					
+					crVehicleRate.lastResult.refresh();
+				}
+				PopUpManager.removePopUp(IFlexDisplayObject(oVRate));
+				
+				crVehicleRate.lastResult.filterFunction = filterVehicleRate;				// Active the filters 
+				crVehicleRate.lastResult.refresh();
+			}
+			// End: Vehicle Rate New/ Edit/ Delete related code	
+			
+			
+			// Start: Filter the Vehicle Model Combo drop down based on selected the Vehicle Make
+			protected function cboMake_changeHandler(event:*):void
+			{
+				sVehicleMakeID = "";
+				sVehicleMake = "";
+				sVehicleModel = "";
+				crVehicleRate.lastResult = null;
+				
+				if(cboMake.selectedIndex > -1){
+					sVehicleMakeID = crVehicleMake.lastResult[cboMake.selectedIndex].vehimakeid;
+					sVehicleMake = crVehicleMake.lastResult[cboMake.selectedIndex].description;
+					crVehicleModel.lastResult.refresh();
+				}	
+			}
+			
+			private function filterVehicleModel(item:Object):Boolean
+			{
+				var val:Boolean = false;
+				if(sVehicleMakeID==item.id.vehimakeid)
+					val = true;
+				
+				return val;
+			}
+			// End: Filter the Vehicle Model Combo drop down 
+			
+			
+			protected function cboModel_changeHandler(event:*):void
+			{
+				crVehicleRate.lastResult = null;
+				var lsVehiModelID:String = "";
+				if (cboModel.selectedIndex > -1){
+					sVehicleModel = crVehicleModel.lastResult[cboModel.selectedIndex].description;
+					sVehiModelID = crVehicleModel.lastResult[cboModel.selectedIndex].id.vehimodelid;
+				} else {
+					sVehicleModel = "";
+					sVehiModelID = "";
+				}
+			}
+			
+			// Start: Filter the Vehicle Rate data based on selected the Vehicle Model, HireType and Client Type
+			protected function cboHireType_changeHandler(event:ListEvent):void
+			{
+				if (cboHireType.selectedIndex > -1){
+					sHireType = crHireType.lastResult[cboHireType.selectedIndex].hiretypeid;
+					crVehicleRate.lastResult.refresh();
+				} else sHireType = "";
+			}
+			
+			protected function cboClientType_changeHandler(event:ListEvent):void
+			{
+				if (cboClientType.selectedIndex > -1){
+					sClientType = crClientType.lastResult[cboClientType.selectedIndex].clienttype;
+					try{
+					if(crVehicleRate.lastResult!=null && crVehicleRate.lastResult!="undefined")
+					crVehicleRate.lastResult.refresh();
+					}catch(e:Error){trace('exception');}
+				} else sClientType = "";
+			} 
+			
+			private function filterVehicleRate(item:Object):Boolean
+			{				
+				var val:Boolean = true;
+				
+				if (sHireType.length>0 && sHireType!=item.id.hiretypeid)		// Only filter based on Hire Type if a value is selected
+					val = false;
+				
+				if (sClientType.length>0 && sClientType!=item.id.clienttype)	// Only filter based on Client Type if a value is selected
+					val = false;
+				
+				return val;
+			}
+			// End: Filter the Vehicle Rate data
+
+
+			// Start: Call Responder Result Handlers
+			protected function crClientType_resultHandler(event:ResultEvent):void
+			{
+				if (crClientType.lastResult is ArrayCollection && crClientType.lastResult.length>0){
+					// Add an empty record to the top
+					var loClientType:Com_dspl_malkey_domain_Fclienttype = new Com_dspl_malkey_domain_Fclienttype();
+					loClientType.clienttype = "";
+					loClientType.description = "All";
+					crClientType.lastResult.addItemAt(loClientType, 0);
+					cboClientType.selectedIndex = 0;		// Set to "All", if no value is selected yet
+				}
+			}
+			
+			
+			protected function crHireType_resultHandler(event:ResultEvent):void
+			{
+				if (crHireType.lastResult is ArrayCollection && crHireType.lastResult.length>0){
+					// Add an empty record to the top
+					var loHireType:Com_dspl_malkey_domain_Fhiretype = new Com_dspl_malkey_domain_Fhiretype();
+					loHireType.hiretypeid = "";
+					loHireType.description = "All";
+					crHireType.lastResult.addItemAt(loHireType, 0);
+					cboHireType.selectedIndex = 0;		// Set to "All", if no value is selected yet 
+				}
+			}
+
+
+			protected function crVehicleRate_resultHandler(event:ResultEvent):void
+			{
+				crVehicleRate.lastResult.filterFunction = filterVehicleRate;
+				crVehicleRate.lastResult.refresh();
+			}			
+			
+			
+			protected function crVehicleModel_resultHandler(event:ResultEvent):void
+			{
+				crVehicleModel.lastResult.filterFunction = filterVehicleModel;
+				crVehicleModel.lastResult.refresh();
+				
+				if (lLoadMasterFilesButtonClicked){
+					// Refresh the based onthe Vehicle Make selection when "Refresh" button is specifically clicked. If this is not the value cboModel defaults some other value other than the one which is saved in the table
+					cboMake_changeHandler(Event);
+					lLoadMasterFilesButtonClicked = false;
+				}
+			}
+			
+			
+			protected function crVehicleRateUpdate_resultHandler(event:ResultEvent):void
+			{
+				var lbUpdateStatus:Boolean = event.message.body;				
+				if (lbUpdateStatus == true)
+					Alert.show("Updated Vehicle Rates successfully.", title + " - Save", Alert.OK, null, null, oGenFunctions.IconInformation);
+				else		
+					Alert.show("Error updating the Vehicle Rates. Please try again.", title + " - Save", Alert.OK, null, null, oGenFunctions.IconWarning);
+				
+				refreshVehicleRates();
+				currentState = "Default";
+			}
+			// End: Call Responder Result Handlers
+			
+			// Close this screen
+			protected function close():void
+			{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}
+				catch(e:Error)
+				{
+					PopUpManager.removePopUp(this);
+				}
+			}
+
+			protected function twVehicleRateMaster_closeHandler(event:CloseEvent):void
+			{
+				close();
+			}
+			
+			
+			protected function btnSearch_clickHandler(event:MouseEvent):void
+			{
+				refreshVehicleRates();
+			}
+
+			private function refreshVehicleRates():void
+			{
+				crVehicleRate.token = srvFvehiclerate.listByVehiModelID(sVehiModelID);				
+			}
+
+			protected function controlbar1_creationCompleteHandler(event:FlexEvent):void
+			{
+				setPermission();
+			}
+
+
+			protected function btnEdit_clickHandler(event:MouseEvent):void
+			{
+				if (crVehicleRate.lastResult==null || sVehicleMakeID.length==0 || sVehiModelID.length==0)
+					Alert.show("Select a Vechile Make and Model combination to edit.", title, Alert.OK, this, null, oGenFunctions.IconWarning);
+				else
+					currentState = "Edit";
+			}
+
+			protected function btnUndo_clickHandler(event:MouseEvent):void
+			{
+				refreshVehicleRates();
+				currentState = "Default";
+			}
+
+			protected function btnReload_clickHandler(event:MouseEvent):void
+			{
+				lLoadMasterFilesButtonClicked = true;
+				loadMasterFiles();
+			}
+
+
+			protected function btnSave_clickHandler(event:MouseEvent):void
+			{
+				// Vehicle Rate
+				crVehicleRate.lastResult.filterFunction = null;					// Remove the active filters 
+				crVehicleRate.lastResult.refresh();
+				
+				var laVehicleRate:ArrayCollection = new ArrayCollection();
+				for each(var loVehiRate:Object in crVehicleRate.lastResult)
+				{
+					var loNewVehiRate:Com_dspl_malkey_domain_Fvehiclerate = new Com_dspl_malkey_domain_Fvehiclerate();
+					var loNewVehiRatePK:Com_dspl_malkey_domain_FvehicleratePK = new Com_dspl_malkey_domain_FvehicleratePK();
+					loNewVehiRatePK.vehimodelid = sVehiModelID;
+					loNewVehiRatePK.clienttype = loVehiRate.id.clienttype;
+					loNewVehiRatePK.hiretypeid = loVehiRate.id.hiretypeid;
+					loNewVehiRatePK.ratetype = loVehiRate.id.ratetype;
+					loNewVehiRate.id = loNewVehiRatePK;
+					loNewVehiRate.standardrate = loVehiRate.standardrate;
+					loNewVehiRate.rate = loVehiRate.rate;
+					loNewVehiRate.xsmilerate = loVehiRate.xsmilerate;
+					loNewVehiRate.allotedkms = loVehiRate.allotedkms;
+					loNewVehiRate.xhourrate = loVehiRate.xhourrate;
+					loNewVehiRate.allotedhours = loVehiRate.allotedhours;
+					// If the record the is an new/ edited record, update the "add" fields with the current user info. If not leave it as it is
+					loNewVehiRate.adduser = loVehiRate.recordid==0 ? "" : loVehiRate.adduser;
+					loNewVehiRate.adddate = loVehiRate.recordid==0 ? new Date() : loVehiRate.adddate;
+					loNewVehiRate.addmach = loVehiRate.recordid==0 ? "" : loVehiRate.addmach;
+					loNewVehiRate.recordid = 0;
+					laVehicleRate.addItem(loNewVehiRate);
+				}
+				
+				crVehicleRateUpdate.token = srvFvehiclerate.udpateList(sVehiModelID, laVehicleRate);
+			}
+			
+
+		]]>
+	</fx:Script>
+	
+	
+	<!-- Declarations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Declarations>
+		<services:FclienttypeSRV id="srvFclienttype"
+								 fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								 showBusyCursor="true"
+								 endpoint="@Resource(key='url',bundle='resource')">
+		</services:FclienttypeSRV>						 
+		<s:CallResponder id="crClientType" result="crClientType_resultHandler(event)"/>
+		<s:CallResponder id="crClientTypeOrg"/>
+		
+		<services:FhiretypeSRV id="srvFhiretype"
+							   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							   showBusyCursor="true"
+							   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crHireType" result="crHireType_resultHandler(event)"/>
+		<s:CallResponder id="crHireTypeOrg"/>
+		
+		<services:FvehiclerateSRV id="srvFvehiclerate"
+								  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								  showBusyCursor="true"
+								  endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleRate" result="crVehicleRate_resultHandler(event)"/>
+		<s:CallResponder id="crVehicleRateUpdate" result="crVehicleRateUpdate_resultHandler(event)"/>
+		
+		<services:FvehiclemodelSRV id="srvFvehiclemodel"
+								   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								   showBusyCursor="true"
+								   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleModel" result="crVehicleModel_resultHandler(event)"/>
+		
+		<services:FvehiclemakeSRV id="srvFvehiclemake"
+								  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								  showBusyCursor="true"
+								  endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crVehicleMake"/>
+		
+		<services:FratetypeSRV id="srvFratetype"
+							   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+							   showBusyCursor="true"
+							   endpoint="@Resource(key='url',bundle='resource')"/>
+		<s:CallResponder id="crRateType"/>
+	</fx:Declarations>
+	
+	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<mx:ControlBar x="-1" y="-4" horizontalGap="2" height="57" width="232" creationComplete="controlbar1_creationCompleteHandler(event)">
+		<mx:Button id="btnUpdate" width="40" height="40" toolTip="Edit" 
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')"
+				   click="btnEdit_clickHandler(event)"
+				   enabled.Default="false" enabled.Edit="false"/>
+		<mx:Button id="btnUndo" width="40" height="40" toolTip="Undo"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')"
+				   click="btnUndo_clickHandler(event)"
+				   enabled.Default="false" enabled.Edit="true"/>
+		<mx:Button id="btnReload" width="40" height="40" toolTip="Reload" 
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')"
+				   click="btnReload_clickHandler(event)" enabled.Edit="true"
+				   />
+		<mx:Button id="btnSave" width="40" height="40" toolTip="Save"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')"
+				   click="btnSave_clickHandler(event)"
+				   enabled.Default="false" enabled.Edit="true"/>
+		<mx:Button id="btnClose" width="40" height="40" toolTip="Close"
+				   icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+				   click="close();"
+				   enabled="true"/>
+	</mx:ControlBar>
+	
+	<mx:Form width="715" height="100%" x="12" y="48"
+			 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+			 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+		
+		<s:HGroup>
+			<mx:FormItem label="Make" labelWidth="70">
+				<components:customComboBox id="cboMake" width="160"
+										   dataProvider="{crVehicleMake.lastResult}" labelField="description"
+										   enabled.Default="true" enabled.Edit="false"
+										   change="cboMake_changeHandler(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Model" labelWidth="70">
+				<components:customComboBox id="cboModel" width="160"
+										   dataProvider="{crVehicleModel.lastResult}" labelField="description"
+										   enabled.Default="true" enabled.Edit="false"
+										   change="cboModel_changeHandler(event)"/>
+			</mx:FormItem>
+			
+			<mx:LinkButton id="btnSearch" label="Search" color="#0A33BB"
+						   enabled.Default="true" enabled.Edit="false"
+						   click="btnSearch_clickHandler(event)"/>
+		</s:HGroup>
+		
+		<s:HGroup>
+			<mx:FormItem id="fiClientType" label="Client Type" labelWidth="70">
+				<components:customComboBox id="cboClientType" width="160"
+										   dataProvider="{crClientType.lastResult}" labelField="description"
+										   change="cboClientType_changeHandler(event)"/>
+			</mx:FormItem>
+			<mx:FormItem label="Hire Type" labelWidth="70">
+				<components:customComboBox id="cboHireType" width="160"
+										   dataProvider="{crHireType.lastResult}" labelField="description"
+										   change="cboHireType_changeHandler(event)"/>
+			</mx:FormItem>
+		</s:HGroup>
+		
+		<s:HGroup width="{dgVehiRate.width}">
+			<mx:Spacer width="100%"/>
+			<s:Button id="btnVehiRateNew" label="New"
+					  click="btnVehiRateNew_clickHandler(event)"
+					  enabled.Default="false" enabled.Edit="true"/>
+			<s:Button id="btnVehiRateEdit" label="Edit"
+					  click="btnVehiRateEdit_clickHandler(event)"
+					  enabled.Default="false" enabled.Edit="true"/>
+			<s:Button id="btnVehiRateDel" label="Delete"
+					  click="btnVehiRateDel_clickHandler(event)"
+					  enabled.Default="false" enabled.Edit="true"/>
+		</s:HGroup>
+		
+		<mx:DataGrid id="dgVehiRate" width="700" height="320" dataProvider="{crVehicleRate.lastResult}">
+			<mx:columns>
+				<mx:DataGridColumn headerText="Client Type" dataField="id.clienttype" width="0.13"/>
+				<mx:DataGridColumn headerText="Hire Type" dataField="id.hiretypeid" width="0.13"/>
+				<mx:DataGridColumn headerText="Rate Type" dataField="id.ratetype" width="0.13"/>
+				<mx:DataGridColumn headerText="Rate (Rs)" dataField="standardrate" textAlign="right" width="0.16"/>
+				<mx:DataGridColumn headerText="Excess Mileage Rate (Rs)" dataField="xsmilerate" textAlign="right" width="0.22"/>							
+				<mx:DataGridColumn headerText="Allotted KMs (Rs)" dataField="allotedkms" textAlign="right" width="0.13"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:Form>
+</s:TitleWindow>

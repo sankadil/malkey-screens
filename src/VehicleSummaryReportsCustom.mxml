@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="444" height="300"
+			   title="Reservation Diary"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			   >
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.data.events.DataConflictEvent;
+			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			public var gsJspFileName:String;
+			public var gsTitle:String;
+			
+			[Bindable]
+			private var lacstatus:ArrayCollection=new ArrayCollection();
+			[Bindable]
+			private var lacownertype:ArrayCollection=new ArrayCollection();
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					this.title=gsTitle;
+					setPermission();
+					
+					var o:Object=new Object();
+					o["id"]="all";
+					o["des"]="All";
+					lacstatus.addItem(o);
+					
+					var o:Object=new Object();
+					o["id"]="AVAILABLE";
+					o["des"]="Available For Rental";
+					lacstatus.addItem(o);
+					
+					var o:Object=new Object();
+					o["id"]="SOLD";
+					o["des"]="Sold";
+					lacstatus.addItem(o);
+					
+					var o:Object=new Object();
+					o["id"]="ATREPAIR";
+					o["des"]="Under Reparis";
+					lacstatus.addItem(o);
+					
+					var o:Object=new Object();
+					o["id"]="ATMAINT";
+					o["des"]="Under Maintenance";
+					lacstatus.addItem(o);
+					
+					var o:Object=new Object();
+					o["id"]="RTOWNER";
+					o["des"]="Returned To Owner";
+					lacstatus.addItem(o);
+					
+					//-------------------------//'Company' 'Outside' 	
+					var o:Object=new Object();
+					o["id"]="all";
+					o["des"]="All";
+					lacownertype.addItem(o);
+					
+					var o:Object=new Object();
+					o["id"]="Company";
+					o["des"]="Company";
+					lacownertype.addItem(o);
+					
+					var o:Object=new Object();
+					o["id"]="Outside";
+					o["des"]="Outside";
+					lacownertype.addItem(o);
+					
+
+					
+					ddStatus.selectedIndex=0;
+					ddownertype.selectedIndex=0;
+					
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}catch(error:Error){
+					Message.displayAlert(1,"closeForm: " + error.message,"Error",errorCloseHandler);	
+				}
+			}
+
+			protected function btnView_clickHandler(event:MouseEvent):void{
+				try{
+					
+					var ddStatus:String=ddStatus.selectedItem.id;
+					var ddownertype:String=ddownertype.selectedItem.id;
+					var request:URLRequest;
+					//request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+jspPage+".jsp?df="+ dateFrom+"&dt="+dateTo+"&ht="+hireType+"&hs="+hireStatus+"&rt="+rateType);
+					
+					var request:URLRequest=request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+gsJspFileName+".jsp?s="+ddStatus+"&o="+ddownertype);
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			
+			
+
+
+			
+		]]>
+	</fx:Script>
+	
+	<mx:VBox height="100%" width="100%">
+		
+		<mx:Form
+			paddingLeft="0"
+			paddingRight="0"
+			paddingTop="0"
+			paddingBottom="0"
+			
+			>
+	<mx:FormItem label="Vehicle Status">
+		<s:DropDownList
+			id="ddStatus"
+			dataProvider="{lacstatus}"
+			labelField="des"
+			width="206"
+			enabled="{btnView.enabled}"
+			/>
+	</mx:FormItem>
+	
+	<mx:FormItem label="Owner Type" direction="horizontal">
+		<s:DropDownList
+			id="ddownertype"
+			dataProvider="{lacownertype}"
+			labelField="des"
+			width="206"
+			enabled="{btnView.enabled}"
+			/>
+		<s:Button
+			enabled="false"
+			id="btnView"
+			click="btnView_clickHandler(event)"
+			label="View" height="29" width="78"/>
+	</mx:FormItem>
+	</mx:Form>
+
+	<s:Label text="Press View Button"  fontSize="13" fontWeight="bold"/>
+	</mx:VBox>
+</s:TitleWindow>

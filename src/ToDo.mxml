@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"
+			   creationComplete="application1_creationCompleteHandler(event)"
+			   title="To-Do List"
+			   close="titlewindow1_closeHandler(event)"
+			    width="891" height="486">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			[Bindable]
+			private var fMTypes:ArrayCollection = new ArrayCollection();
+
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				loadMTypes();
+			}
+			
+			private function loadMTypes():void
+			{
+				var o:Object;
+				for(var a:int=0;a<10;a++)
+				{
+					o = new Object();
+					o["des"] = getType(a);
+					fMTypes.addItem(o);
+				}
+			}
+			
+			private function getType(num:int):String
+			{
+				switch(num)
+				{
+					case 0:
+						return "Oil Filter Change";
+						break;
+					case 1:
+						return "Battery";
+						break;
+					case 2:
+						return "Brake Pads";
+						break;
+					case 3:
+						return "Timing Belt";
+						break;
+					case 4:
+						return "Tires";
+						break;
+					case 5:
+						return "Insurance";
+						break;
+					case 6:
+						return "Lease";
+						break;
+					case 7:
+						return "Revenue Licnese";
+						break;
+					case 8:
+						return "Fitness Test (Bus)";
+						break;
+					case 9:
+						return "Emission Test";
+						break;
+				}	
+				return "";
+			}
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<!--<s:Panel x="19" y="21" width="891" height="486" title="Maintenance">-->
+		<mx:TabNavigator x="11" y="9" width="868" height="438">
+			<s:NavigatorContent label="General" width="100%" height="100%">
+				<mx:Form x="10" y="0" width="846" height="34"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 >
+					<mx:FormItem label="Registration No." direction="horizontal">
+						<s:TextInput width="160"/>
+						<mx:LinkButton label="Search" color="#0A33BB"/>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Form x="11" y="33" width="845" height="190"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 >
+					<mx:DataGrid width="832" height="180">
+						<mx:columns>
+							<mx:DataGridColumn headerText="Task" dataField="col1" width="450"/>
+							<mx:DataGridColumn headerText="Process Owner" dataField="col2"/>
+							<mx:DataGridColumn headerText="Due Date" dataField="col3"/>
+							<mx:DataGridColumn headerText="Date Completed"/>
+							<mx:DataGridColumn headerText="Status" width="80"/>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:Form>
+				<mx:Form x="10" y="227" width="846" height="172"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 >
+					<mx:FormItem label="Process Owner" direction="horizontal">
+						<s:DropDownList width="160"/>
+						<mx:FormItem label="Priority" direction="horizontal">
+							<s:DropDownList width="160"/>
+						</mx:FormItem>
+						<mx:FormItem label="Due Date" direction="horizontal">
+							<mx:DateField width="160"/>
+						</mx:FormItem>
+					</mx:FormItem>
+					<mx:FormItem label="Task" direction="horizontal">
+						<s:TextArea width="727" height="105"/>
+					</mx:FormItem>
+					<mx:FormItem>
+					<mx:HBox>
+						<s:Button label="Add"/>
+						<s:Button label="Update"/>
+						<s:Button label="Delete"/>
+					</mx:HBox>
+					</mx:FormItem>
+				</mx:Form>
+			</s:NavigatorContent>
+		</mx:TabNavigator>
+	<!--</s:Panel>-->
+</s:TitleWindow>

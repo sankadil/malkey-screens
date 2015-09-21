@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project		:	malkey-screens
+Package		:	Default
+Component	:	VehicleRate.mxml
+Description	:	Screen used to enter Vehicle Rate entries
+Author		:	Fuzuli Hameed
+Called From	:	Vehicle.mxml
+Created On	:	Apr 4, 2011
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   width="678" height="305"
+			   creationComplete="init(event)"
+			   close="close(event)"
+			   title="Vehicle Rate">
+	
+	<!-- Properties of the parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	<!-- Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.validators.Validator;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var gaVehicleRate:ArrayCollection;
+			[Bindable]
+			public var gaClientType:ArrayCollection;
+			[Bindable]
+			public var gaHireType:ArrayCollection;
+			[Bindable]
+			public var gaRateType:ArrayCollection;
+			[Bindable]
+			public var gfTmpVehicleRate:Object;
+				
+			public var glBtnSaveClicked:Boolean = false;
+			
+			private var oGenFunctions:GenericFunctions = new GenericFunctions();
+			private var aRequiredFields:Array;
+
+			protected function init(event:FlexEvent):void
+			{
+				//aRequiredFields = [nvClientType,nvHireType,nvRateType,svRate,svAllotedKM];
+				aRequiredFields = [nvClientType,nvHireType,nvRateType,svRate,nvAllotedKM];
+				
+				cboClientType.selectedIndex = oGenFunctions.getArrayCollectionIndex(gaClientType, "clienttype", gfTmpVehicleRate.id.clienttype);
+				cboHireType.selectedIndex = oGenFunctions.getArrayCollectionIndex(gaHireType, "hiretypeid", gfTmpVehicleRate.id.hiretypeid);				
+				cboRateType.selectedIndex = oGenFunctions.getArrayCollectionIndex(gaRateType, "ratetype", gfTmpVehicleRate.id.ratetype);				
+				cboClientType_changeHandler(Event);
+				cboHireType_changeHandler(Event);
+				cboRateType_changeHandler(Event);
+			}
+
+
+			protected function close(event:*):void
+			{
+				dispatchEvent(new Event('closeVehicleRatePopUp'));
+			}
+
+
+			protected function cboClientType_changeHandler(event:*):void
+			{
+				if (cboClientType.selectedIndex > -1)
+					txtClientType.text = gaClientType[cboClientType.selectedIndex].description;
+			}
+
+
+			protected function cboHireType_changeHandler(event:*):void
+			{
+				if (cboHireType.selectedIndex > -1)
+					txtHireType.text = gaHireType[cboHireType.selectedIndex].description;
+			}
+
+
+			protected function cboRateType_changeHandler(event:*):void
+			{
+				if (cboRateType.selectedIndex > -1)
+					txtRateType.text = gaRateType[cboRateType.selectedIndex].description;
+			}
+
+
+			protected function btnSave_clickHandler(event:MouseEvent):void
+			{
+				// Check for mandatory fields
+				var laVals:Array = Validator.validateAll(aRequiredFields);
+				if (laVals.length > 0){
+					Alert.show("Unable to save changes since mandatory field values are missing.", title, Alert.OK, this, null, oGenFunctions.IconWarning);
+					return;
+				}
+				
+				// Validate for duplicate entries
+				for each(var loVehiRate:Object in gaVehicleRate)
+				{
+					if (loVehiRate.id.clienttype==gaClientType[cboClientType.selectedIndex].clienttype &&
+						loVehiRate.id.hiretypeid==gaHireType[cboHireType.selectedIndex].hiretypeid &&
+						loVehiRate.id.ratetype==gaRateType[cboRateType.selectedIndex].ratetype && 
+						loVehiRate.recordid!=gfTmpVehicleRate.recordid)
+					{
+						Alert.show("A rate with the same combination already exists. Please try again!", title, Alert.OK, this, null, oGenFunctions.IconWarning);
+						return;
+					}						
+				}
+				
+				glBtnSaveClicked = true;
+				
+				// Compute the rate for a single day
+				var lnDefaultDaysForTheRate:int = gaRateType[cboRateType.selectedIndex].days;
+				var lnRateForSingleDay:Number = 0;
+				if (lnDefaultDaysForTheRate>0)		
+					lnRateForSingleDay = Number(txtRate.text) / lnDefaultDaysForTheRate;
+					
+				// Update the record with the latest details
+				gfTmpVehicleRate.id.clienttype = gaClientType[cboClientType.selectedIndex].clienttype;
+				gfTmpVehicleRate.id.hiretypeid = gaHireType[cboHireType.selectedIndex].hiretypeid;
+				gfTmpVehicleRate.id.ratetype = gaRateType[cboRateType.selectedIndex].ratetype;
+				gfTmpVehicleRate.standardrate = txtRate.text;
+				gfTmpVehicleRate.rate = lnRateForSingleDay;
+				gfTmpVehicleRate.xsmilerate = txtXMile.text;
+				//gfTmpVehicleRate.allotedkms = txtAllotedKM.text;
+				gfTmpVehicleRate.allotedkms = new Number(nsAllotedKM.value).toString();
+				gfTmpVehicleRate.xhourrate = new Number(txtXHours.text).toString();
+				gfTmpVehicleRate.allotedhours = new Number(nsAllotedHours.value);
+				
+				gfTmpVehicleRate.recordid = 0;
+				
+				close(Event);
+			}
+
+
+			protected function number_focusInHandler(event:FocusEvent):void
+			{
+				event.currentTarget.setSelection(0,event.currentTarget.length);
+			}
+
+		]]>
+	</fx:Script>
+	
+	<!-- Declarations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	<fx:Declarations>
+		<!-- Input Validations for Manadatory Form Items -->
+		<mx:NumberValidator id="nvClientType" source="{cboClientType}" property="selectedIndex" required="true" minValue="0" lowerThanMinError="Select a Client Type"/>
+		<mx:NumberValidator id="nvHireType" source="{cboHireType}" property="selectedIndex" required="true" minValue="0" lowerThanMinError="Select a Hire Type"/>
+		<mx:NumberValidator id="nvRateType" source="{cboRateType}" property="selectedIndex" required="true" minValue="0" lowerThanMinError="Select a Rate Type"/>
+		<mx:StringValidator id="svRate" source="{txtRate}" property="text" required="true" requiredFieldError="Enter the Rate"/>
+		<mx:NumberValidator id="nvAllotedKM" source="{nsAllotedKM}" property="value" required="true" minValue="1" lowerThanMinError="Enter the Allotted Mileage"/>
+		<!--<mx:StringValidator id="svAllotedKM" source="{txtAllotedKM}" property="text" required="true" requiredFieldError="Enter the Allotted Mileage"/>-->
+	</fx:Declarations>
+	
+	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<mx:Form height="332" width="680">
+		<s:HGroup>			
+			<mx:FormItem label="Client Type" labelWidth="135">
+				<s:DropDownList id="cboClientType" dataProvider="{gaClientType}" labelField="clienttype" width="160"
+								change="cboClientType_changeHandler(event)"/>
+			</mx:FormItem>
+			<s:TextInput id="txtClientType" enabled="false" width="325"/>
+		</s:HGroup>
+		
+		<s:HGroup>
+			<mx:FormItem label="Hire Type" labelWidth="135">
+				<s:DropDownList id="cboHireType" dataProvider="{gaHireType}" labelField="hiretypeid" width="160"
+								change="cboHireType_changeHandler(event)"/>
+			</mx:FormItem>
+			<s:TextInput id="txtHireType" enabled="false" width="325"/>
+		</s:HGroup>
+		
+		<s:HGroup>
+			<mx:FormItem label="Rate Type" labelWidth="135">
+				<s:DropDownList id="cboRateType" dataProvider="{gaRateType}" labelField="ratetype" width="160"
+								change="cboRateType_changeHandler(event)"/>
+			</mx:FormItem>
+			<s:TextInput id="txtRateType" enabled="false" width="325"/>
+		</s:HGroup>
+		<mx:FormItem label="Rate (Rs)" labelWidth="135">
+			<mx:TextInput id="txtRate" restrict="0-9." 
+						 text="{gfTmpVehicleRate.standardrate}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Extra Mileage Rate (Rs)" labelWidth="135">
+			<mx:TextInput id="txtXMile" restrict="0-9." text="{gfTmpVehicleRate.xsmilerate}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Allotted Mileage (KMs)" labelWidth="135">
+			<!--<mx:TextInput id="txtAllotedKM" restrict="0-9" text="{gfTmpVehicleRate.allotedkms}"/>-->
+			<s:NumericStepper id="nsAllotedKM" minimum="1" maximum="999"
+							  value="{gfTmpVehicleRate.allotedkms}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Extra Hour Rate (Rs)" labelWidth="135">
+			<mx:TextInput id="txtXHours" restrict="0-9." text="{gfTmpVehicleRate.xhourrate}"/>
+		</mx:FormItem>
+		<mx:FormItem label="Allotted Hours" labelWidth="135">
+			<!--<mx:TextInput id="txtAllotedKM" restrict="0-9" text="{gfTmpVehicleRate.allotedkms}"/>-->
+			<s:NumericStepper id="nsAllotedHours" minimum="1" maximum="999"
+							  value="{gfTmpVehicleRate.allotedhours}"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<s:Button id="btnSave" label="Save and Close" click="btnSave_clickHandler(event)"/>
+		</mx:FormItem>
+	</mx:Form>
+</s:TitleWindow>

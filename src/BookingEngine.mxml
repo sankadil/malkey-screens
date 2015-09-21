@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				layout="absolute" 
+				width="1204" height="500"
+				 xmlns:services="com.dspl.malkey.services.*">
+
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehiclemodel;
+			import mx.controls.Alert;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] private var acVehicleModel:ArrayCollection=new ArrayCollection();
+			[Bindable] private var genericFunctions:GenericFunctions=new GenericFunctions();
+			
+			
+			protected function btnSearchVehicle_clickHandler(event:MouseEvent):void
+			{
+/* 				this.width=1200;
+				this.height=600; */
+				
+				listFvehiclemodel();
+			}
+			
+			
+			
+			protected function listFvehiclemodel():void
+			{
+				crListFvehiclemodel.token = srvFvehiclemodel.ListAll();
+			}
+			
+
+			protected function crListFvehiclemodel_resultHandler(event:ResultEvent):void
+			{
+				acVehicleModel=crListFvehiclemodel.lastResult;
+				fmiVehicleModel.visible=true;
+			}
+			
+			private function lblModel(item:Com_dspl_malkey_domain_Fvehiclemodel):String
+			{
+				//var object:Object=genericFunctions.getArrayCollection(acVehicleModel,"vehimakeid",item.id.vehimakeid);
+				//return genericFunctions.getArrayCollection(acVehicleModel,"vehimakeid",item.id.vehimakeid).name;
+				return item.id.vehimodelid + " "+item.id.vehimakeid +" "+item.description;
+			}
+			
+
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<!--Keep the time values-->
+		<s:ArrayCollection id="acTime">
+			<fx:String>00:00:00</fx:String>
+			<fx:String>00:30:00</fx:String>
+			<fx:String>01:00:00</fx:String>
+			<fx:String>01:30:00</fx:String>
+			<fx:String>02:00:00</fx:String>
+			<fx:String>02:30:00</fx:String>
+			<fx:String>03:00:00</fx:String>
+			<fx:String>03:30:00</fx:String>
+			<fx:String>04:00:00</fx:String>
+			<fx:String>04:30:00</fx:String>
+			<fx:String>05:00:00</fx:String>
+			<fx:String>05:30:00</fx:String>
+			<fx:String>06:00:00</fx:String>
+			<fx:String>06:30:00</fx:String>
+			<fx:String>07:00:00</fx:String>
+			<fx:String>07:30:00</fx:String>
+			<fx:String>08:00:00</fx:String>
+			<fx:String>08:30:00</fx:String>
+			<fx:String>09:00:00</fx:String>
+			<fx:String>09:30:00</fx:String>
+			<fx:String>10:00:00</fx:String>
+			<fx:String>10:30:00</fx:String>
+			<fx:String>11:00:00</fx:String>
+			<fx:String>11:30:00</fx:String>
+			<fx:String>12:00:00</fx:String>
+			<fx:String>12:30:00</fx:String>
+			<fx:String>13:00:00</fx:String>
+			<fx:String>13:30:00</fx:String>
+			<fx:String>14:00:00</fx:String>
+			<fx:String>14:30:00</fx:String>
+			<fx:String>15:00:00</fx:String>
+			<fx:String>15:30:00</fx:String>
+			<fx:String>16:00:00</fx:String>
+			<fx:String>16:30:00</fx:String>
+			<fx:String>17:00:00</fx:String>
+			<fx:String>17:30:00</fx:String>
+			<fx:String>18:00:00</fx:String>
+			<fx:String>18:30:00</fx:String>
+			<fx:String>19:00:00</fx:String>
+			<fx:String>19:30:00</fx:String>
+			<fx:String>20:00:00</fx:String>
+			<fx:String>20:30:00</fx:String>
+			<fx:String>21:00:00</fx:String>
+			<fx:String>21:30:00</fx:String>
+			<fx:String>22:00:00</fx:String>
+			<fx:String>22:30:00</fx:String>
+			<fx:String>23:00:00</fx:String>
+			<fx:String>23:30:00</fx:String>
+		</s:ArrayCollection>
+		
+		
+		<s:ArrayCollection id="acDriverAge">
+			<fx:String>Select</fx:String>
+			<fx:String>25 and Up</fx:String>
+			<fx:String>21-24</fx:String>
+		</s:ArrayCollection>
+		
+		<s:CallResponder id="crListFvehiclemodel" result="crListFvehiclemodel_resultHandler(event)"/>
+		
+		<services:FvehiclemodelSRV id="srvFvehiclemodel" endpoint="@Resource(key='url', bundle='resource')" fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	
+	
+	
+	
+	
+	
+	<!--Front End-->
+	<mx:Form x="8" y="4">
+		<mx:FormItem label="From" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+			<mx:DateField tabIndex="1" selectableRange="{{rangeStart : new Date()}}"/>
+			<s:ComboBox 
+				id="cmbTimeOut" 
+				dataProvider="{acTime}" 
+				width="75" 
+				tabIndex="2"
+				/>
+		</mx:FormItem>
+		<mx:FormItem label="To" direction="horizontal" styleName="formItemL" labelStyleName="formItemLabel">
+			<mx:DateField tabIndex="3" selectableRange="{{rangeStart : new Date()}}"/>
+			<s:ComboBox 
+				id="cmbTimeIn" 
+				dataProvider="{acTime}" 
+				width="75" 
+				tabIndex="4"
+				/>
+		</mx:FormItem>
+		
+		
+		
+		<mx:FormItem label="Pick-up Address"   styleName="formItemL" labelStyleName="formItemLabel"  direction="horizontal">
+			<s:TextArea width="314" height="82" id="txtItinerary"  tabIndex="5"/>
+		</mx:FormItem>
+		<mx:FormItem label="Drop-off Address"   styleName="formItemL" labelStyleName="formItemLabel" direction="horizontal">
+			<s:TextArea width="314" height="82" id="txtReturnAddress"  tabIndex="6"/>
+		</mx:FormItem>
+		<mx:FormItem label="Driver's Age" styleName="formItemL" labelStyleName="formItemLabel">
+			<s:ComboBox dataProvider="{acDriverAge}" />
+		</mx:FormItem>
+		<mx:FormItem label="Vehicle Model" styleName="formItemL" labelStyleName="formItemLabel" visible="false" id="fmiVehicleModel">
+			<s:ComboBox dataProvider="{acVehicleModel}" labelField="description" width="300"/>
+		</mx:FormItem>
+
+
+	</mx:Form>
+	
+	
+	
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace controls "com.dspl.efinac.components.common.controls.*";
+		@namespace services "services.*";
+		
+		.formItems
+		{
+			label-width:60;
+		}
+		.formItem
+		{
+			label-width:80;
+		}
+		
+		.formItemL
+		{
+			label-width:120;
+		}
+		.formItemXL
+		{
+			label-width:180;
+		}
+		
+		.formItemLabel
+		{
+			text-align:left;
+		}
+		
+		
+		
+		
+	</fx:Style>
+	<s:Button label="Search A Car" x="380" y="256" id="btnSearchVehicle" click="btnSearchVehicle_clickHandler(event)"/>
+	
+	
+	
+</mx:TitleWindow>

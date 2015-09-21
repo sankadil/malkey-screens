@@ -1,0 +1,1633 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="748" height="544"
+			   title="Maintenance"
+			   creationComplete="initApp(event)"
+			   close="closeForm()" xmlns:services="com.dspl.malkey.services.*"
+			   currentState="Add">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.ErrorTipManager;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.efinac.components.common.controls.dataGridClasses.BoldSearchItemRenderer;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fmaintenance;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			import spark.events.IndexChangeEvent;
+
+			public var gsRefNo:String="";
+			public var gsCurrentState:String="";
+			public var goVehicle:Object;
+			[Bindable]
+			public var lpuPopup:_tiMasterFile = new _tiMasterFile();
+			
+			[Bindable]
+			private var lacFrequency:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacRaisedByType:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacPriority:ArrayCollection = new ArrayCollection();
+						
+			[Bindable]
+			private var lacMaintStatus:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacMaintTypes:ArrayCollection = new ArrayCollection();
+			private var lacExtMaintTypes:ArrayCollection;
+			[Bindable]
+			private var lacFEmployee:ArrayCollection = new ArrayCollection();
+			private var lsSelEmpId:String = new String(); 
+			private var lsActionBy:String = new String();
+			[Bindable]
+			private var lacFDebtor:ArrayCollection = new ArrayCollection();
+			
+			private var fmaintenance:Com_dspl_malkey_domain_Fmaintenance
+			
+			private var lacLoadCompleted:ArrayCollection = new ArrayCollection();
+			[Bindable] 	private var session:Session = Session.getInstance();
+			
+			protected function initApp(event:FlexEvent):void{
+				try{
+					resetVehicleImage();
+					registerValidators();
+					setState(gsCurrentState);
+					lacLoadCompleted.addEventListener(CollectionEvent.COLLECTION_CHANGE,loadCompletedACCollectionChange,false,0,false);
+					txtComment.addEventListener(KeyboardEvent.KEY_DOWN,txtCommentKeyDown,true,0,false);
+					txtActionTaken.addEventListener(KeyboardEvent.KEY_DOWN,txtCommentKeyDown,true,0,false);
+					loadVehicleDet();
+					loadMasterFiles();
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			public function updateErrorTipVisibility():void{
+				if(currentState=="Add" || currentState=="Edit" || currentState=="Change"){								
+					ErrorTipManager.showErrorTip(svFrequencyValidator.source);
+					ErrorTipManager.showErrorTip(svStatusValidator.source);
+					ErrorTipManager.showErrorTip(svMaintenanceTypeValidator.source);
+					ErrorTipManager.showErrorTip(svMileageValidator.source);
+					ErrorTipManager.showErrorTip(svPeriodValidator.source);
+					ErrorTipManager.showErrorTip(dvStartDateValidator.source);
+					
+					ErrorTipManager.showErrorTip(svRaisedByTypeValidator.source);
+					ErrorTipManager.showErrorTip(svRaisedByValidator.source);
+					ErrorTipManager.showErrorTip(svActionTakenValidator.source);
+					ErrorTipManager.showErrorTip(dvDueDateValidator.source);
+					ErrorTipManager.showErrorTip(dvNotifyOnValidator.source);
+					ErrorTipManager.showErrorTip(svPriorityValidator.source);
+					
+					ErrorTipManager.showErrorTip(svCommentValidator.source);
+					
+					ErrorTipManager.showErrorTip(svActionByValidator.source);
+					ErrorTipManager.showErrorTip(svActionTakenValidator.source);
+				}
+			}
+			
+			private function removeFormErrorTips():void{	
+				try{
+					ErrorTipManager.removeErrorTip(svFrequencyValidator.source,true);
+					ErrorTipManager.removeErrorTip(svStatusValidator.source,true);
+					ErrorTipManager.removeErrorTip(svMaintenanceTypeValidator.source,true);
+					ErrorTipManager.removeErrorTip(svMileageValidator.source,true);
+					ErrorTipManager.removeErrorTip(svPeriodValidator.source,true);
+					ErrorTipManager.removeErrorTip(dvStartDateValidator.source,true);
+					
+					ErrorTipManager.removeErrorTip(svRaisedByTypeValidator.source,true);
+					ErrorTipManager.removeErrorTip(svRaisedByValidator.source,true);
+					ErrorTipManager.removeErrorTip(svAssignedToValidator.source,true);
+					ErrorTipManager.removeErrorTip(dvDueDateValidator.source,true);
+					ErrorTipManager.removeErrorTip(dvNotifyOnValidator.source,true);
+					ErrorTipManager.removeErrorTip(svPriorityValidator.source,true);
+					
+					ErrorTipManager.removeErrorTip(svCommentValidator.source,true);
+					
+					ErrorTipManager.removeErrorTip(svActionByValidator.source,true);
+					ErrorTipManager.removeErrorTip(svActionTakenValidator.source,true);
+				}catch(error:Error){
+					Message.displayAlert(1,"removeFormErrorTips: " + error.message,"Error",null);
+				}
+			} 
+			
+			private function registerValidators():void{
+				ErrorTipManager.registerValidator(svFrequencyValidator);
+				ErrorTipManager.registerValidator(svStatusValidator);
+				ErrorTipManager.registerValidator(svMaintenanceTypeValidator);
+				ErrorTipManager.registerValidator(svMileageValidator);
+				ErrorTipManager.registerValidator(svPeriodValidator);
+				ErrorTipManager.registerValidator(dvStartDateValidator);
+				
+				ErrorTipManager.registerValidator(svRaisedByTypeValidator);
+				ErrorTipManager.registerValidator(svRaisedByValidator);
+				ErrorTipManager.registerValidator(svAssignedToValidator);
+				ErrorTipManager.registerValidator(dvDueDateValidator);
+				ErrorTipManager.registerValidator(dvNotifyOnValidator);
+				ErrorTipManager.registerValidator(svPriorityValidator);
+				
+				ErrorTipManager.registerValidator(svCommentValidator);
+				
+				ErrorTipManager.registerValidator(svActionByValidator);
+				ErrorTipManager.registerValidator(svActionTakenValidator);
+			}
+			
+			private function txtCommentKeyDown(event:KeyboardEvent):void
+			{
+				if(event.keyCode==13)
+				{
+					event.stopImmediatePropagation();
+					event.stopPropagation();
+				}
+			}
+			
+			private function loadCompletedACCollectionChange(event:CollectionEvent):void
+			{
+				if(currentState!="Add")
+				{
+					if(lacLoadCompleted.length==7)
+					{
+						if(gsRefNo!="")
+						{
+							crFindByIdFMaintenance.token = srvFmaintenance.findByID(gsRefNo);
+						}
+						else
+						{
+							trace("Maintenenace Reference Number Is Empty. Closing Form Now....");
+							closeForm();
+						}
+					}
+				}
+			}
+			
+			private function updateLCStatus(description:String):void
+			{
+				var sObj:Object = new Object();
+				sObj["description"] = description;
+				lacLoadCompleted.addItem(sObj);
+			}
+			
+			public function setState(state:String=""):void
+			{
+				if(state=="Add")
+				{
+					lblModifiedBy.text+=" N/A";
+				}
+				/* else if(state=="Edit")
+				{
+					
+				}
+				else if(state=="View")
+				{
+					
+				}
+				else if(state=="Change")
+				{
+					
+				} */
+				txtRefNo.text = gsRefNo;
+				currentState = state;
+			}
+			
+			private function loadVehicleDet():void
+			{
+				if(goVehicle==null)
+				{
+					closeForm();
+				}
+				else
+				{
+					txtRegNo.text = goVehicle["regno"].toString();
+					//txtType.text = goVehicle["vehitypeid"].toString();
+					txtCurMileage.text = goVehicle["curmileage"].toString();
+					txtMake.text = goVehicle["vehimakeid"].toString();
+					txtModel.text = goVehicle["vehimodelid"].toString();
+					txtTransmission.text = goVehicle["vehitransid"].toString();
+					txtFuelType.text = goVehicle["fueltypeid"].toString(); 
+					var llImageLoader:Loader = new Loader();
+					llImageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageReady);
+					llImageLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onImageIOError);
+					llImageLoader.contentLoaderInfo.addEventListener(IOErrorEvent.DISK_ERROR, onImageIOError);
+					llImageLoader.contentLoaderInfo.addEventListener(IOErrorEvent.NETWORK_ERROR, onImageIOError);
+					llImageLoader.contentLoaderInfo.addEventListener(IOErrorEvent.VERIFY_ERROR, onImageIOError);
+					llImageLoader.load(new URLRequest(goVehicle["image"].toString()));
+				}
+			}
+			
+			public function onImageReady(event:Event):void 
+			{
+				var img:Bitmap = new Bitmap();
+				img.smoothing = true;
+				img.bitmapData = event.target.content.bitmapData;
+				iVehicle.source = img;
+				//twFade.play();
+			}
+			
+			private function onImageIOError(event:IOErrorEvent):void{
+				resetVehicleImage();
+			}
+			
+			private function resetVehicleImage():void{
+				iVehicle.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			
+			private function loadMasterFiles():void
+			{
+				try
+				{
+					loadFrequency();
+					loadRaisedByDet();
+					loadPriority();
+					crListAllMaintenanceStatus.token = srvFmaintstatus.ListAll();
+					crListAllMaintenanceTypes.token = srvFmainttype.ListAll();
+					/* crListAllFEmployee.token = srvFemployee.ListAll(); */
+					loadEmployee()
+					getDebtorList();
+
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterFiles: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			private function loadEmployee():void
+			{
+				
+				if(session.getAttribute("acEmployee")==null || session.getAttribute("acEmployee").size()==0)
+				{
+					crListAllFEmployee.token = srvFemployee.ListAll();
+				}
+				else{
+					setDataEmployee();
+				}
+			}
+			
+			private function getDebtorList():void
+			{
+				if(session.getAttribute("acDebtor")==null || session.getAttribute("acDebtor").size()==0)
+				{
+					crListAllFDebtor.token = srvFdebtor.ListAll();
+				}
+				else{
+					setDebtorData();
+				}
+				
+			}
+			private function closeForm():void{
+				removeFormErrorTips();
+				this.parent.removeChild(this);
+			}
+			
+			private function loadRaisedByDet():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["des"] = "Internal";
+				lacRaisedByType.addItem(o);
+				
+				o = new Object();
+				o["des"] = "External";
+				lacRaisedByType.addItem(o);	
+				
+				//Update Load Completion Status
+				updateLCStatus("raisedByDet");
+			}
+			
+			private function loadPriority():void
+			{
+				var o:Object;
+			
+				o = new Object();
+				o["des"] = "High";
+				lacPriority.addItem(o);
+				
+				o = new Object();
+				o["des"] = "Medium";
+				lacPriority.addItem(o);
+				
+				o = new Object();
+				o["des"] = "Low";
+				lacPriority.addItem(o);
+				
+				//Update Load Completion Status
+				updateLCStatus("priority");
+			}
+			
+			private function loadFrequency():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["des"] = "Recurring";
+				lacFrequency.addItem(o);
+				
+				o = new Object();
+				o["des"] = "One-off";
+				lacFrequency.addItem(o);
+				
+				if(currentState=="Add")
+				{
+					ddFrequency.selectedIndex = 0;
+					setRecurringEnabled(true);
+					setOneoffEnabled(false);
+				}
+				
+				//Update Load Completion Status
+				updateLCStatus("frequency");
+			}
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void{
+				PopUpManager.removePopUp(this);
+			}
+
+			protected function crListAllMaintenanceStatus_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacMaintStatus.removeAll();
+					lacMaintStatus = event.result as ArrayCollection;
+					crListAllMaintenanceStatus = null;
+					lacMaintStatus.filterFunction = filterMaintStatus;
+					lacMaintStatus.refresh();
+					if(currentState=="Add")
+					{
+						ddStatus.selectedIndex=0;
+					}
+					//Update Load Completion Status
+					updateLCStatus("maintenanceStatus");
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"loadMaintStatus: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function filterMaintStatus(item:Object):Boolean
+			{
+				if(currentState=="Add" || currentState=="Edit")
+				{
+					if(item["description"].toString().toLowerCase()=="pending")
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+
+			protected function crListAllMaintenanceStatus_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"loadMaintStatus: " + event.fault,"Error",errorCloseHandler);
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+
+			protected function crListAllMaintenanceTypes_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacMaintTypes.removeAll();
+					lacMaintTypes = event.result as ArrayCollection;
+					crListAllMaintenanceTypes = null;
+					if(currentState=="Add")
+					{
+						crGetExtMaintTypes.token = srvFmaintenance.getExtMaintTypes(goVehicle["regno"].toString(),"");
+					}
+					else if(currentState=="Edit")
+					{
+						crGetExtMaintTypes.token = srvFmaintenance.getExtMaintTypes(goVehicle["regno"].toString(),gsRefNo);
+					}
+					//Update Load Completion Status
+					updateLCStatus("maintenanceTypes");
+				}catch(error:Error){
+					Message.displayAlert(1,"loadExtMaintTypes: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+
+			protected function crListAllMaintenanceTypes_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"loadMaintTypes: " + event.fault,"Error",errorCloseHandler);
+			}
+			
+			
+			private function setRecurringEnabled(status:Boolean):void
+			{
+				try
+				{
+					ddMaintenanceType.enabled=status;
+					ddMaintenanceType.selectedIndex=-1;
+					ddMaintenanceType.errorString="";
+					
+					txtMileage.enabled=status;
+					txtMileage.text="";
+					txtMileage.errorString="";
+					
+					txtPeriod.enabled=status;
+					txtPeriod.text="";
+					txtPeriod.errorString="";
+					
+					dfStartDate.enabled=status;
+					dfStartDate.selectedDate=null;
+					dfStartDate.errorString="";
+					
+					txtComment.enabled=status;
+					txtComment.errorString="";
+				}catch(error:Error){
+					Message.displayAlert(1,"setRecurringEnabled: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function setOneoffEnabled(status:Boolean):void
+			{
+				try{
+					ddRaisedByType.enabled=status;
+					ddRaisedByType.selectedIndex=-1;
+					ddRaisedByType.errorString="";
+					
+					txtRaisedBy.enabled=status;
+					txtRaisedBy.text="";
+					txtRaisedBy.errorString="";
+					
+					btnRaisedBy.enabled=status;
+									
+					txtAssignedTo.enabled=status;
+					txtAssignedTo.text="";
+					txtAssignedTo.errorString="";
+
+					btnAssignedTo.enabled=status;
+					
+					dfDueDate.enabled=status;
+					dfDueDate.selectedDate=null;
+					dfDueDate.errorString="";
+					
+					dfNotifyOn.enabled=false;
+					dfNotifyOn.selectedDate=null;
+					dfNotifyOn.errorString="";
+					
+					ddPriority.enabled=status;
+					ddPriority.selectedIndex=-1;
+					ddPriority.errorString="";
+					
+					lsRaisedBy="";
+					lsSelEmpId="";
+				}catch(error:Error)				{
+					Message.displayAlert(1,"setOneoffEnabled: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function ddFrequency_changeHandler(event:IndexChangeEvent):void
+			{
+				if(ddFrequency.selectedIndex>-1)
+				{
+					if(ddFrequency.selectedItem.des=="Recurring")
+					{
+						setRecurringEnabled(true);
+						setOneoffEnabled(false);
+					}
+					else if(ddFrequency.selectedItem.des=="One-off")
+					{
+						setRecurringEnabled(false);
+						setOneoffEnabled(true);
+					}
+					if(currentState=="Add" || currentState=="Edit")
+					{
+						txtComment.enabled=true;
+					}
+				}else{
+					txtComment.enabled=false;
+				}
+			}
+			
+			protected function crListAllFDebtor_resultHandler(event:ResultEvent):void
+			{
+				session.setAttribute("acDebtor",crListAllFDebtor.lastResult);
+				setDebtorData();
+			}
+			
+			private function setDebtorData():void
+			{
+				try
+				{
+					lacFDebtor.removeAll();
+					var tmpAC:ArrayCollection = session.getAttribute("acDebtor") as ArrayCollection;
+					var o:Object;
+					for(var a:int=0;a<tmpAC.length;a++)
+					{
+						o = new Object();
+						var obj:Object = tmpAC.getItemAt(a);
+						o["debcode"] = obj["debcode"].toString();
+						o["debname"] = obj["debname"].toString();
+						lacFDebtor.addItem(o);
+					}
+					tmpAC=null;
+					crListAllFDebtor.token=null;
+					//Update Load Completion Status
+					updateLCStatus("fdebtor");
+				}catch(error:Error){
+					Message.displayAlert(1,"crListAllFDebtor [result]: ","Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crListAllFDebtor_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"crListAllFDebtor [fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+
+			protected function crListAllFEmployee_resultHandler(event:ResultEvent):void
+			{
+				session.setAttribute("acEmployee",crListAllFEmployee.lastResult);
+				setDataEmployee();
+			}
+			
+			private function setDataEmployee():void
+			{
+				//session.setAttribute("acEmployee",crListAllFEmployee.lastResult);
+				try
+				{
+					var tmpAC:ArrayCollection = session.getAttribute("acEmployee") as ArrayCollection;
+					lacFEmployee.removeAll();
+					var o:Object;
+					for(var a:int=0;a<tmpAC.length;a++)
+					{
+						o = new Object();
+						var obj:Object = tmpAC.getItemAt(a);
+						o["empid"] = obj["empid"].toString();
+						o["name"] = obj["name"].toString();
+						o["emptype"] = obj["emptype"].toString();
+						lacFEmployee.addItem(o);
+					}
+					tmpAC=null;
+					//crListAllFEmployee.token=null;
+					//Update Load Completion Status
+					updateLCStatus("femployee");
+				}catch(error:Error){
+					Message.displayAlert(1,"crListAllFEmployee [result]: ","Error",errorCloseHandler);
+				}
+			}
+			
+
+			protected function crListAllFEmployee_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"crListAllFEmployee [fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+			protected function ddRaisedByType_changeHandler(event:IndexChangeEvent):void
+			{
+				txtRaisedBy.text="";
+			}
+
+			protected function btnSave_clickHandler(event:MouseEvent):void{
+				save();
+			}
+			
+			private function save():void{
+				try{
+					ErrorTipManager.hideAllErrorTips();
+					var selStatus:String=ddStatus.selectedItem.statusid.toString().toLocaleLowerCase();
+					var valCnt:int=-1;
+					if(currentState=="Change"){
+						valCnt = validateForm();
+						if(valCnt==0){
+							fmaintenance.statusid=ddStatus.selectedItem.statusid;
+							fmaintenance.actionedby=lsActionBy;
+							fmaintenance.actiontaken=txtActionTaken.text;
+							if(selStatus=="completed" || selStatus=="discard"){
+								fmaintenance.compdate=dfCompDate.selectedDate;
+								if(selStatus=="completed")
+									fmaintenance.compmileage=int(txtCurMileage.text);
+							}
+							crUpdateStatus.token=srvFmaintenance.updateStatus(fmaintenance);
+						}
+					}
+					
+					if(ddFrequency.selectedIndex<=-1){
+						Message.displayAlert(2,"Select Frequency To Continue","Warning",null);
+					}
+					else{
+						valCnt = validateForm();
+						if(valCnt==0){
+							if(currentState=="Add"){
+								fmaintenance = new Com_dspl_malkey_domain_Fmaintenance();
+								fmaintenance.txndate=null; //date
+								fmaintenance.curmileage=int(txtCurMileage.text);
+							}
+							fmaintenance.regno=txtRegNo.text;
+							if(ddMaintenanceType.selectedIndex>-1){
+								fmaintenance.typeid=ddMaintenanceType.selectedItem.typeid;
+							}else{
+								fmaintenance.typeid="";
+							}
+							fmaintenance.statusid=ddStatus.selectedItem.statusid;
+							fmaintenance.frequency=ddFrequency.selectedItem.des;
+							if(txtMileage.text==""){
+								fmaintenance.mileage=0;
+							}else{
+								fmaintenance.mileage = int(txtMileage.text);
+							}
+							if(txtPeriod.text==""){
+								fmaintenance.period=0;
+							}else{
+								fmaintenance.period = int(txtPeriod.text);
+							}
+							fmaintenance.sysgen=false;
+							fmaintenance.dstart=dfStartDate.selectedDate; //date
+							if(ddRaisedByType.selectedIndex>-1){
+								fmaintenance.raisedbytype=ddRaisedByType.selectedItem.des;
+							}else{
+								fmaintenance.raisedbytype="";
+							}
+							fmaintenance.raisedby=lsRaisedBy;
+							fmaintenance.assignedto=lsSelEmpId;
+							fmaintenance.ddue=dfDueDate.selectedDate; //date
+							fmaintenance.notifyon=dfNotifyOn.selectedDate;
+							if(ddPriority.selectedIndex>-1){
+								fmaintenance.priority = ddPriority.selectedItem.des;	
+							}else{
+								fmaintenance.priority="High";
+							}
+							fmaintenance.comment=txtComment.text;
+							fmaintenance.actionedby="";
+							fmaintenance.actiontaken="";
+							fmaintenance.adduser="";
+							fmaintenance.addmach="";
+							fmaintenance.adddate=null; //date
+							
+							if(currentState=="Add"){
+								fmaintenance.refno="";
+								crCreateFMaintenance.token = srvFmaintenance.create(fmaintenance);
+							}else if(currentState=="Edit"){
+								fmaintenance.refno=txtRefNo.text;
+								crUpdateFMaintenance.token = srvFmaintenance.update(fmaintenance);
+							}
+						}
+					}	
+				}catch(error:Error){
+					Message.displayAlert(1,"save: " + error.message,"Error",null);
+				}
+			}
+			
+			private function validateForm():int
+			{
+				var validationArray:Array;
+				
+				if(currentState=="Add" || currentState=="Edit")
+				{
+					if(ddFrequency.selectedItem.des=="Recurring")
+					{
+						validationArray = Validator.validateAll([svRegNoValidator,svFrequencyValidator,svStatusValidator,svMaintenanceTypeValidator,svMileageValidator,svPeriodValidator,dvStartDateValidator]);
+					}
+					else if(ddFrequency.selectedItem.des=="One-off")
+					{
+						validationArray = Validator.validateAll([svRegNoValidator,svFrequencyValidator,svStatusValidator,svRaisedByTypeValidator,svRaisedByValidator,svAssignedToValidator,dvDueDateValidator,dvNotifyOnValidator,svPriorityValidator,svCommentValidator]);
+					}
+					return validationArray.length;
+				}
+				else if(currentState=="Change")
+				{
+					var selStatus:String=ddStatus.selectedItem.statusid.toString().toLocaleLowerCase();
+					if(selStatus=="discard" || selStatus=="completed")
+					{
+						if(selStatus=="discard")
+							validationArray = Validator.validateAll([svStatusValidator,svActionByValidator,svActionTakenValidator]);
+						else if(selStatus=="completed")
+							validationArray = Validator.validateAll([svStatusValidator,svActionByValidator,svActionTakenValidator,svCompDate]);
+					}else{
+						validationArray = Validator.validateAll([svStatusValidator]);
+					}
+					return validationArray.length;
+				}
+				return -1;
+			}			
+
+
+			protected function btnRaisedBy_clickHandler(event:MouseEvent):void
+			{
+				showRaisedByPopUp();
+			}
+			
+			private function showRaisedByPopUp():void
+			{
+				try
+				{
+					if(ddRaisedByType.selectedIndex>-1)
+					{
+						if(ddRaisedByType.selectedItem.des=="Internal")
+						{
+							showPopUp(lacFEmployee,"empid","Employee Id","name","Name","Select An Employee","raisedBySelected",raisedBySelection);
+						}
+						else if(ddRaisedByType.selectedItem.des=="External")
+						{
+							showPopUp(lacFDebtor,"debcode","Client Id","debname","Name","Select A Client","raisedBySelected",raisedBySelection);
+						}
+					}
+					else
+					{
+						Message.displayAlert(2,"Select Raised By Type [Internal/External] To Continue","Warning",null);
+					}
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"showRaisedByPopUp : " + error.message,"Error",null);
+				}
+			}
+			
+			private var lsRaisedBy:String="";
+			private function raisedBySelection(event:Event):void
+			{
+				if(lpuPopup.grdSearch._strSelectedCode!="")
+				{
+					var obj:Object;
+					var keyField:String="";
+					var desField:String="";
+					if(ddRaisedByType.selectedItem.des=="Internal")
+					{
+						obj = findItem(lacFEmployee,"empid",lpuPopup.grdSearch._strSelectedCode);
+						keyField="empid";
+						desField="name";
+					}
+					else if(ddRaisedByType.selectedItem.des=="External")
+					{
+						obj = findItem(lacFDebtor,"debcode",lpuPopup.grdSearch._strSelectedCode);
+						keyField="debcode";
+						desField="debname";
+					}
+					if(obj!=null)
+					{
+						lsRaisedBy = obj[keyField].toString();
+						txtRaisedBy.text = obj[desField].toString();
+					}
+				}
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object
+			{
+				var obj:Object = null;
+				try
+				{
+					//Alert.show("keyfield: " + keyfield + "   keyvalue: " + keyvalue);
+					for(var a:int=0;a<ac.length;a++)
+					{
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+						{
+							return o;
+						}
+					}
+				}
+				catch(er:Error)
+				{
+					obj = null;
+					Alert.show("findItem: " + er.message);
+				}
+				return obj;
+			}
+			
+			private function findIndex(ac:ArrayCollection,keyfield:String,keyvalue:String):int
+			{
+				var obj:Object = null;
+				try
+				{
+					//Alert.show("keyfield: " + keyfield + "   keyvalue: " + keyvalue);
+					for(var a:int=0;a<ac.length;a++)
+					{
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+						{
+							return a;
+						}
+					}
+				}
+				catch(er:Error)
+				{
+					obj = null;
+					Alert.show("findItem: " + er.message);
+				}
+				return -1;
+			}
+			
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function,otherColumns:String="",otherColumnHeaders:String="",otherColumnWidth:int=180):void
+			{
+				lpuPopup._acDataProvider = acDataProvider;								
+				lpuPopup._strKeyColumn = strKeyColumn;
+				lpuPopup._strKeyColCaption = strKeyColCaption; 
+				lpuPopup._strDetailColumn = strDetailColumn;
+				lpuPopup._strDetailColCaption = strDetailColCaption;
+				lpuPopup.otherColumns=otherColumns;
+				lpuPopup.otherColumnHeaderText=otherColumnHeaders;
+				lpuPopup.dgColWidth=otherColumnWidth;
+				lpuPopup._strWindowTitle = strWindowTitle;			
+				lpuPopup._sPostEventToRunPopUpExit = eventName;
+				lpuPopup.addEventListener(eventName,eventListener,false,0,false);
+				lpuPopup.launchSearchGrid(); 
+				lpuPopup.isPopUp=true;
+			}
+			
+			private function saveCompletion(event:Event):void
+			{
+				removeFormErrorTips();
+				dispatchEvent(new DataEvent("childClose",true,true,"successful"));
+				closeForm();
+			}
+
+			protected function crCreateFMaintenance_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result.toString()=="")
+						Message.displayAlert(1,"Save Failed. Please Try Again....","Error",null);
+					else
+						Message.displayAlert(3,"Maintenance Saved Successfully.\nReference No: " + event.result.toString(),"Successful",saveCompletion);
+				}catch(error:Error){
+					Message.displayAlert(1,"Save Failed: " + error.message,"Error",null);
+				}
+			}
+
+
+			protected function crCreateFMaintenance_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"Save Maintenance [Fault] : " + event.fault.toString(),"Error",null);
+			}
+
+
+			protected function crUpdateFMaintenance_resultHandler(event:ResultEvent):void
+			{
+				try{
+					if(event.result==null){
+						Message.displayAlert(1,"Update Maintenance: Error Occured","Error",null);
+					}else{
+						var rslt:Boolean = event.result as Boolean;
+						if(rslt==false){
+							Message.displayAlert(1,"Update Maintenance: Error Occured","Error",null);	
+						}else if(rslt==true){
+							Message.displayAlert(3,"Record Has Been Updated Successfully","Successful",saveCompletion);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Update Maintenance: " + error.message,"Error",null);	
+				}
+			}
+
+			protected function crUpdateFMaintenance_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Update Maintenance [Fault] : " + event.fault.toString(),"Error",null);
+			}
+
+			protected function crFindByIdFMaintenance_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					if(event.result==null){
+						Message.displayAlert(1,"Find Maintenance: Error Occured.","Error",errorCloseHandler);
+					}else{
+						fmaintenance = event.result as Com_dspl_malkey_domain_Fmaintenance;
+						loadFMaintenenaceDet();
+					}
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"Find Maintenance [Result Error] : " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function loadFMaintenenaceDet():void
+			{
+				try
+				{
+					if(fmaintenance.frequency=="Recurring")
+					{
+						//Set Frequency
+						ddFrequency.selectedIndex=0;
+						if(currentState=="Edit")
+						{
+							ddFrequency_changeHandler(new IndexChangeEvent("change",false,false,-1,0));
+						}
+						//Set Maintenance Type
+						ddMaintenanceType.selectedIndex = findIndex(lacMaintTypes,"typeid",fmaintenance.typeid);
+						//Set Mileage
+						txtMileage.text=fmaintenance.mileage.toString();
+						//Set Period
+						txtPeriod.text=fmaintenance.period.toString();
+						//Set Start Date
+						dfStartDate.selectedDate = fmaintenance.dstart;
+					}
+					else if(fmaintenance.frequency=="One-off")
+					{
+						ddFrequency.selectedIndex=1;
+						if(currentState=="Edit")
+						{
+							ddFrequency_changeHandler(new IndexChangeEvent("change",false,false,-1,1));
+						}
+						//Set Raised By Type,Raised By 
+						var rbObj:Object;
+						lsRaisedBy=fmaintenance.raisedby;
+						if(fmaintenance.raisedbytype.toLocaleLowerCase()=="internal")
+						{
+							ddRaisedByType.selectedIndex=0;
+							rbObj=findItem(lacFEmployee,"empid",lsRaisedBy);
+							txtRaisedBy.text=rbObj["name"].toString();
+						}
+						else if(fmaintenance.raisedbytype.toLocaleLowerCase()=="external")
+						{
+							ddRaisedByType.selectedIndex=1;
+							rbObj=findItem(lacFDebtor,"debcode",lsRaisedBy);
+							txtRaisedBy.text=rbObj["debname"].toString();
+						}
+						
+						//Set Assigned To
+						lsSelEmpId=fmaintenance.assignedto;
+						var atObj:Object=findItem(lacFEmployee,"empid",lsSelEmpId);
+						txtAssignedTo.text=atObj["name"].toString();
+						
+						//Set Due Date
+						dfDueDate.selectedDate=fmaintenance.ddue;
+						//Set Notify On 
+						dfNotifyOn.selectedDate=fmaintenance.notifyon;
+						if(fmaintenance.notifyon!=null && currentState!="View" && currentState !="Change")
+								dfNotifyOn.enabled=true;
+						//Set Priority
+						ddPriority.selectedIndex=findIndex(lacPriority,"des",fmaintenance.priority);				
+					}
+					
+					//Set Status 
+					ddStatus.selectedIndex=findIndex(lacMaintStatus,"statusid",fmaintenance.statusid);
+
+					//Set Comment 
+				 	txtComment.text = fmaintenance.comment;
+					
+					if(currentState=="View")
+					{
+						if(fmaintenance.statusid.toLowerCase()=="completed" || fmaintenance.statusid.toLowerCase()=="discard")
+						{
+							//Set Action Date 
+							dfCompDate.selectedDate = fmaintenance.compdate;
+							//Set Action By
+							var abObj:Object=findItem(lacFEmployee,"empid",fmaintenance.actionedby);
+							txtActionBy.text=abObj["name"].toString();
+							//Set Action Taken
+							txtActionTaken.text=fmaintenance.actiontaken;
+						}
+					}
+					
+					lblModifiedBy.text+=" "+fmaintenance.adduser;
+				}catch(error:Error){
+					Message.displayAlert(1,"loadFMaintenenaceDet : " + error.message,"Error",errorCloseHandler);
+				}	
+			}
+
+			protected function crFindByIdFMaintenance_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Find Maintenance [Fault] : " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+
+			protected function crGetExtMaintTypes_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					if(event.result==null)
+					{
+						Message.displayAlert(1,"Get Existing Maintenance Types [Result] : Error Occured","Error",errorCloseHandler);
+					}
+					else
+					{
+						lacExtMaintTypes = event.result as ArrayCollection;
+						lacMaintTypes.filterFunction = filterMaintTypes;
+						lacMaintTypes.refresh(); 
+					}
+					crGetExtMaintTypes.token = null;
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"Get Existing Maintenance Types [Result] : Error Occured","Error",errorCloseHandler);
+				}
+			}
+			
+			private function filterMaintTypes(item:Object):Boolean
+			{
+				try
+				{
+					if(currentState=="Add"){
+						if(StringUtil.trim(item["isdefault"].toString())=="1")
+							return false;
+					}
+					var obj:Object = findItem(lacExtMaintTypes,"typeid",item["typeid"].toString());
+					if(obj==null)
+						return true;
+					else
+						return false;
+				}
+				catch(error:Error)
+				{
+					Alert.show("filterMaintTypes: " + error.message);
+				}
+				return false;
+			}
+
+			protected function crGetExtMaintTypes_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Existing Maintenance Types [Fault] : " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+
+			protected function btnAssignedTo_clickHandler(event:MouseEvent):void
+			{
+				showAssignedToPopUp();
+			}
+			
+			private function showAssignedToPopUp():void
+			{
+				try
+				{
+					showPopUp(lacFEmployee,"empid","Employee Id","name","Name","Select An Employee","assignedToSelected",assignedToSelection);
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"showAssignedToPopUp : " + error.message,"Error",null);
+				}
+			}
+
+			private function assignedToSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!="")
+					{
+						lsSelEmpId=lpuPopup.grdSearch._strSelectedCode;
+						var obj:Object;
+						obj = findItem(lacFEmployee,"empid",lsSelEmpId);
+						txtAssignedTo.text=obj["name"].toString();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"assignedToSelection: " + error.message,"Error",null);
+				}
+			}
+
+			protected function ddStatus_changeHandler(event:IndexChangeEvent):void{
+				try{
+					dfCompDate.enabled=false;
+					dfCompDate.selectedDate=null;
+					var selStatus:String=ddStatus.selectedItem.statusid.toString().toLocaleLowerCase();
+					if(selStatus=="discard" || selStatus=="completed")
+					{
+						btnActionBy.enabled=true;
+						txtActionTaken.enabled=true;
+						var tmpDate:Date=new Date();
+						var curDate:Date=new Date(tmpDate.fullYear,tmpDate.month,tmpDate.date,0,0,0,0);
+						tmpDate=null;
+						dfCompDate.selectedDate=curDate;
+						if(selStatus=="completed")
+							dfCompDate.enabled=true;	
+					}
+					else
+					{
+						btnActionBy.enabled=false;
+						txtActionTaken.enabled=false;
+						txtActionTaken.text="";
+					}
+					dfCompDate.errorString="";
+					txtActionBy.errorString="";
+					txtActionTaken.errorString="";
+					
+				}catch(error:Error){
+					Message.displayAlert(1,"Change Status: " + error.message,"Error",null);
+				}
+			}
+
+			protected function crUpdateStatus_resultHandler(event:ResultEvent):void
+			{
+				try{
+					if(event.result!=null){
+						var rslt:Boolean = event.result as Boolean;
+						if(rslt==true){
+							Message.displayAlert(3,"Status Has Been Changed Successfully","Successful",saveCompletion);
+						}else if(rslt==false){
+							Message.displayAlert(1,"Error Occured While Changing The Status","Error",null);
+						}
+					}else{
+						Message.displayAlert(1,"Error Occured While Changing The Status","Error",null);		
+					}
+					crUpdateStatus.token=null;
+				}catch(error:Error){
+					Message.displayAlert(1,"Update Status:" + error.message,"Error",null);
+				}
+			}
+
+			protected function crUpdateStatus_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Update Status [fault]:" + event.fault,"Error",null);
+			}
+
+
+			protected function btnActionBy_clickHandler(event:MouseEvent):void
+			{
+				showActionByPopUp();
+			}
+			
+			private function showActionByPopUp():void
+			{
+				try{
+					showPopUp(lacFEmployee,"empid","Employee Id","name","Name","Select An Employee","actionBySelected",actionBySelection);
+				}catch(error:Error){
+					Message.displayAlert(1,"showActionByPopUp : " + error.message,"Error",null);
+				}
+			}
+			
+			private function actionBySelection(event:Event):void
+			{
+				try
+				{
+					if(lpuPopup.grdSearch._strSelectedCode!="")
+					{
+						lsActionBy=lpuPopup.grdSearch._strSelectedCode;
+						var obj:Object;
+						obj = findItem(lacFEmployee,"empid",lsActionBy);
+						txtActionBy.text=obj["name"].toString();
+					}
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"assignedToSelection: " + error.message,"Error",null);
+				}
+			}
+
+			protected function dfDueDate_changeHandler(event:CalendarLayoutChangeEvent):void{
+				if(dfDueDate.selectedDate!=null){
+					dfNotifyOn.selectedDate=dfDueDate.selectedDate;
+					dfNotifyOn.enabled=true;
+					dfNotifyOn.selectableRange={rangeEnd : dfDueDate.selectedDate};
+				}else{
+					dfNotifyOn.selectedDate=null;
+					dfNotifyOn.enabled=false;
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="Add"/>
+		<s:State name="Edit"/>
+		<s:State name="View"/>
+		<s:State name="Change"/>
+	</s:states>
+	<fx:Declarations>
+		
+		<!-- Validators -->
+		<mx:StringValidator id="svRefNoValidator"
+							source="{txtRefNo}"							
+							property="text"							
+							triggerEvent=""
+							/>	
+		
+		<mx:StringValidator id="svRegNoValidator"
+							source="{txtRegNo}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svFrequencyValidator"
+							source="{ddFrequency}"							
+							property="selectedItem"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svStatusValidator"
+							source="{ddStatus}"							
+							property="selectedItem"							
+							triggerEvent=""
+							/>
+		
+		<!-- Recurring Maintenance -->
+		
+		<mx:StringValidator id="svMaintenanceTypeValidator"
+							source="{ddMaintenanceType}"							
+							property="selectedItem"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svMileageValidator"
+							source="{txtMileage}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svPeriodValidator"
+							source="{txtPeriod}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:DateValidator id="dvStartDateValidator"
+						  source="{dfStartDate}"
+						  property="text"						  
+						  triggerEvent=""
+						  allowedFormatChars="/"
+						  inputFormat="@Resource(key='dateFormat',bundle='resource')"
+						  />
+		
+		<!-- One-off Maintenance  -->
+		
+		<mx:StringValidator id="svRaisedByTypeValidator"
+							source="{ddRaisedByType}"							
+							property="selectedItem"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svRaisedByValidator"
+							source="{txtRaisedBy}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svAssignedToValidator"
+							source="{txtAssignedTo}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:DateValidator id="dvDueDateValidator"
+						  source="{dfDueDate}"
+						  property="text"						  
+						  triggerEvent=""
+						  allowedFormatChars="/"
+						  inputFormat="@Resource(key='dateFormat',bundle='resource')"
+						  
+						  />
+		<mx:DateValidator id="dvNotifyOnValidator"
+						  source="{dfNotifyOn}"
+						  property="text"						  
+						  triggerEvent=""
+						  allowedFormatChars="/"
+						  inputFormat="@Resource(key='dateFormat',bundle='resource')"
+						  />
+		<mx:StringValidator id="svPriorityValidator"
+							source="{ddPriority}"							
+							property="selectedItem"							
+							triggerEvent=""
+							/>
+		
+		<!-- Comment & Action -->
+		
+		<mx:StringValidator id="svCommentValidator"
+							source="{txtComment}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svActionByValidator"
+							source="{txtActionBy}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<mx:StringValidator id="svActionTakenValidator"
+							source="{txtActionTaken}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svCompDate"
+							source="{dfCompDate}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<!-- Services -->
+		
+		<mx:Parallel id="twFade" target="{iVehicle}">
+			<mx:Fade alphaFrom="0" alphaTo="1" duration="300"/>
+		</mx:Parallel>
+		
+		<services:FmaintstatusSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFmaintstatus"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllMaintenanceStatus"
+			result="crListAllMaintenanceStatus_resultHandler(event)"
+			fault="crListAllMaintenanceStatus_faultHandler(event)"
+			/>
+		
+		<services:FmainttypeSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFmainttype"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllMaintenanceTypes"
+			result="crListAllMaintenanceTypes_resultHandler(event)"
+			fault="crListAllMaintenanceTypes_faultHandler(event)"
+			/>
+		
+		<services:FemployeetypeSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFemployeetype"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		
+		<services:FemployeeSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFemployee"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllFEmployee"
+			result="crListAllFEmployee_resultHandler(event)"
+			fault="crListAllFEmployee_faultHandler(event)"
+			/>
+		
+		<services:FdebtorSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFdebtor"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllFDebtor"
+			result="crListAllFDebtor_resultHandler(event)"
+			fault="crListAllFDebtor_faultHandler(event)"
+			/>
+		
+		<!-- Maintenance -->
+		<services:FmaintenanceSRV 
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFmaintenance"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crGetExtMaintTypes"
+			result="crGetExtMaintTypes_resultHandler(event)"
+			fault="crGetExtMaintTypes_faultHandler(event)"
+			/>
+		
+		<s:CallResponder
+			id="crCreateFMaintenance"
+			result="crCreateFMaintenance_resultHandler(event)"
+			fault="crCreateFMaintenance_faultHandler(event)"
+			/>
+		
+		<s:CallResponder
+			id="crUpdateFMaintenance"
+			result="crUpdateFMaintenance_resultHandler(event)"
+			fault="crUpdateFMaintenance_faultHandler(event)"
+			/>
+		
+		<s:CallResponder
+			id="crFindByIdFMaintenance"
+			result="crFindByIdFMaintenance_resultHandler(event)"
+			fault="crFindByIdFMaintenance_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crUpdateStatus"
+			result="crUpdateStatus_resultHandler(event)"
+			fault="crUpdateStatus_faultHandler(event)"
+			/>
+		
+	</fx:Declarations>
+	<mx:Form x="10" y="37" width="547" height="115"
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 >
+		<s:Label text="Vehicle Details" fontWeight="bold"/>
+		<mx:FormItem label="Registration No." direction="horizontal" width="533">
+			<s:TextInput
+				tabIndex="1"
+				maxChars="10"
+				width="172" id="txtRegNo" enabled="false"/>
+			<mx:FormItem label="Current Mileage" width="249">
+				<s:TextInput
+					tabIndex="2"
+					enabled="false"
+					width="139" id="txtCurMileage"/>
+			</mx:FormItem>
+		</mx:FormItem>
+		<mx:FormItem label="Make" direction="horizontal">
+			<s:TextInput
+				tabIndex="3"
+				enabled="false"
+				width="172" id="txtMake"/>
+			<mx:FormItem label="Model">
+				<s:TextInput
+					tabIndex="4"
+					enabled="false"
+					width="195" id="txtModel"/>
+			</mx:FormItem>
+		</mx:FormItem>
+		<mx:FormItem label="Transmission" direction="horizontal">
+			<s:TextInput
+				tabIndex="5"
+				enabled="false"
+				width="172" id="txtTransmission"/>
+			<mx:FormItem label="Fuel Type">
+				<s:TextInput
+					tabIndex="6"
+					enabled="false"
+					width="175" id="txtFuelType"/>
+			</mx:FormItem>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Form x="11" y="184" width="345" height="137"
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 >
+		<s:Label text="Recurring" fontWeight="bold"/>
+		<mx:FormItem label="Maintenance Type" direction="horizontal" x="11" y="160">
+			<s:DropDownList 
+				tabIndex="9"
+				dataProvider="{lacMaintTypes}" 
+				labelField="description" width="210" id="ddMaintenanceType" enabled="false"/>
+			
+		</mx:FormItem>
+		<mx:FormItem label="Mileage" direction="horizontal">
+			<s:TextInput
+				tabIndex="10"
+				maxChars="15"
+				restrict="0-9"
+				width="160" id="txtMileage" enabled="false"/>
+			
+		</mx:FormItem>
+		<mx:FormItem label="Period" direction="horizontal">
+			<s:TextInput
+				tabIndex="11"
+				maxChars="4"
+				restrict="0-9"
+				width="123" id="txtPeriod" enabled="false"/>
+			<s:Label verticalAlign="bottom" text="Days"  height="18"/>
+		</mx:FormItem>
+		<mx:FormItem label="Start Date" direction="horizontal">
+			<mx:DateField
+				tabIndex="12"
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				width="160" id="dfStartDate" enabled="false"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Form x="364" y="184" width="378" height="137"
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 >
+		<s:Label text="One-off" fontWeight="bold"/>
+		<mx:FormItem label="Raised By" direction="horizontal">
+			<s:DropDownList
+				tabIndex="13"
+				change="ddRaisedByType_changeHandler(event)"
+				id="ddRaisedByType"
+				dataProvider="{lacRaisedByType}"
+				labelField="des"
+				width="80" enabled="false"/>
+			<s:TextInput
+				editable="false"
+				tabIndex="14"
+				width="163" id="txtRaisedBy" enabled="false"/>
+			<mx:Button
+				toolTip="Click To Select Raised By Name"
+				click="btnRaisedBy_clickHandler(event)"
+				textAlign="left"
+				id="btnRaisedBy" label=".." width="22" fontWeight="bold" enabled="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Assigned to" direction="horizontal">
+			<s:TextInput
+				editable="false"
+				tabIndex="14"
+				width="251" id="txtAssignedTo" enabled="false"/>
+			<mx:Button
+				toolTip="Click To Select An Employee"
+				click="btnAssignedTo_clickHandler(event)"
+				textAlign="left"
+				id="btnAssignedTo" label=".." width="22" fontWeight="bold" enabled="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Due Date" direction="horizontal">
+			<mx:DateField 
+				tabIndex="17"
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				width="110" id="dfDueDate" enabled="false" change="dfDueDate_changeHandler(event)"/>
+			
+			<mx:FormItem label="Notify On" direction="horizontal">
+				<mx:DateField 
+					tabIndex="17"
+					formatString="@Resource(key='dateFormat',bundle='resource')"
+					width="95" id="dfNotifyOn" enabled="false"/>
+			</mx:FormItem>
+		</mx:FormItem>
+		<mx:FormItem label="Priority" direction="horizontal">
+			<s:DropDownList
+				tabIndex="18"
+				dataProvider="{lacPriority}"
+				labelField="des"
+				width="110" id="ddPriority" enabled="false"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Form x="11" y="329" width="345" height="154"
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 >
+		<s:Label id="lblTitle" text="Comment" fontWeight="bold"/>
+			<s:TextArea
+				maxChars="1000"
+				tabIndex="19"
+				width="329" height="124" id="txtComment" enabled="false"/>
+	</mx:Form>
+	
+	<mx:FormItem label="Frequency " direction="horizontal" width="245" x="17" y="157">
+		<s:DropDownList
+			tabIndex="7"
+			change="ddFrequency_changeHandler(event)"
+			dataProvider="{lacFrequency}" labelField="des" width="159" id="ddFrequency" 
+			enabled.Add="true" enabled.Edit="true" enabled.View="false" enabled.Change="false"
+			/>
+	</mx:FormItem>
+	<mx:FormItem label="Status" direction="horizontal" x="261" y="157">
+		<s:DropDownList 
+			tabIndex="8"
+			dataProvider="{lacMaintStatus}"
+			labelField="description"
+			width="181" id="ddStatus" 
+			enabled.Add="true" enabled.Edit="true" enabled.View="false" enabled.Change="true"
+			change="ddStatus_changeHandler(event)"
+			/>
+		
+	</mx:FormItem>
+	<mx:Form x="364" y="329" width="378" height="154"
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 >
+		<mx:FormItem label="Action Date" direction="horizontal">
+			<mx:DateField
+				id="dfCompDate"
+				enabled="false"
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				width="125"/>
+		</mx:FormItem>
+		<mx:FormItem label="Action By" direction="horizontal">
+			<s:TextInput
+				tabIndex="14"
+				width="225" id="txtActionBy" enabled="false" includeIn="Add,Edit,View,Change"/>
+			<mx:Button
+				toolTip="Click To Select An Employee"
+				click="btnActionBy_clickHandler(event)"
+				textAlign="left"
+				id="btnActionBy" label=".." width="22" fontWeight="bold" enabled="false" includeIn="Add,Edit,View,Change"/>
+			
+		</mx:FormItem>
+		<s:Label text="Action Taken" fontWeight="bold"/>
+			<s:TextArea
+				maxChars="1000"
+				tabIndex="21"
+				width="365" height="65" id="txtActionTaken" enabled="false"/>
+	</mx:Form>
+	<mx:Form x="560" y="37" width="182" height="115"
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 >
+		<mx:Image
+			maintainAspectRatio="false"
+			width="170" height="104" id="iVehicle"/>
+	</mx:Form>
+	<s:Label x="14" y="489" text="Last Modified By:" id="lblModifiedBy"/>
+	<mx:FormItem label="Reference Number" direction="horizontal" x="13" y="7" fontWeight="bold">
+		<s:TextInput
+			maxChars="15"
+			restrict="0-9"
+			width="160" id="txtRefNo" enabled="false"
+			tabIndex="0"
+			/>
+		
+	</mx:FormItem>
+	<mx:Button
+		click="btnSave_clickHandler(event)"
+		tabIndex="22"
+		id="btnSave" width="40" height="29" toolTip="Save"
+		icon="@Embed(source='/com/dspl/malkey/components/common/icons/filesave.png')"
+		enabled.Add="true" enabled.Edit="true" enabled.View="false" enabled.Change="true" x="696" y="3"/>
+</s:TitleWindow>

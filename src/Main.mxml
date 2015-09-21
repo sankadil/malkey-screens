@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   creationComplete="initApp(event)"
+			   backgroundColor="#FFFFFF" backgroundAlpha="1.0" preloaderChromeColor="#BEBEBE" height="100%" width="100%" resize="application1_resizeHandler(event)" currentState="Login" xmlns:services="com.dspl.malkey.services.*" xmlns:flexlib="http://code.google.com/p/flexlib/"  xmlns:containers="flexlib.containers.*" xmlns:efinac="com.dspl.efinac.*" xmlns:local="*"
+			   >
+	<fx:Style source="Main.css"/>
+	<s:states>
+		<s:State name="Login"/>
+		<s:State name="Main"/>
+	</s:states>
+	<fx:Declarations>
+		<s:CallResponder id="findByIdResult"
+						 result="findByIdResult_resultHandler(event)"
+						 fault="findByIdResult_faultHandler(event)"
+						 />
+		<services:FpassSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="fpassSRV" 
+			showBusyCursor="true"/>
+		
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[			
+			import com.adobe.crypto.HMAC;
+			import com.adobe.crypto.MD5;
+			import com.adobe.utils.ErrorTipManager;
+			import com.dspl.malkey.util.EDate;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fpass;
+			
+			import flash.utils.setTimeout;
+			
+			import flexlib.controls.tabBarClasses.SuperTab;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.SWFLoader;
+			import mx.core.FlexGlobals;
+			import mx.core.IBorder;
+			import mx.core.IFlexDisplayObject;
+			import mx.core.INavigatorContent;
+			import mx.events.ChildExistenceChangedEvent;
+			import mx.events.FlexEvent;
+			import mx.events.IndexChangedEvent;
+			import mx.events.ResizeEvent;
+			import mx.events.StateChangeEvent;
+			import mx.managers.IFocusManagerComponent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			
+			import org.osmf.content.ContentLoader;
+			private var sloader:SWFLoader = new SWFLoader();
+			
+			private function initApp(e:FlexEvent):void{
+				// Call the javascript function in the startup HTML file to set focus to the FLEX app 
+				if (ExternalInterface.available)
+					ExternalInterface.call("onFlexInitialized"); 
+				
+				/* initMain(); */
+				setPosition();
+				txtUsername.setFocus();
+				this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE,stateChangeEventHandler,false,0,false);
+			}
+			
+			private function stateChangeEventHandler(event:StateChangeEvent):void{
+				if(currentState=="Login"){
+					txtPassword.setFocus();
+				}else if(currentState=="Main")
+					supTabNav.addEventListener("logOffTriggered",logOffEventHandler,true,0,true);
+			}
+			
+			private function logOffEventHandler(event:Event):void{
+				try{
+					for(var a:int=(supTabNav.length-1);a>0;a--)
+						supTabNav.removeChildAt(a);
+					SetState("Login");
+				}catch(error:Error){
+					Message.displayAlert(1,"logOffEvent: " + error.message,"Error",null);
+				}
+			}
+			
+			private function setPosition():void{
+				try{
+					if(currentState=="Login"){
+						pnlLogin.x = ((this.width - pnlLogin.width) / 2);
+						pnlLogin.y = ((this.height - pnlLogin.height) / 2);
+					}else if(currentState=="Main"){
+						supTabNav.x = ((this.width - supTabNav.width) / 2);
+						supTabNav.y = ((this.height - (supTabNav.height-33)) / 2);
+					}					
+				}catch(error:Error){
+					//Alert.show("setPosition: " + error.message);
+					trace("setPosition: " + error.message);
+				}
+			}
+			
+			private function SetState(state:String):void{
+				currentState = state;
+				setPosition();
+			}	
+			
+			protected function application1_resizeHandler(event:ResizeEvent):void
+			{
+				setPosition();
+			}
+			
+			
+			protected function btnLogin_clickHandler(event:MouseEvent):void{
+				if(EDate.validateTimeZone()==false){
+					Message.displayAlert(2,"Invalid Time Zone. Please Set Your Computer Time Zone To GMT+05.30 And Restart Web Browser","Warning");
+					return;
+				}
+				if(isValid()==true){
+					findByIdResult.token = fpassSRV.findById(txtUsername.text.toString());	
+				}				
+			}
+			
+			private function validateCredentials(fpass:Com_dspl_malkey_domain_Fpass):void{
+				try{
+					if(fpass==null){
+						lblError.text = "Invalid username";
+						txtUsername.selectAll();
+						txtUsername.setFocus();						
+					}else if(fpass.username==""){
+						lblError.text = "Invalid username";						
+						txtUsername.selectAll();
+						txtUsername.setFocus();
+					}else{
+						if(fpass.status=="I"){
+							Message.displayAlert(2,"Your Account Has Been Disabled.\rPlease Contact System Administrator","Warning",null);
+							return;
+						}
+						if(fpass.password==MD5.hash(txtPassword.text.toString()).substr(0,UserManagement.maxLength)){
+							var session:Session=Session.getInstance();
+							session.setAttribute("user",fpass);
+							resetControls();
+							SetState("Main");
+							//var request:URLRequest = new URLRequest("/malkey_server/malkey-screens-debug/Main.html");
+							//request.method = URLRequestMethod.POST;
+							//navigateToURL(request,"_self");
+						}else{
+							lblError.text = "Invalid password";							
+							txtPassword.selectAll();
+							txtPassword.setFocus();
+						}
+					}
+				}catch(error:Error){
+					resetControls();
+					Message.displayAlert(1,"validateCredentials: " + error.message,"Error",null);
+				}
+			}
+			
+			private function resetControls():void
+			{
+				//txtUsername.text = "";
+				txtPassword.text = "";
+				lblError.text = "";
+			}
+			
+			private function isValid():Boolean{
+				try{
+					lblError.text="";
+					if(txtUsername.text==""){
+						lblError.text="Enter username to continue";
+						txtUsername.setFocus();
+						return false;
+					}else if(txtPassword.text==""){
+						lblError.text="Enter password to continue";
+						txtPassword.setFocus();
+						return false;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"isValid: " + error.message,"Error",null);
+					return false;
+				}
+				return true;
+			}
+			
+			protected function findByIdResult_resultHandler(event:ResultEvent):void{
+				try{
+					var fpass:Com_dspl_malkey_domain_Fpass = event.result as Com_dspl_malkey_domain_Fpass;
+					validateCredentials(fpass);
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+					displayLoginFailError();
+				}
+			}
+			
+			protected function findByIdResult_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Fault Handler: " + event.fault.toString(),"Error",null);
+				displayLoginFailError();
+			}
+			
+			private function displayLoginFailError(message:String=""):void{
+				var str:String="Login Failed. Please Try Again.";
+				if(StringUtil.trim(message).length>0)
+					str += "\rDetail: " + message;
+				Message.displayAlert(1,str,"Error",null);	
+			}
+
+			protected function supTabNav_changeHandler(event:IndexChangedEvent):void{
+				updateChildErrorTrips(event.newIndex);
+			}
+			
+			private function updateChildErrorTrips(newIndex:int):void{
+				try{
+					ErrorTipManager.hideAllErrorTips();
+					if(newIndex!=0){
+						var label:String=StringUtil.trim(INavigatorContent(supTabNav.getChildAt(newIndex)).label.toString());
+						dispatchEvent(new DataEvent("parentTabChanged",true,true,label));
+					}
+				}catch(error:Error){
+					Alert.show("Error: " + error.message);
+				}
+			}
+
+			protected function supTabNav_childRemoveHandler(event:ChildExistenceChangedEvent):void{
+				setTimeout(updateChildErrorTrips,500,supTabNav.selectedIndex);
+			}
+		]]>
+	</fx:Script>
+	
+	<s:BorderContainer x="0" y="0" width="100%" height="100%">
+		<s:backgroundFill>
+			<s:RadialGradient id="gradient1" rotation="180">
+				<s:entries>					
+					<!--<s:GradientEntry id="entry1" color.Login="0xc7c7c7" color.Main="0x9b9b9b" alpha="0.7"/>
+					<s:GradientEntry id="entry2" color.Login="0xc7c7c7" color.Main="0x9b9b9b" alpha="0.9"/>-->
+					<s:GradientEntry id="entry1" color.Login="0xc7c7c7" color.Main="0x9b9b9b" alpha="0.7"/>
+					<s:GradientEntry id="entry2" color.Login="0xc7c7c7" color.Main="0x9b9b9b" alpha="0.9"/>
+				</s:entries>
+			</s:RadialGradient>
+		</s:backgroundFill>
+		<s:Panel includeIn="Login" width="456" height="174" backgroundColor="#FFFFFF" contentBackgroundColor="#FFFFFF" chromeColor="#02609D" contentBackgroundAlpha="1.0" backgroundAlpha="1.0" borderAlpha="0.27" cornerRadius="6" title="Login" id="pnlLogin" borderColor="#FFFDFD" color="#FFFFFF">
+			<mx:Form x="108" y="10" width="353" defaultButton="{btnLogin}">
+				<s:Label text="Please enter your username and password to continue" color="#050505" fontSize="13"/>
+				<mx:FormItem label="Username" color="#0D0A0A" fontWeight="bold" width="315">
+					<s:TextInput tabIndex="1" width="237" id="txtUsername" maxChars="10" text=""/>
+				</mx:FormItem>
+				<mx:FormItem
+					defaultButton="{btnLogin}"
+					label="Password" color="#100F0F" fontWeight="bold" width="315">
+					<s:TextInput tabIndex="2" width="237" id="txtPassword" displayAsPassword="true" maxChars="{UserManagement.maxLength}" text=""/>
+				</mx:FormItem>
+			</mx:Form>
+			<s:Button click="btnLogin_clickHandler(event)" tabIndex="3" x="378" y="108" label="Login" height="26" id="btnLogin" width="61" fontWeight="bold"/>
+			<s:Label x="127" y="114" id="lblError" color="#DA0808" fontSize="12" width="242" height="20" fontWeight="bold"/>
+			<mx:Image x="0" y="15" source="com/dspl/malkey/components/common/icons/FiNAC Logo With R 2D.jpg" width="127" height="90"/>
+		</s:Panel>
+		<flexlib:SuperTabNavigator id="supTabNav" 
+								   borderVisible="false"
+								   backgroundColor="#9b9b9b"
+								   backgroundAlpha="0.2"
+								   scrollSpeed="25"
+								   startScrollingEvent="{MouseEvent.MOUSE_OVER}"
+								   stopScrollingEvent="{MouseEvent.MOUSE_OUT}"
+								   width="1000" height="619" horizontalGap="0"
+								   verticalGap="0"
+								   closePolicy="{SuperTab.CLOSE_NEVER}"
+								   x="0" y="0" includeIn="Main"
+								   change="supTabNav_changeHandler(event)"
+								   childRemove="supTabNav_childRemoveHandler(event)"
+								   >	
+			<mx:VBox label="Home">
+				<local:Home color="#FFFFFF" x="0" y="0" height="586" width="1000" mainTab="{supTabNav}"/>
+			</mx:VBox>
+		</flexlib:SuperTabNavigator>
+	</s:BorderContainer>
+</s:Application>

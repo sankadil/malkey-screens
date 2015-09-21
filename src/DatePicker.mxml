@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   width="564" height="186" 
+			   xmlns:valueObjects="com.dspl.malkey.valueObjects.*" 
+			   title="@Resource(key='DatePicker.title',bundle='message')"
+			   close="titlewindow1_closeHandler(event)"
+			   >
+	
+	<!--METADATA here-->
+	<fx:Metadata>
+		[Event(name="undo",type="flash.events.Event")]
+		[Event(name="creation",type="flash.events.Event")]
+		[Event(name="select",type="com.dspl.malkey.events.DateSelectionEvent")]
+	</fx:Metadata>
+	
+	<!--STATES here-->
+	
+	<!--Bindings Here-->
+	
+	<!--Controller-->
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<!--<valueObjects:Com_dspl_malkey_domain_Freservation id="com_dspl_malkey_domain_Freservation"/>-->
+		<mx:ArrayCollection id="acTime"/>
+		
+		<!--Validators-->
+		<mx:DateValidator  id="dvOut"
+						   source="{dtDateOut}"
+						   property="selectedDate"
+						   required="true"
+						   trigger="{btnNext}" 
+						   />
+		
+		<mx:DateValidator  id="dvIn"
+						   source="{dtDateIn}"
+						   property="selectedDate"
+						   required="true"
+						   trigger="{btnNext}" 
+						   />
+		<mx:NumberValidator id="svTimeFrom"
+							source="{cmbTimeOut}"
+							property="selectedIndex"
+							trigger="{btnNext}" 
+							triggerEvent="click"
+							minValue="0" 
+							maxValue="50" 
+							domain="int" 
+							lowerThanMinError="Check-Out Time is Required"
+							/>
+		<mx:NumberValidator id="svTimeTo"
+							source="{cmbTimeIn}"
+							property="selectedIndex"
+							trigger="{btnNext}" 
+							triggerEvent="click"
+							minValue="0" 
+							maxValue="50" 
+							domain="int"
+							lowerThanMinError="Check-In Time is Required Field"
+							/>
+	</fx:Declarations>
+	
+	
+	<!--Model:Bussiness Logic Here/ActionScript Here-->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.events.DateSelectionEvent;
+			import com.dspl.malkey.util.DateOperation;
+			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]	private var genericFunctions:GenericFunctions=new GenericFunctions();
+			[Bindable]	public var dout:Date=new Date();
+			[Bindable]	public var din:Date=new Date();
+			[Bindable]	public var timeout:String=new String();
+			[Bindable]	public var timein:String=new String();
+			[Bindable]	public var hasChange:Boolean=false;
+			
+
+			protected function btnNext_clickHandler():void
+			{
+				if(DateOperation.getDaysDifference(dtDateIn.selectedDate,dtDateOut.selectedDate) == nsNumDays.value)
+				{
+					if(cmbTimeIn.selectedIndex>-1 && cmbTimeOut.selectedIndex>-1)
+					{
+						if( ((cmbTimeIn.selectedIndex>cmbTimeOut.selectedIndex) && nsNumDays.value==1) || nsNumDays.value >1)
+						{
+							dispatchEvent(new DateSelectionEvent("select", dtDateOut.selectedDate,dtDateIn.selectedDate,cmbTimeOut.selectedItem.toString(),cmbTimeIn.selectedItem.toString(),nsNumDays.value,hasChange));
+							PopUpManager.removePopUp(this);
+						}
+						else
+						{
+							Alert.show("Invalid time.\nCheck-in time should be \ngreater-than check-out time.","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						}
+					}
+					else
+					{
+						Alert.show("Invalid time format,Please enter out/in time in correct format","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					}
+				}
+				else
+				{
+					Alert.show("Invalid number of days,\nPlease correct the date or number of days","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				//PopUpManager.removePopUp(this);
+			}
+
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+			
+			protected function and(b1:Boolean,b2:Boolean,b3:Boolean,b4:Boolean,b5:Boolean):Boolean
+			{
+			return (b1 && b2 && b3&& b4 && b5);
+			}
+
+
+			protected function btnNext_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode==Keyboard.ENTER)
+				{
+					btnNext_clickHandler();
+				}
+			}
+
+
+			protected function btnUndo_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				dispatchEvent(new Event("undo"));
+				PopUpManager.removePopUp(this);
+			}
+
+			
+			
+			
+			
+
+			
+			
+			
+			
+			
+			/***
+			 * Following methods fire when user change data 
+			 * 
+			 * */
+			protected function dtDateOut_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				change_rate();
+			}
+
+			protected function dtDateIn_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				change_rate();
+			}
+			
+			protected function cmbTimeOut_changeHandler(event:IndexChangeEvent):void
+			{
+				change_rate();
+			}
+
+			protected function cmbTimeIn_changeHandler(event:IndexChangeEvent):void
+			{
+				change_rate();
+			}
+			
+			protected function nsNumDays_changeHandler(event:Event):void
+			{
+				change_rate();
+			}			
+			
+			protected function change_rate():void
+			{
+				hasChange=true;
+			}			
+			
+
+		]]>
+	</fx:Script>
+	
+	<!--Start:View Tier-->
+	<mx:Form 
+		x="12" y="9"
+		borderVisible="true"
+		>
+	<mx:FormItem label="Date Out" direction="horizontal" width="100%"  styleName="formItem" labelStyleName="formItemLabel"  required="true">
+		<mx:DateField width="150" id="dtDateOut" 
+					  selectedDate="{dout/* com_dspl_malkey_domain_Freservation.dout */}"
+					  selectableRange="{{rangeStart : new Date()}}"
+					  change="dtDateOut_changeHandler(event)"
+					  formatString="@Resource(key='dateFormat',bundle='resource')"
+					  tabIndex="0"
+					  />
+		<!--<mx:Label  text="  Time :"/>-->
+		<mx:FormItem label="  Time :" styleName="formItems" labelStyleName="formItemLabel"  required="true" direction="horizontal">
+		<s:ComboBox 
+			id="cmbTimeOut" 
+			dataProvider="{acTime}" 
+			selectedIndex="{acTime.getItemIndex(timeout/* com_dspl_malkey_domain_Freservation.timeout */)}" 
+			change="cmbTimeOut_changeHandler(event)"
+			width="100"
+			tabIndex="1"
+			restrict="0-9,:"
+			/>
+		<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+	</mx:FormItem>
+	</mx:FormItem>
+	
+	<mx:FormItem label="Num. Days" styleName="formItem" labelStyleName="formItemLabel"  required="true">
+		<s:NumericStepper 
+			id="nsNumDays" 
+			maximum="366" 
+			minimum="0" 
+			width="150"
+			value="{DateOperation.getDaysDifference(dtDateIn.selectedDate,dtDateOut.selectedDate)}"
+			change="nsNumDays_changeHandler(event)"
+			tabIndex="2"
+			/>
+	</mx:FormItem>
+	
+	<mx:FormItem label="Date In" direction="horizontal"  styleName="formItem" labelStyleName="formItemLabel"  required="true">
+		<mx:DateField width="150" id="dtDateIn" 
+					  selectedDate="{(dtDateOut.selectedDate!=null) ? DateOperation.dateAdd('d', nsNumDays.value,dtDateOut.selectedDate) : null}"
+					  selectableRange="{{rangeStart : dtDateOut.selectedDate}}"
+					  change="dtDateIn_changeHandler(event)"
+					  formatString="@Resource(key='dateFormat',bundle='resource')"
+					  tabIndex="3"
+					  />
+	<!--	<mx:Label  text="  Time :"/>-->
+		<mx:FormItem label="  Time :" styleName="formItems" labelStyleName="formItemLabel"  required="true" direction="horizontal">
+		<s:ComboBox 
+			id="cmbTimeIn" 
+			dataProvider="{acTime}" 
+			selectedIndex="{acTime.getItemIndex(timein/* com_dspl_malkey_domain_Freservation.timein */)}"  
+			width="100" 
+			tabIndex="4"
+			restrict="0-9,:"
+			change="cmbTimeIn_changeHandler(event)"
+			/>
+		<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+	</mx:FormItem>
+	</mx:FormItem>
+	</mx:Form>
+	<s:Button id="btnUndo" label="Back" x="343" y="121" click="btnUndo_clickHandler(event)"   tabIndex="5"/>
+	<s:Button id="btnNext" label="Next" x="443" y="121" click="btnNext_clickHandler()" keyUp="btnNext_keyUpHandler(event)" enabled="{and(dtDateOut.selectedDate!=null,dtDateIn.selectedDate!=null,nsNumDays.value!= 0,cmbTimeIn.selectedIndex!=-1,cmbTimeOut.selectedIndex!=-1)}" tabIndex="6"/>
+
+	<!--End:View Tier-->
+	
+	
+	
+	
+</s:TitleWindow>

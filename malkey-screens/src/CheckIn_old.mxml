@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Project: 	malkey-screens	
+File:		CheckOut.mxml	
+Date:		Jun 1, 2011	
+Author:		Sanka Senavirathna-Administrator
+-->
+
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 enabled="{isEnable}"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:valueObjects="com.dspl.malkey.valueObjects.*" xmlns:services="com.dspl.malkey.services.*" xmlns:controls="com.dspl.efinac.components.common.controls.*">
+	
+	<!--View Tier-->
+	
+	
+	<mx:Form width="417" height="345" x="12" y="10"
+			 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+			 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+		<s:Label text="Indication of Damages" fontWeight="bold"/>
+		
+		<s:BorderContainer id="bcVehiDiagram" width="404" height="279" verticalCenter="0" horizontalCenter="0">
+			<mx:Image id="imgCI" click="imgCI_clickHandler(event)" width="402" height="277" 
+					  source="{com_dspl_malkey_domain_Fvehicletype.image}"/>					
+
+		</s:BorderContainer>
+		<s:HGroup width="232" height="25">
+			<s:ToggleButton id="btnDent" label="Dent"
+							click="btnDent_clickHandler(event)" 
+							enabled.stUndo="false" enabled.stNew="true" enabled.stEdit="true"/>
+			<s:ToggleButton id="btnScratch" label="Scratch"
+							click="btnScratch_clickHandler(event)" 
+							enabled.stUndo="false" enabled.stNew="true" enabled.stEdit="true"/>
+			<s:Button id="btnUndoMarking" label="Undo" 
+					  click="btnUndoMarking_clickHandler(event)" 
+					  enabled.stUndo="false" enabled.stNew="true" enabled.stEdit="true"/>
+		</s:HGroup>
+	</mx:Form>
+	
+	<mx:Form width="315" height="100"  borderAlpha="0.10" borderColor="black" x="10" y="358">
+		<s:Label text="Check-Out Mileage" fontWeight="bold"/>
+		<mx:SWFLoader id="slODOOrgMile"  creationComplete="slODOOrgMile_creationCompleteHandler(event)" scaleContent="true" width="219" height="37" source="@Resource(key='odourl', bundle='resource')"/>
+	</mx:Form>
+	
+	<mx:Form width="233" height="380" x="447" y="10"
+			 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+			 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+		<s:Label text="Fuel Level" fontWeight="bold"/>
+		<mx:SWFLoader id="slFuelMeter" creationComplete="slFuelMeter_creationCompleteHandler(event)" scaleContent="true" enabled="false" enabled.stNew="true" enabled.stEdit="true" width="220" height="310" source="@Resource(key='fuelurl', bundle='resource')"/>
+	</mx:Form>
+	
+	<mx:Form width="200" height="380" x="699" y="10"
+			 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
+			 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
+		<s:Label text="Inventory" fontWeight="bold"/>
+		
+
+		<mx:List id="lstVehiInv" dataProvider="{acFvinventrylist}" labelField="description"
+				 width="188" height="100%" alternatingItemColors="[#edf0fa, white]"
+				 enabled.stUndo="false" enabled.stNew="true" enabled.stEdit="true"
+				 itemClick="lstVehiInv_itemClickHandler(event)"
+				 >
+			<mx:itemRenderer>
+				<fx:Component>
+					<mx:CheckBox selected="{Boolean(data.isselected)}" 
+								 change="checkbox1_changeHandler(event)">
+						<fx:Script>
+							<![CDATA[
+								protected function checkbox1_changeHandler(event:Event):void
+								{
+									data.isselected = this.selected ? 1 : 0;
+								}
+							]]>
+						</fx:Script>
+					</mx:CheckBox>
+					
+				</fx:Component>
+			</mx:itemRenderer>
+			
+		</mx:List>
+	</mx:Form>
+	
+	<mx:Form height="364" x="935" y="10"
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 width="250">
+<!--		<mx:FormItem label="Hire Status" width="225" styleName="formItem" labelStyleName="formItemLabel">
+			<s:DropDownList width="115"/>
+		</mx:FormItem>-->
+		
+		<mx:FormItem label="Hire Status"  styleName="formItemM" labelStyleName="formItemLabel" direction="horizontal">
+			<controls:_tiMasterFile id="txtHireStatus"											
+									_acDataProvider="{acFhirestatus}"
+									text="@{com_dspl_malkey_domain_Freservation.cohirestsid}"
+									_strKeyColumn="hirestsid"
+									_strKeyColCaption="Hire Status" 
+									_strDetailColumn="description" 
+									_strDetailColCaption="description"
+									_strWindowTitle="Select Hire Status"
+									width="115"
+									editable="false" 
+									/>
+<!--			<s:TextInput text="{genericFunctions.getArrayCollection(txtHireStatus._acDataProvider,'hirestsid',com_dspl_malkey_domain_Freservation.cohirestsid).description}" 
+						 
+						 width="300"
+						 />-->
+			
+			<!--<mx:LinkButton label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtHireStatus.launchSearchGrid()}"/>-->
+		</mx:FormItem>
+		
+		<mx:FormItem label="Excess Mileage" width="225" styleName="formItemM" labelStyleName="formItemLabel">
+			<s:TextInput width="115"/>
+		</mx:FormItem>
+		<mx:FormItem label="Detention Hours" styleName="formItemM" labelStyleName="formItemLabel">
+			<s:TextInput width="115"/>
+		</mx:FormItem>
+		<mx:FormItem label="Night Out " styleName="formItemM" labelStyleName="formItemLabel">
+			<s:TextInput width="115"/>
+		</mx:FormItem>
+		<mx:FormItem label="Out of Colombo " styleName="formItemM" labelStyleName="formItemLabel">
+			<s:TextInput width="115"/>
+		</mx:FormItem>
+		<mx:FormItem label="Other (Rs.)" styleName="formItemM" labelStyleName="formItemLabel">
+			<s:TextInput width="115"/>
+		</mx:FormItem>
+		<mx:FormItem label="Damage (Rs.)" styleName="formItemM" labelStyleName="formItemLabel">
+			<s:TextInput width="115"/>
+		</mx:FormItem>
+		<mx:FormItem label="Fuel Diff (Rs.)" styleName="formItemM" labelStyleName="formItemLabel">
+			<s:TextInput width="115"/>
+		</mx:FormItem>
+	</mx:Form>
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--STATES here-->
+	<s:states>
+		<s:State name="State1"   	id="State1"/>
+		<s:State name="stDelete" 	id="stDelete"/>
+		<s:State name="stEdit" 		id="stEdit"/>
+		<s:State name="stNew"    	id="stNew"/>
+		<s:State name="stView"  	id="stView"/>
+		<s:State name="stUndo"  	id="stUndo"/>
+	</s:states>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Bindings Here-->
+	<fx:Binding source="{stCurrent}" destination="currentState"/>
+	<fx:Binding source="genericFunctions.getArrayCollection(acVehicleAll,'regno',com_dspl_malkey_domain_Fresvehicle.id.regno) as Com_dspl_malkey_domain_Fvehicle" 				destination="com_dspl_malkey_domain_Fvehicle" />
+	<fx:Binding source="genericFunctions.getArrayCollection(acVehicleTypeAll,'vehitypeid',com_dspl_malkey_domain_Fvehicle.vehitypeid) as Com_dspl_malkey_domain_Fvehicletype" 	destination="com_dspl_malkey_domain_Fvehicletype"/>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Controller-->
+	<fx:Declarations>
+		
+		<fx:String id="stCurrent"/>
+		
+		<!--VALIDATORS-->
+		
+		<!--FORMATTERS HERE-->
+		
+		<!--VALUEOBJECTS/DOMAINS HERE-->
+		<valueObjects:Com_dspl_malkey_domain_Freservation 	id="com_dspl_malkey_domain_Freservation"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresvehicle 	id="com_dspl_malkey_domain_Fresvehicle"/>
+		<valueObjects:Com_dspl_malkey_domain_FresvehiclePK 	id="com_dspl_malkey_domain_FresvehiclePK"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicle 		id="com_dspl_malkey_domain_Fvehicle"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehicletype 	id="com_dspl_malkey_domain_Fvehicletype"/>
+		<valueObjects:Com_dspl_malkey_domain_Fvehiclemake 	id="com_dspl_malkey_domain_Fvehiclemake"/>
+		
+		<!--ARRAYCOLLECTION HERE-->
+		<mx:ArrayCollection id="acVehicleAll"/>
+		<mx:ArrayCollection id="acVehicleMake"/>
+		<mx:ArrayCollection id="acVehicleTypeAll"/>
+		<mx:ArrayCollection id="acFvinventrylist"/>
+		<mx:ArrayCollection id="acFresVehicleInventory"/>
+		<mx:ArrayCollection id="acVehicleDamage"/>
+		<mx:ArrayCollection id="acFhirestatus"/>
+		
+		<!--CALLRESPONDERS HERE-->
+		<!--<s:CallResponder id="crVehicleDamage" result="crVehicleDamage_resultHandler(event)"/>-->
+		
+		
+		<!--SERVICES HERE-->
+		<services:FvehicledamageSRV id="srvFvehicledamage"
+									fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+									showBusyCursor="true"
+									endpoint="@Resource(key='url',bundle='resource')"/>
+<!--		<services:FvehicletypeSRV id="srvFvehicletype"
+								  fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+								  showBusyCursor="true"
+								  endpoint="@Resource(key='url',bundle='resource')"/>
+		<services:FvinventrylistSRV id="srvFvinventrylist"
+									fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
+									showBusyCursor="true"
+									endpoint="@Resource(key='url',bundle='resource')"/>-->
+	
+		
+	</fx:Declarations>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Model:Bussiness Logic Here/ActionScript Here-->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.components.odoPopup;
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehinv;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresvehinvPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicledamage;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicleinventry;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvinventrylist;
+			
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			
+			
+			//Bindable variables Here
+			[Bindable]private var genericFunctions:GenericFunctions=new GenericFunctions();	
+			[Bindable]public var isEnable:Boolean=false;
+			//non bindable variables Here
+			private var CIchildCnt:int=1;
+			private var size:uint         = 80;
+			private var bgColor:uint      = 0xFFCC00;
+			private var bgColor1:uint     = 0xFFAACC;
+			private var borderColor:uint  = 0x666666;
+			private var borderSize:uint   = 0;
+			private var cornerRadius:uint = 9;
+			private var gutter:uint       = 5;
+			private var isCreatedlODOOrgMile:Boolean=false;
+			private var isCreatedFuelMeter:Boolean=false;
+			
+
+			
+			/***
+			 * Reset all form (fuel level/inventory/indication of damage)
+			 * 
+			 * */
+			public function resetAll():void
+			{
+				isEnable=false;
+				resetInventory();
+				com_dspl_malkey_domain_Fvehicle=new Com_dspl_malkey_domain_Fvehicle();
+				removeAllCI();
+ 				try{
+					if(isCreatedlODOOrgMile){setODOOrgMile("0");}
+					if(isCreatedFuelMeter){setFuelLevel("0");}
+				}
+				catch(e:Error)
+				{} 
+			}
+			
+			
+			public function setVehicleStatus():void
+			{
+				if(currentState=="stNew")
+				{
+					setFuelLevel(com_dspl_malkey_domain_Fvehicle.fuellevel.toString());
+					setODOOrgMile(com_dspl_malkey_domain_Fvehicle.curmileage.toString());
+				}
+				else
+				{
+					setFuelLevel(com_dspl_malkey_domain_Freservation.cofuellevel.toString());
+					setODOOrgMile(com_dspl_malkey_domain_Freservation.comileage.toString());
+				}
+			}
+			
+			//setFuelLevel(fTmpVehicle.fuellevel.toString())
+			// Start: Fuel Meter
+			protected function setFuelLevel(level:String):void
+			{ 
+				var loaderManager:Object = slFuelMeter.content as Object;
+				loaderManager.setFuelLevel(level);
+			}
+			
+			protected function setFuelMeterEnabled(lEnabled:Boolean):void
+			{
+				var loaderManager:Object = slFuelMeter.content as Object;
+				loaderManager.setEnable(lEnabled);
+			}
+			
+			public function getCurrentFuelMeterLevel():int
+			{
+				var loaderManager:Object = slFuelMeter.content as Object;
+				return loaderManager.getCurrentLevel();
+			}
+			// End: Fuel Meter
+
+			
+			
+			
+			//drawing methods
+			
+			
+			protected function imgCI_clickHandler(event:MouseEvent):void
+			{
+				if (currentState.toUpperCase() == "STNEW" || currentState.toUpperCase() == "STEDIT"){
+					var lnDamageType:int;
+					if(btnDent.selected==true){
+						lnDamageType = 1;
+					} else if(btnScratch.selected==true){
+						lnDamageType = 2;
+					} else {
+						return;
+					}
+					
+					var lnXValue:Number = imgCI.mouseX;
+					var lnYValue:Number = imgCI.mouseY;
+					var lnChildCount:int = CIchildCnt;			// Store the current value since the "CIchildCnt" would be incremented within doDrawRectCI() method 
+					doDrawRectCI(lnXValue,lnYValue,lnDamageType);
+					
+					// Update the relational table with the damage info
+					var loVehiDamage:Com_dspl_malkey_domain_Fvehicledamage = new Com_dspl_malkey_domain_Fvehicledamage();
+					loVehiDamage.regno = com_dspl_malkey_domain_FresvehiclePK.regno;
+					loVehiDamage.xvalue = lnXValue.toString();
+					loVehiDamage.yvalue = lnYValue.toString();
+					loVehiDamage.damagetype = lnDamageType;
+					loVehiDamage.seq = lnChildCount;
+					loVehiDamage.recordid = 0;
+					acVehicleDamage.addItem(loVehiDamage);
+				}
+			}	
+			
+			
+			
+			
+			private function doDrawRectCI(lx:Number,ly:Number,type:int):void {
+				try
+				{
+					var loChild:Shape = new Shape();
+					if(type==1){
+						loChild.graphics.beginFill(bgColor);
+					} else if(type==2){
+						loChild.graphics.beginFill(bgColor1);
+					}
+					
+					loChild.graphics.lineStyle(borderSize, borderColor);
+					loChild.graphics.drawRect(lx, ly, 10, 10);
+					loChild.graphics.endFill();
+					imgCI.addChild(loChild);
+					CIchildCnt += 1;
+				}
+				catch(error:Error)
+				{
+					Alert.show("doDrawRect: " + error.message);
+				}
+			}
+			
+			/***
+			 * Button click handlers here
+			 * 
+			 * */
+			public function drawDamages():void
+			{
+				for each(var loVehiDamage:Object in acVehicleDamage){
+					doDrawRectCI(loVehiDamage.xvalue,loVehiDamage.yvalue,loVehiDamage.damagetype);
+				}
+			}
+			
+			
+			protected function btnDent_clickHandler(event:MouseEvent):void
+			{
+				btnScratch.selected=false;
+			}
+			
+			
+			protected function btnScratch_clickHandler(event:MouseEvent):void
+			{
+				btnDent.selected=false;
+			}
+			
+			protected function btnUndoMarking_clickHandler(event:MouseEvent):void
+			{
+				undoCI();	
+			}
+			
+			private function undoCI():void
+			{
+				if(CIchildCnt>1){
+					CIchildCnt -= 1;
+					imgCI.removeChildAt(CIchildCnt);
+					acVehicleDamage.removeItemAt(CIchildCnt-1);		// Since the array collection is zero based, reduce one
+				}
+			}
+			
+			// Remove all the existing damage marks and set the counter to zero
+			private function removeAllCI():void{
+				if (CIchildCnt>1){
+					CIchildCnt -= 1;
+					for (var lnCount:int = CIchildCnt ; lnCount > 0 ; lnCount--)
+						imgCI.removeChildAt(lnCount);
+					
+					CIchildCnt = 1
+				}
+			}  
+			// End: Vehicle Damage Marking	
+
+			
+			
+			
+			// Start: ODO Meter - Original Mileage
+			private function odoOrgrMileOnClick(e:DataEvent):void
+			{
+				if (currentState.toUpperCase() == "STNEW" || currentState.toUpperCase() == "STEDIT"){
+					var pop:odoPopup = new odoPopup();
+					pop.cMileage = e.data;
+					pop.addEventListener("mileageChange",odoOrgMilePopupClose,false,0,false);
+					PopUpManager.addPopUp(pop,this,true,null,null);
+					PopUpManager.centerPopUp(pop);
+				}
+			}
+			
+			private function odoOrgMilePopupClose(e:DataEvent):void
+			{
+				setODOOrgMile(e.data);
+				com_dspl_malkey_domain_Freservation.comileage = int(e.data);
+			}
+			
+			private function setODOOrgMile(value:String):void
+			{
+				var loaderManager:Object = slODOOrgMile.content as Object;
+				loaderManager.setOdoMeter(value);
+			}
+			// End: ODO Meter - Original Mileage
+
+			
+			
+			
+			
+			
+			
+			
+			
+			//Start :Inventory reset and setselect methods are belloow
+			public function setSelectedInventory():void
+			{
+				resetInventory();
+				setInventory();
+			}
+			
+			//Start :Inventory reset and setselect methods are belloow
+			private function setInventory():void
+			{
+				trace("before.....selected..........");
+				for(var index:int =0 ; index<acFresVehicleInventory.length;index++)
+				{
+					for(var index2:int =0 ; index2<acFvinventrylist.length;index2++){
+						var tempResinv:Com_dspl_malkey_domain_Fresvehinv=acFresVehicleInventory.getItemAt(index) as Com_dspl_malkey_domain_Fresvehinv;
+						var tempInventory:Com_dspl_malkey_domain_Fvinventrylist=acFvinventrylist.getItemAt(index2) as Com_dspl_malkey_domain_Fvinventrylist;
+						if(tempResinv.id.invid==tempInventory.invid)
+						{
+							tempInventory.isselected=1;
+							trace("selected..........");
+						}
+					}
+				}
+				lstVehiInv.invalidateDisplayList();
+				lstVehiInv.invalidateList();
+				//wakeup();
+			}
+			
+			
+			/***
+			 * Reset the list
+			 * set all are unselect
+			 * un check all
+			 * */
+			private function resetInventory():void
+			{
+				
+				for each (var tempInventory:Com_dspl_malkey_domain_Fvinventrylist in  acFvinventrylist)
+				{
+					tempInventory.isselected=0;
+				}			
+				lstVehiInv.invalidateDisplayList();
+				lstVehiInv.invalidateList();
+				//wakeup();
+			}
+			
+			/***
+			 * set the selected value as fresvehicleInvetory object and put in to paticular resvehicle object
+			 * 
+			 * 
+			 * */
+		//	[Bindable("inventoryChange")]
+			public function getSelectedInventory():ArrayCollection
+			{
+					var acFresVehicleInventory:ArrayCollection =new ArrayCollection();
+					for each(var tempInventory:Com_dspl_malkey_domain_Fvinventrylist in acFvinventrylist)
+					{
+						
+						if(tempInventory.isselected==1)
+						{
+							tempInventory.isselected=1;
+							var tempResinv:Com_dspl_malkey_domain_Fresvehinv=new Com_dspl_malkey_domain_Fresvehinv();
+							var tempResinvPK:Com_dspl_malkey_domain_FresvehinvPK=new Com_dspl_malkey_domain_FresvehinvPK();
+							tempResinvPK.invid=tempInventory.invid;
+							tempResinvPK.regno=com_dspl_malkey_domain_Fresvehicle.id.regno;
+							tempResinvPK.resno=com_dspl_malkey_domain_Freservation.resno;
+							tempResinv.id=tempResinvPK
+							acFresVehicleInventory.addItem(tempResinv);
+						}
+					}
+					//follwoing line was not working there for manually set the list before call save method in trReservation
+					//com_dspl_malkey_domain_Fresvehicle.lstFresvehinv=acFresVehicleInventory;//sety the values to resvehicle object in vehicle details tab
+					return acFresVehicleInventory;
+			}
+			
+			//End :inventory
+			
+			
+			/***
+			 * This method dispatch the ratechnage event &
+			 *  wakeup for getSelectedInventory
+			 * 
+			 * */
+			public function wakeup():void
+			{
+				dispatchEvent(new Event("inventoryChange"));
+			}
+			
+
+			/***
+			 * Inventory item click invent
+			 * wakeup() method force to create resVehcleInventory object and put int resvehicle object
+			 * 
+			 * */
+			protected function lstVehiInv_itemClickHandler(event:ListEvent):void
+			{
+				wakeup();
+			}
+
+
+			protected function slODOOrgMile_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				slODOOrgMile.addEventListener("ODOClick",odoOrgrMileOnClick,false,0,false);
+
+				isCreatedlODOOrgMile=true;
+				
+			}
+
+
+			protected function slFuelMeter_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				 isCreatedFuelMeter=true;
+			}
+
+		]]>
+	</fx:Script>
+	
+	
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace controls "com.dspl.efinac.components.common.controls.*";
+		@namespace services "services.*";
+		
+		.formItem
+		{
+			label-width:80;
+		}
+		
+		.formItemM
+		{
+			label-width:100;
+		}
+		
+		.formItemLabel
+		{
+			text-align:left;
+		}
+		
+		
+		
+	</fx:Style>
+	
+</s:Group>
+

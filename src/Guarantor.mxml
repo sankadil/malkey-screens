@@ -1,0 +1,1574 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="865" height="578"
+				creationComplete="initApp(event)"
+				close="closeForm()"
+				currentState="Default" xmlns:services="com.dspl.malkey.services.*"
+				title="Guarantor"
+				 xmlns:controls="com.adobe.flex.extras.controls.*">
+
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="List"/>
+		<s:State name="Add"/>
+		<s:State name="Edit"/>
+		<s:State name="Delete"/>
+		<s:State name="Approve"/>
+	</s:states>
+	<fx:Declarations>
+		
+		<!--Validators [Start]-->
+		<mx:StringValidator id="svGid"
+							source="{txtGid}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		
+		<mx:StringValidator id="svName"
+							source="{txtName}"							
+							property="text"							
+							triggerEvent=""
+							/>
+		<!--Validators [End]-->
+		
+		<!--Service-->
+		<services:FdebtorSRV
+			id="srvFdebtor"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder 
+			id="crFdebtorGetGDebList"
+			result="crFdebtorGetGDebList_resultHandler(event)"
+			fault="crFdebtorGetGDebList_faultHandler(event)"
+			/>
+		
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crFdebtorFindById"
+			result="crFdebtorFindById_resultHandler(event)"
+			fault="crFdebtorFindById_faultHandler(event)"
+			/>
+		
+		<!--Service-->
+		<services:FguarantorSRV
+			id="srvFguarantor"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder 
+			id="crFguarantorListAll"
+			result="crFguarantorListAll_resultHandler(event)"
+			fault="crFguarantor_faultHandler(event)"
+			/>
+		
+		<s:CallResponder
+			id="crFguarantorSave"
+			result="crFguarantorSave_resultHandler(event)"
+			fault="crFguarantorSave_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crFguarantorUpdate"
+			result="crFguarantorUpdate_resultHandler(event)"
+			fault="crFguarantorUpdate_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crFguarantorRemove"
+			result="crFguarantorRemove_resultHandler(event)"
+			fault="crFguarantorRemove_faultHandler(event)"
+			/>
+		<s:CallResponder
+			id="crFguarantorApprove"
+			result="crFguarantorApprove_resultHandler(event)"
+			fault="crFguarantorApprove_faultHandler(event)"
+			/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.ErrorTipManager;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.malkey.util.ImageBrowser;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Faddcharge;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdebtor;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fguarantor;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fratetype;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.graphics.codec.JPEGEncoder;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			import mx.validators.Validator;
+			
+			import spark.events.TextOperationEvent;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+			
+			private var lsImgBrwCtrl:String=""; //Image Browsed Control
+			private var imgLoader:ImageBrowser=new ImageBrowser();
+			
+			private var liGurNIC:int=0;
+			private var lbaGurNIC:ByteArray;
+			
+			private var liGurNICBack:int=0;
+			private var lbaGurNICBack:ByteArray;
+			
+			private var liGurPass:int=0;
+			private var lbaGurPass:ByteArray;
+		
+			protected function crFguarantorListAll_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Loading Guarantor Detalis","Error",loadErrorHandler);
+					else{				
+						lacListMF = event.result as ArrayCollection;
+						crFguarantorListAll.token=null;
+						setNavigation();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"List Guarantor Details [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			private function setNavigation():void{
+				liMFCount=(lacListMF.length-1);
+				if(lsSelState=="Default"){
+					liCurIndex=0;
+					goFirst();
+				}else{
+					if(lsSelState=="Delete")
+						liCurIndex=0;
+					setCtrlVal(liCurIndex);
+					lsSelState="Default";
+					setState(lsSelState);
+				}
+			}
+						
+			protected function crFguarantor_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Guarantor Details [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			private function successfulHandler(event:Event):void{
+				resetForm();
+				loadRecords()
+			}
+			
+			protected function crFguarantorSave_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Saving","Error",loadErrorHandler);
+					else{				
+						crFguarantorSave.token=null;
+						Message.displayAlert(3,"Guarantor ID: " + event.result.toString() + "\rSave Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Save Guarantor [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFguarantorSave_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Save Guarantor [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFguarantorUpdate_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Updating","Error",loadErrorHandler);
+					else{				
+						crFguarantorUpdate.token=null;
+						Message.displayAlert(3,"Update Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Update Guarantor [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFguarantorUpdate_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Update Guarantor [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFguarantorRemove_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Deleting","Error",loadErrorHandler);
+					else{				
+						crFguarantorUpdate.token=null;
+						Message.displayAlert(3,"Delete Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Delete Guarantor [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			
+			protected function crFguarantorApprove_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Approve Guarantor [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFguarantorApprove_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null || event.result.toString()=="false")
+						Message.displayAlert(1,"Error Occured While Approving","Error",loadErrorHandler);
+					else{				
+						crFguarantorApprove.token=null;
+						Message.displayAlert(3,"Approval Successful","",successfulHandler);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Approve Guarantor [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			
+			protected function crFguarantorRemove_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Delete Guarantor [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crFdebtorGetGDebList_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Loading Guarantor Customer List","Error",loadErrorHandler);
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Guarantor Customer List [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFdebtorGetGDebList_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Guarantor Customer List [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			private var lsSelDebCode:String;
+			protected function crFdebtorFindById_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured While Loading Customer Details","Error",loadErrorHandler);
+					else{
+						var o:Com_dspl_malkey_domain_Fdebtor=event.result as Com_dspl_malkey_domain_Fdebtor;
+						txtName.text=o.debname;
+						txtResAddress.text=o.homeadd;
+						txtResTel.text=o.hometele;
+						txtCompany.text=o.company;
+						txtOffAddress.text=o.officeadd;
+						txtOffTel.text=o.officetele;
+						txtMob.text=o.billmob1;
+						crFdebtorFindById.token=null;
+						lsSelDebCode=o.debcode;
+						txtGurNIC.text=o.nicno;
+						txtGurPassNo.text=o.passportno;
+						
+						//NIC Front
+						if(StringUtil.trim(o.nicimage.toString())=="")
+							liGurNIC=0;
+						else{
+							loadNICFront(StringUtil.trim(o.nicimage.toString()));
+						}
+						//NIC Back
+						if(StringUtil.trim(o.nicbackimage.toString())=="")
+							liGurNICBack=0;
+						else{
+							loadNICBack(StringUtil.trim(o.nicbackimage.toString()));
+						}
+						
+
+						if(StringUtil.trim(o.ppimage.toString())=="")
+							liGurPass=0;
+						else{
+							loadPassport(StringUtil.trim(o.ppimage.toString()));
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Load Customer By Id [Result]: " + error.message.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crFdebtorFindById_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Load Customer By Id [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			//**** Result/Fault Handlers [End]
+			
+			//Variables
+			[Bindable]
+			public var lpuPopup:_tiMasterFile = new _tiMasterFile();
+			/* private var lacMasterList:ArrayCollection=new ArrayCollection();
+			//private var lbEditInit:Boolean;
+			private var loSelMF:Object;*/
+			private var lsSelState:String="";
+			 
+			[Bindable]
+			private var lacListMF:ArrayCollection;
+			private var liCurIndex:int=0;
+			private var liMFCount:int=0;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					this.addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE,stateChangeHandler,false,0,false);
+					imgLoader.addEventListener("imageLoaded",imageLoadedEvent,false,0,false);
+					registerValidators();
+					txtGid.addEventListener(KeyboardEvent.KEY_DOWN,textInputKeyDown,true,0,false);
+					txtGid.addEventListener(TextOperationEvent.CHANGE,textInputChange,true,0,false);
+					loadRecords();
+					lsSelState="Default";
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function stateChangeHandler(event:StateChangeEvent):void{
+				try{
+					if(event.newState=="Add"){
+						liGurNIC=0;
+						liGurNICBack=0;
+						liGurPass=0;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"stateChangeHandler: " + error.message,"Error",null);
+				} 
+			}
+			
+			private function imageLoadedEvent(event:DataEvent):void{
+				cursorManager.setBusyCursor();
+				try{
+					var bitmapData:BitmapData;
+					var encoder:JPEGEncoder = new JPEGEncoder();
+					var imgBArray:ByteArray;
+					bitmapData = new BitmapData(imgLoader.imageData.width,imgLoader.imageData.height);
+					bitmapData.draw(imgLoader.imageData);
+					
+					switch(lsImgBrwCtrl){				
+						case "btnBrowNIC":
+							lbaGurNIC=encoder.encode(bitmapData);	
+							iGurNIC.source=imgLoader.imageData;
+							liGurNIC=1;
+							break;
+						case "btnBrowNICBack":
+							lbaGurNICBack=encoder.encode(bitmapData);	
+							iGurNICBack.source=imgLoader.imageData;
+							liGurNICBack=1;
+							break;
+						case "btnBrowPass":
+							lbaGurPass=encoder.encode(bitmapData);	
+							iGurPassport.source=imgLoader.imageData;
+							liGurPass=1;
+							break;
+					}
+				}
+				catch(error:Error){
+					switch(lsImgBrwCtrl){
+						case "btnBrowNIC":
+							iGurNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+							liGurNIC=0;
+							break;
+						case "btnBrowNICBack":
+							iGurNICBack.source=resourceManager.getString("resource","inaUrl",null,null);
+							liGurNICBack=0;
+							break;
+						case "btnBrowPass":
+							iGurPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+							liGurPass=0;
+							break;
+					} 
+				}
+				cursorManager.removeBusyCursor();
+			}	
+			
+			public var gsCurTabName:String="";
+			public function parentTabChangedHandler(event:DataEvent):void{
+				if(gsCurTabName==event.data)
+					updateErrorTipVisibility();
+			}
+			
+			public function updateErrorTipVisibility():void{
+				if(currentState=="Add" || currentState=="Edit"){								
+					ErrorTipManager.showErrorTip(svGid.source);
+					ErrorTipManager.showErrorTip(svName.source);
+				}
+			}
+			
+			private function removeFormErrorTips():void{				
+				ErrorTipManager.removeErrorTip(svGid.source,true);
+				ErrorTipManager.removeErrorTip(svName.source,true);
+			} 
+			
+			private function registerValidators():void{
+				ErrorTipManager.registerValidator(svGid);
+				ErrorTipManager.registerValidator(svName);
+			}
+			
+			private function loadRecords():void{
+				try{
+					crFguarantorListAll.token=srvFguarantor.ListAll();
+					loadDebList();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadRecords: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function loadDebList():void{
+				crFdebtorGetGDebList.token=srvFdebtor.getGDebList();
+			}
+			
+			private function textInputChange(e:TextOperationEvent):void{
+				try{
+					if(currentState=="Add"){
+						txtGid.text = txtGid.text.toString().toUpperCase();
+						txtGid.selectRange(txtGid.text.length,txtGid.text.length+1);
+						txtGid.setFocus();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"textInputChange: " + error.message,"Error",null);
+				}
+			}
+			
+			private function textInputKeyDown(e:KeyboardEvent):void{
+				try{
+					if(currentState=="Add"){
+						if(e.keyCode==32){
+							e.stopImmediatePropagation();
+							e.stopPropagation();
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"textInputKeydown: " + error.message,"Error",null);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function loadErrorHandler(event:Event):void{
+				//undoForm();
+				lsSelState="Default";
+				setState(lsSelState);
+			}
+			
+			private function resetForm():void{
+				txtGid.text="Auto Generated";
+				txtGid.errorString="";
+				txtName.text="";
+				txtName.errorString="";
+				txtResAddress.text="";
+				txtResAddress.errorString="";
+				txtResTel.text="";
+				txtResTel.errorString="";
+				txtCompany.text="";
+				txtCompany.errorString="";
+				txtOffAddress.text="";
+				txtOffAddress.errorString="";
+				txtOffTel.text="";
+				txtOffTel.errorString="";
+				txtMob.text="";
+				txtMob.errorString="";
+				cbApproved.selected=false;
+				txtGurNIC.text="";
+				txtGurNIC.errorString="";
+				iGurNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+				iGurNICBack.source=resourceManager.getString("resource","inaUrl",null,null);
+				txtGurPassNo.text="";
+				txtGurPassNo.errorString="";
+				iGurPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+				lsSelDebCode="";
+				setModifiedByDet("");
+			}
+			
+			//Display Popup Window 
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function,useCloseEvent:Boolean=false,otherColumns:String="",otherColumnHeaders:String="",otherColumnWidth:int=180):void{
+				lpuPopup._acDataProvider = acDataProvider;								
+				lpuPopup._strKeyColumn = strKeyColumn;
+				lpuPopup._strKeyColCaption = strKeyColCaption; 
+				lpuPopup._strDetailColumn = strDetailColumn;
+				lpuPopup._strDetailColCaption = strDetailColCaption;
+				lpuPopup.otherColumns=otherColumns;
+				lpuPopup.otherColumnHeaderText=otherColumnHeaders;
+				lpuPopup.dgColWidth=otherColumnWidth;
+				lpuPopup._strWindowTitle = strWindowTitle;			
+				lpuPopup._sPostEventToRunPopUpExit = eventName;
+				lpuPopup.addEventListener(eventName,eventListener,false,0,false);
+				lpuPopup.launchSearchGrid(); 
+				lpuPopup.isPopUp=true;
+				if(useCloseEvent==true)
+					lpuPopup.grdSearch.addEventListener("twMFSearchClose",popUpCloseEvent,false,0,false);
+			}
+			
+			private function popUpCloseEvent(event:Event):void{
+				/* if(lbEditInit==true){
+					undoForm();
+				} */
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return o;
+					}
+				}catch(error:Error){
+					obj = null;
+					Message.displayAlert(1,"findItem: " + error.message,"Error");
+				}
+				return obj;
+			}
+			
+			private function findIndex(ac:ArrayCollection,keyfield:String,keyvalue:String):int{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return a;
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					//Message.displayAlert(1,"findIndex: " + error.message,"Error");
+				}
+				return -1;
+			}
+			
+			private function setState(state:String):void{
+ 				if(state=="Default"){
+					ErrorTipManager.hideAllErrorTips();
+					resetErrorString();
+					setCtrlVal(liCurIndex);
+				}else if(state=="Add")
+					resetForm();
+				currentState=state;
+			}
+			
+			private function resetErrorString():void{
+				try{
+					txtGid.errorString="";
+					txtName.errorString="";
+					txtResAddress.errorString="";
+					txtResTel.errorString="";
+					txtCompany.errorString="";
+					txtOffAddress.errorString="";
+					txtOffTel.errorString="";
+					txtMob.errorString="";
+				}catch(error:Error){
+					Message.displayAlert(1,"resetErrorString: " + error.message,"Error");	
+				}
+			}
+			
+			private function deleteRecord(event:CloseEvent):void{
+				if(event.detail==Alert.YES){
+					lsSelState="Delete";
+					crFguarantorRemove.token=srvFguarantor.removeByID(txtGid.text);
+				}
+			}
+			
+			/* private function loadMasterList():void{
+				try{
+					crFmasterlistListAll.token = srvFmasterlist.ListAll();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterList: " + error.message,"Error",errorCloseHandler);
+				}
+			} */
+			
+			private function closeForm():void{
+				removeFormErrorTips();
+				this.parent.parent.removeChild(this.parent);
+			}
+			
+			private function showRecordList():void{
+				try{
+					if(lacListMF.length<=0)
+						return;
+					if(lacListMF.length>0){
+						showPopUp(lacListMF,"gid","ID","gname","Name","Select Guarantor","recordSelection",recordSelection,true,"","",0);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"showRecordList: " + error.message,"Error",null);
+				}
+			}
+			
+			private function recordSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						liCurIndex=lpuPopup.grdSearch._nSelectedIndex;
+						setCtrlVal(liCurIndex);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"recordSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			//**** Control Button Events [Start]
+			protected function btnList_clickHandler(event:MouseEvent):void{	
+				
+			}
+			
+			protected function btnFind_clickHandler(event:MouseEvent):void{
+				showRecordList();
+			}
+			
+			protected function btnReload_clickHandler(event:MouseEvent):void{
+				//loadRecords();
+				loadDebList();
+			}
+			
+			protected function lbtnCustomer_clickHandler(event:MouseEvent):void{
+				showDebList();
+			}
+			
+			private function showDebList():void{
+				try{
+					if(crFdebtorGetGDebList.token!=null)
+						showPopUp(crFdebtorGetGDebList.lastResult,"debcode","Customer ID","debname","Name","Select A Customer","customerSelected",customerSelection,true,"nicno,passportno,company","NIC No.,Passport No.,Company");
+				}catch(error:Error){
+					Message.displayAlert(1,"showDebList: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function customerSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						loadDebtorById(lpuPopup.grdSearch._strSelectedCode);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"customerSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function loadDebtorById(debcode:String):void{
+				try{
+					crFdebtorFindById.token=srvFdebtor.findByID(debcode);
+				}catch(error:Error){
+					Message.displayAlert(1,"loadDebtorById: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function btnNew_clickHandler(event:MouseEvent):void{
+				lsSelState="Add";
+				setState(lsSelState);
+			}
+			
+			protected function btnEdit_clickHandler(event:MouseEvent):void{
+				lsSelState="Edit";
+				setState(lsSelState);
+			}
+			
+			protected function btnDelete_clickHandler(event:MouseEvent):void{
+				if(StringUtil.trim(txtGid.text).length>0){
+					Message.displayAlert(4,"Are You Sure?","Delete Confirmation",deleteRecord);
+				}
+			}
+			
+			protected function btnUndo_clickHandler(event:MouseEvent):void{
+				setState("Default");
+			}
+			
+			private function goNext():void{
+				liCurIndex+=1;
+				if(liCurIndex>liMFCount)
+					liCurIndex=0;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function goBack():void{
+				liCurIndex-=1;
+				if(liCurIndex<0)
+					liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function setCtrlVal(index:int):void{
+				resetForm();
+				if(lacListMF.length>0){
+					var obj:Object=lacListMF.getItemAt(index);
+					txtGid.text=obj["gid"].toString();
+					txtName.text=obj["gname"].toString();
+					txtResAddress.text=obj["homeadd1"].toString();
+					txtResTel.text=obj["hometele"].toString();
+					txtCompany.text=obj["company"].toString();
+					txtOffAddress.text=obj["offadd1"].toString();
+					txtOffTel.text=obj["offtele"].toString();
+					txtMob.text=obj["mobilephone"].toString();
+					txtGurNIC.text=obj["nicno"].toString();
+					txtGurPassNo.text=obj["passportno"].toString();
+					var apr:Boolean;
+					if(obj["approved"].toString()=="0")
+						apr=false;
+					else
+						apr=true;
+					cbApproved.selected=apr;
+					
+					//NIC Front
+					if(obj["nicimage"].toString()=="")
+						liGurNIC=0;
+					else{
+						loadNICFront(obj["nicimage"].toString());
+					}
+					//NIC Back
+					if(obj["nicbackimage"].toString()=="")
+						liGurNICBack=0;
+					else{
+						loadNICBack(obj["nicbackimage"].toString());
+					}
+					
+					if(obj["ppimage"].toString()=="")
+						liGurPass=0;
+					else{
+						loadPassport(obj["ppimage"].toString());
+					}
+					
+					setModifiedByDet(obj["adduser"].toString());
+				}	
+			}
+			
+			private function genRnd():String{
+				return "?rnd=" + ImageBrowser.genRnd().toString();
+			}
+			
+			private function loadNICFront(url:String):void{
+				try{
+					lilNicImgLoader=new Loader();
+					lilNicImgLoader.cacheAsBitmap=false;
+					lilNicImgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onNicImageReady);
+					lilNicImgLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onNicIOError);
+					lilNicImgLoader.load(new URLRequest(url + genRnd()));
+				}catch(error:Error){
+					Message.displayAlert(2,"loadNICFront: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function loadPassport(url:String):void{
+				try{
+					lilPassImgLoader=new Loader();
+					lilPassImgLoader.cacheAsBitmap=false;
+					lilPassImgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onPassImageReady);
+					lilPassImgLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onPassIOError);
+					lilPassImgLoader.load(new URLRequest(url + genRnd()));
+				}catch(error:Error){
+					Message.displayAlert(2,"loadPassport: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function loadNICBack(url:String):void{
+				try{
+					lilNicBackImgLoader=new Loader();
+					lilNicBackImgLoader.cacheAsBitmap=false;
+					lilNicBackImgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onNicBackImageReady);
+					lilNicBackImgLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onNicBackIOError);
+					lilNicBackImgLoader.load(new URLRequest(url + genRnd()));
+				}catch(error:Error){
+					Message.displayAlert(2,"loadNICBack: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private var lilNicImgLoader:Loader;
+			private var lilNicBackImgLoader:Loader;
+			private var lilPassImgLoader:Loader;
+			
+			//NIC Front [Start]
+			public function onNicImageReady(event:Event):void 
+			{
+				cursorManager.setBusyCursor();
+				try{
+					var img:Bitmap = new Bitmap();
+					img.smoothing = true;
+					img.cacheAsBitmap=false;
+					img.bitmapData = event.target.content.bitmapData;
+					iGurNIC.source=img;
+					liGurNIC=1;
+					
+					if(StringUtil.trim(lsSelDebCode).length>0){
+						var jpg:JPEGEncoder = new JPEGEncoder(75);
+						lbaGurNIC = jpg.encode(event.target.content.bitmapData);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"onNicImageReady: " + error.message,"Error",errorCloseHandler);
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function onNicIOError(event:IOErrorEvent):void{
+				liGurNIC=0;
+				iGurNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			//NIC Front [End]
+			
+			//NIC Back [Start]
+			public function onNicBackImageReady(event:Event):void 
+			{
+				cursorManager.setBusyCursor();
+				try{
+					var img:Bitmap = new Bitmap();
+					img.smoothing = true;
+					img.cacheAsBitmap=false;
+					img.bitmapData = event.target.content.bitmapData;
+					iGurNICBack.source=img;
+					liGurNICBack=1;
+					
+					if(StringUtil.trim(lsSelDebCode).length>0){
+						var jpg:JPEGEncoder = new JPEGEncoder(75);
+						lbaGurNICBack = jpg.encode(event.target.content.bitmapData);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"onNicBackImageReady: " + error.message,"Error",errorCloseHandler);
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function onNicBackIOError(event:IOErrorEvent):void{
+				liGurNICBack=0;
+				iGurNICBack.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			//NIC Back [End]
+			
+			public function onPassImageReady(event:Event):void 
+			{
+				cursorManager.setBusyCursor();
+				try{
+					var img:Bitmap = new Bitmap();
+					img.smoothing = true;
+					img.cacheAsBitmap=false;
+					img.bitmapData = event.target.content.bitmapData;
+					iGurPassport.source=img;
+					liGurPass=1;
+					
+					if(StringUtil.trim(lsSelDebCode).length>0){
+						var jpg:JPEGEncoder = new JPEGEncoder(75);
+						lbaGurPass = jpg.encode(event.target.content.bitmapData);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"onPassImageReady: " + error.message,"Error",errorCloseHandler);
+				}				
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function onPassIOError(event:IOErrorEvent):void{
+				liGurPass=0;
+				iGurPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+			}
+			
+			protected function number_focusInHandler(event:FocusEvent):void{
+				event.currentTarget.setSelection(0,event.currentTarget.length);
+			}
+			
+			private function setModifiedByDet(val:String):void{
+				lblModifiedBy.text="Last Modified By: ";
+				lblModifiedBy.text+=val;
+			}
+			
+			private function goFirst():void{
+				liCurIndex=0;
+				setCtrlVal(liCurIndex);
+			}
+			
+			private function goLast():void{
+				liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex);
+			}
+			
+			protected function btnSave_clickHandler(event:MouseEvent):void{
+				save();
+			}
+			
+			protected function btnPrint_clickHandler(event:MouseEvent):void{
+				displayMFReport();
+			}
+			
+			//**** Control Button Events [End]
+			
+			private function validateForm():Boolean{
+				try{
+					txtResAddress.errorString="";
+					txtOffAddress.errorString="";
+					var validationArray:Array = Validator.validateAll([
+						svGid,
+						svName
+					]);
+					if(validationArray.length==0){
+						/* if(currentState=="Add"){
+							var obj:Object=findItem(lacListMF,"gid",txtGid.text);
+							if(obj==null){
+								txtGid.errorString="";
+							}else{
+								txtGid.errorString="ID Already Exists";
+								updateErrorTipVisibility();
+								return false;
+							}
+						} */
+						if(StringUtil.trim(txtResAddress.text).length==0 && StringUtil.trim(txtOffAddress.text).length==0){
+							Message.displayAlert(2,"Enter Residence/Office Address To Continue","Warning",null);
+							updateErrorTipVisibility();
+							return false;
+						}
+						if(StringUtil.trim(txtOffAddress.text).length>0 && StringUtil.trim(txtCompany.text).length==0){
+							Message.displayAlert(2,"Enter Company Name To Continue","Warning",null);
+							updateErrorTipVisibility();
+							return false;
+						}
+						
+						//Validate NIC/Passport Tab Images
+						if(StringUtil.trim(txtGurNIC.text).length>0 && StringUtil.trim(txtGurNIC.text).length<9){
+							Message.displayAlert(1,"Invalid NIC Number","Error",null);
+							cursorManager.removeBusyCursor();
+							return false;
+						} 
+						
+						if(txtGurNIC.text!="" && liGurNIC==0){
+							Message.displayAlert(2,"Select NIC Image [Front] To Continue","Warning",null);
+							cursorManager.removeBusyCursor();
+							return false;
+						}	
+						if(txtGurNIC.text!="" && liGurNICBack==0){
+							Message.displayAlert(2,"Select NIC Image [Back] To Continue","Warning",null);
+							cursorManager.removeBusyCursor();
+							return false;
+						}	
+						if(txtGurPassNo.text!="" && liGurPass==0){
+							Message.displayAlert(2,"Select Passport Image To Continue","Warning",null);
+							cursorManager.removeBusyCursor();
+							return false;
+						}
+						
+						return true;
+					}	 
+				}catch(error:Error){
+					Message.displayAlert(1,"validateForm: " + error.message,"Error",null);
+				}
+				return false;
+			}
+			
+			private function save():void{
+				try{
+					if(validateForm()==true){
+						var fguarantor:Com_dspl_malkey_domain_Fguarantor=lacListMF.getItemAt(liCurIndex) as Com_dspl_malkey_domain_Fguarantor;
+						if(lsSelState=="Add" || lsSelState=="Edit"){
+							fguarantor.gid=txtGid.text;
+							fguarantor.gname=txtName.text;
+							fguarantor.homeadd1=txtResAddress.text;
+							fguarantor.homeadd2="";
+							fguarantor.homeadd3="";
+							fguarantor.hometele=txtResTel.text;
+							fguarantor.company=txtCompany.text;
+							fguarantor.offadd1=txtOffAddress.text;
+							fguarantor.offadd2="";
+							fguarantor.offadd3="";
+							fguarantor.offtele=txtOffTel.text;
+							fguarantor.mobilephone=txtMob.text;
+							fguarantor.debcode=lsSelDebCode;
+							if(lsSelState=="Add")
+								fguarantor.approved="0";
+							
+							fguarantor.nicno=txtGurNIC.text;
+							if(txtGurNIC.text!=""){
+								fguarantor.nicno!="V"; 
+								if(lbaGurNIC!=null){
+									fguarantor.nicimagedata=lbaGurNIC;
+									fguarantor.nicimage=fguarantor.gid+"_NF.jpeg";
+								}
+								if(lbaGurNICBack!=null){
+									fguarantor.nicbackimagedata=lbaGurNICBack;
+									fguarantor.nicbackimage=fguarantor.gid+"_NB.jpeg";
+								}
+							}
+							else{
+								fguarantor.nicimagedata=null;
+								fguarantor.nicimage="";
+								fguarantor.nicbackimagedata=null;
+								fguarantor.nicbackimage="";
+							}
+							
+							fguarantor.passportno=txtGurPassNo.text;
+							if(txtGurPassNo.text!=""){
+								if(lbaGurPass!=null){
+									fguarantor.passimagedata=lbaGurPass;
+									fguarantor.ppimage=fguarantor.gid+"_P.jpeg";
+								}
+							}
+							else{
+								fguarantor.passimagedata=null;
+								fguarantor.ppimage="";
+							}
+							
+						}else if(lsSelState=="Approve"){
+							if(cbApproved.selected==true)
+								fguarantor.approved="1";
+							else
+								fguarantor.approved="0";
+						}
+						
+						if(lsSelState=="Add"){
+							crFguarantorSave.token=srvFguarantor.create(fguarantor);								
+						}else if(lsSelState=="Edit"){
+							crFguarantorUpdate.token=srvFguarantor.update(fguarantor);
+						}else if(lsSelState=="Approve"){
+							crFguarantorApprove.token=srvFguarantor.approveGuarantor(txtGid.text,fguarantor.approved);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"save: " + error.message,"Error",null);
+				}
+			}
+			
+			private function showSelectionPopup():void{
+				try{
+					showPopUp(lacListMF,"ratetype","ID","description","Description","Select ID","recordSelection",idSelection,true,"","",0);
+				}catch(error:Error){
+					Message.displayAlert(1,"showSelectionPopup: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function idSelection(event:Event):void{
+				try{
+					if(lpuPopup.grdSearch._strSelectedCode!=""){
+						var obj:Object=findItem(lacListMF,"id",lpuPopup.grdSearch._strSelectedCode);
+						if(obj==null)
+							setState("Default")
+						else{
+							txtGid.text=obj["id"].toString();
+							txtName.text=obj["description"].toString();
+							setState(lsSelState);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"idSelection: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function displayMFReport():void{
+				try{
+					//var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/MasterList.jsp?tn="+ gsMFName +"&kf=" + gsKeyField);
+					//request.method = URLRequestMethod.POST;
+					//navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,"printMF: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+
+			protected function controlbar2_creationCompleteHandler(event:FlexEvent):void{
+				setPermission();
+			}
+
+			protected function btnClose_clickHandler(event:MouseEvent):void{
+				closeForm();
+			}
+
+			protected function btnApprove_clickHandler(event:MouseEvent):void{
+				lsSelState="Approve";
+				setState(lsSelState);
+			}
+
+
+			protected function browseImage_clickHandler(event:MouseEvent):void
+			{
+				lsImgBrwCtrl=event.currentTarget.id;
+				imgLoader.browseImage();
+			}
+
+			protected function clearImage_clickHandler(event:MouseEvent):void{
+				switch(event.currentTarget.id.toString()){
+					case "btnClearNIC":
+						iGurNIC.source=resourceManager.getString("resource","inaUrl",null,null);
+						liGurNIC=0;
+						break;
+					case "btnClearNICBack":
+						iGurNICBack.source=resourceManager.getString("resource","inaUrl",null,null);
+						liGurNICBack=0;
+						break;
+					case "btnClearPass":
+						iGurPassport.source=resourceManager.getString("resource","inaUrl",null,null);
+						liGurPass=0;
+						break;
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<!--<mx:ControlBar x="0" y="0"  horizontalGap="2" height="57" width="691">
+		
+		<mx:Button  id="btnNew" width="40" height="40"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')" 
+					enabled="true"
+					toolTip="New"
+					enabled.List="false" enabled.Add="false"
+					click="btnNew_clickHandler(event)"
+					enabled.Edit="false" enabled.Delete="false"/>
+		<mx:Button  id="btnEdit" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')" 
+					enabled="true"
+					toolTip="Edit"
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnEdit_clickHandler(event)"
+					/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')" 
+					enabled="true"
+					toolTip="Delete" 
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnDelete_clickHandler(event)"
+					/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					enabled="false"
+					toolTip="Undo" 
+					enabled.List="true"
+					click="btnUndo_clickHandler(event)"
+					enabled.Add="true" enabled.Edit="true" enabled.Delete="true"/>
+		<mx:Button  id="btnTop" width="40" height="40" 
+					toolTip="GoTop" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+					enabled="false"
+					enabled.List="true"
+					click="goFirst()" enabled.Default="true"/>
+		<mx:Button  id="btnBack" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+					enabled="false"
+					toolTip="goBack" 
+					enabled.List="true"
+					click="goBack()" enabled.Default="true"/>
+		<mx:Button  id="btnNext" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+					enabled="false"
+					toolTip="goNext" 
+					enabled.List="true"
+					click="goNext()"
+					 enabled.Default="true"/>
+		<mx:Button  id="btnBottom" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+					enabled="false"
+					toolTip="goBottom" 
+					enabled.List="true"
+					click="goLast()"
+					 enabled.Default="true"/>
+		<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					enabled="true" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnPrint_clickHandler(event)"
+					/>
+		<mx:Button  id="btnFilter" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filter22.png')" 
+					enabled="true" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>
+		<mx:Button  id="btnSort" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/sort.png')" 
+					enabled="true" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>
+		<mx:Button  id="btnFind" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+					enabled="true"
+					toolTip="Find" 
+					 enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					 click="btnFind_clickHandler(event)"
+					 />
+		<mx:Button  id="btnReload" width="40" height="40" 
+					click="btnReload_clickHandler(event)"
+					toolTip="Refresh" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					enabled="true"
+					 enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/> 
+		<mx:Button  id="btnList" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/view.png')" 
+					toolTip="View"
+					enabled="true"
+					click="btnList_clickHandler(event)"
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>
+		<mx:Button  id="btnSave" width="40" height="40" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					enabled="false"
+					toolTip="Save"
+					enabled.Add="true"
+					click="btnSave_clickHandler(event)"
+					enabled.Edit="true" enabled.Delete="true"/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					enabled="true" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					 enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>
+	</mx:ControlBar>-->
+	<mx:ControlBar x="0" y="0"  horizontalGap="2" height="57" width="691" creationComplete="controlbar2_creationCompleteHandler(event)">
+		
+		<mx:Button  id="btnNew" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')" 
+					enabled="false"
+					toolTip="New"
+					enabled.List="false" enabled.Add="false"
+					click="btnNew_clickHandler(event)"
+					enabled.Edit="false" enabled.Delete="false"
+					enabled.Approve="false"
+					/>
+		<mx:Button  id="btnEdit" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')" 
+					enabled="false"
+					toolTip="Edit"
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnEdit_clickHandler(event)"
+					enabled.Approve="false"
+					/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')" 
+					enabled="false"
+					toolTip="Delete" 
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnDelete_clickHandler(event)"
+					enabled.Approve="false"
+					/>
+		<mx:Button  id="btnApprove" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/approve1D.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/approve1.png')" 
+					enabled="false"
+					toolTip="Approve" 
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnApprove_clickHandler(event)"
+					enabled.Approve="false"
+					/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					enabled="false"
+					toolTip="Undo" 
+					enabled.List="true"
+					click="btnUndo_clickHandler(event)"
+					enabled.Add="true" enabled.Edit="true" enabled.Delete="true"
+					enabled.Approve="true"
+					/>
+		<mx:Button  id="btnTop" width="40" height="40" 
+					toolTip="GoTop" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+					enabled="false"
+					enabled.List="true"
+					click="goFirst()" enabled.Default="false"
+					enabled.Approve="false"
+					/>
+		<mx:Button  id="btnBack" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+					enabled="false"
+					toolTip="goBack" 
+					enabled.List="true"
+					click="goBack()" enabled.Default="false"
+					enabled.Approve="false"
+					/>
+		<mx:Button  id="btnNext" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+					enabled="false"
+					toolTip="goNext" 
+					enabled.List="true"
+					click="goNext()"
+					enabled.Default="false"
+					enabled.Approve="false"/>
+		<mx:Button  id="btnBottom" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+					enabled="false"
+					toolTip="goBottom" 
+					enabled.List="true"
+					click="goLast()"
+					enabled.Default="false"
+					enabled.Approve="false"/>
+		<!--<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					enabled="false" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnPrint_clickHandler(event)"
+					/>-->
+		<!--<mx:Button  id="btnFilter" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filter22D.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filter22.png')" 
+					enabled="false" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>-->
+		<!--<mx:Button  id="btnSort" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/sortD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/sort.png')" 
+					enabled="false" enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>-->
+		<mx:Button  id="btnFind" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/findD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+					enabled="false"
+					toolTip="Find" 
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+					click="btnFind_clickHandler(event)"
+					enabled.Approve="false"
+					/>
+		<mx:Button  id="btnReload" width="40" height="40" 
+					toolTip="Refresh" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					enabled="false"
+					enabled.List="false" enabled.Add="true" enabled.Edit="true" enabled.Delete="false"
+					click="btnReload_clickHandler(event)"
+					enabled.Approve="false"
+					/> 
+		<!--<mx:Button  id="btnList" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/viewD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/view.png')" 
+					toolTip="View"
+					enabled="false"
+					click="btnList_clickHandler(event)"
+					enabled.List="false" enabled.Add="false" enabled.Edit="false" enabled.Delete="false"/>-->
+		<mx:Button  id="btnSave" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')" 
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					enabled="false"
+					toolTip="Save"
+					enabled.Add="true"
+					click="btnSave_clickHandler(event)"
+					enabled.Edit="true" enabled.Delete="true"
+					enabled.Approve="true"
+					/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					enabled="true"
+					click="btnClose_clickHandler(event)"					
+					/>
+	</mx:ControlBar>
+	<mx:Form x="10" y="55"
+			 borderColor="#C0C0C0"
+			 borderAlpha="20"
+			 borderVisible="true"
+			 borderStyle="solid"
+			 paddingLeft="0"
+			 paddingBottom="0"
+			 paddingTop="5"
+			 height="466" width="843">
+		<mx:FormItem label="ID" required="false" direction="horizontal">
+			<s:TextInput enabled="false" id="txtGid"
+						 width="150"
+						 maxChars="10"
+						 enabled.Add="false" enabled.Edit="false" enabled.Delete="false"
+						 enabled.Approve="false"
+						 />
+			<mx:LinkButton 
+				paddingLeft="0" 
+				id="lbtnCustomer" 
+				label="Select Existing Customer"
+				color="#0A33BB" enabled="false" enabled.Edit="false" enabled.Add="true"
+				visible.Default="false"
+				visible.Add="true"
+				visible.Edit="false"
+				visible.Delete="false"
+				visible.List="false"
+				click="lbtnCustomer_clickHandler(event)"
+				visible.Approve="false"/>
+		</mx:FormItem>
+		<mx:FormItem label="Name" required="true">
+			<s:TextInput width="565" enabled="false" id="txtName"
+						 maxChars="254"
+						 enabled.Add="true" enabled.Edit="true" enabled.Delete="false"
+						 enabled.Approve="false"
+						 />
+		</mx:FormItem>
+		<mx:FormItem label="Residence Address" direction="horizontal">
+			<s:TextInput
+				maxChars="254"
+				id="txtResAddress" width="395" enabled="false" enabled.Add="true" enabled.Edit="true"
+				enabled.Approve="false"
+				></s:TextInput>
+			<mx:FormItem label="Tel" direction="horizontal">
+				<s:TextInput
+					restrict="0-9"
+					maxChars="20"
+					id="txtResTel" width="115" enabled="false" enabled.Add="true" enabled.Edit="true"
+					enabled.Approve="false"
+					></s:TextInput>
+			</mx:FormItem>
+		</mx:FormItem>
+		<mx:FormItem label="Company" direction="horizontal">
+			<s:TextInput 
+				maxChars="254"
+				id="txtCompany" width="395" enabled="false" enabled.Add="true" enabled.Edit="true"
+				enabled.Approve="false"
+				></s:TextInput>
+		</mx:FormItem>
+		<mx:FormItem label="Office Address" direction="horizontal">
+			<s:TextInput 
+				maxChars="254"
+				id="txtOffAddress" width="395" enabled="false" enabled.Add="true" enabled.Edit="true"
+				enabled.Approve="false"
+				></s:TextInput>
+			<mx:FormItem label="Tel" direction="horizontal">
+				<s:TextInput
+					restrict="0-9"
+					maxChars="20"
+					id="txtOffTel" width="115" enabled="false" enabled.Add="true" enabled.Edit="true"
+					enabled.Approve="false"
+					></s:TextInput>
+			</mx:FormItem>
+		</mx:FormItem>
+		<mx:FormItem label="Mobile" direction="horizontal">
+			<s:TextInput
+				restrict="0-9"
+				maxChars="20"
+				id="txtMob" width="115" enabled="false" enabled.Add="true" enabled.Edit="true"
+				enabled.Approve="false"
+				></s:TextInput>
+				<mx:FormItem label="Approved" direction="horizontal">
+					<s:CheckBox
+						id="cbApproved" width="115" enabled="false" enabled.Add="false" enabled.Edit="false"
+						enabled.Approve="true"></s:CheckBox>
+				</mx:FormItem>
+		</mx:FormItem>
+	</mx:Form>
+	<s:Label text="Last Modified By:" id="lblModifiedBy" x="10" y="529"/>
+	<mx:HRule x="0" y="50" width="864"/>
+	<mx:Form 
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 x="10" y="233" width="510" height="289">
+		<mx:FormItem id="fiGurNIC" label="NIC No." direction="horizontal" width="320" horizontalGap="1">
+			<controls:MaskedTextInput
+				enabled="false"
+				enabled.Default="false"
+				enabled.Add="true"
+				enabled.Edit="true"
+				enabled.Approve="false"
+				maxChars="10"						
+				inputMask="#########V" id="txtGurNIC" width="115" fontFamily="Arial" fontSize="12"/>
+		</mx:FormItem>
+		<mx:FormItem width="498" height="247">
+			<mx:HBox>
+				<mx:VBox>
+					<s:Label text="NIC Image [Front]" fontWeight="bold"/>
+					<mx:Image id="iGurNIC" width="200" height="200" source="@Resource(key='inaUrl',bundle='resource')"
+							  cacheAsBitmap="false"
+							  />
+					<mx:HBox>
+						<mx:Button
+							click="browseImage_clickHandler(event)"
+							label="Browse" id="btnBrowNIC"
+							textAlign="left"
+							fontSize="10"
+							width="50"
+							height="20"
+							enabled="false"
+							enabled.Default="false"
+							enabled.Add="true"
+							enabled.Edit="true"
+							enabled.Approve="false"
+							/>
+						<mx:Button
+							textAlign="left"
+							label="Clear" id="btnClearNIC"
+							fontSize="10"
+							width="43"
+							height="20"
+							click="clearImage_clickHandler(event)"
+							enabled="false"
+							enabled.Default="false"
+							enabled.Add="true"
+							enabled.Edit="true"
+							enabled.Approve="false"
+							/>
+					</mx:HBox>
+				</mx:VBox>
+				<mx:VBox>
+					<s:Label text="NIC Image [Back]" fontWeight="bold"/>
+					<mx:Image id="iGurNICBack" width="200" height="200" source="@Resource(key='inaUrl',bundle='resource')"
+							  cacheAsBitmap="false"
+							  />
+					<mx:HBox>
+						<mx:Button
+							click="browseImage_clickHandler(event)"
+							label="Browse" id="btnBrowNICBack"
+							textAlign="left"
+							fontSize="10"
+							width="50"
+							height="20"
+							enabled="false"
+							enabled.Default="false"
+							enabled.Add="true"
+							enabled.Edit="true"
+							enabled.Approve="false"
+							/>
+						<mx:Button
+							textAlign="left"
+							label="Clear" id="btnClearNICBack"
+							fontSize="10"
+							width="43"
+							height="20"
+							click="clearImage_clickHandler(event)"
+							enabled="false"
+							enabled.Default="false"
+							enabled.Add="true"
+							enabled.Edit="true"
+							enabled.Approve="false"
+							/>
+					</mx:HBox>
+				</mx:VBox>
+			</mx:HBox>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Form height="288"
+			 borderAlpha="0.10"
+			 paddingTop="5"
+			 paddingLeft="5"
+			 paddingRight="5"
+			 paddingBottom="2"
+			 borderColor="black"
+			 borderStyle="solid"
+			 borderVisible="true" 
+			 x="519" y="234" width="334">
+		<mx:FormItem id="fiGurPassNo" label="Passport No." direction="horizontal" width="277"
+					 horizontalGap="1"
+					 >
+			<s:TextInput
+				maxChars="15"
+				id="txtGurPassNo" width="115"
+				enabled="false"
+				enabled.Default="false"
+				enabled.Add="true"
+				enabled.Edit="true"
+				enabled.Approve="false"
+				></s:TextInput>
+		</mx:FormItem>
+		<mx:FormItem width="314">
+			<s:Label text="Passport Image" fontWeight="bold" />
+			<mx:Image
+				id="iGurPassport"
+				maintainAspectRatio="true"
+				maintainProjectionCenter="true"
+				width="200" height="200" source="@Resource(key='inaUrl',bundle='resource')"
+				cacheAsBitmap="false"
+				/>
+			<mx:HBox>
+				<mx:Button
+					click="browseImage_clickHandler(event)"
+					id="btnBrowPass" label="Browse" 
+					fontSize="10"
+					width="50"
+					enabled="false"
+					enabled.Default="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					enabled.Approve="false"
+					/>
+				<mx:Button
+					textAlign="left"
+					label="Clear" id="btnClearPass"
+					fontSize="10"
+					width="43"
+					click="clearImage_clickHandler(event)"
+					enabled="false"
+					enabled.Default="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					enabled.Approve="false"
+					/>
+			</mx:HBox>
+		</mx:FormItem>
+	</mx:Form>
+</s:TitleWindow>

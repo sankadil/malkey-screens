@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Project: 	malkey-screens	
+File:		ImagePopup.mxml	
+Date:		oct 12, 2011	
+Author:		Sanka Senavirathna-Administrator
+Original resource Descrition: Copy from vehicleImagePopup.mxml done by sandaruwan and customized.Please update this if there any changes in vehicleImagePopup.mxml
+
+client code:
+
+[Bindable]public var lacPicList:ArrayCollection = new ArrayCollection();
+lacPicList.addItem("/malkey_server/resources/dlicence/images_001.jpeg");
+
+var p:ImagePopup =new ImagePopup();
+p.imageList=lacPicList;
+p.titleText="My Title";
+PopUpManager.addPopUp(p,this,true);
+PopUpManager.centerPopUp(p);
+
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="598" height="456"
+				close="titlewindow1_closeHandler(event)"
+				title="{titleText}"
+				xmlns:services="com.dspl.malkey.services.*"
+				creationComplete="initApp()"
+				preinitialize="titlewindow1_preinitializeHandler(event)"
+				>
+	<fx:Declarations>
+		<mx:Parallel id="twFade" target="{iContainer}">
+			<mx:Fade alphaFrom="0" alphaTo="1" duration="300"/>
+		</mx:Parallel>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			
+			[Bindable]public var titleText:String="";
+			[Bindable]private var lacPicList:ArrayCollection = new ArrayCollection();
+			[Bindable]private var giImageCnt:int;
+			private var liIndex:int=-1;		
+			private var llImageLoader:Loader = new Loader();
+			
+			public function set imageList(param:ArrayCollection):void
+			{
+				if(param!=null && param.length>0)
+				{
+				lacPicList=param;
+				giImageCnt=lacPicList.length;
+				//loadNextImage();
+				}
+			}
+			public function get imageList():ArrayCollection
+			{
+				return lacPicList;
+			}
+			private function initApp():void
+			{
+				try
+				{
+					
+					this.addEventListener(KeyboardEvent.KEY_UP,keyUpEvent,false,0,false);
+					this.setFocus();
+					loadNextImage();
+				}
+				catch(error:Error)
+				{
+					Alert.show("initApp: " + error.message);
+					closeForm();
+				}
+			}
+			
+			private function keyUpEvent(event:KeyboardEvent):void
+			{
+				if(event.keyCode==27) //Escape
+				{
+					closeForm();
+				}
+				if(event.keyCode==37) //Left
+				{
+					loadPrevImage();
+				}
+				if(event.keyCode==39) //Right
+				{
+					loadNextImage();
+				}
+				this.setFocus();
+			}
+			
+			private function closeForm():void
+			{
+				this.parent.removeChild(this);
+			}
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				closeForm();
+			}
+
+			private function loadNextImage():void
+			{
+				try
+				{
+					if((giImageCnt-1)==liIndex)
+					{
+						liIndex = 0;
+					}
+					else 
+					{
+						liIndex += 1;
+					}
+					var o:Object = lacPicList.getItemAt(liIndex);
+					llImageLoader.load(new URLRequest(o.toString()));
+					updateLabel();
+				}
+				catch(error:Error)
+				{
+					Alert.show("loadImage: " + error.message);
+				}
+			}
+			
+			private function loadPrevImage():void
+			{
+				try
+				{
+					if(liIndex==0)
+					{
+						liIndex = (giImageCnt-1);
+						updateLabel();
+					}
+					else 
+					{
+						liIndex -= 1;
+					}
+					var o:Object = lacPicList.getItemAt(liIndex);
+					llImageLoader.load(new URLRequest(o.toString()));
+					updateLabel();
+				}
+				catch(error:Error)
+				{
+					Alert.show("loadPrevImage: " + error.message);
+				}
+			}
+
+			protected function crListByRegNo_faultHandler(event:FaultEvent):void
+			{
+				closeForm();
+			}
+			
+			private function updateLabel():void
+			{
+				lblCurrent.text = ((liIndex+1).toString() + " of " + giImageCnt.toString());
+			}
+
+			protected function titlewindow1_preinitializeHandler(event:FlexEvent):void
+			{
+				llImageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageReady);
+				llImageLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			}
+			
+			public function onImageReady(event:Event):void 
+			{
+				var img:Bitmap = new Bitmap();
+				img.smoothing = true;
+				img.bitmapData = event.target.content.bitmapData;
+				iContainer.source = img;
+				twFade.play();
+			}
+
+			public function ioErrorHandler(event:IOErrorEvent):void {
+				trace("ioErrorHandler: " + event);
+			}
+			
+			protected function btnNext_clickHandler(event:MouseEvent):void
+			{
+				loadNextImage();
+			}
+
+			protected function btnPrevous_clickHandler(event:MouseEvent):void
+			{
+				loadPrevImage();
+			}
+		]]>
+	</fx:Script>
+	<mx:Image
+		id="iContainer"
+		completeEffect="twFade"
+		maintainAspectRatio="false"
+		x="4" y="4" width="589" height="385"
+		/>	
+	<s:Label
+		id="lblCurrent"
+		x="274" y="400" text="1 of 4" fontSize="14" width="45"/>
+	<mx:Button  id="btnPrevous" width="50" height="26" toolTip="Back"  
+				icon="@Embed(source='/com/dspl/malkey/components/common/icons/left1arrow.png')"
+				click="btnPrevous_clickHandler(event)"
+				enabled="true" x="213" y="391"/>
+	<mx:Button  id="btnNext" width="50" height="26" toolTip="Next" 
+				icon="@Embed(source='/com/dspl/malkey/components/common/icons/right1arrow.png')"
+				click="btnNext_clickHandler(event)"
+				enabled="true" x="320" y="391"/>
+</s:TitleWindow>

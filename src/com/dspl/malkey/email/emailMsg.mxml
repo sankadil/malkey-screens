@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project		:	malkey-screens
+Package		:	com/dspl/malkey/email
+Component	:	emailmsg.mxml
+Description	:	
+Module		:	
+Author		:	Fuzuli Hameed
+Created On	:	Jun 14, 2011
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   width="900" height="600"
+			   creationComplete="init()"
+			   close="twEmailMsg_closeHandler(event)"
+			   currentState="MsgWithAttachment"
+			   keyUp="{if(event.keyCode==27) (closeScreen())}" 
+			   xmlns:flexIFrame="http://code.google.com/p/flex-iframe/">
+	
+	<!-- Properties of the parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<s:states>
+		<s:State name="MsgWithAttachment"/>
+		<s:State name="MsgWithoutAttachment"/>
+	</s:states>	
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	
+	<!-- Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Script>
+		<![CDATA[
+			import flash.net.navigateToURL;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			public var _oDataprovider:ArrayCollection = null;
+			public var _iSelectedIndex:int = -1;
+			
+			[Bindable]
+			private var sFolderType:String = "";
+			
+			// Indicates the the reponse type for the current message
+			// -1	-	No action required, message is just closed
+			// 0	-	Reply to this message
+			// 1	-	ReplyAll to this message
+			// 2	-	Forward this message
+			// 3	-	Discard this message (Move to Trash)
+			// 4	-	Delete forever this message
+			public var _iResponseType:int = -1;
+			
+			[Bindable]
+			private var acAttach:ArrayCollection = null;
+			
+			protected function init():void
+			{
+				if (_iSelectedIndex > -1){
+					title = _oDataprovider[_iSelectedIndex].subject;
+					
+					var lsAttNames:String = _oDataprovider[_iSelectedIndex].attnames; 
+					if (lsAttNames.length==0)
+						currentState = "MsgWithoutAttachment";
+					else {
+						currentState = "MsgWithAttachment";
+						createAttachmentList(lsAttNames, _oDataprovider[_iSelectedIndex].attachment);
+					}
+					
+					// Change the caption of "lbtnBack" according to the folder type
+					switch (_oDataprovider[_iSelectedIndex].foldertype)
+					{
+						case 0:
+							sFolderType = " to Inbox";
+							break;
+						
+						case 1:
+							sFolderType = " to Drafts";
+							break;
+						
+						case 2:
+							sFolderType = " to Sent Items";
+							break;
+						
+						case 3:
+							sFolderType = " to Trash";
+							btnDiscard.label = "Delete"
+							break;
+						
+						default:
+							sFolderType = "";
+					}
+				}
+			}
+
+			protected function twEmailMsg_closeHandler(event:*):void
+			{
+				closeScreen();
+			}
+			
+			private function closeScreen():void
+			{
+				// Execute any events in the parent module which are bound to "onReturnFromPopUpGrid" event. (This screen should be released from the parent form)
+				dispatchEvent(new Event("_sPostEventToRunPopUpExit"));	
+			}
+			
+			protected function replaceLineFeedWithColon(sourceTxt:String):String
+			{
+				return sourceTxt.replace(/[\r\n]+/g, ";");
+			}
+			
+			protected function createAttachmentList(sAttNames:String, sAttURLs:String)
+			{
+				var lreLineFeed:RegExp = /[\r\n]+/g;
+				var laAttNames:Array = sAttNames.split(lreLineFeed);
+				var laAttURLs:Array = sAttURLs.split(lreLineFeed);
+				acAttach = new ArrayCollection();
+				
+				for (var i:int=0; i<laAttNames.length; i++){
+					// Attahcment file to be displayed
+					var obj:Object = new Object();
+					obj["filename"] = laAttNames[i];
+					
+					// Path to the Attachment file
+					var lsAttURL:String = "";
+					if (i<laAttURLs.length){
+						lsAttURL = laAttURLs[i];
+					}
+					
+					obj["filepath"] = lsAttURL;
+					acAttach.addItem(obj);
+				}
+				
+				lstAttach.dataProvider = acAttach;
+				lstAttach.labelField = "filename"; 
+			}
+
+
+			protected function lstAttach_clickHandler(event:MouseEvent):void
+			{
+				if (lstAttach.selectedIndex==-1)
+					return;
+				
+				var serverURL:String = acAttach[lstAttach.selectedIndex].filepath;
+				if (serverURL.length==0)
+					Alert.show("Unable to locate the source file");
+				else { 
+					var url:URLRequest = new URLRequest(serverURL);
+					url.method = "GET";
+					navigateToURL(url, title);
+				}					
+			}
+
+			// Expand or contract the To/ CC list
+			protected function lblTo_clickHandler(event:MouseEvent):void{
+				//lblTo.maxDisplayedLines = lblTo.maxDisplayedLines==1 ? 0 : 1;
+			}
+			protected function lblCc_clickHandler(event:MouseEvent):void{
+				//lblCc.maxDisplayedLines = lblCc.maxDisplayedLines==1 ? 0 : 1;
+			}
+
+			
+			// Message Reponse buttons
+			protected function btnReply_clickHandler(event:MouseEvent):void
+			{
+				_iResponseType = 0;
+				closeScreen();
+			}			
+			protected function btnReplyAll_clickHandler(event:MouseEvent):void
+			{
+				_iResponseType = 1;
+				closeScreen();
+			}
+			protected function btnForward_clickHandler(event:MouseEvent):void
+			{
+				_iResponseType = 2;
+				closeScreen();
+			}
+			protected function btnDiscard_clickHandler(event:MouseEvent):void
+			{
+				if (_oDataprovider[_iSelectedIndex].foldertype==3)		// Mail is currently in "Trash"
+					_iResponseType = 4;
+				else
+					_iResponseType = 3;
+				
+				closeScreen();
+			}
+
+
+			protected function rteMessage_creationCompleteHandler(event:FlexEvent):void
+			{
+				// Re-position the control bar on top of the Rich Text Editor
+				/* var oRichTxtCtrlBar:DisplayObject = rteMessage.toolbar;
+				rteMessage.toolbar.parent.removeChild(oRichTxtCtrlBar);
+				rteMessage.addChildAt(oRichTxtCtrlBar, 0); */
+			}
+
+		]]>
+	</fx:Script>
+	
+	<!-- Declarations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	<fx:Declarations>
+		<!--<fx:Object id="_oDataprovider">null</fx:Object>
+		<fx:int id="_iSelectedIndex">-1</fx:int>-->
+		
+		<mx:DateFormatter id="formatDateTime" formatString="EEEE, MMMM, YYYY at L:NN A"/>
+		<mx:DateFormatter id="formatDate" formatString="EEEE, MMMM, YYYY"/>
+	</fx:Declarations>
+	
+	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<mx:Form width="100%" height="100%">
+		<mx:FormItem label="From:" width="100%" direction="horizontal" fontWeight="bold" labelWidth="60">
+			<s:Label id="lblFrom"  width="100%" fontWeight="normal"
+					 text="{_oDataprovider[_iSelectedIndex].fromemail}"/>
+			<!--<s:Label id="lblBackToInbox" text="&lt; Back to Inbox" buttonMode="true" useHandCursor="true" click="twEmailMsg_closeHandler(event)" focusEnabled="true"/>-->
+		</mx:FormItem>
+		
+		<mx:FormItem label="Date:" width="100%" fontWeight="bold" labelWidth="60">
+			<s:Label id="lblDate"  width="100%" fontWeight="normal"
+					 text="{formatDate.format(_oDataprovider[_iSelectedIndex].date)}"/>
+		</mx:FormItem>
+		
+		<mx:FormItem label="Subject:" width="100%" fontWeight="bold" labelWidth="60">
+			<s:Label id="lblSubject"  width="100%" fontWeight="normal"
+					 text="{_oDataprovider[_iSelectedIndex].subject}"/>
+		</mx:FormItem>
+		
+		<s:HGroup width="100%">
+			<mx:FormItem label="To:" width="50%" fontWeight="bold" labelWidth="60">
+				<s:TextArea id="txtTo" width="100%" height="47" fontWeight="normal"
+							editable="false" borderVisible="false"
+							text="{_oDataprovider[_iSelectedIndex].toemail}"/>
+			</mx:FormItem>
+			
+			<mx:FormItem label="Cc:" width="50%" fontWeight="bold" labelWidth="60"
+						 visible="{_oDataprovider[_iSelectedIndex].ccemail=='' ? false : true}">
+				<!--<s:Label id="lblCc" width="100%" fontWeight="normal"
+						 text="{_oDataprovider[_iSelectedIndex].ccemail}"
+						 maxDisplayedLines="1" buttonMode="true" useHandCursor="true" 
+						 click="lblCc_clickHandler(event)"/>-->
+				<s:TextArea id="txtCc" width="100%" height="47" fontWeight="normal"
+							editable="false" borderVisible="false"
+							text="{_oDataprovider[_iSelectedIndex].ccemail}"/>
+			</mx:FormItem>
+		</s:HGroup>
+		
+		
+		<!--<s:TextArea width="100%" height="100%" editable="false" 
+					textDisplay="{_oDataprovider[_iSelectedIndex].htmlbody}"/>
+		<s:TextArea id="txtMsg" editable="false" width="100%" height="100%"
+					text="{_oDataprovider[_iSelectedIndex].body}"/>
+		<s:RichEditableText editable="false"/>
+		
+		<flexIFrame:IFrame id="rteMessage" width="100%" height="100%"
+						   content="{_oDataprovider[_iSelectedIndex].htmlbody}"
+						   borderVisible="true" x="{lstAttach.x}"/>-->
+		<mx:RichTextEditor id="rteMessage" width="100%" height="100%"
+						   showControlBar="false"
+						   htmlText="{_oDataprovider[_iSelectedIndex].htmlbody}"/>
+		
+		<s:List id="lstAttach" width="100%" height="47" 
+				buttonMode="true" useHandCursor="true"
+				includeIn="MsgWithAttachment"
+				click="lstAttach_clickHandler(event)" toolTip="Click on file to downalod">
+		</s:List>
+		
+		<mx:ControlBar id="cbButtons" width="100%">
+			<s:Button id="btnReply" label="Reply" click="btnReply_clickHandler(event)"/>
+			<s:Button id="btnReplyAll" label="Reply All" click="btnReplyAll_clickHandler(event)"/>			
+			<s:Button id="btnForward" label="Forward" click="btnForward_clickHandler(event)"/>			
+			<s:Button id="btnDiscard" label="Move To Trash" click="btnDiscard_clickHandler(event)"/>
+			<mx:Spacer width="100%"/>
+			<mx:LinkButton id="lbtnBack" label="&lt; Back{sFolderType}" color="#0A33BB" textDecoration="underline" click="closeScreen()"/>
+		</mx:ControlBar>
+	</mx:Form>
+</s:TitleWindow>

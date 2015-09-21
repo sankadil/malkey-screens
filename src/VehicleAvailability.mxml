@@ -1,0 +1,1471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"	
+			   creationComplete="initApp()"
+			   width="998" height="575"
+			   title="Vehicle Availability"
+			   xmlns:services="com.dspl.malkey.services.*"
+			   close="closeForm()" xmlns:components="com.dspl.malkey.components.*"
+			   >
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.controls.dataGridClasses.BoldSearchItemRenderer;
+			import com.dspl.malkey.components.RatesViewer;
+			import com.dspl.malkey.components.vehicleImagePopup;
+			import com.dspl.malkey.events.VehicleSelectionEvent;
+			import com.dspl.malkey.util.DateOperation;
+			
+			import flexlib.scheduling.util.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.core.Application;
+			import mx.core.FlexGlobals;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.MenuEvent;
+			import mx.events.NumericStepperEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+
+			[Bindable]
+			public var gacSearchResult:ArrayCollection = new ArrayCollection();
+			
+			//Initial Process 
+			[Bindable]
+			public var gbInitProc:Boolean=true;
+			
+			[Bindable]
+			public var dFSDate:Date;
+			[Bindable]
+			public var dTSDate:Date;
+			[Bindable]
+			public var giNoOfDays:int;
+			
+			private var liMLCnt:int=0;
+			
+			[Bindable]
+			private var lacAvailability:ArrayCollection = new ArrayCollection([
+				{des:"Available"},
+				{des:"Unavailable"}
+			]);
+
+			[Bindable]
+			private var lacVehicleClass:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacVehicleTypes:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacVehicleMake:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacVehicleModel:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacVehicleTransmission:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacVehicleFuel:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacVehicleColour:ArrayCollection = new ArrayCollection();
+			
+			private function closeForm():void{
+				if(gbInitProc==true){
+					this.parent.parent.removeChild(this.parent);
+				}else{
+					PopUpManager.removePopUp(this);
+				}
+			}
+			
+			private function initApp():void{
+				try{
+					updateVehicleCount();
+					if(gbInitProc==true){
+						btnProceed.visible=false;
+						btnProceed.enabled=false;
+						setPermission();
+					}else{
+						btnSearch.enabled=true;
+					}
+					setDate();
+					loadMasterFiles();
+					ddAvailability.selectedIndex=0;
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",null);
+				}
+			}
+			
+			private function updateVehicleCount():void{
+				try{
+					this.title="Vehicle Availability";
+					if(gacSearchResult!=null)
+						this.title+="    ["+gacSearchResult.length.toString()+" Vehicle(s) Found]";
+				}catch(error:Error){
+					Alert.show("updateVehicleCount: " + error.message);
+				}
+			}
+			
+			private function setMLCnt():void{
+				liMLCnt+=1;
+				if(liMLCnt==7){
+					if(btnSearch.enabled==true)
+						searchVehicles();
+				}
+			}
+			
+			private function setDate():void{
+				try{
+					if(gbInitProc==false){
+						dfDateFrom.selectableRange={rangeStart : dFSDate,rangeEnd : dTSDate};
+						dfDateTo.selectableRange={rangeStart : dFSDate,rangeEnd : dTSDate};
+						dfDateFrom.selectedDate=dFSDate;
+						nsNoOfDays.maximum=giNoOfDays;
+						nsNoOfDays.value=giNoOfDays;
+						//setMaxDays();
+						//Alert.show("dFSDate: " + dFSDate.getFullYear().toString() + "." + (dFSDate.getMonth()+1).toString() + "." + dFSDate.getDate().toString());
+						//Alert.show("dTSDate: " + dTSDate.getFullYear().toString() + "." + (dTSDate.getMonth()+1).toString() + "." + dTSDate.getDate().toString());
+					}else{
+					 	var tmpDate:Date = new Date();
+						/* dFSDate = new Date(2011,03,04,null,null,null,null); */
+						dFSDate = new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),null,null,null,null);
+						dTSDate = new Date(tmpDate.getFullYear(),tmpDate.getMonth(),tmpDate.getDate(),null,null,null,null);
+						/* dTSDate = dFSDate; */
+						dfDateFrom.selectedDate = dFSDate;
+						dfDateTo.selectedDate = dTSDate;
+						
+						dfDateFrom.selectableRange={rangeStart : dFSDate};
+						dfDateTo.selectableRange={rangeStart : dTSDate};
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"setDate: " + error.message,"Error",null);
+				}
+			}
+			
+			private function loadMasterFiles():void
+			{
+				try
+				{
+					crListAllVehicleClass.token = srvFvehicleclass.ListAll();
+					crListAllVehicleTypes.token = srvFvehicletype.ListAll();
+					crListAllVehicleMake.token = srvFvehiclemake.ListAll();
+					/* crListAllVehicleModel.token = srvFvehiclemodel.ListAll(); */
+					crListAllVehicleTransmission.token = srvFvehicletrans.ListAll();
+					crListAllVehicleFuelType.token = srvFfueltype.ListAll();
+					crListAllVehicleColour.token = srvFcolour.ListAll();
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"loadMasterFiles: " + error.message,"Error",null);
+				}
+			}
+			
+			private function filterDiary(item:Object):Boolean
+			{
+				var str:String = df.format(dfDateFrom.selectedDate);
+				if(item["date"]==str)
+				{
+					return true;
+				}
+				else 
+				{
+					return false;
+				}
+			}
+			
+			private function menuItemClick(e:MenuEvent):void
+			{
+				Alert.show(e.label.toString());
+				
+			/* 	switch(e.label.toString())
+				{
+					case "View Reservation":
+						obj = new Reservation();
+						break;	
+					case "Check-Out":
+						obj = new Reservation();
+						break;
+					case "Check-In":
+						obj = new Reservation();
+						break;
+				}
+				showPopup(obj); */
+			}
+
+			protected function datagrid1_clickHandler(event:MouseEvent):void
+			{
+				/* if(dGrid.selectedIndex>-1)
+				{
+					var globalPoint:Point = dGrid.localToGlobal(new Point(dGrid.x,dGrid.y));
+					var minY:Number = (globalPoint.y + dGrid.headerHeight); 
+					Alert.show("gpY: " + globalPoint.y.toString() +  "      headerheight: " + dGrid.headerHeight.toString() +  "    minY: " + minY.toString() + "     stageY: " + event.stageY.toString());
+					var maxY:Number = (globalPoint.y + dGrid.headerHeight + (dGrid.rowHeight * ar.length));
+					if(event.stageY>minY && event.stageY<maxY)
+					{
+						showMenu(event.stageX,event.stageY);
+					}
+				}  */
+			}
+			
+			private function showPopup(obj:IFlexDisplayObject):void
+			{
+				PopUpManager.addPopUp(obj,this,true,null,null);
+				PopUpManager.centerPopUp(obj);
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			protected function crListAllVehicleClass_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacVehicleClass.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0)
+					{
+						o = new Object();
+						o["vehiclassid"] = "All";
+						o["description"] = "All";
+						lacVehicleClass.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["vehiclassid"] = obj["vehiclassid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleClass.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleClass = null;
+					if(lacVehicleClass.length>0)
+					{
+						ddClass.selectedIndex=0;
+					}
+					setMLCnt();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadVehicleClass: " + error.message,"Error",null);
+				}
+			}
+			
+			
+			protected function crListAllVehicleClass_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"loadVehicleClass: " + event.fault,"Error",errorCloseHandler);
+			}
+
+			protected function cfListAllVehicleTypes_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacVehicleTypes.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0)
+					{
+						o = new Object();
+						o["vehitypeid"] = "All";
+						o["description"] = "All";
+						lacVehicleTypes.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["vehitypeid"] = obj["vehitypeid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleTypes.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleTypes = null;
+					if(lacVehicleTypes.length>0)
+					{
+						ddType.selectedIndex=0;
+					}
+					setMLCnt();
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"loadVehicleTypes: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+
+			protected function cfListAllVehicleTypes_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"loadVehicleTypes: " + event.fault,"Error",errorCloseHandler);
+			}
+
+			protected function crListAllVehicleMake_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacVehicleMake.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0)
+					{
+						o = new Object();
+						o["vehimakeid"] = "All";
+						o["description"] = "All";
+						lacVehicleMake.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["vehimakeid"] = obj["vehimakeid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleMake.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleMake = null;
+					if(lacVehicleMake.length>0)
+					{
+						ddMake.selectedIndex=0;
+					}
+					setMLCnt();
+					crListAllVehicleModel.token = srvFvehiclemodel.ListAll();
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"loadVehicleMake: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crListAllVehicleMake_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"loadVehicleMake: " + event.fault,"Error",errorCloseHandler);
+			}
+
+
+			protected function crListAllVehicleModel_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacVehicleModel.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0)
+					{
+						o = new Object();
+						o["vehimakeid"] = "All";
+						o["vehimodelid"] = "All";
+						o["description"] = "All";
+						lacVehicleModel.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["vehimakeid"] = obj["id"]["vehimakeid"].toString();
+						o["vehimodelid"] = obj["id"]["vehimodelid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleModel.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleModel = null;
+					lacVehicleModel.filterFunction = filterVehicleModel;
+					lacVehicleModel.refresh();
+					if(lacVehicleModel.length>0)
+					{
+						ddModel.selectedIndex=0;
+					}
+					setMLCnt();
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"loadVehicleModel: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function filterVehicleModel(item:Object):Boolean
+			{
+				try
+				{
+					if(ddMake.selectedIndex>-1)
+					{
+						if(item["vehimakeid"].toString()=="All")
+						{
+							return true;
+						}
+						if(ddMake.selectedItem.vehimakeid==item["vehimakeid"].toString())
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					}
+				}
+				catch(error:Error)
+				{
+					trace("filterVehicleMake: " + error.message);
+					return false;
+				}
+				return false;
+			}
+
+
+			protected function crListAllVehicleModel_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"loadVehicleModel: " + event.fault,"Error",errorCloseHandler);
+			}
+
+
+			protected function ddMake_changeHandler(event:IndexChangeEvent):void
+			{
+				lacVehicleModel.refresh();
+				ddModel.selectedIndex=0;
+			}
+
+
+			protected function crListAllVehicleTransmission_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacVehicleTransmission.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0)
+					{
+						o = new Object();
+						o["vehitransid"] = "All";
+						o["description"] = "All";
+						lacVehicleTransmission.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["vehitransid"] = obj["vehitransid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleTransmission.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleTransmission = null;
+					if(lacVehicleTransmission.length>0)
+					{
+						ddTransmission.selectedIndex=0;
+					}
+					setMLCnt();
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"loadVehicleTransmission: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+
+			protected function crListAllVehicleTransmission_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"loadVehicleTransmission: " + event.fault,"Error",errorCloseHandler);
+			}
+
+
+			protected function crListAllVehicleFuelType_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacVehicleFuel.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0)
+					{
+						o = new Object();
+						o["fueltypeid"] = "All";
+						o["description"] = "All";
+						lacVehicleFuel.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["fueltypeid"] = obj["fueltypeid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleFuel.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleFuelType = null;
+					if(lacVehicleFuel.length>0)
+					{
+						ddFuelType.selectedIndex=0;
+					}
+					setMLCnt();
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"loadVehicleTransmission: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crListAllVehicleFuelType_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"loadVehicleFuelType: " + event.fault,"Error",errorCloseHandler);
+			}
+
+
+			protected function crListAllVehicleColour_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacVehicleColour.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0)
+					{
+						o = new Object();
+						o["colourid"] = "All";
+						o["description"] = "All";
+						lacVehicleColour.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["colourid"] = obj["colourid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleColour.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleColour = null;
+					if(lacVehicleColour.length>0)
+					{
+						ddColour.selectedIndex=0;
+					}
+					setMLCnt();
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"loadVehicleTransmission: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+
+			protected function crListAllVehicleColour_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"loadVehicleColour: " + event.fault,"Error",errorCloseHandler);
+			}
+
+
+			protected function btnReset_clickHandler(event:MouseEvent):void{
+				resetSearch();
+			}
+			
+			private function resetSearch():void
+			{
+				try
+				{
+					ddClass.selectedIndex=0;
+					ddType.selectedIndex=0;
+					ddMake.selectedIndex=0;
+					lacVehicleModel.refresh();
+					ddModel.selectedIndex=0;
+					ddTransmission.selectedIndex=0;
+					ddFuelType.selectedIndex=0;
+					ddColour.selectedIndex=0;
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"resetSearch: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function btnView_clickHandler(event:MouseEvent):void{
+				searchVehicles();
+				lacResList=null;
+			}
+			
+			private var lacParaList:ArrayCollection = new ArrayCollection();
+			private var selDateFrom:Date;
+			private var selDateTo:Date;
+			private var dateFrom:String=""
+			private var dateFromnew:String=""
+			private var dateTo:String=""
+			private var avbVal:Boolean;
+			
+			private function searchVehicles():void{
+				try{
+					if(valSearchCriteria()==true){
+						/* var lacParaList:ArrayCollection = new ArrayCollection(); */
+						lacParaList.removeAll();
+						var obj:Object;
+						
+						//Vehicle Class
+						obj = new Object();
+						if(ddClass.selectedItem.vehiclassid=="All")
+						{
+							obj["vehiclassid"] = "";
+						}
+						else
+						{
+							obj["vehiclassid"] = ddClass.selectedItem.vehiclassid;
+							lacParaList.addItem(obj);
+						}
+						
+						//Vehicle Type
+						obj = new Object();
+						if(ddType.selectedItem.vehitypeid=="All")
+						{
+							obj["vehitypeid"] = "";
+						}
+						else 
+						{
+							obj["vehitypeid"] = ddType.selectedItem.vehitypeid;
+							lacParaList.addItem(obj);
+						}
+						
+						//Vehicle Make
+						obj = new Object();
+						if(ddMake.selectedItem.vehimakeid=="All")
+						{
+							obj["vehimakeid"] = "";
+						}
+						else
+						{
+							obj["vehimakeid"] = ddMake.selectedItem.vehimakeid;
+							lacParaList.addItem(obj);
+						}
+						
+						//Vehicle Model
+						obj = new Object();
+						if(ddModel.selectedItem.vehimodelid=="All")
+						{
+							obj["vehimodelid"] = "";
+						}
+						else 
+						{
+							obj["vehimodelid"] = ddModel.selectedItem.vehimodelid;
+							lacParaList.addItem(obj);
+						}
+						
+						//Vehicle Transmission
+						obj = new Object();
+						if(ddTransmission.selectedItem.vehitransid=="All")
+						{
+							obj["vehitransid"] = "";
+						}
+						else 
+						{
+							obj["vehitransid"] = ddTransmission.selectedItem.vehitransid;
+							lacParaList.addItem(obj);
+						}
+						
+						//Vehicle Fuel Type
+						obj = new Object();
+						if(ddFuelType.selectedItem.fueltypeid=="All")
+						{
+							obj["fueltypeid"] = "";
+						}
+						else 
+						{
+							obj["fueltypeid"] = ddFuelType.selectedItem.fueltypeid;
+							lacParaList.addItem(obj);
+						}
+						
+						//Vehicle Colour
+						obj = new Object();
+						if(ddColour.selectedItem.colourid=="All")
+						{
+							obj["colourid"] = "";
+						}
+						else
+						{
+							obj["colourid"] = ddColour.selectedItem.colourid;
+							lacParaList.addItem(obj);
+						}
+						
+						/* var dateFrom:String = dfDateFrom.selectedDate.getFullYear().toString() + "." + (dfDateFrom.selectedDate.getMonth()+1).toString() + "." + dfDateFrom.selectedDate.getDate().toString();
+						var dateTo:String = dfDateTo.selectedDate.getFullYear().toString() + "." + (dfDateTo.selectedDate.getMonth()+1).toString() + "." + dfDateTo.selectedDate.getDate().toString(); */
+						selDateFrom=dfDateFrom.selectedDate;
+						selDateTo=dfDateTo.selectedDate;
+						dateFrom = dfDateFrom.selectedDate.getFullYear().toString() + "." + (dfDateFrom.selectedDate.getMonth()+1).toString() + "." + dfDateFrom.selectedDate.getDate().toString();
+						dateTo = dfDateTo.selectedDate.getFullYear().toString() + "." + (dfDateTo.selectedDate.getMonth()+1).toString() + "." + dfDateTo.selectedDate.getDate().toString();
+						
+						dateFromnew = (dfDateFrom.selectedDate.getMonth()+1).toString()+"-" + dfDateFrom.selectedDate.getDate().toString()+ "-"+dfDateFrom.selectedDate.getFullYear().toString();
+						
+						if(ddAvailability.selectedIndex==0)
+							avbVal=true;
+						else if(ddAvailability.selectedIndex==1) 
+							avbVal=false;
+						
+						crSearchVehicleList.token = srvVehicleSearch.searchVehicles(dateFromnew,dateTo,lacParaList,avbVal);
+					}
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"searchVehicles: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function valSearchCriteria():Boolean
+			{
+				try
+				{
+					
+					if(dfDateFrom.selectedDate==null)
+					{
+						Message.displayAlert(2,"Select Date [From]","Warning",null);
+						dfDateFrom.setFocus();
+						return false;
+					}
+					
+					if(dfDateTo.selectedDate==null)
+					{
+						Message.displayAlert(2,"Select Date [To]","Warning",null);
+						dfDateTo.setFocus();
+						return false;
+					}
+					
+					if(ddAvailability.selectedIndex<0)
+					{
+						Message.displayAlert(2,"Select Availability","Warning",null);
+						ddClass.setFocus();
+						return false;
+					}
+					
+					
+					if(ddClass.selectedIndex<0)
+					{
+						Message.displayAlert(2,"Select Vehicle Class","Warning",null);
+						ddClass.setFocus();
+						return false;
+					}
+					
+					if(ddType.selectedIndex<0)
+					{
+						Message.displayAlert(2,"Select Vehicle Type","Warning",null);
+						ddType.setFocus();
+						return false;
+					}
+					
+					if(ddMake.selectedIndex<0)
+					{
+						Message.displayAlert(2,"Select Vehicle Make","Warning",null);
+						ddMake.setFocus();
+						return false;
+					}
+					
+					if(ddModel.selectedIndex<0)
+					{
+						Message.displayAlert(2,"Select Vehicle Model","Warning",null);
+						ddModel.setFocus();
+						return false;
+					}
+					
+					if(ddTransmission.selectedIndex<0)
+					{
+						Message.displayAlert(2,"Select Vehicle Transmission","Warning",null);
+						ddTransmission.setFocus();
+						return false;
+					}
+					
+					if(ddFuelType.selectedIndex<0)
+					{
+						Message.displayAlert(2,"Select Vehicle Fuel Type","Warning",null);
+						ddFuelType.setFocus();
+						return false;
+					}
+					
+					if(ddColour.selectedIndex<0)
+					{
+						Message.displayAlert(2,"Select Vehicle Colour","Warning",null);
+						ddColour.setFocus();
+						return false;
+					}
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"valSearchCriteria: " + error.message,"Error",errorCloseHandler);
+					return false;
+				}
+				return true;
+			}
+
+
+			protected function dfDateFrom_changeHandler(event:CalendarLayoutChangeEvent):void{
+				if(gbInitProc==true){
+					dTSDate = dfDateFrom.selectedDate;
+					dfDateTo.selectableRange={rangeStart : dTSDate};
+				}else{
+					dfDateTo.selectableRange={rangeStart : dfDateFrom.selectedDate,rangeEnd : dTSDate};		
+					setMaxDays();
+				}
+			}
+			
+			private function setMaxDays():void{
+				try{
+					var MS_PER_DAY:Number=1000*60*60*24;
+					var tempDate:Date;
+					if(dfDateFrom.selectedDate==null)
+						tempDate=new Date(dTSDate.getTime()-dFSDate.getTime());
+					else
+						tempDate= new Date(dTSDate.getTime()-dfDateFrom.selectedDate.getTime());
+					var maxDays:int=Math.round((tempDate.time / MS_PER_DAY) + 1);
+					nsNoOfDays.maximum=maxDays;
+					//if(nsNoOfDays.value>maxDays)
+					//	nsNoOfDays.value=maxDays;
+					nsNoOfDays.value=maxDays;
+				}catch(error:Error){
+					Alert.show("setMaxDays: " + error.message);
+				}
+			}
+			
+			/* private function setDateEnv():void
+			{
+				try
+				{
+					//Alert.show("selectedDate: " + dfDateFrom.selectedDate.toString());
+					var dDate:Date = dfDateFrom.selectedDate;
+					if(nsNoOfDays.value>1)
+					{
+						var val:Number = (nsNoOfDays.value-1) * 24;
+						dDate.setHours(val,null,null,null);
+						
+					} 
+					dfDateTo.selectedDate = dDate; 
+				}
+				catch(error:Error)
+				{
+					Alert.show("setDateEnv: " + error.message,"Error",Alert.OK,null,commonErrorCloseHandler,IconError,Alert.OK,null);
+				}
+			} */
+
+			protected function nsNoOfDays_changeHandler(event:NumericStepperEvent):void
+			{
+/* 				if(nsNoOfDays.value>0 || nsNoOfDays.value.toString()!="NaN")
+				{
+					setDateEnv();
+				} */
+			}
+
+			protected function dfDateTo_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				
+			}
+
+			private var lacVehicleList:ArrayCollection=new ArrayCollection();
+			protected function crSearchVehicleList_resultHandler(event:ResultEvent):void{
+				try{
+					gacSearchResult = event.result as ArrayCollection;
+					gacSearchResult.filterFunction = filterDGVehicles;
+					gacSearchResult.refresh();
+					updateVehicleCount();
+				}catch(error:Error){
+					Message.displayAlert(1,"searchVehicle [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crSearchVehicleList_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"searchVehicle [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+
+			protected function dgVehicles_itemDoubleClickHandler(event:ListEvent):void{
+				showPhotos(event);	
+			}
+			
+			private function showPhotos(event:ListEvent):void{
+				try{
+					var i:int = event.currentTarget.selectedItem.orgmileage as int;
+					if(i<=0)
+						Message.displayAlert(2,"Image(s) not found for the selected vehicle","Warning",null);
+					else
+						showVehImage(event.currentTarget.selectedItem.regno,i,event.currentTarget.selectedItem.regno + " - " + event.currentTarget.selectedItem.vehimodelid);
+				}catch(error:Error){
+					Message.displayAlert(1,"Grid Selection: " + error.message,"Error",null);
+				}
+			}
+			
+			[Bindable]
+			private var pvImage:vehicleImagePopup;
+			
+			private function showVehImage(regno:String,imageCnt:int,vehicleDes:String=""):void
+			{
+				if(dgVehicles.selectedIndex>-1)
+				{
+					pvImage = new vehicleImagePopup();
+					pvImage.gsRegno = regno;
+					pvImage.giImageCnt = imageCnt;
+					pvImage.gsVehicleDes = vehicleDes;
+					PopUpManager.addPopUp(pvImage,this,true,null,null);
+					PopUpManager.centerPopUp(pvImage);
+					twFade.play();
+				}
+			}
+			
+			public function getColour(colourid:String):uint
+			{
+				if(StyleManager.isColorName(colourid)==true) 
+				{
+					return StyleManager.getColorName(colourid);
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			protected function txtFilterKey_changeHandler(event:TextOperationEvent):void
+			{
+				gacSearchResult.refresh();
+				updateVehicleCount();
+			}
+			
+			private function filterDGVehicles(item:Object):Boolean
+			{
+				try
+				{
+					if(txtFilterKey.text=="")
+					{
+						return true;
+					}
+					else
+					{
+						if(item["regno"].toString().toLowerCase().indexOf(txtFilterKey.text.toLowerCase())>-1)
+						{
+							return true;
+						}
+					}
+				}
+				catch(error:Error)
+				{
+					trace("filterDGVehicles: " + error.message);	
+				}
+				return false;
+			}
+
+
+			protected function ddAvailability_changeHandler(event:IndexChangeEvent):void
+			{
+				searchVehicles();
+				if(ddAvailability.selectedItem.des=="Unavailable")
+					btnViewDetail.visible=true;
+				else
+					btnViewDetail.visible=false;
+			}
+
+			protected function btnViewDetail_clickHandler(event:MouseEvent):void{
+				if(gacSearchResult.length<=0)
+					Message.displayAlert(3,"Vehicle(s) Not Found","",null);
+				else
+					crSearchResList.token = srvVehicleSearch.getResList(dateFrom,dateTo,lacParaList);
+			}
+
+			[Bindable]
+			private var lacResList:ArrayCollection;
+			protected function crSearchResList_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Alert.show("getResList [Result]: Error Occured. Please Try Again..");
+					else{
+						lacResList = event.result as ArrayCollection;
+						
+						//Get Vehicle List
+						lacVehicleList.removeAll();
+						var obj:Object;
+						var o:Object;
+						for(var a:int=0;a<gacSearchResult.length;a++){
+							o=new Object();
+							obj=gacSearchResult.getItemAt(a);
+							o["regno"]=obj["regno"].toString();
+							o["make"]=obj["vehimakeid"].toString();
+							o["model"]=obj["vehimodelid"].toString();
+							lacVehicleList.addItem(o);
+						}
+						obj=null;
+						o=null;
+						
+						//Set ResList
+						var resList:VehicleAvailabilityDetail = new VehicleAvailabilityDetail();
+						resList.StartDate=selDateFrom;
+						resList.EndDate=selDateTo;
+						resList.dateFrom=dateFrom;
+						resList.dateTo=dateTo;
+						resList.gacVehicleList=lacVehicleList;
+						resList.gacTmpHireData=lacResList;
+						PopUpManager.addPopUp(resList,this,true,null,null);
+
+						resList.move(((Capabilities.screenResolutionX-resList.width)/2),10);
+						
+						//PopUpManager.centerPopUp(resList);
+					}
+				}catch(error:Error){
+					Alert.show("getResList [Error]: " + error.message);
+				}
+			}
+
+			protected function crSearchResList_faultHandler(event:FaultEvent):void{
+				Alert.show("getResList [Fault]: " + event.fault.toString());				
+			}
+
+			protected function btnProceed_clickHandler(event:MouseEvent):void{
+				var vehicleList:ArrayCollection=new ArrayCollection();
+				var obj:Object;
+				for(var a:int=0;a<gacSearchResult.length;a++){
+					if(gacSearchResult.getItemAt(a).selected.toString().toLowerCase()=="true"){
+						obj=new Object();
+						obj["regno"]=gacSearchResult.getItemAt(a).regno;
+						vehicleList.addItem(obj);
+					}
+				}					
+				if(vehicleList.length==0){
+					Message.displayAlert(2,"Please Select Vehicle(s) To Procced To Hire","Warning",null);
+				}else{
+					if(gbInitProc==false){
+						var availability:String;
+						if(avbVal==true)
+							availability="available";
+						else if(avbVal==false)
+							availability="unavailable";
+							
+						dispatchEvent(new VehicleSelectionEvent("vehicleSelectionEvent",vehicleList,dfDateFrom.selectedDate,dfDateTo.selectedDate,availability));
+						closeForm();
+					}
+				}
+			}
+
+			private var tmpListEvent:ListEvent;
+			protected function dgVehicles_itemClickHandler(event:ListEvent):void
+			{
+				if(gacSearchResult!=null || gacSearchResult.length>0){
+					if(gbInitProc==false && event.columnIndex==0)
+						return;
+					if(dgVehicles.selectedIndex>-1){
+						tmpListEvent=event;
+						//showMenu(contentMouseX,contentMouseY);
+						//var pt:Point = new Point(this. dgVehicles.mouseX, dgVehicles.mouseY);
+						//var global:Point = FlexGlobals.topLevelApplication.localToGlobal(pt);
+						//showMenu(mouseX,mouseY);
+						showMenu(FlexGlobals.topLevelApplication.contentMouseX,FlexGlobals.topLevelApplication.contentMouseY);
+					}
+				}
+			}
+			
+			private var myMenu:Menu;
+			private function showMenu(x:Number,y:Number):void 
+			{
+				myMenu = Menu.createMenu(null, submenu, false);
+				myMenu.addEventListener(MenuEvent.ITEM_CLICK,mainMenuItemClick,false,0,false);
+				myMenu.labelField="@label";
+				myMenu.show(x,y);
+			}
+			
+			private function mainMenuItemClick(e:MenuEvent):void
+			{
+				switch(e.label.toString())
+				{	
+					case "Rates":
+						var rv:RatesViewer=new RatesViewer();
+						rv.vehimodelid=tmpListEvent.currentTarget.selectedItem.inscompany;
+						rv.title=tmpListEvent.currentTarget.selectedItem.vehimakeid + " " + tmpListEvent.currentTarget.selectedItem.vehimodelid + " ["+tmpListEvent.currentTarget.selectedItem.regno+"]";
+						PopUpManager.addPopUp(rv,this,true,null,null);
+						PopUpManager.centerPopUp(rv);
+						break;
+					case "Photos":
+						showPhotos(tmpListEvent);
+						break;
+				}
+			}
+
+
+			protected function btnVAReport_clickHandler(event:MouseEvent):void
+			{
+				//DD/MM/YYYY
+				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/VA.jsp");
+				request.data =new URLVariables();
+				request.data.from=df2.format(dfDateFrom.selectedDate);
+				request.data.to=df2.format(dfDateTo.selectedDate);
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request);
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>	
+		
+		<fx:XML format="e4x" id="cmenu">
+			<root>
+				<menuitem label="View Reservation"/>
+				<menuitem label="Check-Out"/>
+				<menuitem label="Check-In"/>
+			</root>
+		</fx:XML>
+		
+		<fx:XML format="e4x" id="myMenuData">
+			<root>
+				<menuitem label="Rental" >
+					<menuitem label="New Reservation"/>
+					<menuitem label="Check-Out"/>
+					<menuitem label="Check-In"/>
+				</menuitem>
+				<menuitem label="Administration">
+					<menuitem label="Vehicle"/>
+					<menuitem label="Maintenance"/>
+				</menuitem>
+			</root>
+		</fx:XML>
+		
+		<fx:XML format="e4x" id="submenu">
+			<root>
+				<menuitem label="Rates" enabled="{btnSearch.enabled}"/>
+				<menuitem label="Photos" enabled="{btnSearch.enabled}"/>
+			</root>
+		</fx:XML>
+			
+		<mx:DateFormatter id="df" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+		<mx:DateFormatter id="df2" formatString="@Resource(key='dateFormat2',bundle='resource')"/>
+		
+		<services:FvehicleclassSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFvehicleclass"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		
+		<s:CallResponder
+			id="crListAllVehicleClass"
+			result="crListAllVehicleClass_resultHandler(event)"
+			fault="crListAllVehicleClass_faultHandler(event)"
+			/>
+		
+		<services:FvehicletypeSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFvehicletype"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+		
+		<s:CallResponder 
+			id="crListAllVehicleTypes"
+			result="cfListAllVehicleTypes_resultHandler(event)"
+			fault="cfListAllVehicleTypes_faultHandler(event)"
+			/>
+	
+		<services:FvehiclemakeSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFvehiclemake"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllVehicleMake"
+			result="crListAllVehicleMake_resultHandler(event)"
+			fault="crListAllVehicleMake_faultHandler(event)"
+			/>
+	
+		<services:FvehiclemodelSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFvehiclemodel"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllVehicleModel"
+			result="crListAllVehicleModel_resultHandler(event)"
+			fault="crListAllVehicleModel_faultHandler(event)"
+			/>
+		
+		<services:FvehicletransSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFvehicletrans"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllVehicleTransmission"
+			result="crListAllVehicleTransmission_resultHandler(event)"
+			fault="crListAllVehicleTransmission_faultHandler(event)"
+			/>
+		
+		<services:FfueltypeSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFfueltype"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllVehicleFuelType"
+			result="crListAllVehicleFuelType_resultHandler(event)"
+			fault="crListAllVehicleFuelType_faultHandler(event)"
+			/>
+		
+		<services:FcolourSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFcolour"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllVehicleColour"
+			result="crListAllVehicleColour_resultHandler(event)"
+			fault="crListAllVehicleColour_faultHandler(event)"
+			/>
+		
+		<services:VehiclesearchSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvVehicleSearch"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		
+		<s:CallResponder
+			id="crSearchVehicleList"
+			result="crSearchVehicleList_resultHandler(event)"
+			fault="crSearchVehicleList_faultHandler(event)"
+			/>
+		
+		<s:CallResponder
+			id="crSearchResList"
+			result="crSearchResList_resultHandler(event)"
+			fault="crSearchResList_faultHandler(event)"
+			/>
+		
+		<mx:Parallel id="twFade" target="{pvImage}">
+			<mx:Fade duration="450"/>
+		</mx:Parallel>
+		
+	</fx:Declarations>
+	
+	<mx:DataGrid
+		itemClick="dgVehicles_itemClickHandler(event)"
+		tabIndex="14"
+		id="dgVehicles" doubleClickEnabled="true" itemDoubleClick="dgVehicles_itemDoubleClickHandler(event)" x="6" y="120" 
+		width="977" 
+		height="413" 
+		dataProvider="{gacSearchResult}" fontSize="13" fontWeight="bold"
+		>
+		<mx:columns>
+			<mx:DataGridColumn
+				visible="{!gbInitProc}"
+				dataField="selected" resizable="false" sortable="false" width="30" headerText=" ">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:CheckBox
+							paddingLeft="10"
+							change="checkbox1_changeHandler(event)"
+							selected="{data.selected}" 
+							selectedField="selected">
+
+							<fx:Script>
+								<![CDATA[
+									protected function checkbox1_changeHandler(event:Event):void
+									{
+										var cb:CheckBox = event.target as CheckBox;
+										var o:Object = outerDocument.gacSearchResult.getItemAt(outerDocument.dgVehicles.selectedIndex);
+										o["selected"] = cb.selected;
+									}
+								]]>
+							</fx:Script>
+
+							
+						</mx:CheckBox>
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>							   
+			<mx:DataGridColumn dataField="regno" headerText="Vehicle No." width="90" resizable="false" sortable="true"/>
+			<mx:DataGridColumn headerText="Class" dataField="vehiclassid" resizable="false" width="80"/>
+			<mx:DataGridColumn headerText="Type" dataField="vehitypeid" resizable="false" width="110"/>
+			<mx:DataGridColumn dataField="vehimakeid" headerText="Make" width="130" resizable="false" sortable="true"/>
+			<mx:DataGridColumn headerText="Model" dataField="vehimodelid" resizable="false" width="200"/>
+			<mx:DataGridColumn dataField="vehitransid" headerText="Transmission" width="110" resizable="false" sortable="true"/>
+			<mx:DataGridColumn headerText="Fuel " dataField="fueltypeid" resizable="false" width="60"/>
+			<mx:DataGridColumn headerText="Colour" rendererIsEditor="true" dataField="colourid" resizable="false" width="100">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:HBox paddingLeft="10" width="100">
+							<mx:Box verticalAlign="bottom" horizontalAlign="right" borderColor="black" borderVisible="true" borderStyle="solid" width="15" height="15" backgroundColor="{data.jumpseats}"/>
+							<mx:Label text="{data.colourid}" maxWidth="84"/>
+						</mx:HBox>								
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+			<mx:DataGridColumn headerText="Owner " dataField="ownertype" resizable="false" width="60"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<!--backgroundColor="{outerDocument.getColour(data.colcode)}"-->
+	
+	<components:CaptionTextInput
+		_showsCaption="true"
+		_caption="Filter by Vehicle No."
+		id="txtFilterKey" x="853" y="86" width="130" fontSize="11"
+		change="txtFilterKey_changeHandler(event)"
+		tabIndex="13"
+		enabled="{btnSearch.enabled}"
+		/>
+	<mx:FormItem label="Type" x="226" y="55">
+	<s:DropDownList
+		dataProvider="{lacVehicleTypes}"
+		labelField="description"
+		id="ddType"
+		x="8" 
+		y="3" 
+		width="167"
+		tabIndex="4"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:FormItem label="Model" x="693" y="55.2" width="297">
+	<s:DropDownList
+		dataProvider="{lacVehicleModel}"
+		labelField="description"
+		id="ddModel"
+		x="8" 
+		y="3" 
+		width="237"
+		tabIndex="6"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:LinkButton
+		id="btnSearch"
+		x="668" y="86" color="#0A33BB" label="Search"
+		click="btnView_clickHandler(event)"
+		tabIndex="12"
+		enabled="false"
+		/>
+	<mx:FormItem label="Make" x="452" y="55" width="239">
+	<s:DropDownList
+		change="ddMake_changeHandler(event)"
+		dataProvider="{lacVehicleMake}"
+		labelField="description"
+		id="ddMake"
+		x="8" 
+		y="3" 
+		width="183"
+		tabIndex="5"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:FormItem label="Transmission" x="7" y="85">
+	<s:DropDownList
+		dataProvider="{lacVehicleTransmission}"
+		labelField="description"
+		id="ddTransmission"
+		x="8" 
+		y="3" 
+		width="103"
+		tabIndex="7"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:FormItem label="Fuel Type" x="225" y="85">
+	<s:DropDownList
+		dataProvider="{lacVehicleFuel}"
+		labelField="description"
+		id="ddFuelType"
+		x="8" 
+		y="3" 
+		width="141"
+		tabIndex="8"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:FormItem label="Colour" x="451" y="85">
+	<s:DropDownList
+		dataProvider="{lacVehicleColour}"
+		labelField="description"
+		id="ddColour"
+		x="8" 
+		y="3" 
+		width="105"
+		tabIndex="9"
+		enabled="{btnSearch.enabled}"
+		>
+	</s:DropDownList>
+	</mx:FormItem>
+	<mx:FormItem label="Class" x="7" y="54">
+	<s:DropDownList
+		dataProvider="{lacVehicleClass}"
+		labelField="description"
+		id="ddClass"
+		x="8" 
+		y="3" 
+		width="147"
+		tabIndex="3"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:HRule x="0" y="40" width="996"/>
+	<mx:LinkButton
+		id="btnReset"
+		click="btnReset_clickHandler(event)"
+		x="621" y="86" color="#0A33BB" label="Reset"
+		tabIndex="10"
+		enabled="{btnSearch.enabled}"
+		/>
+	<mx:FormItem label="Date To" x="237" y="9" width="211">
+		<!--selectableRange="{{rangeStart : dTSDate}}"-->
+	<mx:DateField 
+		x="8" 
+		y="3" 
+		width="137" 
+		showToday="true" 
+		id="dfDateTo" 
+		formatString="@Resource(key='dateFormat',bundle='resource')"
+		selectedDate="{DateOperation.dateAdd('d',nsNoOfDays.value,dfDateFrom.selectedDate)}"
+		tabIndex="1"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:FormItem label="Date From" x="7" y="9" width="223">
+		<!--selectableRange="{{rangeStart : dFSDate}}"-->
+		<mx:DateField 
+			x="8" 
+			y="3" 
+			width="137" 
+			showToday="true" 
+			id="dfDateFrom" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			change="dfDateFrom_changeHandler(event)"
+			tabIndex="0"
+			enabled="{btnSearch.enabled}"
+			/>
+	</mx:FormItem>
+	<mx:FormItem label="No. Of Days" x="455" y="9" width="152">
+		<s:NumericStepper
+			minimum="1"
+			maximum="366"
+			width="65"  
+			id="nsNoOfDays" 
+			maxChars="3"
+			value="{DateOperation.getDaysDifference(dfDateTo.selectedDate,dfDateFrom.selectedDate)}"	
+			tabIndex="2"
+			enabled="{btnSearch.enabled}"
+			/>
+	</mx:FormItem>	
+	<mx:FormItem label="Availability" x="620" y="10" width="359" direction="horizontal">
+		<s:DropDownList
+			id="ddAvailability"
+			dataProvider="{lacAvailability}"
+			labelField="des"
+			x="8" 
+			y="3" 
+			width="162"
+			tabIndex="2"
+			change="ddAvailability_changeHandler(event)"
+			enabled="{btnSearch.enabled}"
+			/>
+		
+		<mx:LinkButton
+			id="btnVAReport"
+			x="200" y="3" color="#0A33BB" label="Vehicle Availability Report"
+			click="btnVAReport_clickHandler(event)"
+			enabled="{btnSearch.enabled}"
+			/>
+		
+	</mx:FormItem>
+	<mx:LinkButton
+		id="btnViewDetail"
+		click="btnViewDetail_clickHandler(event)"
+		visible="false"
+		color="#0A33BB"
+		x="866" y="11" label="View Details"/>
+	<mx:LinkButton
+		id="btnProceed"
+		x="736" y="86" color="#0A33BB" label="Proceed To Hire"
+		click="btnProceed_clickHandler(event)"
+		tabIndex="12"
+		/>
+</s:TitleWindow>

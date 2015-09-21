@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Project: 	malkey-screens	
+File:		DriverDetails.mxml	
+Date:		Apr 8, 2011	
+Author:		Sanka Senavirathna-Administrator
+-->
+
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:controls="com.dspl.efinac.components.common.controls.*" 
+			   width="624" height="114" 
+			   title="Please Select the Model You want to Apply Rates"
+			   close="titlewindow1_closeHandler(event)">
+	
+	<!--METADATA here-->
+	<fx:Metadata>
+		[Event(name="selectModel",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	
+	<!--Model:Bussiness Logic Here/ActionScript Here-->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.util.Session;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]  private var genericfunctions:GenericFunctions = new GenericFunctions();
+			[Bindable] 	private var session:Session = Session.getInstance();
+			[Bindable] 	public var selectedModel:String ="";
+			//[Bindable] 	private var selectedItem:* =new Object();
+			
+			protected function btnOK_clickHandler(event:MouseEvent):void
+			{
+				var dataEvent:DataEvent=new  DataEvent("selectModel");
+				dataEvent.data=txtModel.text;
+				dispatchEvent(dataEvent);
+				PopUpManager.removePopUp(this);
+			}
+
+
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+
+		]]>
+	</fx:Script>
+	<mx:Form x="17" y="13">
+		<mx:FormItem label="Model" direction="horizontal">
+			<controls:_tiMasterFile id="txtModel"
+									text="{selectedModel}"
+									_acDataProvider="{session.getAttribute('acVehiclemodel')}"
+									_strKeyColumn="id.vehimodelid"
+									_strKeyColCaption="Model" 
+									_strDetailColumn="id.vehimakeid" 
+									_strDetailColCaption="Made By"
+									_strWindowTitle="Select Vehicle Model"
+									otherColumns="description"
+									otherColumnHeaderText="Description"
+									editable="false"
+									width="100"
+									/>
+			<s:TextInput id="txtVehicleModel" 
+						 text="{(session.getAttribute('acVehiclemodel')as ArrayCollection).getItemAt(txtModel._nSelectedIndex).description}" 
+						 width="250" editable="false"/>
+<!--			<mx:TextInput id="lblVehicleDescription" text="{genericfunctions.getArrayCollection(session.getAttribute('acVehiclemodel'),'regno',txtModel.text).description}" width="150"  editable="false"/>-->
+			<mx:LinkButton id="lnkVehicle" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtModel.launchSearchGrid();}"/>
+			<s:Button label="OK" id="btnOK" click="btnOK_clickHandler(event)"/>
+		</mx:FormItem>
+	</mx:Form>
+			
+</s:TitleWindow>

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="522" height="144"
+			   title="Reservation Diary With Hire Status"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			    xmlns:services="com.dspl.malkey.services.*" xmlns:controls="com.dspl.efinac.components.common.controls.*">
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+		<!--CallResponder [Start]-->
+		<s:CallResponder id="crListAllResult" result="crListAllResult_resultHandler(event)" fault="crListAllResult_faultHandler(event)"/>
+		<!--CallResponder [End]-->
+		<!--services [Start]-->
+		<services:FhirestatusSRV 
+			id="srvFhirestatus" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true"
+			endpoint="@Resource(key='url', bundle='resource')"
+			/>
+		<!--services [End]-->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.util.Session;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.data.events.DataConflictEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+		//	[Bindable] private var session:Session = Session.getInstance();
+			[Bindable] private var genericFunctions:GenericFunctions=new GenericFunctions();
+			
+			[Bindable]
+			[Bindable]
+			private var lacStatus:ArrayCollection=new ArrayCollection([
+				{id:"A",description:"All"},
+				{id:"O",description:"Out"},
+				{id:"I",description:"In"}
+			]);
+			
+			//RD: Reservation Diary
+			//WD: Daily Hire Bookings With Driver
+			//SD: Daily Hire Bookings Without Driver
+			public var gsType:String;
+			public var gsTitle:String;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					var curDate:Date=new Date();
+					dfDateFrom.selectedDate=curDate;
+					dfDateTo.selectedDate=curDate;
+					this.title=gsTitle;
+					setPermission();
+					listAll();
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}catch(error:Error){
+					Message.displayAlert(1,"closeForm: " + error.message,"Error",errorCloseHandler);	
+				}
+			}
+			
+			public function setQueryString():String
+			{
+				var queryString:String="";
+				if(cbBooked.selected){
+					queryString+="'BOOKED'";
+				}
+				if(cbConfirmed.selected){
+					if(cbBooked.selected){queryString+=","}
+						queryString+="'CONFIRMED'";
+				}
+				if(cbPrepared.selected){
+					if(cbConfirmed.selected){queryString+=","}
+					else if(cbBooked.selected){queryString+=","}
+					queryString+="'PREPARED'";
+				}
+				return queryString;
+			}
+
+			protected function btnView_clickHandler(event:MouseEvent):void{
+				try{
+					if(dfDateFrom.selectedDate>dfDateTo.selectedDate){
+						Message.displayAlert(2,"Date To Cannot Be Less Than Date From","Warning",null);
+					}
+					else if(!cbBooked.selected && !cbConfirmed.selected && !cbPrepared.selected){
+						Message.displayAlert(2,"Enter Hire Status","Warning",null);
+					}else{
+						var dateFrom:String=getDateString(dfDateFrom.selectedDate);
+						var dateTo:String=getDateString(dfDateTo.selectedDate);
+						var request:URLRequest;
+						var hireStatus:String=setQueryString();
+						
+						request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/ReservationDiary.jsp");
+						var postData:URLVariables = new URLVariables();
+						postData.df = dateFrom;
+						postData.dt = dateTo;
+						postData.hs = hireStatus;
+						request.data = postData;
+						request.method = URLRequestMethod.POST;
+						navigateToURL(request);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			
+			protected function btnViewHistory_clickHandler(event:MouseEvent):void{
+				try{
+					if(dfDateFrom.selectedDate>dfDateTo.selectedDate){
+						Message.displayAlert(2,"Date To Cannot Be Less Than Date From","Warning",null);
+					}
+					else if(!cbBooked.selected && !cbConfirmed.selected && !cbPrepared.selected){
+						Message.displayAlert(2,"Enter Hire Status","Warning",null);
+					}else{
+						var dateFrom:String=getDateString(dfDateFrom.selectedDate);
+						var dateTo:String=getDateString(dfDateTo.selectedDate);
+						var request:URLRequest;
+						var hireStatus:String=setQueryString();
+						
+						request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/HReservationDiary.jsp");
+						var postData:URLVariables = new URLVariables();
+						postData.df = dateFrom;
+						postData.dt = dateTo;
+						postData.hs = hireStatus;
+						request.data = postData;
+						request.method = URLRequestMethod.POST;
+						navigateToURL(request);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			
+			private function getDateString(dt:Date):String{
+				var year:String=dt.getFullYear().toString();
+				var month:String=(dt.getMonth()+1).toString();
+				var date:String=dt.getDate().toString();
+				if(StringUtil.trim(month).length<2)
+					month="0"+month;
+				if(StringUtil.trim(date).length<2)
+					date="0"+date;
+				return year+"."+month+"."+date;
+			}
+
+			
+			protected function listAll():void
+			{
+				crListAllResult.token = srvFhirestatus.ListAll();
+			}
+			
+
+			protected function crListAllResult_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function crListAllResult_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+		]]>
+	</fx:Script>
+	<mx:Form
+		paddingLeft="0"
+		paddingRight="0"
+		paddingTop="0"
+		paddingBottom="0"
+		x="10" y="10" width="420" height="93">
+		<s:HGroup>
+			<s:VGroup width="50%">
+				<mx:FormItem label="Date From" direction="horizontal"  styleName="formItemL" labelStyleName="formItemLabel" >
+					<mx:DateField
+						formatString="@Resource(key='dateFormat',bundle='resource')"
+						id="dfDateFrom"
+						width="148"
+						enabled="{btnView.enabled}"
+						/>
+				</mx:FormItem>
+				<mx:FormItem label="Date To"  styleName="formItemL" labelStyleName="formItemLabel" >
+					<mx:DateField
+						formatString="@Resource(key='dateFormat',bundle='resource')"
+						id="dfDateTo"
+						width="148"
+						enabled="{btnView.enabled}"
+						/>
+				</mx:FormItem>
+			</s:VGroup>
+			<s:VGroup>
+				<s:Button
+					id="btnView"
+					click="btnView_clickHandler(event)"
+					label="View" height="29" width="78"
+					enabled="false"
+					/>
+				<s:Button
+					id="btnViewHistory"
+					click="btnViewHistory_clickHandler(event)"
+					label="History View" height="29" width="100"
+					enabled="{btnView.enabled}"
+					/>
+			</s:VGroup>
+		</s:HGroup>
+		<mx:FormItem label="Hire Status" id="fiHireStatus"  styleName="formItemL" labelStyleName="formItemLabel" direction="horizontal">
+			<s:CheckBox id="cbBooked" 		label="BOOKED" />
+			<s:CheckBox id="cbConfirmed" 	label="CONFIRMED"/>
+			<s:CheckBox id="cbPrepared" 	label="PREPARED"/>
+		</mx:FormItem>
+		
+<!--		<mx:FormItem label="Hire Status" id="fiHireStatus"  styleName="formItemL" labelStyleName="formItemLabel" direction="horizontal" required="true" >
+			<controls:_tiMasterFile id="txtHireStatus"											
+									_acDataProvider="{crListAllResult.lastResult}"
+									text=""
+									_strKeyColumn="hirestsid"
+									_strKeyColCaption="Hire Status" 
+									_strDetailColumn="description" 
+									_strDetailColCaption="description"
+									_strWindowTitle="Select Hire Status"
+									width="100"
+									editable="false" 
+									enabled="{btnView.enabled}"
+									tabIndex="3"
+									/>
+			<s:TextInput text="{genericFunctions.getArrayCollection(crListAllResult.lastResult,'hirestsid',txtHireStatus.text).description}" 
+						 width="148"
+						 tabIndex="16"
+						 editable="false"
+						 />
+			
+			<mx:LinkButton 
+				label="Search" 
+				width="60" 
+				color="#0A33BB" 
+				textDecoration="underline" 
+				click="{txtHireStatus.launchSearchGrid();}"
+				enabled="{btnView.enabled}"
+				tabIndex="17"
+				/>
+		</mx:FormItem>-->
+
+	</mx:Form>
+
+</s:TitleWindow>

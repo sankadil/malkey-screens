@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:controls="com.dspl.efinac.components.common.controls.*"
+		 xmlns:services="com.dspl.malkey.services.*"
+		 title="{title_text}" 
+		 creationComplete="initApp(event)"
+		 close="close(event)"
+		 width="1000" height="400">
+	
+	
+	
+
+	
+	
+	<!--View Tier-->
+	
+	<mx:FormItem label="Ref No" x="19" y="17" direction="horizontal"  styleName="formItem" labelStyleName="formItemLabel"  borderStyle="solid" borderVisible="true" borderAlpha=".5" >
+		
+		<mx:TextInput enter="txtHed_enterHandler(event)"
+					  doubleClickEnabled="true"
+					  id="txtHed"
+					  width="100"
+					  tabIndex="0"
+					  />
+		<mx:TextInput enter="txtDet_enterHandler(event)"
+					  doubleClickEnabled="true"
+					  id="txtDet"
+					  width="100"
+					  tabIndex="1"
+					  />
+		
+		<controls:_tiMasterFile id="txtRefNo"											
+								_acDataProvider="{acReservationListAll}"
+								_strKeyColumn="resno"
+								_strKeyColCaption="Ref No" 
+								_strDetailColumn="dout"
+								otherColumns="din,hiretypeid,cohirestsid"
+								otherColumnHeaderText="Date In,Hire Type,Status"
+								_strDetailColCaption="Date-out"
+								_strWindowTitle="Select Reservation"
+								width="0"
+								editable="false" 
+								_onReturnFromSearchGrid="txtRefNo__onReturnFromSearchGridHandler(event)"
+								tabIndex="0"
+								/>
+		
+		<mx:LinkButton id="btnSearch" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="btnSearch_clickHandler(event)"/>
+		<mx:LinkButton id="btnAdvancedSearch" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="btnAdvancedSearch_clickHandler(event)"/>
+	</mx:FormItem>
+	
+	<mx:FormItem label="Allocation Status" x="520" y="17" direction="horizontal" horizontalGap="10" borderStyle="solid" borderVisible="true" borderAlpha=".5"  styleName="formItemL" labelStyleName="formItemLabel" width="370">
+		<s:RadioButton x="76" y="9" 	label="Booked" 		groupName="dispatch" 	value="{0}"/>
+		<s:RadioButton x="76" y="35" 	label="CheckOut" 	groupName="dispatch"  	value="{1}"/>
+		<s:RadioButton x="76" y="61" 	label="CheckIn" 	groupName="dispatch"  	value="{2}"/>
+	</mx:FormItem>
+	<mx:DataGrid 
+		id="dgDrivers" 
+		editable="true" 
+		dataProvider="{acResDriver}" 
+		width="962" height="267"  
+		verticalScrollPolicy="auto"
+		itemClick="dgDrivers_itemClickHandler(event)"
+		 x="19" y="70">
+		<mx:columns>
+			<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="From" 			width="130" 	labelFunction="lblfDateOut"/>
+			<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="To" 			width="130" 	labelFunction="lblfDateIn"/>
+			<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="Time Out" 		width="100" 	labelFunction="lblfTimeOut"/>
+			<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="Time In" 		width="100" 	labelFunction="lblfTimeIn"/>
+			<mx:DataGridColumn dataField="priority" editable="false" 	headerText="Priority" 		width="80" 		/>
+			<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="Name" 			width="170" 	labelFunction="lblfEmployeName"/>
+			<mx:DataGridColumn dataField="id" 		editable="false"  	headerText="NIC " 			width="170" 	labelFunction="lblfEmployeNIC"/>
+			<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="License Number" width="150" 	labelFunction="lblfEmployeDlno"/>
+			<mx:DataGridColumn dataField="id" 		editable="false" 	headerText="T.P(Mobile)" 	width="150" 	labelFunction="lblfEmployeMobilephone"/>
+			<mx:DataGridColumn dataField="srvid" 	editable="false" 	headerText="Service" 		width="150" 	labelFunction="lblfService"/>
+			<mx:DataGridColumn dataField="dispatch" editable="false" 	headerText="Dispatch Status" width="150" 	labelFunction="lblfDispatch"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<s:Button 
+		id="btnSave"
+		x="896" y="18" 
+		label="Save" 
+		chromeColor="#FFFFFF"
+		click="btnSave_clickHandler(event)"/>
+	
+	
+	<!--METADATA here-->
+	<fx:Metadata>
+		[Event(name="select",type="flash.events.Event")]
+	</fx:Metadata>
+	
+	
+	<!--Bindings Here-->
+	<fx:Declarations>
+		<!--Formatters here-->
+		<mx:DateFormatter id="dateFormatter" formatString="YYYY.MM.DD"/>
+		<mx:DateFormatter id="dateFormatterView" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+		<!--Validators-->
+		
+		<!--CallResponders here-->
+ 		<s:CallResponder id="crFreservationSRVListAll" 		result="crFreservationSRVListAll_resultHandler(event)"/>
+		<s:CallResponder id="crFothersrvSRVListAll"			result="crFothersrvSRVListAll_resultHandler(event)"/>
+		<s:CallResponder id="crFresdriverSRVListByResno"	result="crFresdriverSRVListByResno_resultHandler(event)"/>
+		<s:CallResponder id="crFemployeeSRVListAll"			result="crFemployeeSRVListAll_resultHandler(event)"/>
+		<s:CallResponder id="crFresdriverSRVupdate"			result="crFresdriverSRVupdate_resultHandler(event)"/>
+		<!--services here-->
+		<services:FreservationSRV 	id="freservationSRV"  	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FresdriverSRV 	id="fresdriverSRV"  	endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FemployeeSRV 		id="femployeeSRV"  		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<services:FothersrvSRV 		id="fothersrvSRV"  		endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		<s:RadioButtonGroup id="dispatch"/>
+
+
+	</fx:Declarations>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace controls "com.dspl.efinac.components.common.controls.*";
+		@namespace services "services.*";
+		
+		.formItems
+		{
+			label-width:60;
+		}
+		.formItem
+		{
+			label-width:80;
+		}
+		
+		.formItemL
+		{
+			label-width:120;
+		}
+		.formItemXL
+		{
+			label-width:180;
+		}
+		
+		.formItemLabel
+		{
+			text-align:left;
+		}
+		
+		
+		
+		
+	</fx:Style>
+	
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicle;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			//import org.osmf.traits.SwitchableTrait;
+			
+			[Bindable] 	private var session:Session = Session.getInstance();
+			[Bindable] 	private var genericFunctions:GenericFunctions = new GenericFunctions();
+			[Bindable] 	private var title_text:String = "Driver Allocation Search ";
+			//[Bindable] 	private var acReservation:ArrayCollection = new ArrayCollection();
+			[Bindable] 	private var acAllDrivers:ArrayCollection = new ArrayCollection();
+			[Bindable] 	private var acOtherService:ArrayCollection = new ArrayCollection();
+			[Bindable] 	private var acResDriver:ArrayCollection = new ArrayCollection();
+			[Bindable] 	private var acReservationListAll:ArrayCollection = new ArrayCollection();
+			
+			
+			protected function initApp(event:FlexEvent):void
+			{
+				fothersrvSRVListAll();
+				femployeeSRVListAll();
+				freservationSRVListAll();
+			}
+			
+
+			
+			protected function fresdriverSRVlistByResno(arg0:String):void
+			{
+				crFresdriverSRVListByResno.token = fresdriverSRV.listByResno(arg0);
+			}
+			
+			
+			protected function femployeeSRVListAll():void
+			{
+				crFemployeeSRVListAll.token = femployeeSRV.ListAll();
+			}
+			
+			
+			protected function fothersrvSRVListAll():void
+			{
+				crFothersrvSRVListAll.token = fothersrvSRV.ListAll();
+			}
+			
+			protected function freservationSRVListAll():void
+			{
+				crFreservationSRVListAll.token = freservationSRV.ListAll();
+			}
+
+
+
+
+			protected function crFothersrvSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				acOtherService=crFothersrvSRVListAll.lastResult;
+			}
+			
+			
+			protected function crFemployeeSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				acAllDrivers=crFemployeeSRVListAll.lastResult;
+			}
+			
+			
+			protected function crFresdriverSRVListByResno_resultHandler(event:ResultEvent):void
+			{
+				acResDriver=crFresdriverSRVListByResno.lastResult;
+				title_text="Driver Allocation Search - "+acResDriver.length+" Results Found.";
+			}
+
+			protected function crFreservationSRVListAll_resultHandler(event:ResultEvent):void
+			{
+				acReservationListAll=crFreservationSRVListAll.lastResult;
+			}
+
+			
+			
+			
+			
+			//lable functions here
+			//---------------------------------------------------------------------------------------
+			private function lblfService(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				var tempVal:String="";
+				if(item.srvid !=null)
+				{
+					if(item.srvid.length>0)
+					{
+						tempVal= genericFunctions.getArrayCollection(acOtherService,"srvid",(item).srvid).description;
+					}
+				}
+				return tempVal;
+			}
+			private function lblfAvailability(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return (item.isavailabile == 1 ? "available" : "unavailable");
+			}
+			private function lblfTimeIn(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return item.id.timein;
+			}
+			private function lblfTimeOut(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return item.id.timeout;
+			}
+			private function lblfDateOut(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return dateFormatter.format(item.id.dout);
+			}
+			private function lblfDateIn(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return dateFormatter.format(item.id.din);
+			}
+			private function lblfEmployeName(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAllDrivers,"empid",item.id.empid).name;
+			}
+			private function lblfEmployeNIC(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAllDrivers,"empid",item.id.empid).nicno;
+			}
+			private function lblfEmployeDlno(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAllDrivers,"empid",item.id.empid).dlno;
+			}
+			private function lblfEmployeMobilephone(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAllDrivers,"empid",item.id.empid).mobilephone1;
+			}
+			private function lblfDispatch(item:Com_dspl_malkey_domain_Fresdriver,column:DataGridColumn):String
+			{
+				var labelText:String="";
+				switch (item.dispatch)
+				{
+					case 0: labelText="BOOKED";break;
+					case 1: labelText="CHECKOUT";break;
+					case 2: labelText="CHECKIN";break;
+					default: labelText="else";break;
+				}
+				//trace(labelText+":"+item.dispatch);
+				return labelText;
+			}
+			//---------------------------------------------------------------------------------------
+			
+			
+
+
+			protected function btnAdvancedSearch_clickHandler(event:MouseEvent):void
+			{
+				var asearch:AdvancedSearch=new AdvancedSearch();
+				asearch.addEventListener("selectHed",listener_selectHed);
+				asearch.addEventListener("selectDet",listener_selectDet);
+				PopUpManager.addPopUp(asearch,this,true);
+				PopUpManager.centerPopUp(asearch);
+			}
+
+			
+			
+			/***
+			 * listerner for advanced search 
+			 * 
+			 * */
+			protected function listener_selectHed(event:DataEvent):void
+			{
+				txtHed.text=event.data;
+			}
+			
+			
+			/***
+			 * listerner for advanced search 
+			 * 
+			 * */
+			protected function listener_selectDet(event:DataEvent):void
+			{
+				txtDet.text=event.data;
+				fresdriverSRVlistByResno(txtDet.text);
+				//setUnSelect();
+			}
+			
+			
+
+			protected function txtDet_enterHandler(event:FlexEvent):void
+			{
+				fresdriverSRVlistByResno(txtDet.text);
+				//setUnSelect();
+			}
+
+
+			protected function txtHed_enterHandler(event:FlexEvent):void
+			{
+				fresdriverSRVlistByResno(txtDet.text);
+			}
+
+
+			protected function dgDrivers_itemClickHandler(event:ListEvent):void
+			{
+				var temp:Com_dspl_malkey_domain_Fresdriver=acResDriver.getItemAt(dgDrivers.selectedIndex) as Com_dspl_malkey_domain_Fresdriver;
+				dispatch.enabled=true;
+				btnSave.enabled=true;
+				if(dispatch.selectedValue==null)
+				{
+					dispatch.selection=null;
+				}
+				dispatch.selectedValue=temp.dispatch;
+			}
+			
+			private function setUnSelect():void
+			{
+				dgDrivers.selectedIndex=-1;
+			}
+
+
+			protected function btnSave_clickHandler(event:MouseEvent):void
+			{
+				var temp:Com_dspl_malkey_domain_Fresdriver=acResDriver.getItemAt(dgDrivers.selectedIndex) as Com_dspl_malkey_domain_Fresdriver;
+				temp.dispatch=dispatch.selectedValue as int;
+				update(temp);
+			}
+
+			
+			protected function update(arg0:Com_dspl_malkey_domain_Fresdriver):void
+			{
+				crFresdriverSRVupdate.token = fresdriverSRV.udpate(arg0);
+			}
+			
+
+			protected function crFresdriverSRVupdate_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("Saved successfully\n","Success",Alert.OK,null,saveOK,genericFunctions.IconInformation,Alert.OK,null);
+			}
+			
+			/***
+			 * this method fire when user click ok
+			 * after user press ok reset the form
+			 * 
+			 * */
+			public function saveOK(eventObj:CloseEvent):void
+			{
+				
+				if(eventObj.detail==Alert.OK)
+				{
+					reset();
+				}
+			}
+			
+			private function reset():void
+			{
+				txtHed.text="";
+				txtDet.text="";
+				dispatch.selection=null;
+				acResDriver.removeAll();
+				acResDriver.refresh();
+				btnSave.enabled=false;
+				dispatch.enabled=false;
+				
+			}
+
+
+			protected function btnSearch_clickHandler(event:MouseEvent):void
+			{
+				txtRefNo.launchSearchGrid();
+			}
+
+
+
+
+
+			protected function txtRefNo__onReturnFromSearchGridHandler(event:Event):void
+			{
+				reset();
+				txtDet.text=txtRefNo.text;
+				txtHed.text=(acReservationListAll.getItemAt(txtRefNo._nSelectedIndex) as Com_dspl_malkey_domain_Freservation).agrno;
+				fresdriverSRVlistByResno(txtDet.text);
+			}
+
+			
+			//---------------------------------------------------------------------------------------
+			//close method here
+			protected function close(event:CloseEvent):void
+			{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}
+				catch(e:Error)
+				{
+					try{
+						PopUpManager.removePopUp(this);
+					}
+					catch(e:Error)
+					{
+						
+					}
+				}
+			}
+
+		]]>
+	</fx:Script>
+		
+
+		
+</s:TitleWindow>

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project		:	malkey-screens
+Package		:	com/dspl/malkey/email
+Component	:	composeMsg.mxml
+Description	:	
+Module		:	
+Author		:	Fuzuli Hameed
+Created On	:	Jun 27, 2011
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   width="900" height="600"
+			   creationComplete="init()"
+			   close="twComposeMsg_closeHandler(event)"
+			   currentState="MsgWithAttachment">
+	
+	<!-- Properties of the parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<s:states>
+		<s:State name="MsgWithAttachment"/>
+		<s:State name="MsgWithoutAttachment"/>
+	</s:states>	
+	
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+	<fx:Metadata>
+	[Event(name="_sPostEventToRunPopUpExit", type="flash.events.Event")] 
+	</fx:Metadata>-->
+	
+	<!-- Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.controls._twMasterFileSearch;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Femails;
+			
+			import flash.net.navigateToURL;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.core.FlexGlobals;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
+			import mx.utils.StringUtil;
+			
+			[Bindable]
+			public var _oSourceRecord:Object
+			[Bindable]
+			public var _acAttach:ArrayCollection = null;
+			[Bindable]
+			public var _acDebtor:ArrayCollection = null;
+			[Bindable]
+			public var _acSupplier:ArrayCollection = null;
+			[Bindable]
+			public var _acEmployee:ArrayCollection = null;
+			[Bindable]
+			private var sFolderType:String = "";
+			
+			public var _iSelectedIndex:int = -1;
+			
+			// Indicates the Reponse Type for the current message
+			// -1	-	No action required, message is just closed
+			// 0	-	Save this message
+			// 1	-	Send to this message
+			// 2	-	Discard/ Delete this message
+			public var _iResponseType:int = -1;
+			
+			private var sToListSeperatedByLineFeed:String = "";
+			private var sCcListSeperatedByLineFeed:String = "";
+			private var oGrdEmailSearch:Object;
+			private var mPopup:Menu;
+			
+			// Indicates whether to add the email address To or Cc
+			// 0	-	To
+			// 1	-	Cc
+			private var iAddEmailAs:int=0;
+			private var oFileRef:FileReference = new FileReference();
+			
+			protected function init():void
+			{
+				title = _oSourceRecord.subject;
+				
+				var lsAttNames:String = _oSourceRecord.attnames; 
+				if (lsAttNames.length==0)
+					currentState = "MsgWithoutAttachment";
+				else {
+					currentState = "MsgWithAttachment";
+				}
+				createAttachmentList(lsAttNames, _oSourceRecord.attachment);		// Initiate the _acAttach array collection
+				
+				txtMsg.setFocus();
+				
+				// Change the caption of "lbtnBack" according to the folder type
+				switch (_oSourceRecord.foldertype)
+				{
+					case 0:
+						sFolderType = " to Inbox";
+						break;
+					
+					case 1:
+						sFolderType = " to Drafts";
+						break;
+
+					case 2:
+						sFolderType = " to Sent Items";
+						break;
+
+					case 3:
+						sFolderType = " to Trash";
+						break;
+					
+					default:
+						sFolderType = "";
+				}
+			}
+			
+			protected function twComposeMsg_closeHandler(event:*):void
+			{
+				closeScreen();
+			}
+			
+			private function closeScreen():void
+			{
+				if (_iResponseType== 1 && txtTo.text.length==0 && txtCc.text.length==0){
+					// Clicked "Send" button
+					Alert.show("Select at least one recipient.", "Send Email");
+					return;
+				}
+				
+				_oSourceRecord.toemail = txtTo.text;
+				_oSourceRecord.ccemail = txtCc.text;
+				_oSourceRecord.subject = txtSubject.text;
+				_oSourceRecord.htmlbody = txtMsg.text;
+				_oSourceRecord.body = txtMsg.text;
+				// Execute any events in the parent module which are bound to "onReturnFromPopUpGrid" event. (This screen should be released from the parent form)
+				dispatchEvent(new Event("_sPostEventToRunPopUpExit"));	
+			}
+			
+			protected function createAttachmentList(sAttNames:String, sAttURLs:String):void
+			{
+				_acAttach = new ArrayCollection();
+			
+				if (sAttNames.length > 0){
+					var lreLineFeed:RegExp = /[\r\n]+/g;
+					var laAttNames:Array = sAttNames.split(lreLineFeed);
+					var laAttURLs:Array = sAttURLs.split(lreLineFeed);
+					
+					for (var i:int=0; i<laAttNames.length; i++){
+						// Path to the Attachment file
+						var lsAttURL:String = "";
+						if (i<laAttURLs.length)
+							lsAttURL = laAttURLs[i];
+						
+						createAttachmentRecordInfo(laAttNames[i], lsAttURL);
+					}
+				}
+				
+				lstAttach.dataProvider = _acAttach;
+				lstAttach.labelField = "filename"; 
+			}
+			
+			// Create record containing relevant info of an attachment
+			private function createAttachmentRecordInfo(psFileName:String, psFilePath:String="", pbaFileData:ByteArray=null, piNewlySelected:int=0):void
+			{
+				// Attahcment file to be displayed/ uploaded
+				var newAtt:Com_dspl_malkey_domain_Femails = new Com_dspl_malkey_domain_Femails();
+				
+				newAtt.filename = psFileName;
+				newAtt.fileurl = psFilePath;
+				newAtt.filedata = pbaFileData;
+				newAtt.newlyadded = piNewlySelected;
+				newAtt.isdeleted = 0;
+				
+				_acAttach.addItem(newAtt);
+			}
+			
+			protected function lstAttach_clickHandler(event:MouseEvent):void
+			{
+				if (lstAttach.selectedIndex==-1)
+					return;
+				
+				var serverURL:String = _acAttach[lstAttach.selectedIndex].fileurl;
+				if (serverURL.length==0)
+					Alert.show("This file is not uploaded yet, please view it from your local file location.");
+				else { 
+					var url:URLRequest = new URLRequest(serverURL);
+					url.method = "GET";
+					navigateToURL(url, title);
+				}	
+			}
+			
+			
+			// Message Reponse buttons
+			protected function btnSave_clickHandler(event:MouseEvent):void
+			{
+				_iResponseType = 0;
+				closeScreen();
+			}			
+			protected function btnSend_clickHandler(event:MouseEvent):void
+			{
+				_iResponseType = 1;
+				closeScreen();
+			}
+			protected function btnDiscard_clickHandler(event:MouseEvent):void
+			{
+				_iResponseType = 2;
+				closeScreen();
+			}
+
+			// Add To/ Cc email addresses
+			protected function lbtnAddTo_clickHandler(event:MouseEvent):void
+			{
+				iAddEmailAs = 0;
+				createPopMenu(event.stageX, event.stageY);
+			}			
+			protected function lbtnAddCc_clickHandler(event:MouseEvent):void
+			{
+				iAddEmailAs = 1;
+				createPopMenu(event.stageX, event.stageY);
+			}
+			
+			private function createPopMenu(xShow:Number, yShow:Number):void
+			{
+				mPopup = Menu.createMenu(null, EmailIdTypes, false);
+				mPopup.addEventListener(MenuEvent.ITEM_CLICK, PopupMenuItemClick, false, 0, false);
+				mPopup.labelField = "@label";
+				mPopup.show(xShow, yShow);
+			}
+			
+			private function PopupMenuItemClick(event:MenuEvent):void
+			{
+				var loParentApp:DisplayObject = DisplayObject(FlexGlobals.topLevelApplication);
+				oGrdEmailSearch = PopUpManager.createPopUp(loParentApp, emailIDSearch, true);
+				
+				switch (event.label.toString())
+				{
+					case "Customers":
+						oGrdEmailSearch._strKeyColumn = "debcode";
+						oGrdEmailSearch._strDetailColumn = "debname";
+						oGrdEmailSearch._strDetailColCaption = "Customer Name";
+						oGrdEmailSearch._strEmailColumn = "email";					
+						oGrdEmailSearch._strTypeColumn = "clienttype";					
+						oGrdEmailSearch._strWindowTitle = "Select Customers";
+						oGrdEmailSearch._acDataProvider = _acDebtor;
+						break;
+
+					case "Suppliers":
+						oGrdEmailSearch._strKeyColumn = "supcode";
+						oGrdEmailSearch._strDetailColumn = "supname";
+						oGrdEmailSearch._strDetailColCaption = "Supplier Name";
+						oGrdEmailSearch._strEmailColumn = "supemail";					
+						oGrdEmailSearch._strTypeColumn = "typ";						
+						oGrdEmailSearch._strWindowTitle = "Select Suppliers";
+						oGrdEmailSearch._acDataProvider = _acSupplier;
+						break;
+
+					case "Employees":
+						oGrdEmailSearch._strKeyColumn = "empid";
+						oGrdEmailSearch._strDetailColumn = "name";
+						oGrdEmailSearch._strDetailColCaption = "Employee Name";
+						oGrdEmailSearch._strEmailColumn = "email";
+						oGrdEmailSearch._strTypeColumn = "emptype";
+						oGrdEmailSearch._strWindowTitle = "Select Employees";
+						oGrdEmailSearch._acDataProvider = _acEmployee;
+						break;
+				}
+								
+				oGrdEmailSearch._strKeyColCaption = "ID";
+				oGrdEmailSearch._strEmailColCaption = "Email Address";						
+				oGrdEmailSearch._strTypeColCaption = "Type";
+				oGrdEmailSearch._strRecipientEmailIDSeperator = ";";
+				
+				if (iAddEmailAs==0)		// Add "To" recipeints 
+					oGrdEmailSearch._strRecipients = txtTo.text;
+				else					// Add "Cc" recipeints
+					oGrdEmailSearch._strRecipients = txtCc.text;				
+				
+				// Bind the pop-up windows close event to the "closeSearchGrid" of this component 
+				oGrdEmailSearch.addEventListener("emailIDSearchClose", closeEmailIDSearch);
+				
+				// Center the pop-up window			
+				PopUpManager.centerPopUp(IFlexDisplayObject(oGrdEmailSearch));
+			}
+			
+			private function closeEmailIDSearch(event:Event):void
+			{				
+				// Remove the pop-up window
+				PopUpManager.removePopUp(IFlexDisplayObject(oGrdEmailSearch));
+				
+				if (oGrdEmailSearch._nUpdateRecipients==0){
+					// User "cancel" any changes made in Email Search screen.
+					oGrdEmailSearch._acDataProvider.sort = null;		// Remove the sorting on "isSelected" field
+					
+					// Reset to un-Selected
+					for (var liEmailID:int=0; liEmailID<oGrdEmailSearch._acDataProvider.length; liEmailID++){
+						oGrdEmailSearch._acDataProvider[liEmailID].isSelected = false;
+					}
+				} else {
+					// Build the recipients list based on the "isSelected" field value
+					var lcRecipeints:String = "";
+					// 1st add all the Email ID's which were not beloging to the selected catergory
+					for (var liOther:int=0; liOther<oGrdEmailSearch._aRecipients.length; liOther++){
+						if (oGrdEmailSearch._aRecipients[liOther].editable==-1){
+							var lcEmail:String = StringUtil.trim(oGrdEmailSearch._aRecipients[liOther].email);
+							lcRecipeints += (lcRecipeints.length==0 ? "" : "; ") + lcEmail;
+						}
+					}
+					
+					// Now add the selected Email ID's
+					oGrdEmailSearch._acDataProvider.sort = null;		// Remove the sorting on "isSelected" field
+					for (var liNewEmailID:int=0; liNewEmailID<oGrdEmailSearch._acDataProvider.length; liNewEmailID++){
+						if (oGrdEmailSearch._acDataProvider[liNewEmailID].isSelected==true){
+							var lcEmail:String = StringUtil.trim(oGrdEmailSearch._acDataProvider[liNewEmailID][oGrdEmailSearch._strEmailColumn]);
+							lcRecipeints += (lcRecipeints.length==0 ? "" : "; ") + lcEmail;
+						}
+						oGrdEmailSearch._acDataProvider[liNewEmailID].isSelected = false;			// Reset to un-selected
+					}
+					
+					if (iAddEmailAs==0)
+						txtTo.text = lcRecipeints;
+					else
+						txtCc.text = lcRecipeints;
+					
+				}
+			}
+
+
+			// Attach a file
+			protected function lbtnAttach_clickHandler(event:MouseEvent):void
+			{				
+				oFileRef.addEventListener(Event.SELECT,fileSelection,false,0,false);
+				oFileRef.browse();
+			}
+			
+			private function fileSelection(e:Event):void
+			{
+				oFileRef.addEventListener(Event.COMPLETE,fileLoadComplete,false,0,false);
+				oFileRef.load();
+			}
+			
+			private function fileLoadComplete(e:Event):void
+			{
+				createAttachmentRecordInfo(oFileRef.name, "", oFileRef.data, 1);
+				lstAttach.selectedIndex = _acAttach.length;
+				currentState = "MsgWithAttachment";
+			}
+			// End: Browse a file from the User's local directory
+
+		]]>
+	</fx:Script>
+	
+	<!-- Declarations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	
+	<fx:Declarations>
+		<!-- Pop menu data -->
+		<fx:XML id="EmailIdTypes">
+			<root>
+				<node label="Customers"/>
+				<node label="Suppliers"/>
+				<node label="Employees"/>
+			</root>
+		</fx:XML>
+		
+		<mx:DateFormatter id="formatDateToString" formatString="EEEE, MMMM, YYYY"/>
+	</fx:Declarations>
+	
+	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<mx:Form width="100%" height="100%">
+
+		<mx:FormItem label="From:" width="100%" direction="horizontal" fontWeight="bold" labelWidth="60">
+			<s:Label id="lblFrom"  width="100%" fontWeight="normal"
+					 text="{_oSourceRecord.fromemail}"/>
+		</mx:FormItem>
+		
+		<mx:FormItem label="Subject:" width="100%" fontWeight="bold" labelWidth="60">
+			<s:TextInput id="txtSubject"  width="100%" fontWeight="normal"
+						 change="title=txtSubject.text;"
+						 text="{_oSourceRecord.subject}"/>
+		</mx:FormItem>
+		
+		<mx:FormItem label="To:" width="100%" fontWeight="bold" labelWidth="60" direction="horizontal">
+			<s:TextArea id="txtTo" fontWeight="normal" width="100%" height="47" editable="false"
+						text="{_oSourceRecord.toemail}"/>
+			<mx:LinkButton id="lbtnAddTo" label="Add" textDecoration="underline" color="#0A33BB" toolTip="Add TO recipients"
+						   click="lbtnAddTo_clickHandler(event)"/>
+		</mx:FormItem>
+			
+		<mx:FormItem label="Cc:" width="100%" fontWeight="bold" labelWidth="60" direction="horizontal">
+			<s:TextArea id="txtCc" fontWeight="normal" width="100%" height="47" editable="false" color="black"
+						text="{_oSourceRecord.ccemail}"/>
+			<mx:LinkButton id="lbtnAddCc" label="Add" textDecoration="underline" color="#0A33BB" toolTip="Add CC recipients"
+						   click="lbtnAddCc_clickHandler(event)"/>
+		</mx:FormItem>
+		
+		<!--<s:TextArea id="txtMsg" width="100%" height="100%"
+					text="{_oSourceRecord.body}"/>-->
+		<mx:RichTextEditor id="txtMsg" width="100%" height="100%"
+						   htmlText="{_oSourceRecord.htmlbody}"/>
+		
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:List id="lstAttach" width="100%" height="47" 
+					buttonMode="true" useHandCursor="true"
+					includeIn="MsgWithAttachment"
+					click="lstAttach_clickHandler(event)"/>
+			<mx:Spacer width="100%" includeIn="MsgWithoutAttachment"/>
+			<mx:LinkButton id="lbtnAttach" label="Attach a file" color="#0A33BB" textDecoration="underline"
+						   icon="@Embed(source='com/dspl/malkey/components/common/icons/paperclip.png')"
+						   click="lbtnAttach_clickHandler(event)"/>
+		</s:HGroup>
+		
+		<mx:ControlBar id="cbButtons" width="100%">
+			<s:Button id="btnSave" label="Save" click="btnSave_clickHandler(event)"/>
+			<s:Button id="btnSend" label="Send" click="btnSend_clickHandler(event)"/>						
+			<s:Button id="btnDiscard" label="Discard" click="btnDiscard_clickHandler(event)"/>
+			<mx:Spacer width="100%"/>
+			<mx:LinkButton id="lbtnBack" label="&lt; Back{sFolderType}" color="#0A33BB" textDecoration="underline" click="_iResponseType=-1;closeScreen();"/>
+		</mx:ControlBar>
+	</mx:Form>
+</s:TitleWindow>

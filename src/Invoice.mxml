@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="1000" height="556" currentState="Default"
+			   title="Invoice"
+			   creationComplete="initApp(event)"
+			   close="closeForm()"
+			    x="26" y="153" xmlns:services="com.dspl.malkey.services.*">
+	
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>		
+		<mx:DateFormatter 
+			id="dfFormatterJava" 
+			formatString="YYYY-MM-DD"
+			/>		
+		<!--Formatters [End]-->
+		
+		
+		<!--Service-->
+		<services:FarfdtfSRV
+			id="srvFarfdtf"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetAgreementList"
+			result="crgetAgreementListList_resultHandler(event)"
+			fault="crgetAgreementListList_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetSubAgreementList"
+			result="crGetSubAgreementList_resultHandler(event)"
+			fault="crGetSubAgreementList_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGenInvoice"
+			result="crGenInvoice_resultHandler(event)"
+			fault="crGenInvoice_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crSaveInvoice"
+			result="crSaveInvoice_resultHandler(event)"
+			fault="crSaveInvoice_faultHandler(event)"
+			/>
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetInvoiceList"
+			result="crGetInvoiceList_resultHandler(event)"
+			fault="crGetInvoiceList_faultHandler(event)"
+			/>
+		
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetInvHedByInvNo"
+			result="crGetInvHedByInvNo_resultHandler(event)"
+			fault="crGetInvHedByInvNo_faultHandler(event)"
+			/>
+		
+		<!--Call Responder-->
+		<s:CallResponder
+			id="crGetInvDetByInvNo"
+			result="crGetInvDetByInvNo_resultHandler(event)"
+			fault="crGetInvDetByInvNo_faultHandler(event)"
+			/>
+	</fx:Declarations>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.StringUtil;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.malkey.components.SubAgreementListControl;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.util.PopupControl;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Farfdtf;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FarfdtfPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdtftax;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FdtftaxPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Finvhed;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freshed;
+			
+			import flash.desktop.Clipboard;
+			
+			import mx.collections.ArrayCollection;
+			import mx.containers.Panel;
+			import mx.controls.Alert;
+			import mx.controls.Text;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+			
+			/* [Bindable]
+			private var lacInvDet:ArrayCollection=new ArrayCollection([
+				{resno:"RS/1107/00056",
+				 dfrom:"22/06/2011",
+				 dto:"22/07/2011",
+				 description:"TOYOTA COROLLA\r[Rs.42,500/- Per Week + NBT 03% + VAT 12%]",
+				 regno:"WPKH 4017",
+				 rate:"7,004.00",
+				 km:"",
+				 days:"17",
+				 amount:"119,068.00T"}
+			]); */
+			
+			[Bindable]
+			private var lacInvDet:ArrayCollection=new ArrayCollection();
+			
+			private var lsSelState:String;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					lsSelState="Default";
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function loadErrorHandler(event:Event):void{
+				lsSelState="Default";
+				setState(lsSelState);
+			}
+			
+			private function closeForm():void{
+				popupcontrol=null;
+				this.parent.parent.removeChild(this.parent);
+			}
+			
+			private function successfulCloseHandler(event:Event):void{
+				displayInvoice();
+				lsSelState="Default";
+				setState(lsSelState);
+			}
+			
+			private function displayInvoice():void{
+				try{
+					var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/Invoice.jsp?in="+ resStr);
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,"displayInvoice: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function displayInvoiceDateRange():void{
+				try{
+					
+					var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/InvoiceDateRange.jsp?df="+ dfFormatterJava.format(dtDateStart.selectedDate)+"&dt="+dfFormatterJava.format(dtDateEnd.selectedDate));
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,"displayInvoice: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function resetForm():void{
+				try{
+					txtInvNo.text="";
+					txtAgrNo.text="";
+					txtDebtor.text="";
+					lacMasterAC=null;
+					if(lacInvDet!=null){
+						lacInvDet.removeAll();
+						lacInvDet.refresh();
+					}
+					dgInvDet.rowHeight=24;
+					txtTotal.text="0.00";
+					
+					crGenInvoice.token=null;
+					crGetAgreementList.token=null;
+					crGetInvDetByInvNo.token=null;
+					crGetInvHedByInvNo.token=null;
+					crGetInvoiceList.token=null;
+					crGetSubAgreementList.token=null;
+					crSaveInvoice.token=null;
+				}catch(error:Error){
+					Message.displayAlert(1,"resetForm: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function loadMasterFiles():void{
+				try{
+
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterFiles: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function controlbar2_creationCompleteHandler(event:FlexEvent):void{
+				setPermission();
+			}
+			
+			//Set Application State
+			private function setState(state:String=""):void{
+				if(state=="Default"){
+					resetForm();
+					setModifiedByDet("");						
+				}else if(state=="Add"){
+					setModifiedByDet("N/A");	
+				}else if(state=="Delete"){
+					
+				}
+				currentState = state;
+			}
+			
+			private function setModifiedByDet(val:String):void{
+				lblModifiedBy.text="Last Modified By: ";
+				lblModifiedBy.text+=val;
+			}
+
+			//**** Control Buttons Click Handlers [Start]
+			protected function btnNew_clickHandler(event:MouseEvent):void{
+				lsSelState="Add";
+				loadAgreementList();
+			}
+
+			protected function btnDelete_clickHandler(event:MouseEvent):void{
+				// TODO Auto-generated method stub
+			}
+
+			protected function btnUndo_clickHandler(event:MouseEvent):void{
+				lsSelState="Default";
+				setState(lsSelState);
+			}
+
+			protected function btnPrint_clickHandler(event:MouseEvent):void{
+				lsSelState="Print";
+				showInvoiceList();
+			}
+
+			protected function btnFind_clickHandler(event:MouseEvent):void{
+				lsSelState="Find";
+				showInvoiceList();
+			}
+
+			protected function btnReload_clickHandler(event:MouseEvent):void{
+				// TODO Auto-generated method stub
+			}
+
+			protected function btnSave_clickHandler(event:MouseEvent):void{
+				btnSave.enabled=false;
+				saveInvoice();
+			}
+			
+			private function saveInvoice():void{
+				try{
+					var invhed:Com_dspl_malkey_domain_Finvhed=new Com_dspl_malkey_domain_Finvhed();
+					invhed.invno="TMP000000";
+					invhed.agrno=freshed.agrno;
+					invhed.debcode=freshed.debcode;
+					var fdfList:ArrayCollection=lacMasterAC.getItemAt(1) as ArrayCollection;
+					var ftaxList:ArrayCollection=lacMasterAC.getItemAt(2) as ArrayCollection;
+					
+					var farfdtfList:ArrayCollection=new ArrayCollection;
+					var fdtftaxList:ArrayCollection=new ArrayCollection;
+					
+					var tmpFarfdtf:Com_dspl_malkey_domain_Farfdtf;
+					var tmpFarfdtfPK:Com_dspl_malkey_domain_FarfdtfPK;
+					var obj:Object;
+					for(var a:int=0;a<fdfList.length;a++){
+						obj=fdfList.getItemAt(a);
+						tmpFarfdtfPK=new Com_dspl_malkey_domain_FarfdtfPK();
+						tmpFarfdtf=new Com_dspl_malkey_domain_Farfdtf();
+						
+						tmpFarfdtfPK.dtfref=obj["id"]["dtfref"].toString();
+						tmpFarfdtfPK.dtfbil=obj["id"]["dtfbil"].toString();
+						tmpFarfdtfPK.seq=int(obj["id"]["seq"].toString());
+						tmpFarfdtf.id=tmpFarfdtfPK;
+						
+						tmpFarfdtf.dtfdate=null;
+						tmpFarfdtf.dtftype=obj["dtftype"].toString();
+						tmpFarfdtf.debcode=obj["debcode"].toString();
+						tmpFarfdtf.dtfamt=obj["dtfamt"].toString();
+						tmpFarfdtf.dtffamt=obj["dtffamt"].toString();
+						tmpFarfdtf.dtfbal=obj["dtfbal"].toString();
+						tmpFarfdtf.dtfbal1=obj["dtfbal1"].toString();
+						tmpFarfdtf.dtffbal=obj["dtffbal"].toString();
+						tmpFarfdtf.dtffbal1=obj["dtffbal1"].toString();
+						tmpFarfdtf.dtfremarks=obj["dtfremarks"].toString();
+						tmpFarfdtf.dtfgst=obj["dtfgst"].toString();
+						tmpFarfdtf.dtffgst=obj["dtffgst"].toString();
+						tmpFarfdtf.dtfchqno=obj["dtfchqno"].toString();
+						tmpFarfdtf.gpost=obj["gpost"].toString();
+						tmpFarfdtf.opbal=obj["opbal"].toString();
+						tmpFarfdtf.txnuser=null;
+						tmpFarfdtf.txntime=null;
+						tmpFarfdtf.accoddb=obj["accoddb"].toString();
+						tmpFarfdtf.accodcr=obj["accodcr"].toString();
+						tmpFarfdtf.dtfchqdat=null;
+						tmpFarfdtf.minvno=obj["minvno"].toString();
+						tmpFarfdtf.dtfbranch=obj["dtfbranch"].toString();
+						tmpFarfdtf.dtfnbt=obj["dtfnbt"].toString();
+						tmpFarfdtf.dtffnbt=obj["dtffnbt"].toString();
+						tmpFarfdtf.nbtper=obj["nbtper"].toString();
+						tmpFarfdtf.vatper=obj["vatper"].toString();
+						tmpFarfdtf.curcode=obj["curcode"].toString();
+						tmpFarfdtf.currate=obj["currate"].toString();
+						tmpFarfdtf.gainloss=obj["gainloss"].toString();
+						tmpFarfdtf.coscod=obj["coscod"].toString();
+						tmpFarfdtf.agnno=obj["agnno"].toString();
+						tmpFarfdtf.resno=obj["resno"].toString();
+						tmpFarfdtf.regno=obj["regno"].toString();
+						tmpFarfdtf.empid=obj["empid"].toString();
+						tmpFarfdtf.type=obj["type"].toString();
+						tmpFarfdtf.taxcomcode=obj["taxcomcode"].toString();
+						tmpFarfdtf.pgamt=obj["pgamt"].toString();
+						tmpFarfdtf.disper=obj["disper"].toString();
+						tmpFarfdtf.pdisamt=obj["pdisamt"].toString();
+						tmpFarfdtf.pbtamt=obj["pbtamt"].toString();
+						tmpFarfdtf.km=int(obj["km"].toString());
+						tmpFarfdtf.days=obj["days"].toString();
+						tmpFarfdtf.qty=int(obj["qty"].toString());
+						tmpFarfdtf.tbamt=obj["tbamt"].toString();
+						tmpFarfdtf.hiretypeid=obj["hiretypeid"].toString();
+						tmpFarfdtf.subseq=int(obj["subseq"].toString());
+						tmpFarfdtf.companyid=obj["companyid"].toString();
+						farfdtfList.addItem(tmpFarfdtf);
+					}
+					
+					var tmpFdftax:Com_dspl_malkey_domain_Fdtftax;
+					var tmpFdtftaxPK:Com_dspl_malkey_domain_FdtftaxPK;
+					for(var b:int=0;b<ftaxList.length;b++){
+						obj=ftaxList.getItemAt(b);
+						tmpFdtftaxPK=new Com_dspl_malkey_domain_FdtftaxPK();
+						tmpFdftax=new Com_dspl_malkey_domain_Fdtftax();
+						
+						tmpFdtftaxPK.dtfref=obj["id"]["dtfref"].toString();
+						tmpFdtftaxPK.taxcode=obj["id"]["taxcode"].toString();
+						tmpFdtftaxPK.seq=int(obj["id"]["seq"].toString());
+						tmpFdftax.id=tmpFdtftaxPK;
+						tmpFdftax.resno=obj["resno"].toString();
+						tmpFdftax.type=obj["type"].toString();
+						tmpFdftax.taxcomcode=obj["taxcomcode"].toString();
+						tmpFdftax.taxper=obj["taxper"].toString();
+						tmpFdftax.taxrate=obj["taxrate"].toString();
+						tmpFdftax.taxseq=int(obj["taxseq"].toString());
+						tmpFdftax.taxamt=obj["taxamt"].toString();
+						tmpFdftax.subseq=int(obj["subseq"].toString());
+						
+						fdtftaxList.addItem(tmpFdftax);
+					}
+					
+
+					
+					
+					crSaveInvoice.token=srvFarfdtf.saveInvoice(invhed,lacInvDet,farfdtfList,fdtftaxList);
+				}catch(error:Error){
+					Message.displayAlert(1,"saveInvoice: " + error.message,"Error",null);
+				}
+			}
+			
+			private function goFirst():void{
+				/* liCurIndex=0;
+				setCtrlVal(liCurIndex);   */ 
+			}
+			
+			private function goLast():void{
+				/* liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex);  */
+			}
+			
+			private function goNext():void{
+				/* liCurIndex+=1;
+				if(liCurIndex>liMFCount)
+					liCurIndex=0;
+				setCtrlVal(liCurIndex);   */
+			}
+			
+			private function goBack():void{
+				/* liCurIndex-=1;
+				if(liCurIndex<0)
+					liCurIndex=liMFCount;
+				setCtrlVal(liCurIndex);  */
+			}
+			//**** Control Buttons Click Handlers [End]
+
+			private function showInvoiceList():void{
+				try{
+					crGetInvoiceList.token=srvFarfdtf.getInvoiceListPage();
+				}catch(error:Error){
+					Message.displayAlert(1,"showInvoiceList: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			private function showInvoiceListFeelLucky():void{
+				try{
+					crGetInvoiceList.token=srvFarfdtf.getInvoiceListFeelLucky(txtSearch.text);
+				}catch(error:Error){
+					Message.displayAlert(1,"showInvoiceList: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function invoiceSelectionHandler(event:Event):void{
+				try{
+					if(popupcontrol.lpuPopup.grdSearch._strSelectedCode!=""){
+						resStr=popupcontrol.lpuPopup.grdSearch._strSelectedCode;
+						crGetInvoiceList.token=null;
+						if(lsSelState=="Print"){
+							displayInvoice();
+						}else{
+							crGetInvHedByInvNo.token=srvFarfdtf.getInvHedByInvNo(resStr);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"agreementSelectionHandler: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			//**** Result & Fault Handlers [Start]
+			
+			protected function crGetInvHedByInvNo_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured. Please Try Again..","Error",loadErrorHandler);
+					else{
+						txtInvNo.text=crGetInvHedByInvNo.lastResult.invno;
+						txtAgrNo.text=crGetInvHedByInvNo.lastResult.agrno;
+						txtDebtor.text=crGetInvHedByInvNo.lastResult.debname;
+						crGetInvDetByInvNo.token=srvFarfdtf.getInvDetById(crGetInvHedByInvNo.lastResult.invno);
+						//crGetInvDetByInvNo.token=srvFarfdtf.getInvDetByInvNo(crGetInvHedByInvNo.lastResult.invno);							
+						setModifiedByDet(crGetInvHedByInvNo.lastResult.adduser);
+						crGetInvHedByInvNo.token=null;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Invoice Header [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crGetInvHedByInvNo_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Invoice Header [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crGetInvDetByInvNo_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Occured. Please Try Again..","Error",loadErrorHandler);
+					else{
+						lacInvDet=event.result as ArrayCollection;
+						calcTotal();
+						crGetInvDetByInvNo.token=null;
+						setState(lsSelState);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Invoice Details [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crGetInvDetByInvNo_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Invoice Details [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crGetInvoiceList_resultHandler(event:ResultEvent):void{
+				try{
+					if(crGetInvoiceList==null || crGetInvoiceList.lastResult.length==0)
+						Message.displayAlert(3,"Invoice(s) Not Found","",loadErrorHandler);
+					else
+						popupcontrol.showPopUp(crGetInvoiceList.lastResult,"invno","Invoice No.","debname","Customer","Select An Invoice","invoiceSelection",invoiceSelectionHandler,false,"agrno","Agreement No.",220);
+				}catch(error:Error){
+					Message.displayAlert(1,"Get Invoice List [Result]: " + event.result.toString(),"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crGetInvoiceList_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Get Invoice List [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crgetAgreementListList_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Agreement List [Error]","Error",loadErrorHandler);
+					else
+						showAgreementList();
+				}catch(error:Error){
+					Message.displayAlert(1,"List Agreements [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+
+			protected function crgetAgreementListList_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Agreements [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			protected function crGetSubAgreementList_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Sub Agreement List [Error]","Error",loadErrorHandler);
+					else
+						showSubAgreementList();
+				}catch(error:Error){
+					Message.displayAlert(1,"List Sub Agreements [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crGetSubAgreementList_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Sub Agreements [Fault]: " + event.fault.toString(),"Error",loadErrorHandler);
+			}
+			
+			private var resStr:String;
+			protected function crSaveInvoice_resultHandler(event:ResultEvent):void{
+				try{
+					resStr=event.result.toString();
+					if(mx.utils.StringUtil.trim(resStr).length==0){
+						displaySaveErrorMessage();
+					}else{
+						if(mx.utils.StringUtil.trim(resStr).length>15){
+							Message.displayAlert(1,resStr,"Error",loadErrorHandler);
+						}else{
+							Message.displayAlert(3,"Invoice Number: " + resStr + "\rSave Successful","Successful",successfulCloseHandler);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Save Invoice [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+				btnSave.enabled=true;
+			}
+			
+			protected function crSaveInvoice_faultHandler(event:FaultEvent):void{
+				displaySaveErrorMessage();
+				btnSave.enabled=true;
+			}
+
+			private var lacMasterAC:ArrayCollection;
+			protected function crGenInvoice_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						displayErrorMessage();
+					else{
+						lacMasterAC=event.result as ArrayCollection;
+						if(lacMasterAC==null){
+							displayErrorMessage();
+							return;
+						}
+						lacInvDet=lacMasterAC.getItemAt(0) as ArrayCollection;
+						
+						if(lacInvDet==null){
+							displayErrorMessage();
+							return;
+						}
+						
+						calcTotal();
+						var tmp:ArrayCollection=lacMasterAC.getItemAt(1) as ArrayCollection;
+						//lacMasterAC.removeAll();
+						setState(lsSelState);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Generate Invoice [Result]: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			private function displaySaveErrorMessage():void{
+				Message.displayAlert(1,"Error Occured While Saving The Invoice","Error",loadErrorHandler);
+			}
+			
+			private function displayErrorMessage():void{
+				Message.displayAlert(1,"Error Occured While Generating The Invoice","Error",loadErrorHandler);
+			}
+			
+			private function calcTotal():void{
+				try{
+					if(lacInvDet!=null){
+						var amount:Number=0;
+						for(var a:int=0;a<lacInvDet.length;a++){
+							//lacInvDet.getItemAt(a).rate=Number(lacInvDet.getItemAt(a).rate).toFixed(2);
+							lacInvDet.getItemAt(a).amount=Number(lacInvDet.getItemAt(a).amount.toString()).toFixed(2);
+							amount+=Number(lacInvDet.getItemAt(a).amount.toString());
+						}
+						txtTotal.text=amount.toFixed(2);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Calculate Total: " + error.message,"Error",loadErrorHandler);
+				}
+			}
+			
+			protected function crGenInvoice_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Generate Invoice [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			//**** Result & Fault Handlers [Fault]
+			
+			private function loadAgreementList():void{
+				try{
+					crGetAgreementList.token=srvFarfdtf.getAgreementList();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadAgreementList: " + error.message,"Error",null);
+				}
+			}
+			
+			private var sub:SubAgreementListControl;
+			private function showSubAgreementList():void{
+				try{
+					sub=new SubAgreementListControl();
+					sub.addEventListener("subAgreementsSelected",fetchSubAgreementList,false,0,false);
+					sub.gsAgrNo=freshed.agrno;
+					sub.gacSAgrList=crGetSubAgreementList.lastResult as ArrayCollection;
+					PopUpManager.addPopUp(sub,this,true,null,null);
+					PopUpManager.centerPopUp(sub);
+				}catch(error:Error){
+					Message.displayAlert(1,"showSubAgreementList: " + error.message,"Error",null);		
+				}
+			}
+			
+			//private var lacSubAgrList:ArrayCollection;
+			private function fetchSubAgreementList(event:Event):void{
+				try{
+					txtInvNo.text="Auto Generated";
+					txtAgrNo.text=freshed.agrno;
+					txtDebtor.text=freshed.debname;
+					crGetAgreementList.token=null;
+					crGetSubAgreementList.token=null;
+					crGenInvoice.token=srvFarfdtf.genInvoice(freshed,sub.gacAgrList);
+					PopUpManager.removePopUp(sub);
+					sub=null;	
+					//setState(lsSelState);
+				}catch(error:Error){
+					Message.displayAlert(1,"fetchSubAgreementList: " + error.message,"Error",null);
+				}
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object{
+				var obj:Object = null;
+				try{
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+							return o;
+					}
+				}
+				catch(error:Error){
+					obj = null;
+					Message.displayAlert(1,"findItem: " + error.message,"Error");
+				}
+				return obj;
+			}
+			
+			private var popupcontrol:PopupControl=new PopupControl();
+			private function showAgreementList():void{
+				try{
+					if(crGetAgreementList.lastResult.length<=0)
+						Message.displayAlert(3,"Agreement(s) Not Found","",null);
+					else 
+						popupcontrol.showPopUp(crGetAgreementList.lastResult,"agrno","Reference No.","debname","Customer","Select An Agreement","agreementSelection",agreementSelectionHandler,false,"","",180);
+				}catch(error:Error){
+					Message.displayAlert(1,"showAgreementList: " + error.message,"Error",null);		
+				}
+			}
+			
+			private var freshed:Com_dspl_malkey_domain_Freshed;
+			private function agreementSelectionHandler(event:Event):void{
+				try{
+					if(popupcontrol.lpuPopup.grdSearch._strSelectedCode!=""){
+						//var obj:com_dspl_malkey_domain_fa lpuPopup.grdSearch._nSelectedIndex;
+						//loadAccessoryById(lpuPopup.grdSearch._strSelectedCode);
+						//setState(lsSelState);
+						freshed=findItem(crGetAgreementList.lastResult,"agrno",popupcontrol.lpuPopup.grdSearch._strSelectedCode) as Com_dspl_malkey_domain_Freshed;
+						if(freshed==null)
+							Message.displayAlert(1,"Error Occured. Please Try Again..","Error",null);
+						else{
+							crGetSubAgreementList.token=srvFarfdtf.getSubAgreementList(freshed.agrno);
+						}
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"agreementSelectionHandler: " + error.message,"Error",null);
+				}
+			}
+			
+			private function formatDate(item:Object,column:DataGridColumn):String{
+				try{
+					return dfFormatter.format(item[column.dataField].toString());
+				}catch(error:Error){
+					Message.displayAlert(1,"formatDate: " + error.message,"Error",null);
+				}
+				return null;
+			}
+
+			protected function btnClose_clickHandler(event:MouseEvent):void{
+				closeForm();
+			}
+
+			
+			protected function textinput1_enterHandler(event:FlexEvent):void
+			{
+				//feelLucky(txtSearch.text);
+				//Alert.show("txtSearch :"+txtSearch.text);
+				lsSelState="Print";
+				showInvoiceListFeelLucky()
+			}
+			
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// dtDateStart dtDateEnd
+				//Alert.show("dtDateStart:"+dtDateStart.selectedDate+"- dtDateEnd:"+dtDateEnd.selectedDate,"Invoice will generate soon!!!");
+				displayInvoiceDateRange();
+			}
+
+
+/* 			protected function btnPI_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pObj:spark.components.Panel = new InvoicePerformer();
+				pObj["gsTransCode"]="T007";
+				PopUpManager.addPopUp(pObj,this,true);
+			} */
+
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="Add"/>
+		<s:State name="Find"/>
+	</s:states>
+	
+	<mx:ControlBar x="3" y="-6" horizontalGap="2" height="57" width="938" creationComplete="controlbar2_creationCompleteHandler(event)">
+
+		<mx:Button  id="btnNew" width="40" height="40"
+					toolTip="New"	
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')"
+					click="btnNew_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Find="false"/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					toolTip="Delete" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')"
+					click="btnDelete_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Find="false"/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					toolTip="Undo"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					enabled.Default="false"
+					enabled.Add="true"
+					click="btnUndo_clickHandler(event)"
+					enabled.Find="true"/>
+		<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					click="btnPrint_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Find="false"/>
+		<mx:Button  id="btnFind" width="40" height="40" 
+					toolTip="Find"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/findD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+					click="btnFind_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Find="false"/>
+		<mx:Button  id="btnReload" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					toolTip="Reload"
+					enabled="false"
+					click="btnReload_clickHandler(event)"
+					/>
+		<mx:Button  id="btnSave" width="40" height="40" 
+					toolTip="Save"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					enabled.Default="false"
+					enabled.Add="true"
+					click="btnSave_clickHandler(event)"
+					enabled.Find="false"/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					enabled="true"
+					click="btnClose_clickHandler(event)"
+					/>
+		<mx:Spacer width="25%"/>
+		<s:Label text="Enter Customer Name/Code/IN/RH/RS number" fontWeight="bold" height="40" width="100"
+				 toolTip="Enter Customer Name/Code/IN/RH/RS number"/>
+		<mx:TextInput  
+			width="157" 
+			enter="textinput1_enterHandler(event)" 
+			id="txtSearch" 
+			enabled="{currentState!='Add'}"
+			toolTip="Enter Customer Name/Code/IN/RH/RS number"
+			text="Search Invoices here"
+			contentBackgroundColor="#89DAFC"/>
+		
+
+	</mx:ControlBar>
+	<mx:HRule x="-0.25" y="48" width="952"/>
+	<mx:Form
+		borderAlpha="0.10"
+		paddingTop="5"
+		paddingLeft="5"
+		paddingRight="5"
+		paddingBottom="2"
+		borderColor="black"
+		borderStyle="solid"
+		borderVisible="true" 
+		x="262.65" y="55" width="589" height="60">
+		<s:Label text="Rental Details" fontWeight="bold"/>
+		<mx:FormItem label="Agreement No." direction="horizontal" width="575">
+			<s:TextInput
+				restrict="0-9a-zA-Z"
+				enabled="false"
+				id="txtAgrNo" width="125"
+				maxChars="10"></s:TextInput>
+			<mx:FormItem label="Customer" direction="horizontal" width="340">
+				<s:TextInput id="txtDebtor" width="250"
+							 restrict="A-Za-z "
+							 enabled="false"
+							 maxChars="260"
+							 >
+				</s:TextInput>
+			</mx:FormItem>
+		</mx:FormItem>
+		
+	</mx:Form>
+	<mx:DataGrid
+		id="dgInvDet"
+		variableRowHeight="true"
+		wordWrap="true"
+		enabled.Default="false"
+		enabled.Add="true"
+		enabled.Find="true"
+		dataProvider="{lacInvDet}"
+		 width="932" height="300" fontSize="11" fontFamily="Arial" x="10" y="118">
+		<mx:columns>
+			<mx:DataGridColumn headerText="RES. NO." dataField="resno" resizable="false" sortable="false" width="100"/>
+			<mx:DataGridColumn labelFunction="formatDate" dataField="dfrom" headerText="DATE (FROM)" resizable="false" sortable="false" width="85"/>
+			<mx:DataGridColumn labelFunction="formatDate" dataField="dto" headerText="DATE (TO)" resizable="false" sortable="false" width="80"/>
+			<mx:DataGridColumn headerText="DESCRIPTION" dataField="description" resizable="false" sortable="false" width="260"/>
+			<mx:DataGridColumn headerText="HIRE TYPE" dataField="hiretype" resizable="false" sortable="false" width="90"/>
+			<mx:DataGridColumn headerText="VEHICLE NO." dataField="regno" resizable="false" sortable="false" width="90"/>
+			<mx:DataGridColumn textAlign="right" dataField="rate" headerText="RATE" resizable="false" sortable="false" width="80"/>
+			<mx:DataGridColumn textAlign="right" dataField="km" headerText="KM" resizable="false" sortable="false" width="45"/>
+			<mx:DataGridColumn headerWordWrap="true" textAlign="right" dataField="days" headerText="DAYS/ HOURS" resizable="false" sortable="false" width="60"/>
+			<mx:DataGridColumn headerWordWrap="true" textAlign="right" dataField="qty" headerText="QTY." resizable="false" sortable="false" width="40"/>
+			<mx:DataGridColumn textAlign="right" dataField="amount" headerText="AMOUNT" resizable="false" sortable="false"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<s:Label x="9.75" y="430.25" text="Invoice List Report For Given Date range"/>
+	<mx:HBox  x="9.75" y="454.25" label="Invoice List Report For Given Date range">
+		<s:Label text="Date Range" fontWeight="bold"/>
+		<mx:DateField width="100" id="dtDateStart" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+		<mx:DateField width="100" id="dtDateEnd" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+		<s:Button label="Show Invoice" click="button1_clickHandler(event)"/>	
+	</mx:HBox>
+
+	
+	
+	<s:Label x="9.75" y="504.25" text="Last Modified By:" id="lblModifiedBy"/>
+	<mx:Form
+		borderAlpha="0.10"
+		paddingTop="5"
+		paddingLeft="5"
+		paddingRight="5"
+		paddingBottom="2"
+		borderColor="black"
+		borderStyle="solid"
+		borderVisible="true" 
+		x="10" y="55" width="249" height="60">
+		<s:Label text="Invoice Details" fontWeight="bold"/>
+		<mx:FormItem label="Invoice No." direction="horizontal" width="231">
+			<s:TextInput
+				restrict="0-9a-zA-Z"
+				enabled="false"
+				id="txtInvNo" width="140"
+				maxChars="10"></s:TextInput>
+		</mx:FormItem>
+	</mx:Form>
+	<s:Label x="800" y="482" text="Total" fontSize="13" fontWeight="bold" width="44"/>
+	<mx:TextInput editable="false" id="txtTotal" x="843" y="475" fontSize="13" fontWeight="bold" textAlign="right" text="0.00" width="99" borderVisible="true" borderColor="#DADADA"/>
+	<!--<s:Button id="btnPI" label="PI" toolTip="Performer Invoice" click="btnPI_clickHandler(event)" x="847" y="60"/>-->
+</s:TitleWindow>

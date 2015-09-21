@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="1000" minHeight="600"
+			   creationComplete="initApp()"
+			   height="586" width="1000" resize="application1_resizeHandler(event)" xmlns:services="com.dspl.malkey.services.*">
+	<s:states>
+		<s:State name="Main"/>
+	</s:states>
+	<fx:Declarations>
+
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[			
+			/* import com.dspl.malkey.email.Email; */
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.util.Session;
+			
+			import flexlib.containers.SuperTabNavigator;
+			
+			import mx.containers.VBox;
+			import mx.controls.Alert;
+			import mx.controls.SWFLoader;
+			import mx.core.FlexGlobals;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
+			import mx.events.ResizeEvent;
+			import mx.managers.PopUpManager;
+			import mx.utils.StringUtil;
+			
+			import spark.components.Panel;
+			
+			private var sloader:SWFLoader = new SWFLoader();
+			public var username:String="";
+			
+			public var mainTab:SuperTabNavigator;
+			
+			private function initApp():void
+			{
+				/* initMain(); */
+				initMain();
+			}
+			
+			private function initMain():void{
+				try{				
+					var context:LoaderContext = new LoaderContext();
+					context.securityDomain = SecurityDomain.currentDomain;
+					context.applicationDomain = new ApplicationDomain();
+					
+					sloader.loaderContext = context;
+					sloader.source = resourceManager.getString("resource","mBackURL",null,null); 
+					this.addElement(sloader);
+					sloader.width = 1000;
+					sloader.height = 586;
+					
+					sloader.addEventListener("mainMenuClicked",MenuClickHandler,false,0,false);
+					sloader.addEventListener("subMenuClicked",subMenuClickHandler,false,0,false);
+										
+					/* var dboard:Dashboard = new Dashboard();
+					PopUpManager.addPopUp(dboard,this,true,null,null);
+					PopUpManager.centerPopUp(dboard);  */
+					//addTab("Dashboard","Dashboard",mainTab,new Dashboard(),false);
+				/* 	var db:DBoard = new DBoard();
+					addTab("Dashboard","Dashboard",mainTab,db,false); */
+				}catch(error:Error){
+					Alert.show("InitApp: " + error.message);
+				}
+			}
+	
+			private function subMenuClickHandler(e:DataEvent):void
+			{
+				if(e.type=="subMenuClicked")
+				{
+					TxnSelection(e.data);
+				}
+			}
+			
+			private function TxnSelection(txn:String):void{
+				try{
+					var iObj:IFlexDisplayObject;
+					var pObj:Panel;
+					
+					var str:String = resourceManager.getString("resource",txn,null,null); 
+					if(str!=null || str!="")
+					{
+						/* var classRef:Class = getDefinitionByName(str) as Class;
+						if(classRef.toString()=="[class DummyReports]")
+						{
+							var d:DummyReports = new DummyReports();
+							d.windowTitle = setTitle(txn);
+							d.fileName = txn + ".pdf";
+							pObj = d;
+						}
+						else
+						{
+							pObj = new classRef();
+						}*/
+						
+						txn=setTitle(txn);
+						switch(txn){							
+							case "Location":
+								pObj = new Location();
+								pObj["gsTransCode"]="T038";
+								break;	
+							case "Gate Pass":
+								pObj = new GatePass();
+								pObj["gsTransCode"]="T008";
+								break;	
+							case "Driver Movement":
+								pObj = new DriverMovement();
+								pObj["gsTransCode"]="T067";
+								break;	
+/* 							case "Email Correspondence":
+								pObj = new Email();
+								break; */	
+							case "Vehicle Availability":
+								pObj = new VehicleAvailability();
+								pObj["gsTransCode"]="T001";
+								break;	
+							case "Maintenance":
+								pObj = new Maintenance();
+								pObj["gsTransCode"]="T010";
+								break;
+							case "Reservation":
+								pObj = new trReservationHed();
+								pObj["gsTransCode"]="T004";
+								break;
+							case "Agreement":
+								pObj = new trReservationHed();
+								pObj["gsTransCode"]="T004";
+								break;
+							case "Check Out":
+								pObj = new trReservationHed();
+								pObj["gsTransCode"]="T004";
+								break;
+							case "Check In":
+								pObj = new trReservationHed();
+								pObj["gsTransCode"]="T004";
+								break;
+							case "Invoice":
+								pObj = new Invoice();
+								pObj["gsTransCode"]="T007";
+								break;
+							case "Vehicle":
+								pObj = new Vehicle();
+								pObj["gsTransCode"]="T032";
+								
+								var pObjSupplier:Supplier = new Supplier();
+								pObjSupplier["gsTransCode"]="T032";
+								
+								//createTab(pObj1,setTitle("Reservation History"),"Reservation History",true);
+								createTab(pObjSupplier,setTitle("Supplier"),"Supplier",true);
+								
+								break;
+							case "Vehicle Rate":
+								pObj = new VehicleRateMaster();
+								pObj["gsTransCode"]="T066";
+								break;
+							case "Customer":
+								pObj = new Customer();
+								pObj["gsTransCode"]="T034";
+								
+								var pObj4:SubCustomer = new SubCustomer();
+								pObj4["gsTransCode"]="T034";
+								
+								//createTab(pObj1,setTitle("Reservation History"),"Reservation History",true);
+								createTab(pObj4,setTitle("Sub Customer"),"Sub Customer",true);
+								
+								break;
+							case "Guarantor":
+								pObj = new Guarantor(); 
+								pObj["gsTransCode"]="T035";
+								break;
+							case "Employee":
+								pObj = new Employee();
+								pObj["gsTransCode"]="T037";
+								break;
+							case "User Management":
+								pObj = new UserManagement();
+								pObj["gsTransCode"]="T060";
+								break;
+							case "Change Password":
+								pObj = new ChangePassword();
+								pObj["gsTransCode"]="T058";
+								break;
+							case "User Access Levels":
+								pObj = new UserAccessLevels();
+								pObj["gsTransCode"]="T061";
+								break;
+							case "Accessory":
+								pObj = new Accessory(); 
+								pObj["gsTransCode"]="T013";
+								break;
+							case "Other Services":
+								pObj = new OtherServiceMF(); 
+								pObj["gsTransCode"]="T018";
+								break;
+							case "Additional Charges":
+								pObj = new AdditionalCharges(); 
+								pObj["gsTransCode"]="T014";
+								break;
+							case "Vehicle Type":
+								pObj = new VehicleType(); 
+								pObj["gsTransCode"]="T029";
+								break;
+							case "Vehicle Model":
+								pObj = new VehicleModel(); 
+								pObj["gsTransCode"]="T026";
+								break;
+							case "Rate Type":
+								pObj = new RateTypeMF(); 
+								pObj["gsTransCode"]="T011";
+								break;
+							case "Driver Rate":
+								pObj = new DriverRate();
+								pObj["gsTransCode"]="T015";
+								break;
+							case "Tax":
+								//pObj = new Tax();
+								//pObj["gsTransCode"]="T063";
+								break;
+							case "Tax Combination":
+								pObj=new TaxCombination();
+								pObj["gsTransCode"]="T064";
+								break;
+							case "Company Profile":
+								pObj=new CompanyMF();
+								pObj["gsTransCode"]="T065";
+								break;
+							//Reports 
+							case "Reservation Diary":
+								pObj = new ReservationDiaryWithHireStatus();
+								pObj["gsTransCode"]="T040";
+								pObj["gsType"]="RD";
+								pObj["gsTitle"]=txn;
+								
+								var pObj1:AgrHistory = new AgrHistory();
+								pObj1["gsTransCode"]="T040";
+								pObj1["gsType"]="RD";
+								pObj1["gsTitle"]=txn;
+								
+								var pObj2:NewReportz = new NewReportz();
+								pObj2["gsTransCode"]="T040";
+								pObj2["gsType"]="RD";
+								pObj2["gsTitle"]=txn;
+								
+								createTab(pObj1,setTitle("Reservation History"),"Reservation History",true);
+								createTab(pObj2,setTitle("New Reportz"),"New Reportz",true);
+								break;
+							case "Daily Hire Bookings W D":
+								txn="Daily Hire Bookings With Driver";
+								pObj = new ReservationDiary();
+								pObj["gsTransCode"]="T041";
+								pObj["gsType"]="WD";
+								pObj["gsTitle"]=txn;
+								break;
+							case "Daily Hire Bookings S D":
+								txn="Daily Hire Bookings Self Drive";
+								pObj = new ReservationDiary();
+								pObj["gsTransCode"]="T042";							
+								pObj["gsType"]="SD";
+								pObj["gsTitle"]=txn;
+								break;
+							case "Registry Of Vehicle Due In":
+								pObj = new RegistryOfVehicleDueIn();
+								pObj["gsTransCode"]="T044";
+								pObj["gsType"]="DI";
+								pObj["gsTitle"]=txn;
+								break;
+							case "Registry Of Vehicle Movement":
+								pObj = new RegistryOfVehicleMovement();
+								pObj["gsTransCode"]="T054";
+								break;
+							case "License Expiration Listing":
+								pObj = new ReservationDiary();
+								pObj["gsTransCode"]="T052";
+								pObj["gsType"]="LEL";
+								pObj["gsTitle"]=txn;
+								break;
+							case "Emission Test Expiration Listing":
+								pObj = new ReservationDiary();
+								pObj["gsTransCode"]="T051";
+								pObj["gsType"]="EEL";
+								pObj["gsTitle"]=txn;
+								break;
+							case "Registry Of Rented Vehicles":
+								pObj = new ReservationDiary();
+								pObj["gsTransCode"]="T043";
+								pObj["gsType"]="RRV";
+								pObj["gsTitle"]=txn;
+								break;
+							case "Vehicle Summary":
+								//showReport("VehicleSummary");
+								pObj = new SummaryReports();
+								pObj["gsTransCode"]="T056";
+								pObj["gsJspFileName"]="VehicleSummary";
+								pObj["gsTitle"]=txn;
+								
+								var pObj3:VehicleSummaryReportsCustom = new VehicleSummaryReportsCustom();
+								pObj3["gsTransCode"]="T056";
+								pObj3["gsJspFileName"]="VehicleSummary2";
+								pObj3["gsTitle"]=txn;
+								createTab(pObj3,setTitle("Vehicle Status/Ownership Reports"),"Vehicle Status/Ownership Reports",true);
+								
+								break;
+							case "Customer List":
+								//showReport("CustomerList");
+								pObj = new SummaryReportsCustomerList();
+								pObj["gsTransCode"]="T057";
+								pObj["gsJspFileName"]="CustomerList";
+								pObj["gsTitle"]=txn;
+								break;
+							case "Vehicle Hire Status":
+								pObj = new VehicleHireStatus();
+								pObj["gsTransCode"]="T045";
+								break;
+							case "Vehicle Maintenance Activity":
+								pObj = new MaintenanceReminder();
+								pObj["gsTransCode"]="T055";
+								break;
+							case "Reservation Diary Detail":
+								pObj = new ReservationDiaryWithHireStatus();
+								pObj["gsTransCode"]="T068";
+								break;
+							case "Agreement History":
+								pObj = new AgrHistory();
+								pObj["gsTransCode"]="T069";
+								break;
+							case "Continous Hire Data":
+								Alert.show("Continous Hire Data");
+								break;
+							default:
+								pObj = getCommMastObj(txn);
+								break;
+						}
+						if(pObj!=null){
+							createTab(pObj,setTitle(txn),txn,true);
+						}  
+					}
+				}catch(error:Error){
+					Alert.show("[Home]TxnSelection: " + error.message + ": " + error.name);
+				}
+			}
+			
+			private function showReport(jspFileName:String):void{
+				try{
+					var request:URLRequest=request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+jspFileName+".jsp");
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Alert.show("showReport: " + error.message);
+				}
+			}
+			
+			private function getCommMastObj(MFName:String):CommonMaster{
+				MFName=StringUtil.trim(MFName);
+				var cm:CommonMaster = new CommonMaster();
+				cm.gsTitle=MFName;
+				switch(MFName){
+					case "Accessory Type":  
+						cm.gsTransCode="T012";
+						cm.gsMFName="facctype";
+						cm.gsKeyField="acctypeid";
+						break;
+					case "Customer Type":
+						cm.gsTransCode="T033";
+						cm.gsMFName="fclienttype";
+						cm.gsKeyField="clienttype";
+						break;
+					case "Colour":
+						cm.gsTransCode="T020";
+						cm.gsMFName="fcolour";
+						cm.gsKeyField="colourid";
+						break;
+					case "Employee Type":
+						cm.gsTransCode="T036";
+						cm.gsMFName="femployeetype";
+						cm.gsKeyField="emptype";
+						break;
+					case "Engine Size":
+						cm.gsTransCode="T021";
+						cm.gsMFName="fenginesize";
+						cm.gsKeyField="engsizeid";
+						break;
+					case "Fuel Type": 
+						cm.gsTransCode="T022";  
+						cm.gsMFName="ffueltype";
+						cm.gsKeyField="fueltypeid";
+						break;
+					case "Hire Status":
+						cm.gsTransCode="T016";
+						cm.gsMFName="fhirestatus";
+						cm.gsKeyField="hirestsid";
+						break;
+					case "Hire Type":
+						cm.gsTransCode="T017";
+						cm.gsMFName="fhiretype";
+						cm.gsKeyField="hiretypeid";
+						break;
+					case "Insurance Fleet":
+						cm.gsTransCode="T030";
+						cm.gsMFName="finsfleet";
+						cm.gsKeyField="fleetid";
+						break;
+					case "Insurance Policy":
+						cm.gsTransCode="T031";
+						cm.gsMFName="finspolicy";
+						cm.gsKeyField="policyid";
+						break;
+					case "Payment Type":
+						cm.gsTransCode="T019";
+						cm.gsMFName="fpaytype";
+						cm.gsKeyField="paytypeid";
+						break;
+					case "Vehicle Class":   
+						cm.gsTransCode="T023";
+						cm.gsMFName="fvehicleclass";
+						cm.gsKeyField="vehiclassid";
+						break;
+					case "Vehicle Inventory List":
+						cm.gsTransCode="T024";
+						cm.gsMFName="fvinventrylist";
+						cm.gsKeyField="invid";
+						break;
+					case "Vehicle Make":
+						cm.gsTransCode="T025";
+						cm.gsMFName="fvehiclemake";
+						cm.gsKeyField="vehimakeid";
+						break;
+					case "Vehicle Status":
+						cm.gsTransCode="T027";
+						cm.gsMFName="fvehiclestatus";
+						cm.gsKeyField="vehistsid";
+						break;
+					case "Vehicle Transmission":
+						cm.gsTransCode="T028";
+						cm.gsMFName="fvehicletrans";
+						cm.gsKeyField="vehitransid";
+						break;
+					case "User Type":
+						cm.gsTransCode="T059";
+						cm.gsMFName="fusertype";
+						cm.gsKeyField="usertypeid";
+						break;
+					case "Maintenance Type":
+						cm.gsTransCode="T062";
+						cm.gsMFName="fmainttype";
+						cm.gsKeyField="typeid";
+						break;
+					default:
+						cm=null;
+						break;
+				}
+				return cm;
+			}
+			
+			private function setTitle(title:String):String
+			{
+				title = title.replace( /((?<![A-Z])[A-Z]|[A-Z](?![A-Z]))/g, ' $1' );
+				if ( title.charAt( 0 ) == ' ' )
+					title = title.substr( 1 );
+				return title;
+			}
+			
+			private function addTab(tabHeader:String, tabId:String, parentNavigator:SuperTabNavigator, tabContentsToBeDisplayed:Panel,tabClosable:Boolean):void
+			{
+				if (tabHeader == "")
+					tabHeader = "(Untitled)";
+				
+				// Verfiy if the tab to be added to aleady exists
+				var mainTabChildren:Array = parentNavigator.getChildren();
+				var curTabNo:int = 0
+				for each(var currentVBox:VBox in mainTabChildren)
+				{
+					if (currentVBox.id == tabId)
+					{
+						// The page contents to be added already exists, so jus activate that tab
+						parentNavigator.selectedIndex = curTabNo;
+						return;
+					}
+					curTabNo += 1;
+				}
+				
+				// Initiate the page tab
+				var child:VBox = new VBox();
+				child.id = tabId;
+				child.label = tabHeader;			// Tab's Caption
+				child.setStyle("closable", tabClosable);	// Enable the tab to be closable
+				// Add the contents to be displayed in the tab
+				/* if(tabContentsToBeDisplayed["gsCurTabName"]!=null){
+					tabContentsToBeDisplayed["gsCurTabName"]=tabId;
+					FlexGlobals.topLevelApplication.addEventListener("parentTabChanged",tabContentsToBeDisplayed["parentTabChangedHandler"],false,0,false);
+					child.addChild(tabContentsToBeDisplayed);
+					parentNavigator.addChild(child);
+					parentNavigator.selectedIndex = parentNavigator.numChildren - 1;	// Activate the new tab
+				} */
+
+				try{
+					if(tabContentsToBeDisplayed["gsCurTabName"]!=null){
+						tabContentsToBeDisplayed["gsCurTabName"]=StringUtil.trim(tabHeader);
+						FlexGlobals.topLevelApplication.addEventListener("parentTabChanged",tabContentsToBeDisplayed["parentTabChangedHandler"],false,0,false);
+					} 
+				}catch(error:Error){
+					
+				}
+				
+				child.addChild(tabContentsToBeDisplayed);
+				parentNavigator.addChild(child);
+				parentNavigator.selectedIndex = parentNavigator.numChildren - 1;	// Activate the new tab
+			}
+			
+			private function showPopUp(iObj:IFlexDisplayObject):void{
+				try{
+					PopUpManager.addPopUp(iObj,this,true,null,null);
+					PopUpManager.centerPopUp(iObj);
+				}catch(error:Error){
+					Alert.show("showPopUp: " + error.message);
+				}
+			}
+			
+			private function createTab(pageContent:Panel,displayName:String,tabId:String,tabClosable:Boolean):void
+			{
+				addTab(displayName, tabId, mainTab, pageContent, tabClosable); 
+			}
+			
+			private function MenuClickHandler(e:DataEvent):void{
+				try{
+					//Alert.show("type: " + e.type.toString() + "    data: " + e.data.toString());	 
+					if(e.data.toString()=="logOffTriggered")
+						Message.displayAlert(4,"Are You Sure?","Log Off Confirmation",logOffConfirmation);
+				}catch(error:Error){
+					Message.displayAlert(1,"MenuClickHandler: " + error.message,"Error",null);
+				}
+			}
+			
+			private function logOffConfirmation(event:CloseEvent):void{
+				try{
+					if(event.detail==Alert.YES){
+						var loaderManager:Object = sloader.content as Object;
+						loaderManager.resetMenu();
+						dispatchEvent(new Event("logOffTriggered",true,true));
+						var session:Session=Session.getInstance();
+						session.dispose();		
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"Log Off: " + error.message,"Error",null);
+				}
+			}
+			
+			protected function application1_resizeHandler(event:ResizeEvent):void
+			{
+
+			}
+		]]>
+	</fx:Script>
+	
+	<!--<s:BorderContainer x="0" y="0" width="1000" height="586">
+		<s:backgroundFill>
+			<s:RadialGradient id="gradient1" rotation="180">
+				<s:entries>					
+					<s:GradientEntry id="entry1" color="0xf0f0f0" alpha="0.7"/>
+					<s:GradientEntry id="entry2" color="0x9b9b9b" alpha="0.9"/>
+				</s:entries>
+			</s:RadialGradient>
+		</s:backgroundFill>
+	</s:BorderContainer>-->
+</s:HGroup>

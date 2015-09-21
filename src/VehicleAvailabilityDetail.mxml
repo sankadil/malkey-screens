@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" xmlns:code="http://code.google.com/p/flexlib/"
+			   creationComplete="initApp(event)"
+			   width="927"
+			   title="Vehicle Availability [Unavailable]"
+			   height="600"
+			   close="titlewindow1_closeHandler(event)" xmlns:components="com.dspl.malkey.components.*"
+			   >
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:DateFormatter id="df" formatString="YYYY/MM/DD"/>
+		<mx:DateFormatter id="dfd" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.events.SelectionEvent;
+			
+			import flexlib.scheduling.*;
+			import flexlib.scheduling.samples.ScheduleData;
+			import flexlib.scheduling.scheduleClasses.BackgroundItem;
+			import flexlib.scheduling.scheduleClasses.ColoredScheduleEntry;
+			import flexlib.scheduling.scheduleClasses.LayoutScrollEvent;
+			import flexlib.scheduling.scheduleClasses.SimpleScheduleEntry;
+			import flexlib.scheduling.scheduleClasses.lineRenderer.ILineRenderer;
+			import flexlib.scheduling.util.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.MenuEvent;
+			import mx.events.ScrollEvent;
+			import mx.events.ScrollEventDirection;
+			import mx.managers.PopUpManager;
+			import mx.utils.StringUtil;
+			
+			import spark.events.TextOperationEvent;
+			
+			[Bindable]
+			public var StartDate:Date;
+			[Bindable]
+			public var EndDate:Date;
+			
+			[Bindable]
+			public var dateFrom:String;
+			[Bindable]
+			public var dateTo:String;
+			
+			public var gacVehicleList:ArrayCollection;
+			public var gacTmpHireData:ArrayCollection;
+			[Bindable]
+			private var lacHireData:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacDataProvider:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacRowProvider:IList = new ArrayCollection();
+			
+			[Bindable]
+			private var liBookedCol:int = 0x3ae3f8;
+			[Bindable]
+			private var liConfirmedCol:int = 0xffea3c;
+			[Bindable]
+			private var liPreparedCol:int = 0xff60cd;
+			[Bindable]
+			private var liCheckedoutCol:int = 0x5cff3c;
+			[Bindable]
+			private var liCheckedinCol:int = 0xee5501;
+			//private var liCheckedinCol:int = 0xffb33c;
+
+			protected function initApp(event:FlexEvent):void
+			{
+				try{
+					initHireData();
+					initDataProvider();
+					dateFrom=dfd.format(dateFrom);
+					dateTo=dfd.format(dateTo);
+					setTimeFrame(StartDate);
+				}catch(error:Error){
+					Alert.show("initApp: " + error.message);
+					closeForm();
+				}
+			}
+			
+			protected function contextMenuHandler(event:ContextMenuEvent):void{
+				Alert.show("And handler invoked.","Context Menu clicked...");
+			}
+			
+			private function initHireData():void
+			{
+				try
+				{
+					lacHireData.removeAll();
+					for(var a:int=0;a<gacVehicleList.length;a++){
+						var row:ArrayCollection = new ArrayCollection();
+						var regno:String=gacVehicleList.getItemAt(a).regno;
+						for(var b:int=0;b<gacTmpHireData.length;b++){
+							var obj:Object = gacTmpHireData.getItemAt(b);
+							if(regno==obj["regno"].toString()){
+								var o:Object = new Object();
+								o["agrno"] = obj["agrno"].toString();
+								o["refno"] = obj["resno"].toString();
+								o["startDate"] = df.format(obj["sdate"].toString());
+								o["timeout"] = obj["timeout"].toString();
+								o["timein"] = obj["timein"].toString();
+								o["dout"] = df.format(obj["dout"].toString());
+								o["din"] = df.format(obj["din"].toString());
+								o["hours"] = obj["diff"].toString();
+								o["status"] = obj["cohirestsid"].toString();
+								o["typedes"] = obj["typedes"].toString();
+								o["hiredes"] = obj["hiredes"].toString();
+								row.addItem(o);
+							}
+						}	 
+						lacHireData.addItem(row);
+					}
+				}catch(error:Error){
+					Alert.show("initResData: " + error.message);
+				}
+			}
+			
+			private function initDataProvider() : void{
+				try{
+					lacDataProvider.removeAll();
+					var entries : ArrayCollection = new ArrayCollection();
+					var o:Object;
+
+					for(var a:int=0;a<lacHireData.length;a++)
+					{
+						var row : IList = new ArrayCollection();
+						o = new Object();
+						o["label"] = gacVehicleList.getItemAt(a).regno + "\r" + gacVehicleList.getItemAt(a).make + "\r" + gacVehicleList.getItemAt(a).model;
+						lacRowProvider.addItem(o);
+						
+						var resAC:ArrayCollection = lacHireData.getItemAt(a) as ArrayCollection;
+						for(var b:int=0;b<resAC.length;b++)
+						{
+							var ro:Object = resAC.getItemAt(b);
+							var agrno:String = ro["refno"].toString();
+							var refno:String = ro["agrno"].toString();
+							var ar:Array = ro["startDate"].toString().split("/");
+							var timeout:String = ro["timeout"].toString();
+							var timein:String = ro["timein"].toString();
+							var toutAr:Array=timeout.split(":");
+							var tinAr:Array=timein.split(":");
+							var dt:Date = new Date(ar[0].toString(),int(ar[1].toString())-1,ar[2].toString(),0,0,0,0);
+							//var dt:Date = new Date(ar[0].toString(),int(ar[1].toString())-1,ar[2].toString(),toutAr[0].toString(),toutAr[1].toString(),0,0);
+							//ar = ro["din"].toString().split("/");
+							//var dtEnd:Date = new Date(ar[0].toString(),int(ar[1].toString())-1,ar[2].toString(),tinAr[0].toString(),tinAr[1].toString(),0,0);
+							var hours:int = int(ro["hours"].toString());
+							var status:String = ro["status"].toString();
+
+							//Alert.show("d: " + d.toString() + "   dt: " + dt.toString());
+							
+							//var entry:SimpleScheduleEntry = new SimpleScheduleEntry();
+							var entry:ColoredScheduleEntry = new ColoredScheduleEntry();
+							//entry.startDate = DateUtil.clearTime(dt);
+							entry.startDate = dt;
+							entry.endDate = new Date(entry.startDate.getTime() + DateUtil.HOUR_IN_MILLISECONDS * hours);
+							//entry.endDate = dtEnd;
+							entry.backgroundColor = getColour(status);
+							entry.label = agrno + " - " + refno;
+							entry.label += "\rOut: " + ro["dout"].toString() + " @ " + timeout;
+							entry.label += "\rIn: " + ro["din"].toString() + " @ " + timein;
+							entry.label += "\rType: " + ro["typedes"].toString();
+							entry.label += "\r" + ro["hiredes"].toString();
+							row.addItem(entry);
+						}
+						entries.addItem(row); 
+					}
+					lacDataProvider = entries; 
+					lacDataProvider.refresh();
+				}catch(error:Error){
+					Alert.show("initDataProvider: " + error.message);
+				}
+			} 
+			
+			private function getColour(status:String):int{
+				status=StringUtil.trim(status.toLowerCase());
+				switch(status){
+					case "booked":
+						return liBookedCol;
+					case "confirmed":
+						return liConfirmedCol;
+					case "prepared":
+						return liPreparedCol;
+					case "checkout":
+						return liCheckedoutCol;
+					case "checkin":
+						return liCheckedinCol;
+				}				
+				return -1;
+			}
+
+			protected function sl_changeHandler(event:Event):void
+			{
+				//zoomViewer();
+			}
+			
+			/* private function zoomViewer():void{
+				var defVal:int=200;
+				scheduleViewer.zoom = defVal;
+				timeline.zoom = defVal;
+			} */
+
+			private function zoomViewer(defVal:int=200):void{
+				scheduleViewer.zoom = defVal;
+				timeline.zoom = defVal;
+				hsZoomer.value=defVal;
+			}
+
+			protected function timeline_scrollHandler(event:ScrollEvent):void{
+				 scheduleViewer.xPosition = event.position; 
+			}
+
+
+			protected function scheduleViewer_scrollHandler(event:ScrollEvent):void{
+				if(event.direction==ScrollEventDirection.VERTICAL){
+					scrollRowList(event.position);
+				}
+			}
+
+
+			protected function scheduleViewer_pixelScrollHandler(event:LayoutScrollEvent):void
+			{
+				if(event.direction==ScrollEventDirection.VERTICAL)
+				{
+					scrollRowList(event.position);
+				}
+			}
+		
+			protected function scheduleViewer_itemScrollHandler(event:LayoutScrollEvent):void
+			{
+				scrollRowList(event.position);
+			}
+			
+			private function scrollRowList(position:Number):void
+			{
+				rowList.verticalScrollPosition = position;
+				
+				//if(position>=rowList.maxVerticalScrollPosition){
+				//	Alert.show("scheduleviewer: " + scheduleViewer.maxVerticalScrollPosition.toString()  + "position: " + position.toString() + "   maxScroll: " + rowList.maxVerticalScrollPosition.toString());
+				//}
+			}
+
+			protected function scheduleViewer_clickHandler(event:MouseEvent):void
+			{
+				try{
+					if(scheduleViewer.selectedItem!=null){
+						var se:SimpleScheduleEntry = scheduleViewer.selectedItem as SimpleScheduleEntry;
+						scheduleViewer.selectedItem = null;
+						//Alert.show(se.label.toString());
+					}
+				}catch(error:Error){
+					Alert.show(error.message);
+				}
+			}
+			
+			private static const MS_PER_DAY:int = 1000 * 60 * 60 * 24; 
+			private var numDays:int;
+			private function setTimeFrame(sd:Date):void
+			{
+				try{
+					var dt:Date = DateUtil.copyDate(StartDate);
+					/* StartDate = DateUtil.clearTime(dt); */
+					dt.setHours(dt.getHours() + 720);
+					if(EndDate<dt)
+						EndDate = DateUtil.copyDate(DateUtil.clearTime(dt));
+					
+					numDays =  Math.round((EndDate.getTime()-StartDate.getTime())/MS_PER_DAY)+1;
+					zoomViewer();
+					timeline.xPosition = 0;
+					scheduleViewer.xPosition = 0;
+					lacDataProvider.refresh();
+				}catch(error:Error){
+					Alert.show("setTimeFrame: " + error.message);
+				}
+			}
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				PopUpManager.removePopUp(this);
+			}
+
+			protected function hsZoomer_changeHandler(event:Event):void{
+				zoomViewer(hsZoomer.value);
+			}
+
+			protected function btnReset_clickHandler(event:MouseEvent):void{
+				zoomViewer();
+			}
+		]]>
+	</fx:Script>
+	
+	<mx:HBox horizontalScrollPolicy="off" verticalScrollPolicy="off" horizontalGap="0" x="11" y="36" height="491">
+	<mx:VBox verticalGap="20" width="125" contentBackgroundColor="#EAEAEA" backgroundColor="#EAEAEA" backgroundAlpha="30">
+	<!--<s:Label
+		paddingLeft="30"
+		paddingTop="20"
+		text="Vehicles"
+		fontSize="16"
+		fontWeight="bold"
+		fontStyle="italic"
+		color="#616161"
+		/>-->
+		<!--paddingTop="{timeline.height}"-->
+	<mx:List 
+			paddingTop="{timeline.height}"
+			id="rowList"
+			dataProvider="{lacRowProvider}"
+			rowHeight="{scheduleViewer.rowHeight}"
+			width="125" 
+			height="{scheduleViewer.height+timeline.height}"
+			verticalScrollPolicy="off"
+			horizontalScrollPolicy="off" fontWeight="bold" color="#616161" contentBackgroundColor="#EAEAEA"/>
+	</mx:VBox>
+		
+		
+	<mx:VBox verticalGap="0" height="487" width="775">
+	
+	<code:Timeline id="timeline"
+				   width="{scheduleViewer.width}" 
+				   startDate="{StartDate}"
+				   endDate="{EndDate}" 
+				   xPosition="{scheduleViewer.xPosition}"
+				   scroll="timeline_scrollHandler(event)"
+				   minimumTimeRangeWidth="72"
+				   verticalScrollPolicy="off"
+				   height="35"
+				   fontWeight="bold"
+				   fontSize="13"
+				   contentBackgroundColor="#EAEAEA"
+				   />
+	
+	<code:ScheduleViewer id="scheduleViewer"
+							   width="775" height="450"
+							   rowHeight="90"
+							   dataProvider="{lacDataProvider}"
+							   contentWidth="35"
+							   startDate="{ StartDate }" endDate="{ EndDate }"
+							   verticalScrollPolicy="on"
+							   horizontalScrollPolicy="off"
+							   scroll="scheduleViewer_scrollHandler(event)"
+							   pixelScrollEnabled="false"
+							   pixelScroll="scheduleViewer_pixelScrollHandler(event)"
+							   itemScroll="scheduleViewer_itemScrollHandler(event)"
+							   click="scheduleViewer_clickHandler(event)"
+							   fontWeight="bold"
+							   
+							   entryRenderer="com.adobe.flex.extras.renderer.EntryRenderer" 
+							   entryLayout="flexlib.scheduling.scheduleClasses.layout.SimpleLayout"
+							   />
+		<!--entryRenderer="flexlib.scheduling.scheduleClasses.renderers.ColoredSolidScheduleEntryRenderer"-->
+		<!--entryRenderer="flexlib.scheduling.scheduleClasses.renderers.SolidScheduleEntryRenderer" -->
+		
+	</mx:VBox>
+	</mx:HBox>		
+	<s:Label x="11" y="14" text="Date From:" fontFamily="Arial" fontSize="14" fontWeight="bold" color="#504E4E"/>
+	<s:Label x="195" y="14" text="Date To:" fontFamily="Arial" fontSize="14" fontWeight="bold" color="#504E4E"/>
+	<s:Label
+		text="{dateFrom}"
+		id="txtDateFrom"
+		x="92" y="14" fontFamily="Arial" fontSize="14" fontWeight="bold" color="#504E4E"/>
+	<s:Label
+		text="{dateTo}"
+		id="txtDateTo"
+		x="257" y="14" fontFamily="Arial" fontSize="14" fontWeight="bold" color="#504E4E"/>
+	<mx:Canvas
+		borderColor="black"
+		borderStyle="solid"
+		backgroundColor="{liBookedCol}"
+		x="139" y="535" width="20" height="20"/>
+	<s:Label x="165" y="540" text="Booked" fontWeight="bold"/>
+	<mx:Canvas
+		borderColor="black"
+		borderStyle="solid"
+		backgroundColor="{liConfirmedCol}"
+		x="229" y="535" width="20" height="20"/>
+	<s:Label x="255" y="540" text="Booking Confirmed" fontWeight="bold"/>
+	<mx:Canvas
+		borderColor="black"
+		borderStyle="solid"
+		backgroundColor="{liPreparedCol}"
+		x="379" y="535" width="20" height="20"/>
+	<mx:Canvas
+		borderColor="black"
+		borderStyle="solid"
+		backgroundColor="{liCheckedoutCol}"
+		x="553" y="535" width="20" height="20"/>
+	<s:Label x="579" y="540" text="Checked Out" fontWeight="bold"/>
+	<mx:Canvas
+		borderColor="black"
+		borderStyle="solid"
+		backgroundColor="{liCheckedinCol}"
+		x="674" y="535" width="20" height="20"/>
+	<s:Label x="700" y="540" text="Checked In"  fontWeight="bold"/>
+	<s:Label x="405" y="540" text="Prepared to Check Out" fontWeight="bold"/>
+	<s:HSlider
+		minimum="100"
+		maximum="800"
+		id="hsZoomer"
+		toolTip="Move To Zoom In/Out"
+		change="hsZoomer_changeHandler(event)"
+		x="698" y="17" width="160"/>
+	<s:Label x="655" y="16" text="Zoom" fontFamily="Arial" fontSize="13" fontWeight="bold"/>
+	<mx:LinkButton
+		id="btnReset"
+		click="btnReset_clickHandler(event)"
+		color="#0A33BB"
+		x="860" y="11" label="Reset" fontSize="11"/>
+	
+	<!--<code:ScheduleViewer
+		id="MyScheduleViewer" 
+		width="600" 
+		height="100"
+		rowHeight="25"
+		startDate="{StartDate}"
+		endDate="{ EndDate }"
+		color="#FFFFFF"
+		borderColor="#FFFFFF"  />-->
+</s:TitleWindow>

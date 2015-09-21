@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	width="250" height="200">
+
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.events.DeleteCommentEvent;
+			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+
+			protected function btnCancel_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.visible=false;
+				var cancelEvent:DeleteCommentEvent=new DeleteCommentEvent("cancel",txtReason.text);
+				cancelEvent.comment=txtReason.text;
+				dispatchEvent(cancelEvent);
+			}
+
+			protected function btnUndo_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				this.visible=false;
+				var undoEvent:DeleteCommentEvent=new DeleteCommentEvent("undo",txtReason.text);
+				undoEvent.comment=txtReason.text;
+				dispatchEvent(undoEvent);
+			}
+			
+			private function titleWin_close(evt:CloseEvent):void
+			{
+				PopUpManager.removePopUp(evt.target as IFlexDisplayObject);
+			}
+			
+
+		]]>
+	</fx:Script>
+
+	<fx:Metadata>
+		[Event(name="cancel",type="events.DeleteCommentEvent")]
+		[Event(name="undo",type="events.DeleteCommentEvent")]
+	</fx:Metadata>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Label text="ARE YOU SURE,YOU WANT TO DELETE?" x="13" y="3"/>
+	<s:Label text="Reason" x="13" y="15"/>
+	<mx:VBox  x="24" y="32">		
+		<mx:HBox horizontalAlign="center">
+			<s:Button label="Cancel" id="btnCancel" click="btnCancel_clickHandler(event)" enabled="{txtReason.text.length !=0 ? true : false}"/>
+			<s:Button label="Undo" id="btnUndo" click="btnUndo_clickHandler(event)"/>		
+		</mx:HBox>		
+		<s:TextArea id="txtReason" width="200" height="100"/>
+	</mx:VBox>
+	
+</s:TitleWindow>

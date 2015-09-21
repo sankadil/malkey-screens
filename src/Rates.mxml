@@ -1,0 +1,1881 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Project: 	malkey-screens	
+File:		Rates.mxml	
+Date:		Apr 11, 2011	
+Author:		Sanka Senavirathna-Administrator
+-->
+
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:valueObjects="com.dspl.malkey.valueObjects.*"
+	xmlns:controls="com.dspl.efinac.components.common.controls.*" 
+	xmlns:services="com.dspl.malkey.services.*"
+	width="100%" height="100%"
+	disabledAlpha="1"
+	creationComplete="group1_creationCompleteHandler(event)"
+	 >
+	<!-- Metadata ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Metadata>
+	[Event(name="calculate", type="flash.events.Event")]
+	</fx:Metadata>
+	
+	
+	<s:states>
+		<s:State name="stDelete" id="stDelete"/>
+		<s:State name="stEdit" id="stEdit"/>
+		<s:State name="stNew"    id="stNew"/>
+		<s:State name="stView"  id="stView"/>
+		<s:State name="stUndo"  id="stUndo"/>
+	</s:states>
+	
+	
+	<!--View Tier-->
+	<mx:HBox width="100%" height="100%" horizontalGap="50" paddingLeft="20">
+		
+			<mx:VBox enabled="{isEnable}" disabledOverlayAlpha="0">
+				
+				<mx:Form height="100%" 
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="100%"
+						 >
+					<s:Label text="Deposit/Advance" fontWeight="bold"/>
+					<mx:FormItem label="Payment Type" direction="horizontal" required="true"  labelStyleName="formItemLabel" styleName="formItemL" horizontalGap="0">
+						<controls:_tiMasterFile id="txtPaymentType"
+												text="@{com_dspl_malkey_domain_Freservation.paytypeid}"
+												_acDataProvider="{acPaymentType}"
+												_strKeyColumn="paytypeid"
+												_strKeyColCaption="paytypeid" 
+												_strDetailColumn="description" 
+												_strDetailColCaption="description"
+												_strWindowTitle="Select Payment Type"
+												editable="false"
+												width="60"
+												paddingRight="0"
+												
+												/>
+						<s:TextInput width="100" 
+									 editable="false"  
+									 text="{genericFunctions.getArrayCollection(txtPaymentType._acDataProvider,'paytypeid',com_dspl_malkey_domain_Freservation.paytypeid).description}" 
+									 paddingRight="0" 
+									 paddingLeft="0"/>
+						<mx:LinkButton id="lnkPaymentType" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtPaymentType.launchSearchGrid();}"/>
+						
+					</mx:FormItem>
+					<mx:FormItem label="Deposit" direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtDeposit" 
+									 width="100" 
+									 restrict="0-9." 
+									 text="{com_dspl_malkey_domain_Freservation.deposit}" 
+									 focusOut="txtDeposit_changeHandler(event)"
+									 toolTip="To Be Paid:{com_dspl_malkey_domain_Freservation.depositbal}/= from Deposit"
+									 enabled.stNew="{com_dspl_malkey_domain_Freservation.cohirestsid=='BOOKED'}"
+									 />
+						<mx:Label text="To Be Paid {com_dspl_malkey_domain_Freservation.depositbal}" visible.stNew="false"/>
+							<!--<s:TextInput id="txtDepositBal" 
+										 width="75" 
+										 text="{com_dspl_malkey_domain_Freservation.depositbal}" 
+										 editable="false"
+										 borderVisible="false"
+										 />-->
+					</mx:FormItem>
+					
+					<mx:FormItem label="Rent" direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtRent" 
+									 width="100" 
+									 restrict="0-9." 
+									 editable="false"
+									 enabled="false"
+									 text="{txtTotal.text}" 
+									 />
+					</mx:FormItem>
+					
+					<mx:FormItem label="Total Payable" direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtRentPlusDeposit" 
+									 width="100" 
+									 restrict="0-9." 
+									 editable="false"
+									 enabled="false"
+									 text="{(new Number(txtTotal.text)+new Number(txtDeposit.text)).toFixed(2)}" 
+									 />
+					</mx:FormItem>
+					
+<!--					
+					THIS WAS A ORIGINAL CODE AND DONT DELETE IT UNTIL USER ACCEPTANCE 
+					
+					<mx:FormItem label="Total Payable" direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtRentPlusDeposit" 
+									 width="100" 
+									 restrict="0-9." 
+									 text="{(new Number(txtTotal.text)+new Number(txtDeposit.text)).toFixed(2)}" 
+									 />
+					</mx:FormItem>
+					
+					<mx:FormItem label="Advance"  direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtAdvance" 
+									 width="100" 
+									 restrict="0-9." 
+									 text="{com_dspl_malkey_domain_Freservation.advance}" 
+									 focusOut="txtAdvance_changeHandler(event)"
+									 toolTip="To Be Paid:{com_dspl_malkey_domain_Freservation.advancebal}/= from Advance"
+									 enabled.stNew="{com_dspl_malkey_domain_Freservation.cohirestsid=='BOOKED'}"
+									 />
+						<mx:Label text="To Be Paid {com_dspl_malkey_domain_Freservation.advancebal}"/>
+					</mx:FormItem>-->
+				</mx:Form>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<!--NEW ADDED PART-->
+				
+				<s:Label text="Minimum amount to be paid" fontWeight="bold"/>
+				<mx:Form height="100%" 
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="100%"
+						 >
+					
+					<mx:FormItem label="Deposit" direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtDeposit2" 
+									 width="100" 
+									 restrict="0-9." 
+									 text="{txtDeposit.text}" 
+									 toolTip="To Be Paid:{com_dspl_malkey_domain_Freservation.depositbal}/= from Deposit"
+									 editable="false"
+									 enabled="false"
+									 />
+						<mx:Label text="To Be Paid {com_dspl_malkey_domain_Freservation.depositbal}"  visible.stNew="false"/>
+					</mx:FormItem>
+					
+
+					
+					<mx:FormItem label="Advance"  direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtAdvance" 
+									 width="100" 
+									 restrict="0-9." 
+									 text="{com_dspl_malkey_domain_Freservation.advance}" 
+									 focusOut="txtAdvance_changeHandler(event)"
+									 toolTip="To Be Paid:{com_dspl_malkey_domain_Freservation.advancebal}/= from Advance"
+									 enabled.stNew="{com_dspl_malkey_domain_Freservation.cohirestsid=='BOOKED'}"
+									 />
+						<mx:Label text="To Be Paid {com_dspl_malkey_domain_Freservation.advancebal}"  visible.stNew="false"/>
+					</mx:FormItem>
+					
+<!--					<mx:FormItem label="Advance"  direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtAdvance2" 
+									 width="100" 
+									 restrict="0-9." 
+									 text="{txtAdvance.text}" 
+									 toolTip="To Be Paid:{com_dspl_malkey_domain_Freservation.advancebal}/= from Advance"
+									 />
+						<mx:Label text="To Be Paid {com_dspl_malkey_domain_Freservation.advancebal}"/>
+					</mx:FormItem>-->
+					
+				</mx:Form>
+				
+				<s:Label text="Minimum amount to be paid for confirmation" fontWeight="bold"/>
+				<mx:Form height="100%" 
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="100%"
+						 >				
+					<mx:FormItem label="Amount"  direction="horizontal"  labelStyleName="formItemLabel" styleName="formItemL">
+						<s:TextInput id="txtAdvancePlusDeposit" 
+									 width="100" 
+									 restrict="0-9." 
+									 editable="false"
+									 enabled="false"
+									 text="{new Number(txtDeposit.text)+ new Number(txtAdvance.text)}" 
+									 toolTip="To Be Paid:{com_dspl_malkey_domain_Freservation.advancebal}/= from Advance + {com_dspl_malkey_domain_Freservation.depositbal}/= from Deposit"
+									 />
+						<mx:Label 
+							maxWidth="200"
+							visible.stNew="false"
+							text="To Be Paid {(new Number(com_dspl_malkey_domain_Freservation.advancebal) +new Number(com_dspl_malkey_domain_Freservation.depositbal)).toFixed(2)}"/>
+					</mx:FormItem>
+					
+				</mx:Form>
+				
+				<!--END NEW ADDED PART-->
+				
+				
+				
+				
+				
+				
+				
+				<s:Label text="Other charges" fontWeight="bold"/>
+				<mx:Form height="100%"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 >				
+				
+				<mx:FormItem label="Other (Rs.)" toolTip="Eg:Parking.etc" styleName="formItemM" labelStyleName="formItemLabel" direction="horizontal" horizontalGap="0">
+					<s:TextInput id="txtOther" width="90" textAlign="right"  text="@{com_dspl_malkey_domain_Freservation.ciother}" restrict="0-9."   editable="false"/>
+					
+					<mx:LinkButton width="70" color="#0A33BB" textDecoration="underline" 
+								   id="lnkChange_txtOther" 
+								   click="lnkChange_txtOther_clickHandler(event)"
+								   label="Change"
+								   />
+				</mx:FormItem>
+				<mx:FormItem label="Naration" toolTip="Other Charges Naration Eg:Parking.etc" styleName="formItemM" labelStyleName="formItemLabel" direction="horizontal" horizontalGap="0">
+					<s:TextArea id="txtOtherNaration" width="350" height="70"   text="@{com_dspl_malkey_domain_Freservation.othernaration}"/>
+				</mx:FormItem>
+				
+					<mx:Spacer height="10"/>
+				</mx:Form>
+<!--				
+				<mx:Form height="100%"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 >
+					<s:Label text="Additional Charges" fontWeight="bold"/>
+					<mx:List id="lstAdditionalCharges" width="404" height="75" labelField="description" dataProvider="{acAddchgs}" verticalScrollPolicy="auto" itemClick="list2_itemClickHandler(event)">
+						<mx:itemRenderer>
+							<fx:Component>
+								<mx:CheckBox selectedField="isSelected">
+									
+								</mx:CheckBox>
+							</fx:Component>
+						</mx:itemRenderer>
+					</mx:List>
+					
+					<mx:Spacer height="10"/>
+					
+					<mx:VBox>
+						<mx:FormItem label="Additional Charges"   labelStyleName="formItemLabel" styleName="formItemL">
+							<s:TextInput id="txtTotalAddCharge" editable="false" textAlign="right"/>
+						</mx:FormItem>
+						<mx:FormItem label="Total Discount"   labelStyleName="formItemLabel" styleName="formItemL">
+							<s:TextInput id="txtTotalDiscount" editable="false"  textAlign="right"/>
+						</mx:FormItem>
+						<mx:FormItem label="Total"   labelStyleName="formItemLabel" styleName="formItemL">
+							<s:TextInput id="txtTotal" editable="false"  textAlign="right"/>
+						</mx:FormItem>
+					</mx:VBox>
+
+					
+				</mx:Form>-->
+				
+
+			</mx:VBox>
+		
+		
+			<mx:VBox creationPolicy="all">
+				
+				<mx:Accordion id="accordionRates" height="350" width="700" creationPolicy="all">
+
+				<mx:Form height="350" 
+						 borderAlpha="0.10"
+						 paddingTop="10"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="100%"
+						 label="1.Vehicle Rental Rates"
+						 >
+					<!--<s:Label text="Vehicle Rental Rates" fontWeight="bold"/>-->
+					<mx:HBox>
+					
+					<mx:VBox>
+						<mx:FormItem label="RegNo" styleName="formItemL" labelStyleName="formItemLabel">
+							<!--<s:TextInput id="txtVehicle"  text="{vehicleRate.id}" editable="false"/>-->
+							<s:TextInput id="txtVehicle"  text="{com_dspl_malkey_domain_Fresvehicle.id.regno}" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Description" styleName="formItemL" labelStyleName="formItemLabel">
+							<s:TextInput id="txtVehicleDescrition"  text="{genericFunctions.getArrayCollection(acVehicleAll,'regno',com_dspl_malkey_domain_Fresvehicle.id.regno).description}" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Num Of Days" styleName="formItemL" labelStyleName="formItemLabel">
+							<s:TextInput id="txtVehicleNumOfDate"  text="{com_dspl_malkey_domain_Freservation.chargdays}" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Rate Type" styleName="formItemL" labelStyleName="formItemLabel">
+							<s:TextInput id="txtVehicletype"  text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.ratetype}" editable="false"/>
+						</mx:FormItem>
+
+						<mx:FormItem label="From Date" styleName="formItemL" labelStyleName="formItemLabel">
+							<mx:DateField id="txtVehicleFdate"  selectedDate="{com_dspl_malkey_domain_Freservation.dout}" enabled="false"  disabledColor="#000000"/>
+						</mx:FormItem>
+						<mx:FormItem label="To Date" styleName="formItemL" labelStyleName="formItemLabel">
+							<mx:DateField id="txtVehicleTDate"  selectedDate="{com_dspl_malkey_domain_Freservation.din}" enabled="false"  disabledColor="#000000"/>
+						</mx:FormItem>
+
+						<mx:FormItem label="Allocation(hours)" styleName="formItemL" labelStyleName="formItemLabel">
+							<s:TextInput id="txtVehicleAllotedHours"  text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.allotedhours}" width="{txtVehicleTDate.width}" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Excess Hours rate"  styleName="formItemL" labelStyleName="formItemLabel" >
+							<s:TextInput id="txtVehicleXsHoursrate"  text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.xhourrate}" width="{txtVehicleTDate.width}" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Allocation(kms)" styleName="formItemL" labelStyleName="formItemLabel" direction="horizontal" horizontalGap="0">
+							<s:TextInput id="txtVehicleAllotedkms"  text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.allotedkms}" width="50" editable="false"/>
+							<mx:LinkButton width="70" color="#0A33BB" textDecoration="underline" 
+										   id="btnChange_VehicleAllotedkms" 
+										   click="btnChange_txtVehicleAllotedkms_clickHandler(event)"
+										   enabled="{isEnable}"
+										   label="Change"
+										   />
+						</mx:FormItem>
+					</mx:VBox>
+					<mx:VBox>
+
+						<mx:FormItem label="Excess Mileage rate"  styleName="formItemXL" labelStyleName="formItemLabel" >
+							<s:TextInput id="txtVehicleXsmilerate"  text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.xsmilerate}" width="{txtVehicleTDate.width}" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Rate" styleName="formItemXL" labelStyleName="formItemLabel">
+							<s:TextInput id="txtVehicleRate"  text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.rate}" editable="false"/>
+						</mx:FormItem>
+						
+						<mx:FormItem label="Excess Hours Discount"  styleName="formItemXL" labelStyleName="formItemLabel" direction="horizontal" horizontalGap="0">
+							<s:TextInput 
+								id="txtVehicleXsHoursratediscount"  
+								text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.discountxhourrate}" 
+								enabled="false"
+								restrict="0-9." 
+								contentBackgroundColor="#C6CCFA"
+								/>
+							<mx:Label text="%"/>
+							<mx:LinkButton width="70" color="#0A33BB" textDecoration="underline" 
+										   id="btnChange_txtVehicleDiscount" 
+										   click="btnChange_txtVehicleHSDiscount_clickHandler(event)"
+										   enabled="{isEnable}"
+										   label="Change"
+										   />
+						</mx:FormItem>
+						<mx:FormItem label="Excess Mileage Discount" styleName="formItemXL" labelStyleName="formItemLabel" direction="horizontal" horizontalGap="0">
+							<s:TextInput 
+								id="txtDiscountXsmilerate"  
+								restrict="0-9." 
+								contentBackgroundColor="#C6CCFA"
+								text="{com_dspl_malkey_domain_Freservation.discount_xmile}"
+								enabled="false"
+								/>
+							<mx:Label text="%"/>
+							<mx:LinkButton width="70" color="#0A33BB" textDecoration="underline" 
+								id="btnChange_txtVehicleXsmilerate" 
+								click="btnChange_txtVehicleXsmilerate_clickHandler(event)"
+								enabled="{isEnable}"
+								label="Change"
+								/>
+						</mx:FormItem>
+						
+
+						<mx:FormItem label="Discount" styleName="formItemXL" labelStyleName="formItemLabel" direction="horizontal" horizontalGap="0">
+							<s:TextInput 
+								id="txtVehicleDiscount"  
+								text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.discount}"  
+								restrict="0-9." 
+								contentBackgroundColor="#C6CCFA"
+								enabled="false"
+								width="50"
+								/>
+							<mx:Label text="%"/>
+							
+							<mx:LinkButton width="70" color="#0A33BB" textDecoration="underline" 
+										   id="btnChange_txtVehicleHSDiscount" 
+										   click="btnChange_txtVehicleDiscount_clickHandler(event)"
+										   enabled="{isEnable}"
+										   label="Change"
+										   />
+							<mx:LinkButton width="50" color="#0A33BB" textDecoration="underline" 
+										   id="btnChange_txtVehicleHSDiscountIncludedPrice" 
+										   click="btnChange_txtVehicleDiscountCalculator_clickHandler(event)"
+										   enabled="{isEnable}"
+										   label="?"
+										   />
+						</mx:FormItem>
+						<mx:FormItem label="Discount Amount" styleName="formItemXL" labelStyleName="formItemLabel" direction="horizontal">
+							<s:TextInput 
+								id="txtVehicleDiscountAmt"  
+								editable="false"
+								/>
+						</mx:FormItem>
+						<mx:FormItem label="Additonal Charge" styleName="formItemXL" labelStyleName="formItemLabel" direction="horizontal">
+							<s:TextInput 
+								id="txtVehicleAdditionalChargeAmt"  
+								editable="false"
+								/>
+						</mx:FormItem>
+						<mx:FormItem label="Total" styleName="formItemXL" labelStyleName="formItemLabel">
+							<s:TextInput id="txtVehicleTotal"  text="{com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.total}" editable="false" fontWeight="bold" contentBackgroundColor="#C6CCFA"/>
+							<mx:HRule width="{txtVehicleTotal.width}"/>
+							<mx:HRule width="{txtVehicleTotal.width}"/>
+						</mx:FormItem>
+					</mx:VBox>
+					</mx:HBox>
+					
+				</mx:Form>
+
+					
+					
+					
+				<mx:Form height="350" 
+							 borderAlpha="0.10"
+							 paddingTop="10"
+							 paddingLeft="5"
+							 paddingRight="5"
+							 paddingBottom="2"
+							 borderColor="black"
+							 borderStyle="solid"
+							 borderVisible="true" 
+							 width="100%"
+							 label="2.Driver Rental Rates"
+							 >
+						<s:Label text="Driver Rental Rates" fontWeight="bold"/>
+					
+						<mx:HBox>
+							<mx:VBox>
+<!--								<mx:FormItem label="Licence No" styleName="formItemL" labelStyleName="formItemLabel">
+									<s:TextInput id="txtDriver"  text="{genericFunctions.getArrayCollection(acMalkeyDrivers,'empid',com_dspl_malkey_domain_Fresdriver.id.empid).dlno}" editable="false"/>
+								</mx:FormItem>
+								<mx:FormItem label="Name" styleName="formItemL" labelStyleName="formItemLabel">
+									<s:TextInput id="txtDriverDescrition"  text="{genericFunctions.getArrayCollection(acMalkeyDrivers,'empid',com_dspl_malkey_domain_Fresdriver.id.empid).name}" editable="false"/>
+								</mx:FormItem>
+								<mx:FormItem label="Num Of Date" styleName="formItemL" labelStyleName="formItemLabel">
+									<s:TextInput id="txtDriverNumOfDate"  text="{isMalkeyDriver==true ? com_dspl_malkey_domain_Freservation.chargdays : ''}" editable="false"/>
+								</mx:FormItem>
+								<mx:FormItem label="Rate Type" styleName="formItemL" labelStyleName="formItemLabel">
+									<s:TextInput id="txtDrivertype"  text="{fresdriverrate.id.ratetype}" editable="false"/>
+								</mx:FormItem>-->
+<!--								<mx:FormItem label="Rate" styleName="formItemL" labelStyleName="formItemLabel">
+									<s:TextInput id="txtDriverRate"  text="{fresdriverrate.rate}" editable="false"/>
+								</mx:FormItem>-->
+								<mx:FormItem label="Detention-Rate" styleName="formItemXL" labelStyleName="formItemLabel">
+									<s:TextInput id="txtDriverOTRate"  text="{fresdriverrate.otrate}" editable="false"/>
+								</mx:FormItem>
+								<mx:FormItem label="Night Out Rate" styleName="formItemXL" labelStyleName="formItemLabel">
+									<s:TextInput id="txtDriverNightOutRate"  text="{fresdriverrate.nightoutrate}" editable="false"/>
+								</mx:FormItem>
+								<mx:FormItem label="Detention-Rate Discount" styleName="formItemXL" labelStyleName="formItemLabel" direction="horizontal" horizontalGap="0">
+									<s:TextInput 
+										id="txtDriverDiscountDetention"  
+										restrict="0-9." 
+										contentBackgroundColor="#C6CCFA"
+										text="{fresdriverrate.discount_detention}"
+										enabled="false"
+										/>
+									<!--
+												focusOut="txtDriverDiscountDetention_focusOutHandler(event)"
+										change="/* txtDriverDiscountDetention_changeHandler(event) */"		
+									enabled="{isEnable}"
+									-->
+									<mx:Label text="%"/>
+									<mx:LinkButton width="70" color="#0A33BB" textDecoration="underline" 
+												   id="btnChange_txtDriverDiscountDetention" 
+												   click="btnChange_txtDriverDiscountDetention_clickHandler(event)"
+												   enabled="{isEnable}"
+												   label="Change"
+												   />
+								</mx:FormItem>
+								<mx:FormItem label="Night Out Rate Discount" styleName="formItemXL" labelStyleName="formItemLabel" direction="horizontal" horizontalGap="0">
+									<s:TextInput 
+										id="txtDriverDiscountNightOut"  
+										restrict="0-9." 
+										contentBackgroundColor="#C6CCFA"
+										text="{fresdriverrate.discount_nightout}"
+										enabled="false"
+										
+										/>
+									<!--
+									focusOut="txtDriverDiscountNightOut_focusOutHandler(event)"
+									-->
+									<mx:Label text="%"/>
+									<mx:LinkButton width="70" color="#0A33BB" textDecoration="underline" 
+												   id="btnChange_txtDriverDiscountNightOut" 
+												   click="btnChange_txtDriverDiscountNightOut_clickHandler(event)"
+												   enabled="{isEnable}"
+												   label="Change"
+												   />
+								</mx:FormItem>
+							</mx:VBox>
+						</mx:HBox>
+						
+					
+					
+					
+					</mx:Form>
+					
+					
+					
+					
+				<mx:Form height="350" 
+						borderAlpha="0.10"
+						paddingTop="10"
+						paddingLeft="5"
+						paddingRight="5"
+						paddingBottom="2"
+						borderColor="black"
+						borderStyle="solid"
+						borderVisible="true" 
+						width="100%"
+						label="3.Accesories Rental Rates"
+						>
+						<s:Label text="Accesories Rental Rates" fontWeight="bold"/>
+					
+						<mx:DataGrid id="dgAccRate" dataProvider="{acRatesAccessory}"
+									 itemEditEnd="doCalculate()"
+									 itemFocusOut="doCalculate()"
+									 width="100%" height="80%"  
+									 verticalScrollPolicy="auto"  
+									 editable="true"
+									 enabled="{isEnable}"
+									 >
+							<mx:columns>
+								<mx:DataGridColumn headerText="Accessory" 		dataField="id"  						editable="false" labelFunction="lblfDescriptionAccessory"/>
+								<mx:DataGridColumn headerText="Date-Range" 		dataField="id"  						editable="false" labelFunction="lblfDate2" 				width="170"/>
+								<mx:DataGridColumn headerText="Days" 			dataField="id"  						editable="false" labelFunction="lblfNumberOfDays" 		width="85"/>
+								<mx:DataGridColumn headerText="Quantity" 		dataField="qty"  						editable="false" 										width="85"/>
+								<mx:DataGridColumn headerText="Rate-Type" 		dataField="fresaccrate.id.ratetype"   	editable="false"/>
+								<mx:DataGridColumn headerText="Rate" 			dataField="fresaccrate.rate"   			editable="false"  										width="50"/>
+								<mx:DataGridColumn headerText="Discount (%)" 	dataField="fresaccrate.discount" 		editable="true"  										width="150"/>
+								<mx:DataGridColumn headerText="Total" 			dataField="fresaccrate.total"  			editable="false"/>
+							</mx:columns>
+						</mx:DataGrid>
+					
+					
+					<mx:HBox>
+						<mx:FormItem label="Sub Total Discount">
+							<s:TextInput id="txtTotalDiscountAccesories" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Sub Total">
+							<s:TextInput id="txtTotalAccesories" editable="false"/>
+						</mx:FormItem>
+					</mx:HBox>
+					<mx:Spacer height="5"/>
+					</mx:Form>
+				
+				<mx:Form height="350" 
+						 borderAlpha="0.10"
+						 paddingTop="10"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 width="100%"
+						 label="4.Other Service Rental Rates"
+						 >
+					<s:Label text="Other Service Rental Rates" fontWeight="bold"/>
+					
+					<mx:DataGrid id="dgOtherServiceRate1" dataProvider="{acRatesOthersrv}" 
+								 itemEditEnd="doCalculate()"
+								 itemFocusOut="doCalculate()"
+								 width="100%" height="100%"  
+								 verticalScrollPolicy="auto" 
+								 editable="true"
+								 enabled="{isEnable}"
+								 >
+						<mx:columns>
+							<mx:DataGridColumn headerText="Service" 		dataField="id"  							editable="false" labelFunction="lblfDescriptionOtherService"	/>
+							<mx:DataGridColumn headerText="Date-Range" 		dataField="id"  							editable="false" labelFunction="lblfDateOtherService" 			width="170"/>
+							<mx:DataGridColumn headerText="Days" 			dataField="id"   							editable="false" labelFunction="lblfNumberOfDaysOtherService" 	width="50"/>
+							<mx:DataGridColumn headerText="Rate-Type" 		dataField="fresothersrvrate.id.ratetype"   	editable="false"												/>
+							<mx:DataGridColumn headerText="Rate" 			dataField="fresothersrvrate.rate"   		editable="false"  												width="50"/>
+							<mx:DataGridColumn headerText="Discount (%)" 	dataField="fresothersrvrate.discount" 		editable="true"   												width="150"/>
+							<mx:DataGridColumn headerText="Total" 			dataField="fresothersrvrate.total"  		editable="false" 												/>
+						</mx:columns>
+					</mx:DataGrid>
+
+					<mx:HBox>
+						<mx:FormItem label="Sub Total Discount">
+							<s:TextInput id="txtTotalDiscountOther" editable="false"/>
+						</mx:FormItem>
+						<mx:FormItem label="Sub Total">
+							<s:TextInput id="txtTotalOther" editable="false"/>
+						</mx:FormItem>
+					</mx:HBox>
+					<mx:Spacer height="5"/>
+				</mx:Form>
+				
+				</mx:Accordion>
+				
+				<!--<mx:Spacer height="10"/>-->
+				
+				<mx:Form height="100%"
+						 borderAlpha="0.10"
+						 paddingTop="5"
+						 paddingLeft="5"
+						 paddingRight="5"
+						 paddingBottom="2"
+						 borderColor="black"
+						 borderStyle="solid"
+						 borderVisible="true" 
+						 >
+					<mx:HBox horizontalGap="20">
+						<mx:VBox>
+							<s:Label text="Additional Charges" fontWeight="bold"/>
+							<mx:List id="lstAdditionalCharges" width="304" height="65" labelField="description" dataProvider="{acAddchgs}" verticalScrollPolicy="auto" itemClick="list2_itemClickHandler(event)">
+								<mx:itemRenderer>
+									<fx:Component>
+										<mx:CheckBox selectedField="isSelected">
+											
+										</mx:CheckBox>
+									</fx:Component>
+								</mx:itemRenderer>
+							</mx:List>
+						</mx:VBox>
+						<!--<mx:Spacer height="10"/>-->
+						
+						<mx:VBox>
+							<mx:FormItem label="Additional Charges"   labelStyleName="formItemLabel" styleName="formItemL">
+								<s:TextInput id="txtTotalAddCharge" editable="false" textAlign="right"/>
+							</mx:FormItem>
+							<mx:FormItem label="Total Discount"   labelStyleName="formItemLabel" styleName="formItemL">
+								<s:TextInput id="txtTotalDiscount" editable="false"  textAlign="right"/>
+							</mx:FormItem>
+							<mx:FormItem label="Total"   labelStyleName="formItemLabel" styleName="formItemL">
+								<s:TextInput id="txtTotal" editable="false"  textAlign="right"/>
+							</mx:FormItem>
+						</mx:VBox>
+					</mx:HBox>
+					
+				</mx:Form>
+				
+			</mx:VBox>
+	
+	</mx:HBox>
+	
+	<!--Bindings here-->
+	<fx:Binding source="{stCurrent}" destination="currentState"/>
+	
+	<!--Controller-->
+	<fx:Declarations>
+		<!--Validators-->
+		<mx:StringValidator id="svPaymentType"
+							source="{txtPaymentType}"
+							property="text"
+							/>
+		<!--Formatters here-->
+		<mx:DateFormatter id="dateFormatter" formatString="DD/MM/YYYY"/>
+		<!--valueObjects/domains here-->
+
+		<valueObjects:Com_dspl_malkey_domain_Freservation id="com_dspl_malkey_domain_Freservation"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresdriver id="com_dspl_malkey_domain_Fresdriver"/>
+		<valueObjects:Com_dspl_malkey_domain_Fresdriverrate id="fresdriverrate"/>
+		<!--
+		fresdriverrate should be apply to all com_dspl_malkey_domain_Fresdriver.fresdriverrate
+		
+		-->
+		<valueObjects:Com_dspl_malkey_domain_Fresvehicle id="com_dspl_malkey_domain_Fresvehicle"/>
+		<mx:ArrayCollection id="acRatesAccessory" collectionChange="acRatesAccessory_collectionChangeHandler(event)"/>
+		<mx:ArrayCollection id="acAccessoryListAll" collectionChange="acAccessoryListAll_collectionChangeHandler(event)"/>
+		<mx:ArrayCollection id="acOtherServiceListAll" collectionChange="acOtherServiceListAll_collectionChangeHandler(event)"/>
+		<mx:ArrayCollection id="acRatesOthersrv"  collectionChange="acRatesOthersrv_collectionChangeHandler(event)"/>
+		<mx:ArrayCollection id="acMalkeyDrivers"  collectionChange="acMalkeyDrivers_collectionChangeHandler(event)"/>
+		<mx:ArrayCollection id="acVehicleAll"  collectionChange="acVehicleAll_collectionChangeHandler(event)"/>
+		<mx:ArrayCollection id="acResAdditionalCharges"  collectionChange="acResAdditionalCharges_collectionChangeHandler(event)"/>
+		<mx:ArrayCollection id="acAddchgs"  collectionChange="acAddchgs_collectionChangeHandler(event)"/>
+		
+	</fx:Declarations>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!--Model:Bussiness Logic Here/ActionScript Here-->
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.events.TextBoxEvent;
+			import com.dspl.malkey.util.DateOperation;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.util.Tax;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Faddcharge;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccs;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaddcharge;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaddchargePK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freshed;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothsrv;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicle;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.DateField;
+			import mx.events.CollectionEvent;
+			import mx.events.DataGridEvent;
+			import mx.events.FlexEvent;
+			import mx.events.IndexChangedEvent;
+			import mx.events.ListEvent;
+			import mx.formatters.NumberBaseRoundType;
+			import mx.formatters.NumberFormatter;
+			import mx.managers.PopUpManager;
+			import mx.resources.IResourceManager;
+			import mx.resources.ResourceManager;
+			import mx.utils.StringUtil;
+			
+			import spark.events.TextOperationEvent;
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//variables here
+			//---------------------------------------------------------------------------------------	
+			[Bindable] private var genericFunctions:GenericFunctions=new GenericFunctions();
+			[Bindable] public var acPaymentType:ArrayCollection=new ArrayCollection();
+			[Bindable] public var isMalkeyDriver:Boolean=false;
+			[Bindable] public var clientType:String ="INDIVIDUAL";
+			[Bindable] public var isEnable:Boolean=false;
+			[Bindable] public var stCurrent:String;
+			[Bindable] public var nFormatter:NumberFormatter=new NumberFormatter();
+			//---------------------------------------------------------------------------------------	
+			
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			private function andOperation(var1:Boolean,var2:Boolean):Boolean
+			{
+				return var1 && var2;
+			}
+			
+			
+			
+			
+			/*Lable Functions here  */
+			//---------------------------------------------------------------------------------------		
+			private function lblfDate2(rate:Com_dspl_malkey_domain_Fresaccs, column:DataGridColumn):String
+			{
+				return dateFormatter.format(rate.fresaccrate.id.dfrom)+"-"+dateFormatter.format(rate.fresaccrate.id.dto);
+			}
+			private function lblfDateOtherService(rate:Com_dspl_malkey_domain_Fresothsrv, column:DataGridColumn):String
+			{
+				return dateFormatter.format(rate.id.dfrom)+"-"+dateFormatter.format(rate.id.dto);
+			}
+			private function lblfNumberOfDays(rate:Com_dspl_malkey_domain_Fresaccs, column:DataGridColumn):String
+			{
+				return DateOperation.getDaysDifference(rate.fresaccrate.id.dto,rate.fresaccrate.id.dfrom).toString();
+			}
+			private function lblfQty(rate:Com_dspl_malkey_domain_Fresaccs, column:DataGridColumn):String
+			{
+				return rate.qty.toString();
+			}
+			private function lblfNumberOfDaysOtherService(rate:Com_dspl_malkey_domain_Fresothsrv, column:DataGridColumn):String
+			{
+				return DateOperation.getDaysDifference(rate.id.dto,rate.id.dfrom).toString();
+			}
+			private function lblfDescriptionAccessory(acc:Com_dspl_malkey_domain_Fresaccs, column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acAccessoryListAll,"accid",acc.id.accid).description;
+			}
+			private function lblfDescriptionOtherService(srv:Com_dspl_malkey_domain_Fresothsrv, column:DataGridColumn):String
+			{
+				return genericFunctions.getArrayCollection(acOtherServiceListAll,"srvid",srv.id.srvid).description;
+			}
+			//---------------------------------------------------------------------------------------	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			/*set style of accordian*/
+			//---------------------------------------------------------------------------------------	
+			public function setAccordianStyles():void {
+				accordionRates.getHeaderAt(0).setStyle('color', 0xAA0000);
+				accordionRates.getHeaderAt(1).setStyle('color', 0x00AA00);
+				accordionRates.getHeaderAt(2).setStyle('color', 0x0000AA);
+				accordionRates.getHeaderAt(3).setStyle('color', 0x00AAAA);
+			}
+			//---------------------------------------------------------------------------------------	
+
+			
+
+
+
+
+
+			/*set editable deposite & advance*/
+			//---------------------------------------------------------------------------------------	
+			public function isEditableDeposite():Boolean {
+				var flag:Boolean=false;
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=="BOOKED" 
+					&& new Number(com_dspl_malkey_domain_Freservation.deposit)==new Number(com_dspl_malkey_domain_Freservation.depositbal)
+				)
+				{
+					flag=true;
+				}
+				return flag;
+			}
+			
+			public function setEditableDepositeAdvance():Boolean {
+				var flagD:Boolean=false;
+				var flagA:Boolean=false;
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=="BOOKED" 
+					&& new Number(com_dspl_malkey_domain_Freservation.deposit)==new Number(com_dspl_malkey_domain_Freservation.depositbal)
+				)
+				{
+					flagD=true;
+				}
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=="BOOKED" 
+					&& new Number(com_dspl_malkey_domain_Freservation.advance)==new Number(com_dspl_malkey_domain_Freservation.advancebal)
+				)
+				{
+					flagA=true;
+				}
+				txtAdvance.editable=flagA;
+				txtDeposit.editable=flagD;
+				return (flagA&&flagD);
+			}
+			
+			public function setEditableAdvance():Boolean {
+				var flagA:Boolean=false;
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=="BOOKED" 
+					&& new Number(com_dspl_malkey_domain_Freservation.advance)==new Number(com_dspl_malkey_domain_Freservation.advancebal)
+				)
+				{
+					flagA=true;
+				}
+				txtAdvance.editable=flagA;
+				return (flagA);
+			}
+			
+			public function setEditableDeposit():Boolean {
+				var flagD:Boolean=false;
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=="BOOKED" 
+					&& new Number(com_dspl_malkey_domain_Freservation.deposit)==new Number(com_dspl_malkey_domain_Freservation.depositbal)
+				)
+				{
+					flagD=true;
+				}
+				txtDeposit.editable=flagD;
+				return (flagD);
+			}
+			//---------------------------------------------------------------------------------------	
+			
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//Start :Following methods are related to aditional changes
+			//---------------------------------------------------------------------------------------	
+			/***
+			 * Following methods are related to aditional changes
+			 * do the selection,when user click on list
+			 * 
+			 * */
+			protected function doSelectSessionalRate(index:int):void
+			{
+				if(acAddchgs.getItemAt(index)["isSelected"])
+				{
+					acAddchgs.getItemAt(index)["isSelected"]=false;
+					return;
+				}
+				else
+				{ 
+					var o:Object;
+					/* for(var i:int=0;i<acAddchgs.length;i++)
+					{
+						o=acAddchgs.getItemAt(i);
+						o["isSelected"]=false;
+					}	 */			
+					o=acAddchgs.getItemAt(index);
+					o["isSelected"]=true;
+					lstAdditionalCharges.invalidateDisplayList();
+					lstAdditionalCharges.invalidateList();
+				}
+			}
+			//Following methods are related to aditional changes
+			/***
+			 * Following methods are related to aditional changes
+			 * read list of additional charges that user has entered.
+			 * 
+			 * */
+			public function getAdditionalRates():ArrayCollection
+			{
+
+				var acAdditionalRates:ArrayCollection=new ArrayCollection();
+				for(var index:int =0 ; index<acAddchgs.length;index++){
+				var tempAddchrg:Com_dspl_malkey_domain_Faddcharge=acAddchgs.getItemAt(index) as Com_dspl_malkey_domain_Faddcharge;
+				if(tempAddchrg.isSelected==true)
+				{
+					var tempResAddchrg:Com_dspl_malkey_domain_Fresaddcharge=new Com_dspl_malkey_domain_Fresaddcharge();
+					var tempResAddchrgPK:Com_dspl_malkey_domain_FresaddchargePK=new Com_dspl_malkey_domain_FresaddchargePK();
+					tempResAddchrg.percentage=tempAddchrg.percentage;
+					tempResAddchrg.amount=tempAddchrg.amount;
+					tempResAddchrgPK.addchargeid=tempAddchrg.addchargeid;
+					tempResAddchrgPK.resno=com_dspl_malkey_domain_Freservation.resno;
+					tempResAddchrg.id=tempResAddchrgPK;
+					acAdditionalRates.addItem(tempResAddchrg);
+				}}
+					
+				return acAdditionalRates;
+			}
+			//Following methods are related to aditional changes
+			/***
+			 * Following methods are related to aditional changes
+			 * reset the list of additional rates list
+			 * 
+			 * */
+			public function resetAdditionalRatesGrid():void
+			{
+
+				try{
+					if(acAddchgs !=null || acAddchgs.length>0)
+					{
+						var o:Object;
+						for(var i:int=0;i<acAddchgs.length;i++)
+						{
+							o=acAddchgs.getItemAt(i);
+							o["isSelected"]=false;
+						}
+						acAddchgs.refresh();
+						if(lstAdditionalCharges!=null){
+						lstAdditionalCharges.invalidateDisplayList();
+						lstAdditionalCharges.invalidateList();
+						}
+					}
+				}
+				catch(e:Error)
+				{
+					trace("i think acAddchgs have not been initialized");
+				}
+			}
+			//Following methods are related to aditional changes
+			/***
+			 * Following methods are related to aditional changes
+			 * set data that retrive from DB for paticular reservation
+			 * 
+			 * */
+			public function setAdditionalRatesOnGrid():void
+			{
+				resetAdditionalRatesGrid();//before set data reset the 
+				for(var index:int =0 ; index<acResAdditionalCharges.length;index++)
+				{
+					for(var index2:int =0 ; index2<acAddchgs.length;index2++){
+						var tempResAddchrg:Com_dspl_malkey_domain_Fresaddcharge=acResAdditionalCharges.getItemAt(index) as Com_dspl_malkey_domain_Fresaddcharge;
+						var tempAddchrg:Com_dspl_malkey_domain_Faddcharge=acAddchgs.getItemAt(index2) as Com_dspl_malkey_domain_Faddcharge;
+						
+						if(tempResAddchrg.id.addchargeid==tempAddchrg.addchargeid)
+						{
+							tempAddchrg.isSelected=true;
+						}
+					}
+				}
+				lstAdditionalCharges.invalidateDisplayList();
+				lstAdditionalCharges.invalidateList();
+				
+			}
+			//---------------------------------------------------------------------------------------	
+			//End :Following methods are related to aditional changes
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//Following method reset the the entier form
+			//-----------------------------------------------------------------------------------------------------------------------------------
+			public function resetForm():void
+			{
+				try
+				{
+				com_dspl_malkey_domain_Fresdriver=new Com_dspl_malkey_domain_Fresdriver();
+				com_dspl_malkey_domain_Fresvehicle=new Com_dspl_malkey_domain_Fresvehicle();
+				txtTotal.text="";
+				txtTotalDiscount.text="";
+				txtTotalAddCharge.text="";
+				txtVehicleDiscountAmt.text="";
+				txtVehicleAdditionalChargeAmt.text="";
+				accordionRates.selectedIndex=0;
+				resetAdditionalRatesGrid();
+				}
+				catch(e:Error)
+				{
+					trace(e.message);
+				}
+			}
+			//-----------------------------------------------------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//this method push to calculate rates again
+			//-----------------------------------------------------------------------------------------------------------------------------------
+			public function wakeup():void
+			{
+				dispatchEvent(new Event("rateChange"));
+			}
+			//-----------------------------------------------------------------------------------------------------------------------------------
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+
+	
+			
+
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//Start : collection change events of collections
+			//-----------------------------------------------------------------------------------------------------------------------------------
+			protected function acMalkeyDrivers_collectionChangeHandler(event:CollectionEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function acVehicleAll_collectionChangeHandler(event:CollectionEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function acResAdditionalCharges_collectionChangeHandler(event:CollectionEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function acAddchgs_collectionChangeHandler(event:CollectionEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+
+			protected function arraycollection1_collectionChangeHandler(event:CollectionEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+			
+			protected function acRatesViewOthersrv_collectionChangeHandler(event:CollectionEvent):void
+			{
+				calculate(event);
+			}
+			
+			
+			protected function acRatesViewAccessory_collectionChangeHandler(event:CollectionEvent):void
+			{
+				calculate(event);
+			}
+			
+			
+			protected function acRatesAccessory_collectionChangeHandler(event:CollectionEvent):void
+			{
+				trace("Rates.acRatesAccessory_collectionChangeHandler();");
+				calculate(event);
+			}
+			
+			protected function acAccessoryListAll_collectionChangeHandler(event:CollectionEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+			
+			
+			protected function acRatesOthersrv_collectionChangeHandler(event:CollectionEvent):void
+			{
+				calculate(event);
+			}
+			
+			
+			protected function acOtherServiceListAll_collectionChangeHandler(event:CollectionEvent):void
+			{
+				
+			}
+			
+			
+			//-----------------------------------------------------------------------------------------------------------------------------------
+			//End : collection change events of collections
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			
+			
+			
+			
+			
+			//start: controls flex events
+			//-----------------------------------------------------------------------------------------------------------------------------------
+
+			protected function txtAdvance_changeHandler(event:FocusEvent):void
+			{
+				com_dspl_malkey_domain_Freservation.advance=nFormatter.format(new Number(txtAdvance.text));//new Number(txtAdvance.text).toFixed(2);
+			}
+
+
+			protected function txtDeposit_changeHandler(event:FocusEvent):void
+			{
+				com_dspl_malkey_domain_Freservation.deposit=nFormatter.format(new Number(txtDeposit.text));//new Number(txtDeposit.text).toFixed(2);
+			}
+
+			protected function accordionRates_changeHandler(event:IndexChangedEvent):void
+			{
+				//if(event.newIndex == 0)
+					//txtVehicleDiscount.setFocus();
+			}
+			
+			
+/* 			protected function txtDriverDiscount_changeHandler(event:FocusEvent):void
+			{
+				doCalculate();				
+			} */
+			
+			protected function txtVehicleXsHoursratediscount_changeHandler():void
+			{
+				txtVehicleXsHoursratediscount.text=nFormatter.format(new Number(txtVehicleXsHoursratediscount.text));//new Number(txtVehicleDiscount.text).toFixed(2);
+				if(new Number(txtVehicleXsHoursratediscount.text) >100)
+				{
+					txtVehicleXsHoursratediscount.text="0.00";
+					Alert.show("Invalid discount amount","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.discountxhourrate=nFormatter.format(new Number(txtVehicleXsHoursratediscount.text));
+
+			}
+			
+			protected function txtVehicleDiscount_changeHandler():void
+			{
+				txtVehicleDiscount.text=nFormatter.format(new Number(txtVehicleDiscount.text));//new Number(txtVehicleDiscount.text).toFixed(2);
+				if(new Number(txtVehicleDiscount.text) >100)
+				{
+					txtVehicleDiscount.text="0.00";
+					Alert.show("Invalid discount amount","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+					
+			}
+			
+			protected function list2_itemClickHandler(event:ListEvent):void
+			{
+				doSelectSessionalRate(event.rowIndex);
+				doCalculate();
+			}
+			
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				/*NumberFormatter use by:Rounding procedures of each calculation in this method*/
+				
+				var resourceManager:IResourceManager = ResourceManager.getInstance();
+				nFormatter.useThousandsSeparator=false;
+				nFormatter.precision=resourceManager.getInt("resource","noofdecimals.reservation");
+				nFormatter.rounding=NumberBaseRoundType.NEAREST; 
+				setAccordianStyles();
+				txtVehicleDiscount.setFocus();
+				trace("after create compleate");
+				//doCalculate();
+			}
+			//-----------------------------------------------------------------------------------------------------------------------------------
+			//end: controls flex events
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//Collection change event
+			//---------------------------------------------------------------------------------------	
+			public function calculate(event:CollectionEvent):void
+			{
+				try{doCalculate();}
+				catch(e:Error)
+				{}
+			}
+			//---------------------------------------------------------------------------------------	
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//Following method perform the calculations,this is the main method of rates file.
+			//---------------------------------------------------------------------------------------	
+			/***
+			 * Following method calculate the entier rates
+			 * event:fire on itemeditend of datagrid,textchanging of discount fields
+			 * 
+			 * */
+			[Bindable("rateChange")]
+			public function doCalculate():Number
+			{
+				
+				
+				/***
+				 * About Floating point rounding logic
+				 * 
+				 * 
+				 * Per day rate: 8 decimal point.thats why use nfv
+				 * Discount Amt Per day 	:2 decimail point nf
+				 * Aditional Chrges			:2 decimal point
+				 * Tax per day				:2 decimal point
+				 * {(Per day rate) - (Discount Amt Per day)}:5 decimail point.thats why use nf5
+				 * 
+				 * PER_DAY_RATE::5 decimail point.thats why use nf5
+				 * PER_DAY_RATE: is the rate that multiply by CHARGEABLE_DAYS
+				 * round in to 5 decimal point before multiply by chargable days.and the total amt round into 2 decimal point.
+				 * example
+				 * 	daly rate-------: 3142.85714286 {8 decimal}
+					discount amt----: 209.31 {2 decimal}
+					tax per day-----: 352.03 {2 decimal}
+					final rate------:3285.57714286 {8 decimal}
+					final rate------:3285.57714 {5 decimal}
+				 * */
+				
+				
+				trace("Rates.doCalculate();");				
+				var total:Number=0;
+				var totalDiscount:Number=0;
+				var subtotalAcc:Number=0;
+				var subtotalOtherSrv:Number=0;
+				var subtotalVehi:Number=0;
+				var subtotal:Number=0;
+				var subDiscountAcc:Number=0;
+				var subDiscountOtherSrv:Number=0;
+				var subDiscountVehi:Number=0;
+				var subDiscountDriver:Number=0;
+				var subTotalAddChrg:Number=0;
+				/*NumberFormatter use by:Rounding procedures of each calculation in this method*/
+				var nfv:NumberFormatter=new NumberFormatter();
+				nfv.useThousandsSeparator=false;
+				nfv.precision=resourceManager.getInt("resource","noofdecimals.reservation.vehicle");
+				nfv.rounding=NumberBaseRoundType.NEAREST; 
+				
+				/*NumberFormatter use by:Rounding procedures of each calculation in this method*/
+				var nf:NumberFormatter=new NumberFormatter();
+				nf.useThousandsSeparator=false;
+				nf.precision=resourceManager.getInt("resource","noofdecimals.reservation");
+				nf.rounding=NumberBaseRoundType.NEAREST; 
+				
+				/*NumberFormatter use by:Rounding procedures of each calculation in this method*/
+				var nf5:NumberFormatter=new NumberFormatter();
+				nf5.useThousandsSeparator=false;
+				nf5.precision=resourceManager.getInt("resource","noofdecimals.reservation.unit");
+				nf5.rounding=NumberBaseRoundType.NEAREST; 
+
+				//--------------------------------------------------------------------------------------------------------------------------------
+				/*Calculate Accessory Rates  */
+				for each(var fresaccs:Com_dspl_malkey_domain_Fresaccs in acRatesAccessory)
+				{
+					fresaccs.fresaccrate.discount=nf.format(new Number(fresaccs.fresaccrate.discount));
+					if(new Number(fresaccs.fresaccrate.discount).toString()=="NaN")
+					{
+						fresaccs.fresaccrate.discount="0.00";
+					}
+					//fresaccs.fresaccrate.discount=new Number(fresaccs.fresaccrate.discount).toFixed(2);
+					if(new Number(fresaccs.fresaccrate.discount)>100)
+					{
+						fresaccs.fresaccrate.discount="0.00";
+						Alert.show("Invalid discount amount","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						doCalculate();
+					}
+					var numOfDay:Number=DateOperation.getDaysDifference(fresaccs.fresaccrate.id.dto,fresaccs.fresaccrate.id.dfrom);
+					var a_quantity:Number=fresaccs.qty;
+					var a_perDayRate:Number=new Number(nfv.format(fresaccs.fresaccrate.rate));
+					var a_numberOfChargabledays:Number=DateOperation.getDaysDifference(fresaccs.id.dto,fresaccs.id.dfrom);
+					var a_discountAccesories:Number=new Number((new Number(fresaccs.fresaccrate.discount)/100));
+					var a_perDayDiscountAmt:Number=new Number(nf.format(a_perDayRate*a_discountAccesories));
+					var a_perDayRateMinusDiscount:Number=new Number(nf5.format(a_perDayRate-a_perDayDiscountAmt));
+					var tmpTotalAmt:Number=new Number(nf.format(a_perDayRateMinusDiscount*a_numberOfChargabledays));
+					tmpTotalAmt=new Number(nf.format(tmpTotalAmt*a_quantity));
+					var tmpDiscountAmt:Number=new Number(nf.format(a_perDayDiscountAmt*a_numberOfChargabledays));
+					tmpDiscountAmt=new Number(nf.format(a_quantity*tmpDiscountAmt));
+					totalDiscount+=tmpDiscountAmt;
+					subDiscountAcc+=tmpDiscountAmt;
+					subtotalAcc+=tmpTotalAmt;
+					fresaccs.fresaccrate.total=new Number(nf.format(tmpTotalAmt));
+					total +=fresaccs.fresaccrate.total;
+					
+				}
+				txtTotalDiscountAccesories.text=nf.format(subDiscountAcc);
+				txtTotalAccesories.text=nf.format(subtotalAcc);
+				acRatesAccessory.refresh();
+				//--------------------------------------------------------------------------------------------------------------------------------
+				
+				
+				//--------------------------------------------------------------------------------------------------------------------------------
+				/*Start-OtherService rate Calculate  */
+				for each(var fresothsrv:Com_dspl_malkey_domain_Fresothsrv in acRatesOthersrv)
+				{
+					fresothsrv.fresothersrvrate.discount=nf.format(new Number(fresothsrv.fresothersrvrate.discount));
+					if(new Number(fresothsrv.fresothersrvrate.discount).toString()=="NaN")
+					{
+						fresothsrv.fresothersrvrate.discount="0.00";
+					}
+					if(new Number(fresothsrv.fresothersrvrate.discount)>100)
+					{
+						fresothsrv.fresothersrvrate.discount="0.00";
+						Alert.show("Invalid discount amount","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						doCalculate();
+					}
+					var o_perDayRate:Number=new Number(nfv.format(fresothsrv.fresothersrvrate.rate));
+					var o_numberOfChargabledays:Number=fresothsrv.noofdays;
+					var o_discountOtherService:Number=new Number((new Number(fresothsrv.fresothersrvrate.discount)));
+					var o_perDayDiscountAmt:Number=new Number(nf.format((o_perDayRate*o_discountOtherService)/100));
+					var o_perDayRateMinusDiscount:Number=new Number(nf5.format(o_perDayRate-o_perDayDiscountAmt));
+					var tmpDiscountAmt:Number=new Number(nf.format(o_perDayDiscountAmt*o_numberOfChargabledays));
+					var tmpTotalAmt:Number=new Number(nf.format(o_perDayRateMinusDiscount * o_numberOfChargabledays));
+					totalDiscount+=tmpDiscountAmt;
+					subDiscountOtherSrv+=tmpDiscountAmt;
+					subtotalOtherSrv+=tmpTotalAmt;
+					fresothsrv.fresothersrvrate.total=new Number(nf.format(tmpTotalAmt));
+					total +=fresothsrv.fresothersrvrate.total;
+					
+					
+				}
+				txtTotalDiscountOther.text=nf.format(subDiscountOtherSrv);
+				txtTotalOther.text=nf.format(subtotalOtherSrv);
+				acRatesOthersrv.refresh();
+				/*End-OtherService rate Calculate  */
+				//--------------------------------------------------------------------------------------------------------------------------------
+				
+				
+				//--------------------------------------------------------------------------------------------------------------------------------	
+				/*Start-Vehicle Rate calulate  */
+				if(com_dspl_malkey_domain_Fresvehicle !=null && com_dspl_malkey_domain_Fresvehicle.id !=null && com_dspl_malkey_domain_Fresvehicle.fresvehiclerate!=null)
+				{
+					if( com_dspl_malkey_domain_Fresvehicle.id.regno.length>0)					
+					{
+						com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.discount=nf.format(new Number(txtVehicleDiscount.text));
+						if(new Number(com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.discount)>100)
+						{
+							txtVehicleDiscount.text="0.00";
+							Alert.show("Invalid discount amount","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+							doCalculate();
+						}
+
+						
+
+						
+						var v_perDayRate:Number=new Number(nfv.format(com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.rate));
+						var v_numberOfChargabledays:Number=com_dspl_malkey_domain_Freservation.chargdays;
+						var v_discountVehicle:Number=new Number((new Number(com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.discount)));
+						var v_perDayDiscountAmt:Number=new Number(nf.format((v_perDayRate*v_discountVehicle)/100));
+						var v_perDayRateMinusDiscount:Number=v_perDayRate-v_perDayDiscountAmt;
+						var v_perDayRateMinusDiscountAdditionalCharges:Number=calculateAdditionalCharges(v_perDayRateMinusDiscount);
+						var v_perDayRateMinusDiscountPlusAdditionalCharges:Number=new Number(nf5.format(v_perDayRateMinusDiscount+v_perDayRateMinusDiscountAdditionalCharges));
+						//var v_perDayRateMinusDiscountTax:Number= new Number(nf.format(tax.Sline_Tax_Cal(com_dspl_malkey_domain_Freservation.taxcomcode,v_perDayRateMinusDiscountPlusAdditionalCharges,"","",1)));
+						//var v_taxDet:ArrayCollection=tax.TaxTable;
+						//var v_totalTax:Number=new Number( nf.format(v_perDayRateMinusDiscountTax * v_numberOfChargabledays));
+						
+						
+						var tempTotalAmt:Number=new Number(nf.format(v_perDayRateMinusDiscountPlusAdditionalCharges  * v_numberOfChargabledays));
+						var tmpDiscountAmt:Number=new Number(nf.format(v_perDayDiscountAmt  * v_numberOfChargabledays));
+						totalDiscount+=tmpDiscountAmt;
+						subDiscountVehi =tmpDiscountAmt;
+						
+						var tempAddchgAmt:Number=new Number(nf.format(v_perDayRateMinusDiscountAdditionalCharges  * v_numberOfChargabledays));
+						txtVehicleAdditionalChargeAmt.text=tempAddchgAmt.toString();
+						subTotalAddChrg +=tempAddchgAmt;
+						
+						
+						com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.total=new Number(nf.format(tempTotalAmt));
+						txtVehicleTotal.text=nf.format(com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.total);
+						total =total+ (com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.total) ;
+						txtVehicleDiscountAmt.text=nf.format(subDiscountVehi);
+						//vehicleRate.other1=subDiscountVehi.toString();
+					}
+				}
+				/*End-Vehicle Rate calulate  */
+				//--------------------------------------------------------------------------------------------------------------------------------	
+				
+				txtTotalAddCharge.text=nf.format(subTotalAddChrg);
+				txtTotal.text=nf.format(total);
+				txtTotalDiscount.text=nf.format(totalDiscount);
+				dispatchEvent(new Event("calculate"));
+				return total;
+				
+				
+			}
+			//---------------------------------------------------------------------------------------	
+
+			
+
+
+
+			
+
+
+
+
+			
+			
+			
+			
+			
+			public function calculateAdditionalCharges(tempTotalAmt:Number):Number
+			{
+				/*NumberFormatter use by:Rounding procedures of each calculation in this method*/
+				var nf:NumberFormatter=new NumberFormatter();
+				nf.useThousandsSeparator=false;
+				nf.precision=resourceManager.getInt("resource","noofdecimals.reservation");//2
+				nf.rounding=NumberBaseRoundType.NEAREST;
+				var tempAddchgAmt:Number=0;//keep additional charge amount 
+				for each(var tempFaddcharge:Com_dspl_malkey_domain_Faddcharge in acAddchgs)
+				{
+					if(tempFaddcharge.isSelected)
+					{
+						if(tempFaddcharge.ctype=='P')
+						{
+						tempAddchgAmt=new Number(nf.format(tempAddchgAmt+tempTotalAmt * (new Number(tempFaddcharge.percentage)/100)));
+						}
+						/*if(tempFaddcharge.ctype=='V')
+						{
+							tempAddchgAmt=new Number(nf.format(tempAddchgAmt+ new Number(tempFaddcharge.amount)));
+						}*/
+					}
+				}
+				return tempAddchgAmt;
+			}
+			
+			
+			//[Bindable("hasAdditionalCharges")]
+			public function hasAdditionalCharges():Boolean
+			{
+				for each(var tempFaddcharge:Com_dspl_malkey_domain_Faddcharge in acAddchgs)
+				{
+					if(tempFaddcharge.isSelected)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/* EXTRA MILEAGE RATE DISCOUNT POPUP------------------------------------------------------------------------------------------- */
+			protected function btnChange_txtVehicleXsmilerate_clickHandler(event:MouseEvent):void
+			{
+				commonPopupMethod(txtDiscountXsmilerate.text,"Enter Extra Mileage Discount","Extra Mileage Discount",listener_txtVehicleXsmilerate);
+			}
+			
+			protected function listener_txtVehicleXsmilerate(event:TextBoxEvent):void
+			{
+				txtDiscountXsmilerate.text=event.text;
+				extraMileageDiscount();
+				doCalculate();
+			}
+			/* ------------------------------------------------------------------------------------------- */
+			
+			
+			
+			
+			
+			
+			/* VEHICLE EXCESS HOURS DISCOUNT POPUP------------------------------------------------------------------------------------------- */
+			protected function btnChange_txtVehicleHSDiscount_clickHandler(event:MouseEvent):void
+			{
+				commonPopupMethod(txtVehicleXsHoursratediscount.text,"Enter Discount for Excess Hours Rate","Discount",listener_txtVehicleHSDiscount);
+			}
+			
+			protected function listener_txtVehicleHSDiscount(event:TextBoxEvent):void
+			{
+				txtVehicleXsHoursratediscount.text=event.text;
+				txtVehicleXsHoursratediscount_changeHandler();
+				doCalculate();
+			}
+			/* ------------------------------------------------------------------------------------------- */
+			
+			/* Alloted Millage DISCOUNT POPUP------------------------------------------------------------------------------------------- */
+			protected function btnChange_txtVehicleAllotedkms_clickHandler(event:MouseEvent):void
+			{
+				commonPopupMethod(txtVehicleAllotedkms.text,"Enter Alloted Millage(kms)","Alloted(kms)",listener_txtAllotedMillage);
+			}
+			protected function listener_txtAllotedMillage(event:TextBoxEvent):void
+			{
+				//txtVehicleAllotedkms.text=event.text;
+				//var temp:int=com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.allotedkms;
+				try{
+				if(new Number(event.text).toString()!="NaN")
+				com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.allotedkms=new Number(event.text);
+				}
+				catch(e:Error)
+				{
+				
+				}
+				//txtVehicleDiscount_changeHandler();
+				//doCalculate();
+			}
+			
+			/* VEHICLE DISCOUNT POPUP------------------------------------------------------------------------------------------- */
+			protected function btnChange_txtVehicleDiscount_clickHandler(event:MouseEvent):void
+			{
+				commonPopupMethod(txtVehicleDiscount.text,"Enter Discount for Vehicle","Discount",listener_txtVehicleDiscount);
+			}
+			
+			protected function listener_txtVehicleDiscount(event:TextBoxEvent):void
+			{
+				txtVehicleDiscount.text=event.text;
+				txtVehicleDiscount_changeHandler();
+				doCalculate();
+			}
+			/* ------------------------------------------------------------------------------------------- */
+			/* VEHICLE DISCOUNT CALCULATER POPUP------------------------------------------------------------------------------------------- */
+			protected function btnChange_txtVehicleDiscountCalculator_clickHandler(event:MouseEvent):void
+			{
+				commonPopupMethod(com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.total.toFixed(2),"Enter Final Amount to Calculate Discount","Amount(Discount deducted)",listener_txtVehicleDiscountCalculator);
+			}
+			
+			protected function listener_txtVehicleDiscountCalculator(event:TextBoxEvent):void
+			{
+				if(new Number(event.text) ==new Number("NaN"))
+					event.text="0";
+				var discountPercentageCalculated:Number=((new Number(com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.total) + new Number(txtVehicleDiscountAmt.text)-new Number(event.text)) * 100/(new Number(com_dspl_malkey_domain_Fresvehicle.fresvehiclerate.total) + new Number(txtVehicleDiscountAmt.text)))
+				txtVehicleDiscount.text=discountPercentageCalculated.toFixed(2);
+				txtVehicleDiscount_changeHandler();
+				doCalculate();
+			}
+			/* ------------------------------------------------------------------------------------------- */
+			
+			
+			
+			
+			
+			
+			/* DETENTION DISCOUNT POPUP------------------------------------------------------------------------------------------- */
+			protected function btnChange_txtDriverDiscountDetention_clickHandler(event:MouseEvent):void
+			{
+				commonPopupMethod(txtDriverDiscountDetention.text,"Enter Detention-Rate Discount","Detention-Rate Discount",listener_txtDriverDiscountDetention);
+			}
+			
+			protected function listener_txtDriverDiscountDetention(event:TextBoxEvent):void
+			{
+				txtDriverDiscountDetention.text=event.text;
+				driverDiscountDetention();
+				doCalculate();
+			}
+			/* ------------------------------------------------------------------------------------------- */
+			
+			
+			
+			
+			
+			
+			
+			/* NIGHT OUT DISCOUNT POPUP------------------------------------------------------------------------------------------- */
+			protected function btnChange_txtDriverDiscountNightOut_clickHandler(event:MouseEvent):void
+			{
+				commonPopupMethod(txtDriverDiscountNightOut.text,"Night Out Rate Discount","Night Out Rate Discount",listener_txtDriverDiscountNightOut);
+			}
+			
+			protected function listener_txtDriverDiscountNightOut(event:TextBoxEvent):void
+			{
+				txtDriverDiscountNightOut.text=event.text;
+				if(new Number(txtDriverDiscountNightOut.text) >100)
+				{
+					txtDriverDiscountNightOut.text="0.00";
+					Alert.show("Invalid discount amount","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				fresdriverrate.discount_nightout=nFormatter.format(new Number(txtDriverDiscountNightOut.text));//new Number(txtDriverDiscountNightOut.text).toFixed(2);
+				doCalculate();
+			}
+			/* ------------------------------------------------------------------------------------------- */
+			
+			
+			
+			
+			
+			/* OTHER CHARAGES POPUP------------------------------------------------------------------------------------------- */
+			protected function lnkChange_txtOther_clickHandler(event:MouseEvent):void
+			{
+				commonPopupMethod(txtOther.text,"Other (Rs.)","Other (Rs.)",listener_txtOther);
+			}
+			
+			protected function listener_txtOther(event:TextBoxEvent):void
+			{
+				com_dspl_malkey_domain_Freservation.ciother=new Number(event.text).toFixed(2);
+			}
+			/* ------------------------------------------------------------------------------------------- */
+			
+			
+			/***
+			 * Common popup TextBox method
+			 * 
+			 */
+			protected function commonPopupMethod(text:String,titleLabel:String,label:String,myListener:Function):void
+			{
+				var textbox:TextBox=new TextBox();
+				textbox.text=text;
+				textbox.label=label;
+				textbox.titleLabel=titleLabel;
+				textbox.addEventListener("enter",myListener);
+				PopUpManager.addPopUp(textbox,this,true);
+				PopUpManager.centerPopUp(textbox);
+			}
+			
+	
+
+			/***
+			 * validate user entered amount
+			 * 
+			 * 
+			 * */
+			protected function extraMileageDiscount():void
+			{
+				txtDiscountXsmilerate.text=nFormatter.format(new Number(txtDiscountXsmilerate.text));//new Number(txtDiscountXsmilerate.text).toFixed(2);
+				if(new Number(txtDiscountXsmilerate.text)<=100)
+				{
+					com_dspl_malkey_domain_Freservation.discount_xmile=nFormatter.format(new Number(txtDiscountXsmilerate.text));//new Number(txtDiscountXsmilerate.text).toFixed(2);
+				}
+				else
+				{
+					txtDiscountXsmilerate.text="0.00";
+					com_dspl_malkey_domain_Freservation.discount_xmile=nFormatter.format(new Number(txtDiscountXsmilerate.text));//new Number(txtDiscountXsmilerate.text).toFixed(2);
+					Alert.show("Invalid discount amount","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+			}
+			
+			
+			/***
+			 * validate user entered amount
+			 * 
+			 * 
+			 * */
+			protected function driverDiscountDetention():void
+			{
+				if(new Number(txtDriverDiscountDetention.text) >100)
+				{
+					txtDriverDiscountDetention.text="0.00";
+					Alert.show("Invalid discount amount","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+				fresdriverrate.discount_detention=nFormatter.format(new Number(txtDriverDiscountDetention.text));//new Number(txtDriverDiscountDetention.text).toFixed(2);
+			}
+
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	
+</s:Group>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="360" height="138"
+			   title="Registry Of Vehicle Due In"
+			   close="closeForm()"
+			   creationComplete="initApp(event)" xmlns:services="com.dspl.malkey.services.*"
+			   >
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+		
+		
+		<!--Service-->
+		<services:FhiretypeSRV 
+			id="srvFhiretype"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		
+		<!--Call Responder-->
+		<s:CallResponder 
+			id="crListAllFhiretype"
+			result="crListAllFhiretype_resultHandler(event)"
+			fault="crListAllFhiretype_faultHandler(event)"
+			/>
+		
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.data.events.DataConflictEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			[Embed(source="com/dspl/malkey/components/common/icons/Warning.png")]
+			private var IconWarning:Class;
+			[Embed(source="com/dspl/malkey/components/common/icons/Error.png")]
+			private var IconError:Class;
+			[Embed(source="com/dspl/malkey/components/common/icons/Question.png")]
+			private var IconQuestion:Class;
+			[Embed(source="com/dspl/malkey/components/common/icons/Information.png")]
+			private var IconInformation:Class;
+			
+			[Bindable]
+			[Bindable]
+			private var lacStatus:ArrayCollection=new ArrayCollection([
+				{id:"A",description:"All"},
+				{id:"O",description:"Out"},
+				{id:"I",description:"In"}
+			]);
+			
+			[Bindable]
+			private var lacFhiretype:ArrayCollection=new ArrayCollection();
+			
+			//RD: Reservation Diary
+			//WD: Daily Hire Bookings With Driver
+			//SD: Daily Hire Bookings Without Driver
+			public var gsType:String;
+			public var gsTitle:String;
+			
+			//Alert Type: 1-Error,2-Warning,3-Message,4-Question
+			private function displayAlert(alertType:int,alertText:String,alertTitle:String="",closeHandler:Function=null):void{
+				try{
+					if(alertType==1)//Error
+						Alert.show(alertText,alertTitle,Alert.OK,null,closeHandler,IconError,Alert.OK,null);
+					else if(alertType==2)//Warning
+						Alert.show(alertText,alertTitle,Alert.OK,null,closeHandler,IconWarning,Alert.OK,null);
+					else if(alertType==3)//Message
+						Alert.show(alertText,alertTitle,Alert.OK,null,closeHandler,IconInformation,Alert.OK,null);
+					else if(alertType==4)//Question
+						Alert.show(alertText,alertTitle,Alert.YES|Alert.NO,null,closeHandler,IconQuestion,Alert.YES,null);
+				}catch(error:Error){
+					Alert.show("displayAlert: " + error.message,"Error",Alert.OK,null,null,IconError,Alert.OK,null);
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					var curDate:Date=new Date();
+					dfDateFrom.selectedDate=curDate;
+					dfDateTo.selectedDate=curDate;
+					this.title=gsTitle;
+					setPermission();
+					loadMasterFiles();
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}catch(error:Error){
+					Message.displayAlert(1,"closeForm: " + error.message,"Error",errorCloseHandler);	
+				}
+			}
+
+			protected function btnView_clickHandler(event:MouseEvent):void{
+				try{
+					if(dfDateFrom.selectedDate>dfDateTo.selectedDate){
+						Message.displayAlert(2,"Date To Cannot Be Less Than Date From","Warning",null);
+					}else{
+						var dateFrom:String=getDateString(dfDateFrom.selectedDate);
+						var dateTo:String=getDateString(dfDateTo.selectedDate);
+						var hireType:String=ddHireType.selectedItem.id;
+						if(hireType=="all")
+							hireType="";
+						var request:URLRequest;
+						
+					if(gsType=="DI"){ //Registry Of Vehicle Due In
+							request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/RegistryOfVehicleDueIn.jsp?df="+ dateFrom+"&dt="+dateTo+"&ht="+hireType);
+						}
+						
+						request.method = URLRequestMethod.POST;
+						navigateToURL(request);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			
+			private function getDateString(dt:Date):String{
+				var year:String=dt.getFullYear().toString();
+				var month:String=(dt.getMonth()+1).toString();
+				var date:String=dt.getDate().toString();
+				if(StringUtil.trim(month).length<2)
+					month="0"+month;
+				if(StringUtil.trim(date).length<2)
+					date="0"+date;
+				return year+"."+month+"."+date;
+			}
+			
+			private function loadMasterFiles():void{
+				try{
+					crListAllFhiretype.token=srvFhiretype.ListAll();
+				}catch(error:Error){
+					displayAlert(1,"loadMasterFiles: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			
+			protected function crListAllFhiretype_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						displayAlert(1,"Error Loading Hire Types [Error]","Error",errorCloseHandler);
+					else{
+						lacFhiretype.removeAll();
+						var tmpAC:ArrayCollection=event.result as ArrayCollection;
+						var o:Object=new Object();
+						o["id"]="all";
+						o["des"]="All";
+						lacFhiretype.addItem(o);
+						for(var a:int=0;a<tmpAC.length;a++){
+							o=new Object();
+							o["id"]=tmpAC.getItemAt(a).hiretypeid;
+							o["des"]=tmpAC.getItemAt(a).description;
+							lacFhiretype.addItem(o);
+						}
+						ddHireType.selectedIndex=0;
+						tmpAC=null;
+						crListAllFhiretype.token=null;
+					}
+				}catch(error:Error){
+					displayAlert(1,"List Hire Types [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crListAllFhiretype_faultHandler(event:FaultEvent):void{
+				displayAlert(1,"List Hire Types [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+
+		]]>
+	</fx:Script>
+	<mx:Form
+		paddingLeft="0"
+		paddingRight="0"
+		paddingTop="0"
+		paddingBottom="0"
+		x="10" y="10" width="250" height="92">
+		<mx:FormItem label="Date From" direction="horizontal">
+			<mx:DateField
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				id="dfDateFrom"
+				width="148"
+				enabled="{btnView.enabled}"
+				/>
+		</mx:FormItem>
+		<mx:FormItem label="Date To">
+			<mx:DateField
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				id="dfDateTo"
+				width="148"
+				enabled="{btnView.enabled}"
+				/>
+		</mx:FormItem>
+		
+		<mx:FormItem label="Hire Type">
+			<s:DropDownList
+				id="ddHireType"
+				dataProvider="{lacFhiretype}"
+				labelField="des"
+				width="147"
+				enabled="{btnView.enabled}"
+				/>
+		</mx:FormItem>
+		
+	</mx:Form>
+	<s:Button
+		id="btnView"
+		click="btnView_clickHandler(event)"
+		x="268" y="10" label="View" height="29" width="78"
+		enabled="false"
+		/>
+</s:TitleWindow>

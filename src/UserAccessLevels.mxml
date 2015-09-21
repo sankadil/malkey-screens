@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="416" height="530"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			    xmlns:services="com.dspl.malkey.services.*">
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Faccessrule;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FaccessrulePK;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import com.dspl.malkey.util.Message;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+			
+			[Bindable]
+			private var lXml:XML;
+			[Bindable]
+			private var lXmlURL:String;
+			[Bindable]
+			private var lacUserTypes:ArrayCollection;
+			private var lacAccessRules:ArrayCollection;
+			[Bindable]
+			public var gpuCtrl:_tiMasterFile = new _tiMasterFile();
+			private var lsCurUTI:String; //Currently Selected User Type Id
+		
+			private function closeForm():void{
+				this.parent.parent.removeChild(this.parent);	
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}			
+			
+			private function setAR():void{
+				try{
+					var xFuncList:XMLList = lXml.descendants();
+					xFuncList = xFuncList.descendants().(@pType=="Function");
+					for(var a:int=0;a<xFuncList.length();a++){
+						var sTransCode:String = xFuncList[a].@pTransCode;
+						var sFuncCode:String = xFuncList[a].@pId;
+						var o:Object = findItem(lacAccessRules,"usertypeid,transcode,funccode",lsCurUTI+","+sTransCode+","+sFuncCode,true);
+						if(o!=null){
+							xFuncList[a].@checked="1";
+						}else{
+							xFuncList[a].@checked="0";	
+						}
+					}
+					btnUpdate.enabled=true;
+				}catch(error:Error){
+					Message.displayAlert(1,"setAR: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function save():void{
+				try{
+					var xList:XMLList = lXml.descendants().(@checked == "1");
+					//var str:String = new String();
+					//str = "The following permissions are checked.\n";
+					var ac:ArrayCollection = new ArrayCollection();
+					var far:Com_dspl_malkey_domain_Faccessrule;
+					var farPK:Com_dspl_malkey_domain_FaccessrulePK;
+					for (var x:uint=0;x<xList.length();x++)
+					{
+						//str+= xList[x].@pTransCode + ": " + xList[x].@pId + ": " + xList[x].@pName + "\n";
+						farPK = new Com_dspl_malkey_domain_FaccessrulePK();
+						farPK.usertypeid = lsCurUTI;
+						farPK.transcode = xList[x].@pTransCode;
+						farPK.funccode = xList[x].@pId;
+						far = new Com_dspl_malkey_domain_Faccessrule();
+						far.id = farPK;
+						ac.addItem(far);
+					}
+					crInsert.token = srvFaccessrule.insert(lsCurUTI,ac);
+				}catch(error:Error){
+					Message.displayAlert(1,"save: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function initApp(event:FlexEvent):void{
+				try{
+					setPermission();
+					lXmlURL = resourceManager.getString("resource","xmlURL",null,null);
+					http.url = lXmlURL;
+					http.send();
+				 	crUserTypes.token = srvFusertype.listAll();
+					resetNodes();
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function http_resultHandler(event:ResultEvent):void{
+				try{
+					lXml = event.result as XML;
+				}catch(error:Error){
+					Message.displayAlert(1,"setAR: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function http_faultHandler(event:FaultEvent):void{
+				Alert.show("fault: " + event.fault.toString());
+				closeForm();
+			}
+
+			protected function btnReset_clickHandler(event:MouseEvent):void{
+				resetNodes();
+			}
+			
+			protected function btnExpand_clickHandler(event:MouseEvent):void{
+				expandNodes();
+			}
+			
+			private function expandNodes():void{
+				if(tPermissions.enabled==true){
+					var xList:XMLList = lXml.descendants();
+					tPermissions.openItems = xList;
+				}
+			}
+			
+			private function resetNodes():void{
+				if(tPermissions.enabled==true){
+					tPermissions.openItems = [];
+				}
+			}
+			
+			private function checkAll():void{
+				if(tPermissions.enabled==true){
+					var xList:XMLList = lXml.descendants();
+					tPermissions.openItems = xList;
+					for (var x:uint=0; x < xList.length(); x++){
+						if(xList[x].@pType=="Function")	{
+							xList[x].@checked = "1";
+						}
+					} 
+				}
+			}
+			
+			private function checkNone():void{
+				if(tPermissions.enabled==true){
+					var xList:XMLList = lXml.descendants();
+					tPermissions.openItems = xList;
+					for (var x:uint=0; x < xList.length(); x++){
+						if(xList[x].@pType=="Function"){
+							xList[x].@checked = "0";
+						}
+					} 
+				}
+			}
+
+			protected function btnUpdate_clickHandler(event:MouseEvent):void{
+				save();
+			}
+
+			protected function crUserTypes_resultHandler(event:ResultEvent):void{
+				try{
+					lacUserTypes = event.result as ArrayCollection;
+					crUserTypes.lastResult = null;
+				}catch(error:Error){
+					Message.displayAlert(1,"setAR: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crUserTypes_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"listAll Fault: " + event.fault.toString(),"Error",errorCloseHandler);
+				closeForm();
+			}
+			
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function):void{
+				gpuCtrl._acDataProvider = acDataProvider;								
+				gpuCtrl._strKeyColumn = strKeyColumn;
+				gpuCtrl._strKeyColCaption = strKeyColCaption; 
+				gpuCtrl._strDetailColumn = strDetailColumn;
+				gpuCtrl._strDetailColCaption = strDetailColCaption;
+				gpuCtrl._strWindowTitle = strWindowTitle;			
+				gpuCtrl._sPostEventToRunPopUpExit = eventName;
+				gpuCtrl.addEventListener(eventName,eventListener,false,0,false);
+				gpuCtrl.launchSearchGrid(); 
+				gpuCtrl.isPopUp=true;
+			}
+
+
+			protected function btnSelect_clickHandler(event:MouseEvent):void{
+				showUserTypes();
+			}
+			
+			private function showUserTypes():void{
+				showPopUp(lacUserTypes,"usertypeid","ID","description","User Type","Select User Type","userTypeSelectionEvent",userTypeSelectionClose);			
+			}
+			
+			private function userTypeSelectionClose(event:Event):void{
+				if(gpuCtrl.grdSearch._strSelectedCode!=""){
+					var obj:Object = findItem(lacUserTypes,"usertypeid",gpuCtrl.grdSearch._strSelectedCode,false);
+					lsCurUTI = obj["usertypeid"].toString();
+					txtUserType.text = obj["description"].toString();
+					tPermissions.enabled=true;
+					setEnable(true);
+					crFindByUserTypeId.token = srvFaccessrule.findByUserTypeId(lsCurUTI);
+				}
+			}
+			
+			private function setEnable(value:Boolean):void{
+				btnExpand.enabled=value;
+				btnReset.enabled=value;
+				btnCheckAll.enabled=value;
+				btnCheckNone.enabled=value;
+				btnUpdate.enabled=value;
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String,composite:Boolean):Object{
+				var obj:Object = null;
+				try{
+					var kf:Array = keyfield.split(",");
+					var kv:Array = keyvalue.split(",");
+					//Alert.show("keyfield: " + keyfield + "   keyvalue: " + keyvalue);
+					for(var a:int=0;a<ac.length;a++){
+						var o:Object = ac.getItemAt(a);
+						switch(kf.length){
+							case 1:
+								if(composite==true){
+									if(o["id"][keyfield]==keyvalue){
+										return 0;
+									}
+								}else{
+									if(o[keyfield]==keyvalue){
+										return o;
+									}
+								}
+								break;
+							case 2:
+								if(composite==true){
+									if(o["id"][kf[0].toString()]==kv[0] && o["id"][kf[1].toString()]==kv[1]){
+										return o;
+									}
+								}else{
+									if(o[kf[0].toString()]==kv[0] && o[kf[1].toString()]==kv[1]){
+										return o;
+									} 
+								}
+								break;
+							case 3:
+								if(composite==true){
+									if(o["id"][kf[0].toString()]==kv[0] && o["id"][kf[1].toString()]==kv[1] && o["id"][kf[2].toString()]==kv[2]){
+										return o;
+									}
+								}else{
+									if(o[kf[0].toString()]==kv[0] && o[kf[1].toString()]==kv[1] && o[kf[2].toString()]==kv[2]){
+										return o;
+									} 
+								}
+								break;
+						}
+					}
+				}catch(er:Error){
+					obj = null;
+					Message.displayAlert(1,"FindItem: " + er.message,"Error",null);
+				}
+				return obj;
+			}
+			
+			/* private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object
+			{
+				var obj:Object = null;
+				try
+				{
+					for(var a:int=0;a<ac.length;a++)
+					{
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+						{
+							return o;
+						}
+					}
+				}
+				catch(er:Error)
+				{
+					obj = null;
+					Alert.show("findItem: " + er.message);
+				}
+				return obj;
+			} */
+
+			protected function btnCheckAll_clickHandler(event:MouseEvent):void{
+				checkAll();
+			}
+
+			protected function btnCheckNone_clickHandler(event:MouseEvent):void{
+				checkNone();
+			}
+
+			protected function srvFindByUserTypeId_resultHandler(event:ResultEvent):void{
+				try{
+					lacAccessRules = event.result as ArrayCollection;
+					crFindByUserTypeId.token = null;
+					setAR()
+				}catch(error:Error){
+					Message.displayAlert(1,"srvFindByUserTypeId: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function srvFindByUserTypeId_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function crInsert_resultHandler(event:ResultEvent):void{
+				if(event.result.toString()=="true"){
+					Message.displayAlert(3,"User Level Updated Successfully","Successful",successfulCloseHandler);
+				}else{
+					Message.displayAlert(1,"Error Occured While Updating User Level. Please Try Again....","Error",null);
+				}
+			}
+			
+			private function successfulCloseHandler(event:Event):void{
+				resetNodeList();
+			}
+			
+			private function resetNodeList():void{
+				try{
+					var xList:XMLList = lXml.descendants();
+					tPermissions.openItems = xList;
+					for (var x:uint=0; x < xList.length(); x++){
+						if(xList[x].@pType=="Function"){
+							xList[x].@checked = "0";
+						}
+					} 
+					resetNodes()
+					tPermissions.enabled=false;
+					txtUserType.text="";
+					setEnable(false);
+				}catch(error:Error){
+					Alert.show("resetNodeList: " + error.message);
+				}
+			}
+
+			protected function crInsert_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"Fault: " + event.fault.toString(),"Error",null);
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:HTTPService fault="http_faultHandler(event)" result="http_resultHandler(event)" id="http" resultFormat="e4x"/>
+		
+		<s:CallResponder id="crUserTypes"
+						 result="crUserTypes_resultHandler(event)"
+						 fault="crUserTypes_faultHandler(event)"
+						 />
+		<services:FusertypeSRV 
+			id="srvFusertype" 
+			endpoint="@Resource(key='url',bundle='resource')"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true"/>
+		
+		<s:CallResponder
+			id="crInsert"
+			result="crInsert_resultHandler(event)"
+			fault="crInsert_faultHandler(event)"
+			/>		
+		<s:CallResponder 
+			id="crFindByUserTypeId"
+			result="srvFindByUserTypeId_resultHandler(event)"
+			fault="srvFindByUserTypeId_faultHandler(event)"
+			/>
+		<services:FaccessruleSRV 
+			id="srvFaccessrule" 
+			endpoint="@Resource(key='url',bundle='resource')"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" 
+			showBusyCursor="true"/>
+	</fx:Declarations>
+			
+	<mx:VBox borderStyle="solid" borderColor="black" x="1" y="38" width="412" height="429">
+		<mx:Tree id="tPermissions" dataProvider="{lXml}" enabled="false"
+				 itemRenderer="com.dspl.malkey.components.common.controls.CheckBoxTreeView"
+				 rendererIsEditor="true"
+				 showRoot="false"
+				 paddingTop="5"
+				 labelField="@pName"
+				 height="427"
+				 width="410"
+				 folderClosedIcon="{null}"
+				 folderOpenIcon="{null}"
+				 defaultLeafIcon="{null}"
+				 mouseEnabled="false"
+				 borderStyle="none"
+				 verticalScrollPolicy="auto"
+				 fontSize="12" fontFamily="Arial"
+				 />
+	</mx:VBox>
+	<s:Button enabled="false" id="btnUpdate" label="Update" click="btnUpdate_clickHandler(event)" x="334" y="469"/>
+	<mx:Button enabled="false" toolTip="Expand" textAlign="left" id="btnExpand" label="+" x="7" y="469" click="btnExpand_clickHandler(event)" width="23" fontSize="10" fontFamily="Arial"/>
+	<mx:Button enabled="false" toolTip="Reset" textAlign="left" id="btnReset" label="-" x="32" y="469" click="btnReset_clickHandler(event)" width="23"/>
+	<mx:Form x="-9" y="-10">
+		<mx:FormItem label="User Type" direction="horizontal">
+			<s:TextInput id="txtUserType" width="174" enabled="false"/>
+			<s:Button
+				enabled="false"
+				id="btnSelect" label="Select" click="btnSelect_clickHandler(event)"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Button enabled="false" toolTip="Check All" textAlign="left" id="btnCheckAll" label="Check All" x="59" y="469" click="btnCheckAll_clickHandler(event)" width="64" fontSize="10" fontFamily="Arial"/>
+	<mx:Button enabled="false" toolTip="Check None" textAlign="left" id="btnCheckNone" label="Check None" x="126" y="469" click="btnCheckNone_clickHandler(event)" width="75" fontSize="10" fontFamily="Arial"/>
+</s:TitleWindow>

@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:controls="com.dspl.efinac.components.common.controls.*" 
+		 xmlns:valueObjects="com.dspl.malkey.valueObjects.*"
+		 xmlns:services="com.dspl.malkey.services.*" 
+		 xmlns:util="com.dspl.malkey.util.*"
+		 width="100%" height="100%"
+		 enabled="{isEnable}"
+		 disabledAlpha="1"
+		 creationComplete="group1_creationCompleteHandler(event)" 
+		 >
+	
+	
+
+	
+	
+	<!--View Tier-->
+	<mx:Form
+		borderAlpha="0.10"
+		paddingTop="5"
+		paddingLeft="5"
+		paddingRight="5"
+		paddingBottom="2"
+		borderColor="black"
+		borderStyle="solid"
+		borderVisible="true"
+		label="Other Services" width="100%" height="100%">
+		<s:Label text="Other Services" fontWeight="bold"/>
+		
+		<mx:FormItem label="Service" styleName="formItem" labelStyleName="formItemLabel" direction="horizontal"  required="true">
+			<!--<s:DropDownList width="172" dataProvider="{crFaccessoryListAll.lastResult}" labelField="accid"/>-->
+			<controls:_tiMasterFile id="txtOtherService"											
+									_acDataProvider="{acOtherService}"
+									text="@{com_dspl_malkey_domain_FresothsrvPK.srvid}"
+									_strKeyColumn="srvid"
+									_strKeyColCaption="Service ID" 
+									_strDetailColumn="description" 
+									_strDetailColCaption="description"
+									_strWindowTitle="Select Accessories"
+									width="{100}"
+									editable="false" 
+									/>
+			<!--<mx:Label text="{txtOtherService.selectedItem.description}" id="lblOtherSrv"/>-->
+			<mx:TextInput id="lblOtherSrv" text="{genericFunctions.getArrayCollection(acOtherService,'srvid',txtOtherService.text).description}" width="150" editable="false"/>
+			<mx:LinkButton id="lnkOtherService" label="Search" width="60" color="#0A33BB" textDecoration="underline" click="{txtOtherService.launchSearchGrid();}"/>
+			<!--text="{com_dspl_malkey_domain_Fresaccs.id.accid}"-->
+			
+		</mx:FormItem>
+		<mx:FormItem label="Date From" direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  required="true">
+			
+			
+<!--			<util:DateTimeField id="dtDateFrom" 
+								selectedDateTime="@{com_dspl_malkey_domain_Fresothsrv.dfrom}" 
+								showTime="{true}" 
+								is24Hour="{false}"
+								/>-->
+			
+			<mx:DateField width="135" 
+						  id="dtDateFrom" 
+						  selectedDate="@{com_dspl_malkey_domain_Fresothsrv.dfrom}"
+						  selectableRange="{{rangeStart : new Date()}}"
+						  />
+			<mx:Label  text="  Time :"/>
+			<s:ComboBox id="cmbTimeFrom" dataProvider="{acTime}" selectedIndex="{acTime.getItemIndex(com_dspl_malkey_domain_Fresothsrv.timeout)}" width="100"/>
+			<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+
+		<!--	<mx:Label text="Time :" width="40"/>
+				<s:NumericStepper 
+					id="nsDateFromHour" 
+					maximum="12" 
+					minimum="1" 
+					maxChars="2"
+					width="40"
+					value="@{com_dspl_malkey_domain_Fresothsrv.tfromhour}"
+					/>
+			<mx:Label text=":" width="10"/>
+				<s:NumericStepper 
+					id="nsDateFromMin" 
+					maximum="45" 
+					minimum="0"
+					maxChars="2"
+					width="40"
+					stepSize="15"
+					value="@{com_dspl_malkey_domain_Fresothsrv.tfrommin}"
+					/>	
+
+			<s:RadioButton  label="AM" groupName="rbDateFrom" value="AM"/>
+			<s:RadioButton  label="PM" groupName="rbDateFrom" value="PM"/>-->
+
+
+		</mx:FormItem>
+		<mx:FormItem label="Num. Days" styleName="formItem" labelStyleName="formItemLabel" required="true" direction="horizontal">
+			<s:NumericStepper 
+				id="nsNumDays" 
+				maximum="366" 
+				minimum="0" 
+				maxWidth="50"
+				value="{DateOperation.getDaysDifference(dtDateTo.selectedDate,dtDateFrom.selectedDate)}"
+				/>
+			<!--<mx:Label text="RateType :{rateType.getRatetype(nsNumDays.value)}" width="200" />-->
+			<mx:FormItem label="RateType" styleName="formItem" labelStyleName="formItemLabel" required="true" visible="false">
+			<controls:_tiMasterFile id="txtRateType"											
+									_acDataProvider="{acRateType}"
+									text="{session.getAttribute('RateType').getRatetype(nsNumDays.value)}"
+									_strKeyColumn="ratetype"
+									_strKeyColCaption="Rate Type" 
+									_strDetailColumn="description" 
+									_strDetailColCaption="Description"
+									_strWindowTitle="Select Rate Type"
+									width="{100}"
+									editable="false" 
+									/>
+			</mx:FormItem>
+<!--			<mx:FormItem label="Quantity" styleName="formItem" labelStyleName="formItemLabel"  required="true" >
+				<s:NumericStepper 
+					id="nsQtyAcc" 
+					maximum="10000" 
+					minimum="1"
+					maxWidth="50"
+					/>
+			</mx:FormItem>-->
+			
+		</mx:FormItem>
+		<mx:FormItem label="Date To"   direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  required="true">
+		
+<!--			<util:DateTimeField id="dtDateTo" 
+								selectedDateTime="{DateOperation.dateAdd('d', nsNumDays.value,dtDateFrom.selectedDateTime)}" 
+								showTime="{true}" 
+								is24Hour="{false}"
+								/>-->
+			
+			<mx:DateField width="135" 
+						  id="dtDateTo" 
+						  selectedDate="{DateOperation.dateAdd('d', nsNumDays.value,dtDateFrom.selectedDate)}"
+						  selectableRange="{{rangeStart : dtDateFrom.selectedDate}}"
+						  />
+			
+			<mx:Label  text="  Time :"/>
+			<s:ComboBox id="cmbTimeTo" dataProvider="{acTime}" selectedIndex="{acTime.getItemIndex(com_dspl_malkey_domain_Fresothsrv.timein)}" width="100"/>
+			<mx:Label   text="in 24 Hours Clock" color="#069413" fontSize="9"/>
+			
+		<!--		<mx:Label text="Time :" width="40" />
+			<s:NumericStepper 
+				id="nsDateToHour" 
+				maximum="12" 
+				minimum="1" 
+				width="40"
+				value="@{com_dspl_malkey_domain_Fresothsrv.ttohour}"
+				/>
+			<mx:Label text=":" width="10"/>
+			<s:NumericStepper 
+				id="nsDateToTime" 
+				maximum="45" 
+				minimum="0" 
+				width="40"
+				stepSize="15"
+				value="@{com_dspl_malkey_domain_Fresothsrv.ttomin}"
+				/>	
+			<s:RadioButton  label="AM" groupName="rbdateTo" value="AM"/>
+			<s:RadioButton  label="PM" groupName="rbdateTo" value="PM" selected="true"/>-->
+			
+			
+		</mx:FormItem>
+		<mx:FormItem label="Remarks"   direction="horizontal" styleName="formItem" labelStyleName="formItemLabel"  >
+			<s:TextArea id="txtRemarks" width="410"  height="25" text="@{com_dspl_malkey_domain_Fresothsrv.remarks}"/>
+		</mx:FormItem>
+		<mx:HBox horizontalAlign="center">
+			<s:Button id="btnAddOtherService" 	 label="Add" 		click="btnAddAcc_clickHandler(event)" 		enabled="{!btnUpdateOtherService.enabled}"/>
+			<s:Button id="btnUpdateOtherService" label="Edit" 		click="btnUpdateAcc_clickHandler(event)" 	enabled="{dgOtherService.selectedIndex !=-1 ? true : false}"/>
+			<s:Button id="btnDeleteOtherService" label="Delete" 	click="btnDeleteAcc_clickHandler(event)" 	enabled="{dgOtherService.selectedIndex !=-1 ? true : false}"/>
+			<s:Button id="btnCancleOtherService" label="Cancle" 	click="btnCancleAcc_clickHandler(event)" 	enabled="{dgOtherService.selectedIndex !=-1 ? true : false}"/>
+		</mx:HBox>
+		<mx:Spacer height="40"/>
+		<!--Following datagrid contain reserverd other services-->
+		<mx:DataGrid 
+			id="dgOtherService" 
+			dataProvider="{acResothsrv}" 
+			width="100%" height="50%" 
+			dropShadowVisible="false" 
+			borderAlpha="0.28" 
+			borderVisible="true"  
+			verticalScrollPolicy="auto"
+			horizontalScrollPolicy="auto"
+			itemClick="dgOtherService_itemClickHandler(event)"
+			>
+			<mx:columns>
+				<mx:DataGridColumn headerText="Service" dataField="id.srvid" labelFunction="lblOtherService" width="200"/>
+<!--			<mx:DataGridColumn headerText="From" dataField="dfrom" itemRenderer="mx.controls.DateField" rendererIsEditor="true" labelFunction="dateLabel"/>
+				<mx:DataGridColumn headerText="To" dataField="dto"  itemRenderer="mx.controls.DateField" rendererIsEditor="true" labelFunction="dateLabel"/>-->	
+				<mx:DataGridColumn headerText="From" dataField="dfrom" labelFunction="fromDateTimeLabel"  width="150"/>
+				<mx:DataGridColumn headerText="To" dataField="dto"   labelFunction="toDateTimeLabel" width="150"/>
+				<mx:DataGridColumn headerText="Rate"  dataField="rate" width="50"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:Form>
+	
+	
+	
+	<!--Model-->
+	<fx:Binding destination="dgOtherService.dataProvider" source="acResothsrv" />
+	<fx:Binding destination="com_dspl_malkey_domain_FresothsrvPK" source="com_dspl_malkey_domain_Fresothsrv.id" twoWay="true"/>
+	<fx:Binding destination="dtDateTo.selectedDate" source="com_dspl_malkey_domain_Fresothsrv.dto" twoWay="true"/>
+<!--	<fx:Binding destination="com_dspl_malkey_domain_Fresothsrv.tfromampm" source="rbDateFrom.selectedValue as String" />
+	<fx:Binding destination="com_dspl_malkey_domain_Fresothsrv.ttoampm" source="rbDateTo.selectedValue as String" />-->
+	<!--
+	Not working
+	<fx:Binding destination="com_dspl_malkey_domain_Fresothsrv.ratetype" source="txtRateType.text"/>-->
+	
+	
+	<!--Declarations here-->
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<!--Validators-->
+		<mx:NumberValidator source="{nsNumDays}" 
+							property="value" 
+							integerError="Enter Integer value"
+							minValue="1" 
+							maxValue="1000" 
+							domain="int" 
+							trigger="{btnAddOtherService}" 
+							triggerEvent="click"
+							id="nvNumDays"/>
+
+		<mx:StringValidator id="svAccessoryId"
+							source="{txtOtherService}"
+							property="text"
+							trigger="{btnAddOtherService}" 
+							triggerEvent="click"
+							/>
+		<mx:DateValidator  id="dvFrom"
+						   source="{dtDateFrom}"
+						   property="selectedDate"
+						   trigger="{btnAddOtherService}"
+						   triggerEvent="click"
+						   />
+
+		
+		<!--Formatters here-->
+		<mx:DateFormatter id="dateFormatter" formatString="DD-MM-YYYY"/>
+		<!--<mx:DateFormatter id="dateFormatter" formatString="DD-MMM-YYYY-H-NN-A"/>-->
+		<mx:DateFormatter id="timeFormatter" formatString="H-NN-A"/>
+		<!--valueObjects/domains here-->
+		<!--<valueObjects:Com_dspl_malkey_domain_Freservation id="com_dspl_malkey_domain_Freservation"/>-->
+		<valueObjects:Com_dspl_malkey_domain_Fresothsrv id="com_dspl_malkey_domain_Fresothsrv"/>
+		<valueObjects:Com_dspl_malkey_domain_FresothsrvPK id="com_dspl_malkey_domain_FresothsrvPK"/>
+<!--		<s:RadioButtonGroup id="rbDateFrom" selectedValue="{com_dspl_malkey_domain_Fresothsrv.tfromampm}"/>
+		<s:RadioButtonGroup id="rbDateTo"   selectedValue="{com_dspl_malkey_domain_Fresothsrv.ttoampm}"/>
+-->		
+		<!--CallResponders here-->
+		<s:CallResponder id="crFothersrvrateSRVFindByID" result="findByIDResult_resultHandler(event)"/>
+		<!--services here-->
+		<services:FothersrvrateSRV id="fothersrvrateSRV" endpoint="@Resource(key='url', bundle='resource')" showBusyCursor="true"/>
+		
+		
+		<s:ArrayCollection id="acTime"/>
+	</fx:Declarations>
+	
+	
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.util.DateOperation;
+			import com.dspl.malkey.util.RateType;
+			import com.dspl.malkey.util.Session;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Faccessory;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fothersrvrate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FothersrvratePK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccs;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccsPK;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothersrvrate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresothersrvratePK;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.managers.SystemManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			import mx.utils.StringUtil;
+			
+			import spark.events.IndexChangeEvent;
+			
+			
+			/*My Add  */
+			[Bindable]public var acResothsrv:ArrayCollection = new ArrayCollection();
+			[Bindable]public var acOtherService:ArrayCollection = new ArrayCollection();
+			[Bindable]public var acRateType:ArrayCollection = new ArrayCollection();
+			[Bindable]public var clientType:String ="INDIVIDUAL";
+			[Bindable]private var session:Session = Session.getInstance();
+			[Bindable]private var genericFunctions:GenericFunctions=new GenericFunctions();	
+			[Bindable]public var isEnable:Boolean=false;
+/* 			[Bindable]
+			public var rateType:RateType; */
+			
+			
+			
+			
+/* 			[Embed(source="icons/Warning.png")]
+			private var IconWarning:Class;
+			
+			[Embed(source="icons/Error.png")]
+			private var IconError:Class; */
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/*Buttons event-handlers are following  */
+			protected function btnAddAcc_clickHandler(event:MouseEvent):void
+			{
+				if(clientType!=null)//check the client typ e because rates are apply to client type
+				{
+					if(nsNumDays.value>0  && StringUtil.trim(txtOtherService.text).length>0 && cmbTimeFrom.selectedIndex >-1 && cmbTimeTo.selectedIndex >-1 && dtDateFrom.text.length>0 && dtDateTo.text.length>0)
+					{
+						fothersrvrateSRVFindByID();
+						//addOtherService();
+					}
+					else
+					{
+						Alert.show("Invalied Data Submition.\nPlease re-check the form and re-submit","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+					}
+				}
+				else
+				{
+					Alert.show("Please Select the Client First","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+
+			}
+			
+			
+			protected function btnDeleteAcc_clickHandler(event:MouseEvent):void
+			{
+				acResothsrv.removeItemAt(dgOtherService.selectedIndex);
+				acResothsrv.refresh();
+				resetOtherServiceForm();
+				dispatchEvent(new Event("rateChange"));
+			}
+			
+			
+			protected function btnCancleAcc_clickHandler(event:MouseEvent):void
+			{
+				resetOtherServiceForm();
+			}
+			
+			protected function btnUpdateAcc_clickHandler(event:MouseEvent):void
+			{
+				if(btnUpdateOtherService.label=="Edit")
+				{
+					btnUpdateOtherService.label="Update";
+					dgOtherService.selectable=false;
+					lnkOtherService.enabled=false;
+					txtOtherService.enabled=false;
+					com_dspl_malkey_domain_Fresothsrv=dgOtherService.selectedItem as Com_dspl_malkey_domain_Fresothsrv;
+					com_dspl_malkey_domain_FresothsrvPK=com_dspl_malkey_domain_Fresothsrv.id;
+				}
+				else
+				{
+					btnUpdateOtherService.label="Edit";
+					dgOtherService.selectable=true;
+					resetOtherServiceForm();
+					dispatchEvent(new Event("rateChange"));
+				}
+			}
+			
+			
+			
+			/*Add Accessory to datagrid  */
+			private function addOtherService():void
+			{
+				/* acFresothsrv.addItem(com_dspl_malkey_domain_Fresothsrv);
+				acFresothsrv.refresh();
+				resetOtherServiceForm(); */
+				
+				/***
+				 * Following code lines perform avoid adding duplicates
+				 * */
+				
+				var hasElement:Boolean=false;
+				for each(var tempOtherService:Com_dspl_malkey_domain_Fresothsrv in acResothsrv)
+				{
+					if(	tempOtherService.id.srvid == txtOtherService.text 
+						/* && dateFormatter.format(tempOtherService.dfrom) 	== dateFormatter.format(dtDateFrom.selectedDate)
+						&& dateFormatter.format(tempOtherService.dto)	== dateFormatter.format(dtDateTo.selectedDate) */
+						&& StringUtil.trim(txtOtherService.text).length>0)
+					{
+						Alert.show("Item Already Reserved In Selected Date Range","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+						hasElement=true;
+						return;
+					}
+				}
+				if(!hasElement)
+				{
+					acResothsrv.addItem(com_dspl_malkey_domain_Fresothsrv);
+					acResothsrv.refresh();
+					resetOtherServiceForm();
+					dispatchEvent(new Event("rateChange"));
+				}
+				
+				
+			}
+			
+			/*Reset Form  */
+			public function resetAll():void
+			{
+				com_dspl_malkey_domain_Fresothsrv=new Com_dspl_malkey_domain_Fresothsrv();
+				com_dspl_malkey_domain_Fresothsrv.dfrom=null;//new Date();
+				com_dspl_malkey_domain_Fresothsrv.dto=null;//new Date();
+				com_dspl_malkey_domain_Fresothsrv.rate="0";
+				com_dspl_malkey_domain_Fresothsrv.timeout="";
+				com_dspl_malkey_domain_Fresothsrv.timein="";
+				com_dspl_malkey_domain_FresothsrvPK=new Com_dspl_malkey_domain_FresothsrvPK();
+				dgOtherService.selectedIndex=-1;
+				dgOtherService.selectable=true;
+				btnUpdateOtherService.label="Edit";
+				lnkOtherService.enabled=true;
+				txtOtherService.enabled=true;
+				lblOtherSrv.text="";
+				acResothsrv.removeAll();
+				dispatchEvent(new Event("rateChange"));
+			}
+			
+			/*Reset Form  */
+			private function resetOtherServiceForm():void
+			{
+				com_dspl_malkey_domain_Fresothsrv=new Com_dspl_malkey_domain_Fresothsrv();
+				com_dspl_malkey_domain_Fresothsrv.dfrom=null;//new Date();
+				com_dspl_malkey_domain_Fresothsrv.dto=null;//new Date();
+				com_dspl_malkey_domain_Fresothsrv.rate="0";
+				com_dspl_malkey_domain_Fresothsrv.timeout="";
+				com_dspl_malkey_domain_Fresothsrv.timein="";
+				com_dspl_malkey_domain_FresothsrvPK=new Com_dspl_malkey_domain_FresothsrvPK();
+				dgOtherService.selectedIndex=-1;
+				dgOtherService.selectable=true;
+				btnUpdateOtherService.label="Edit";
+				lnkOtherService.enabled=true;
+				txtOtherService.enabled=true;
+				lblOtherSrv.text="";
+			}
+			
+			/*Manual Validation Form  */
+			private function manualValidateOtherServiceForm():Boolean
+			{
+				return (nsNumDays.value>0 && StringUtil.trim(txtOtherService.text).length>0);
+			}
+			
+			
+			/*Lable Functions here  */
+ 			/* private function dateLabel(item:Object, column:DataGridColumn):String
+			{
+				return dateFormatter.format(item[column.dataField]);
+			} */ 
+ 			private function fromDateTimeLabel(item:Object, column:DataGridColumn):String
+			{
+				var valDate:String=dateFormatter.format(item[column.dataField]);/* +" "+item["tfromhour"]+":"+item["tfrommin"]+" "+item["tfromampm"]; */
+				var varTime:String=item["timeout"];
+				return  (valDate +"@"+varTime);
+			} 
+ 			private function toDateTimeLabel(item:Object, column:DataGridColumn):String
+			{
+				var valDate:String=dateFormatter.format(item[column.dataField]);/* +" "+item["ttohour"]+":"+item["ttomin"]+" "+item["ttoampm"]; */
+				var varTime:String=item["timein"];
+				return  (valDate+"@"+varTime);
+			} 
+			
+
+			
+			private function lblOtherService(item:Object, column:DataGridColumn):String
+			{
+				var tempVal:String="";
+				if((item as Com_dspl_malkey_domain_Fresothsrv).id.srvid !=null)
+				{
+					return genericFunctions.getArrayCollection(acOtherService,"srvid",(item as Com_dspl_malkey_domain_Fresothsrv).id.srvid).description;
+				}
+				return "";
+			}
+			
+			/*This is test method  */
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				resetOtherServiceForm();
+				//rateType=session.getAttribute("RateType");
+			}
+
+			
+			protected function fothersrvrateSRVFindByID():void
+			{
+				var fothersrvratePK:Com_dspl_malkey_domain_FothersrvratePK=new Com_dspl_malkey_domain_FothersrvratePK();
+				fothersrvratePK.clienttype=clientType;
+				fothersrvratePK.ratetype=session.getAttribute("RateType").getRatetype(nsNumDays.value);//acRateType.getItemAt(txtRateType._nSelectedIndex).ratetype;//txtRateType.selectedItem.ratetype;//rateType.getRatetype(nsNumDays.value);
+				fothersrvratePK.srvid=txtOtherService.text;
+				crFothersrvrateSRVFindByID.token = fothersrvrateSRV.findByID(fothersrvratePK);
+			}
+			
+
+			protected function findByIDResult_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+				com_dspl_malkey_domain_Fresothsrv.rate=(crFothersrvrateSRVFindByID.lastResult as Com_dspl_malkey_domain_Fothersrvrate).rate;
+				//com_dspl_malkey_domain_Fresothsrv.ratetype=txtRateType.text;
+				var tempRate:Com_dspl_malkey_domain_Fresothersrvrate=new Com_dspl_malkey_domain_Fresothersrvrate();
+				var tempRatePK:Com_dspl_malkey_domain_FresothersrvratePK=new Com_dspl_malkey_domain_FresothersrvratePK();
+				tempRatePK.ratetype=session.getAttribute("RateType").getRatetype(nsNumDays.value);//txtRateType.text;
+				tempRatePK.srvid=com_dspl_malkey_domain_Fresothsrv.id.srvid;
+				//tempRatePK.resno=com_dspl_malkey_domain_Fresothsrv.id.srvid;
+				tempRatePK.clienttype=clientType;
+				tempRate.adddate=new Date();
+				tempRate.addmach="snk";
+				tempRate.adduser="snk";
+				tempRate.discount="0.0000";				
+				tempRate.rate=(crFothersrvrateSRVFindByID.lastResult as Com_dspl_malkey_domain_Fothersrvrate).rate;			
+				tempRate.id=tempRatePK;
+				com_dspl_malkey_domain_Fresothsrv.fresothersrvrate=tempRate;
+				com_dspl_malkey_domain_Fresothsrv.remarks=txtRemarks.text;
+				com_dspl_malkey_domain_Fresothsrv.timeout=cmbTimeFrom.selectedItem;
+				com_dspl_malkey_domain_Fresothsrv.timein=cmbTimeTo.selectedItem;
+				addOtherService();
+				}
+				catch(e:Error)
+				{
+					Alert.show("Unable to find the rates for paticular client type,service and ratetype","Warning",Alert.OK,null,null,genericFunctions.IconWarning,Alert.OK,null);
+				}
+			}
+			
+			
+
+	/* 		
+			public function getRate():ArrayCollection
+			{
+				[Binadable]
+				var acResOtherService:ArrayCollection=new ArrayCollection();
+				for each(var temp:Com_dspl_malkey_domain_Fresothsrv in acOtherService)
+				{
+					var tempResothersrvrate:Com_dspl_malkey_domain_Fresothersrvrate=new Com_dspl_malkey_domain_Fresothersrvrate();
+					var tempResothersrvratePK:Com_dspl_malkey_domain_FresothersrvratePK=new Com_dspl_malkey_domain_FresothersrvratePK();
+					tempResothersrvratePK.clienttype=clientType;
+					tempResothersrvratePK.srvid=temp.id.srvid;
+					tempResothersrvratePK.ratetype=temp.ratetype;
+					tempResothersrvrate.id=tempResothersrvratePK;
+					tempResothersrvrate.rate=temp.rate;
+					acResOtherService.addItem(tempResothersrvrate);
+				}
+				return acResOtherService;
+			} */
+			
+/* 			[Bindable("rateChange")]
+			public function getRate():ArrayCollection
+			{
+				var acRateView:ArrayCollection=new ArrayCollection();
+				for each(var tempFresothsrv:Com_dspl_malkey_domain_Fresothsrv in acResothsrv)
+				{
+					var tempRateView:RateView=new RateView();
+					tempRateView.id=tempFresothsrv.id.srvid;
+					tempRateView.description=genericFunctions.getArrayCollection(acOtherService,"srvid",tempFresothsrv.id.srvid).description as String;
+					tempRateView.type=tempFresothsrv.ratetype;
+					tempRateView.rate=new Number(tempFresothsrv.rate);
+					tempRateView.qty=1;
+					tempRateView.discount=0.0000;
+					tempRateView.fdate=tempFresothsrv.dto;
+					tempRateView.tdate=tempFresothsrv.dfrom;
+					tempRateView.numOfDate=(DateOperation.getDaysDifference(tempFresothsrv.dto,tempFresothsrv.dfrom));
+					tempRateView.total=(tempRateView.rate) * (tempRateView.qty) * (tempRateView.numOfDate);
+					acRateView.addItem(tempRateView);
+				}
+				getResOtherServiceRate();
+				return acRateView;
+			} */
+			
+			[Bindable("rateChange")]
+			public function getResOtherServiceRate():ArrayCollection
+			{
+				var acFresothersrvrate:ArrayCollection=new ArrayCollection();
+				for each(var tempFresothsrv:Com_dspl_malkey_domain_Fresothsrv in acResothsrv)
+				{
+					acFresothersrvrate.addItem(tempFresothsrv.fresothersrvrate);
+				}
+				return acFresothersrvrate;
+			}
+			
+
+			
+			
+			/***
+			 * This method dispatch the ratechnage event &
+			 *  wakeup for calculate rates
+			 * 
+			 * */
+			public function wakeup():void
+			{
+				dispatchEvent(new Event("rateChange"));
+			}
+			
+
+			/***
+			 * This function set the image according to the selection of datagrid
+			 * 
+			 * */
+			protected function dgOtherService_itemClickHandler(event:ListEvent):void
+			{
+				// Keep the original copy no dirty
+				com_dspl_malkey_domain_Fresothsrv=ObjectUtil.copy(acResothsrv.getItemAt(event.rowIndex))  as Com_dspl_malkey_domain_Fresothsrv;	
+			}
+
+		]]>
+	</fx:Script>
+	
+</s:Group>

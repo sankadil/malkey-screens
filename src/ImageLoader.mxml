@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600">
+	
+	<fx:Script>
+		<![CDATA[
+			private var oLoadFile:FileReference;
+
+			protected function btnBrowse_clickHandler(event:MouseEvent):void{
+				startLoadingFile();
+			}
+			
+			private function startLoadingFile():void{
+				oLoadFile = new FileReference();
+				oLoadFile.addEventListener(Event.SELECT, selectFileHandler);
+				var fileFilter:FileFilter = new FileFilter("Images: (*.jpeg, *.jpg, *.gif, *.png)", "*.jpeg; *.jpg; *.gif; *.png");
+				oLoadFile.browse([fileFilter]); 
+			}
+			
+			private function selectFileHandler(event:Event):void{
+				oLoadFile.removeEventListener(Event.SELECT, selectFileHandler);
+				
+				oLoadFile.addEventListener(Event.COMPLETE, loadCompleteHandler);
+				oLoadFile.load();
+			}
+			
+			private function loadCompleteHandler(event:Event):void{
+				oLoadFile.removeEventListener(Event.COMPLETE, loadCompleteHandler);
+				
+				var loader:Loader = new Loader();
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadByteHandler);
+				loader.loadBytes(oLoadFile.data);
+			}
+			
+			private function loadByteHandler(event:Event):void{
+				var loaderInfo:LoaderInfo = (event.target as LoaderInfo);
+				image1.source = loaderInfo.content;
+			}
+
+
+			protected function btnLoad_clickHandler(event:MouseEvent):void
+			{
+				image1.source = ("F:\efinac\vehiclediagram\Sedan.png");
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	
+	<mx:Form x="10" y="10" width="635" height="436">
+		<mx:FormItem>
+			<mx:Image id="image1" x="600" y="43" width="402" height="277"/>			
+		</mx:FormItem>
+		
+		<mx:FormItem>
+			<s:Button id="btnBrowse" label="..." width="50" click="btnBrowse_clickHandler(event)"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<s:Button id="btnLoad" label="Load image" click="btnLoad_clickHandler(event)"/>
+		</mx:FormItem>
+	</mx:Form>
+</s:Application>

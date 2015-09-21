@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project		:	efinac_web
+Package		:	com/dspl/efinac/Administration/
+Component	:	mfTaxCombination.mxml
+Description	:	Tax Combination Master File
+Module		:	Administration
+Author		:	
+Created On	:	Dec 15, 2010
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:valueObjects="com.dspl.malkey.valueObjects.*" 
+		 xmlns:controls="com.dspl.efinac.components.common.controls.*"
+		 xmlns:services="com.dspl.malkey.services.*"
+		 title="Tax Combination Master File" 
+		 creationComplete="initApp()" 
+		 close="titlewindow1_closeHandler(event)" 
+		 width="704" height="308" xmlns:controls1="com.dspl.efinac.components.common.controls.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.ErrorTipManager;
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FtaxdetPK;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.HeaderEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
+			
+			[Embed(source="com/dspl/malkey/components/common/icons/Information.png")]
+			private var IconInformation:Class;
+			
+			[Embed(source="com/dspl/malkey/components/common/icons/Warning.png")]
+			private var IconWarning:Class;
+			
+			[Embed(source="com/dspl/malkey/components/common/icons/Error.png")]
+			private var IconError:Class;
+			
+			
+			[Bindable] private var intCurrentRec:int=0;
+			[Bindable] private var intTotalRec:int=0;
+			
+			private var nIndex:int = -1;
+			
+			private var ftaxhedAr:ArrayCollection = new ArrayCollection();
+			private var ftaxdetAr:ArrayCollection = new ArrayCollection();
+			private var ftaxAr:ArrayCollection = new ArrayCollection();
+			
+			private var sEditedAccCode:String;
+			
+			private var genFuncs:com.dspl.efinac.components.common.utils.GenericFunctions = new GenericFunctions();
+			
+			[Bindable]
+			private var dgAr:ArrayCollection = new ArrayCollection();
+			
+			private var popupCtrl:com.dspl.efinac.components.common.controls._tiMasterFile = new _tiMasterFile();
+			
+			private var requiredFields:Array = new Array();
+			
+			private var lGoTop:Boolean=false;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String="";
+			
+			private function initApp():void{
+				requiredFields=[svpCode,svpName];
+				getfTaxdetResultList.token = fTaxdetService.listAll();
+				getfTaxhedResultList.token = fTaxhedService.listAll();
+				getfTaxResultList.token = fTaxService.listAll();
+				loadTaxCom(TxtComCode.text);
+				dgAr.refresh();
+				lGoTop = true;
+			}
+			
+			public var gsCurTabName:String="";
+			public function parentTabChangedHandler(event:DataEvent):void{
+				if(gsCurTabName==event.data)
+					updateErrorTipVisibility();
+			}
+			
+			public function updateErrorTipVisibility():void{
+				if(currentState=="Add" || currentState=="Edit"){								
+					ErrorTipManager.showErrorTip(svpCode.source);
+					ErrorTipManager.showErrorTip(svpName.source);
+				}
+			}
+			
+			private function removeFormErrorTips():void{				
+				ErrorTipManager.removeErrorTip(svpCode.source,true);
+				ErrorTipManager.removeErrorTip(svpName.source,true);
+			} 
+			
+			private function registerValidators():void{
+				ErrorTipManager.registerValidator(svpCode);
+				ErrorTipManager.registerValidator(svpName);
+			}
+			
+			protected function fTaxService_resultHandler(event:ResultEvent):void
+			{
+				
+				ftaxAr = event.result as ArrayCollection;
+				if(currentState=="Default")
+				{
+					if(TxtComCode.text!="")
+					{
+						loadTaxCom(TxtComCode.text);
+						
+					}
+				}
+			}
+			protected function fTaxService_faultHandler(event:FaultEvent):void
+			{
+				
+			}
+			
+			protected function fTaxhedService_resultHandler(event:ResultEvent):void
+			{
+				intTotalRec = getfTaxhedResultList.lastResult.length;
+				
+				
+				
+				ftaxhedAr = event.result as ArrayCollection;
+				if(currentState=="Default")
+				{
+					if(TxtComCode.text!="")
+					{
+						loadTaxCom(TxtComCode.text);
+						
+					}
+				}
+				
+				if (lGoTop==true)
+					goTop();
+				
+			}
+			
+			protected function fTaxhedService_faultHandler(event:FaultEvent):void
+			{
+				
+			}
+			protected function fTaxdetService_resultHandler(event:ResultEvent):void
+			{
+				
+				try
+				{
+					ftaxdetAr = event.result as ArrayCollection;	
+					if(currentState=="Default")
+					{
+						if(TxtComCode.text!="")
+						{
+							loadTaxCom(TxtComCode.text);
+							
+						}
+					}
+				}
+				catch(error:Error)
+				{
+					Alert.show("FtaxdetService: " + error.message);
+				}
+				
+			}
+			
+			
+			protected function fTaxdetService_faultHandler(event:FaultEvent):void
+			{
+				
+			}
+			
+			protected function btnNew_clickHandler(event:MouseEvent):void
+			{
+				currentState = "Add";
+				TxtComCode.setFocus();
+				TxtComCode.text="";
+				TxtComName.text="";
+				dgAr.removeAll();
+				addtaxrecord();	
+			}
+			
+			private function addtaxrecord():void
+			{
+				try
+				{
+					if(currentState=="Add"||currentState=="Edit")
+					{
+						var obj:Object = new Object();
+						obj["taxcode"]="";
+						obj["taxname"]="";
+						obj["taxper"]="";
+						obj["taxrate"]="";
+						obj["taxseq"]="";
+						dgAr.addItem(obj);
+					}
+				}
+				catch(error:Error)
+				{
+					Alert.show("addtaxrecord: " + error.message);
+				}
+			}
+			
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function):void
+			{
+				popupCtrl._acDataProvider = acDataProvider;								
+				popupCtrl._strKeyColumn = strKeyColumn;
+				popupCtrl._strKeyColCaption = strKeyColCaption; 
+				popupCtrl._strDetailColumn = strDetailColumn;
+				popupCtrl._strDetailColCaption = strDetailColCaption;
+				popupCtrl._strWindowTitle = strWindowTitle;			
+				popupCtrl._sPostEventToRunPopUpExit = eventName;
+				popupCtrl.addEventListener(eventName,eventListener,false,0,false);
+				popupCtrl.launchSearchGrid(); 
+				popupCtrl.isPopUp=true;
+			}
+			
+			public function showTaxPopup():void
+			{
+				showPopUp(getfTaxResultList.lastResult,"taxcode","Tax Code","taxname","Tax Name","Select Tax Code","taxSelectionEvent",taxSelection);
+			}
+			
+			private function taxSelection(event:Event):void
+			{
+				if(popupCtrl.grdSearch._strSelectedCode!="")
+				{
+					var index:int = taxgrid.selectedIndex;
+					for(var a:int=0;a<dgAr.length;a++)
+					{
+						var ob:Object = dgAr.getItemAt(a,0);
+						if(ob["taxcode"].toString() == popupCtrl.grdSearch._strSelectedCode && a!=index)
+						{
+							Alert.show("Duplicate Tax Code Found","Warning",Alert.OK,null,null,null,Alert.OK,null);
+							return;
+						}
+					}
+				}
+				
+				if(popupCtrl.grdSearch._strSelectedCode!="")
+				{
+					var obj:Object = FindItem(getfTaxResultList.lastResult as ArrayCollection,"taxcode",popupCtrl.grdSearch._strSelectedCode);
+					var index:int = taxgrid.selectedIndex;
+					var o:Object = dgAr.getItemAt(index);
+					var cVal:String = o["taxcode"].toString();
+					o["taxcode"] = obj["taxcode"].toString();
+					o["taxname"] = obj["taxname"].toString();
+					o["taxper"] = obj["taxper"].toString();
+					
+					dgAr.removeItemAt(index);
+					dgAr.addItemAt(o,index);
+					dgAr.refresh();
+					
+					if(cVal=="")
+					{
+						addtaxrecord();
+					}
+				}
+				
+			}
+			
+			private function FindItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object
+			{
+				var obj:Object = null;
+				try
+				{
+					for(var a:int=0;a<ac.length;a++)
+					{
+						var o:Object = ac.getItemAt(a);
+						if(o[keyfield]==keyvalue)
+						{
+							return o;
+						}
+					}
+				}
+				catch(er:Error)
+				{
+					obj = null;
+					Alert.show("FindItem: " + er.message);
+				}
+				return obj;
+			}
+			
+			
+			
+			public function getArrayCollectionIndex(acSourceArrayCollection:ArrayCollection, sColumnName:String, sSearchCode:*):int
+			{
+				var nIndex:int = -1;
+				var oArrayElement:Object;
+				
+				if (acSourceArrayCollection!=null)
+				{
+					for(var i:int = 0; i < acSourceArrayCollection.length; i++)
+					{
+						oArrayElement = acSourceArrayCollection.getItemAt(i);
+						if(oArrayElement[sColumnName] == sSearchCode){
+							nIndex = i;
+							break;
+						}
+					}
+				}
+				
+				return nIndex;	
+			}
+			
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				savegrid();
+				
+			}
+			
+			protected function btnSave_clickHandler(event:MouseEvent):void
+			{
+				try
+				{
+					var vals:Array = Validator.validateAll(requiredFields);
+					if(vals.length > 0)
+					{
+						Alert.show("Unable to save changes since mandatory field value(s) are missing.", title + " - Save",Alert.OK,null,null,IconWarning,Alert.OK,null);
+						return;
+					}
+					
+					sEditedAccCode = TxtComCode.text;
+					if (currentState=="Add")
+					{
+						nIndex =genFuncs.getArrayCollectionIndex(getfTaxhedResultList.lastResult, "taxcomcode", sEditedAccCode);		
+						if (nIndex >= 0)
+						{						
+							Alert.show(sEditedAccCode + " TaxcomCode already exists.", title + " - Save",Alert.OK,null,null,IconWarning,Alert.OK,null);
+							TxtComCode.setFocus();
+							return;
+						}
+					}
+					
+					if(currentState=="Add")
+					{
+						Ftaxhed.taxcomcode = TxtComCode.text;
+						Ftaxhed.taxcomname = TxtComName.text;
+						Ftaxhed.adddate = new Date();
+						Ftaxhed.active = selectval();
+						
+						Ftaxhed.addmach = "INOSHI#";
+						Ftaxhed.adduser = "dspl";
+						
+						
+						var arrr:ArrayCollection = new ArrayCollection();
+						//for each(var taxobj:Object in dgAr)
+						for(var a:int=0;a<(dgAr.length-1);a++)
+						{
+							var taxobj:Object = dgAr.getItemAt(a); 
+							
+							/*  var itempk:Com_dspl_malkey_domain_FtaxdetPK = new Com_dspl_malkey_domain_FtaxdetPK();
+							itempk.taxcomcode = TxtComCode.text;
+							itempk.taxcode = taxobj["taxcode"].toString();
+							Ftaxdet.id = itempk; 
+							
+							Ftaxdet.taxrate = taxobj["taxrate"].toString();
+							Ftaxdet.taxseq = taxobj["taxseq"].toString();
+							Ftaxdet.taxmode = "0";  */
+							
+							var o:Object = new Object();
+							o["taxcomcode"] = TxtComCode.text;
+							o["taxcode"] = taxobj["taxcode"].toString();
+							o["taxrate"] = taxobj["taxrate"].toString();
+							o["taxseq"] = taxobj["taxseq"].toString();
+							o["taxmode"] = "0"; 
+							arrr.addItem(o);
+							//fTaxhedService.insert(Ftaxhed,arrr);
+							//fTaxdetService.create(Ftaxdet);
+						}
+						/* for(var b:int=0;b<arrr.length;b++)
+						{
+						var ob:Object = arrr.getItemAt(b);
+						Alert.show("taxcode: " + ob["taxcode"].toString());
+						} */
+						addfTaxhedResultList.token = fTaxhedService.insert(Ftaxhed,arrr);
+						Alert.show("\'" + sEditedAccCode + "\' " + " Record Saved Successfully.",title + " - Save",Alert.OK,null,null,IconInformation,Alert.OK,null);
+					}			
+					
+					if(currentState=="Edit")
+					{
+						//Ftaxhed.taxcomcode = TxtComCode.text;
+						Ftaxhed.taxcomname = TxtComName.text;
+						Ftaxhed.adddate = new Date();
+						Ftaxhed.active = selectval();
+						
+						Ftaxhed.addmach = "INOSHI#";
+						Ftaxhed.adduser = "dspl";
+						
+						var arr:ArrayCollection = new ArrayCollection();
+						for each(var taxobj:Object in dgAr)
+						{
+							var itempk:Com_dspl_malkey_domain_FtaxdetPK = new Com_dspl_malkey_domain_FtaxdetPK();
+							itempk.taxcomcode = TxtComCode.text;
+							itempk.taxcode = taxobj["taxcode"].toString();
+							Ftaxdet.id = itempk;
+							
+							Ftaxdet.taxrate = taxobj["taxrate"].toString();
+							Ftaxdet.taxseq = taxobj["taxseq"].toString();
+							Ftaxdet.taxmode = "0";
+							
+							arr.addItem(Ftaxdet);
+							
+							
+							editfTaxhedResultList.token = fTaxhedService.edit(Ftaxhed,arr);
+						}
+						Alert.show("\'" + sEditedAccCode + "\' " + "Record Updated Successfully.",title + " - Update",Alert.OK,null,null,IconInformation,Alert.OK,null);
+					}
+				}
+				catch(error:Error)
+				{
+					Alert.show("save: " + error.message);
+				}
+				
+				currentState = "Default";
+				initApp();
+			}
+			
+			private function savegrid():void{
+				try{
+					var arr:ArrayCollection = new ArrayCollection();
+					for each(var taxobj:Object in dgAr)
+					{
+						var itempk:Com_dspl_malkey_domain_FtaxdetPK = new Com_dspl_malkey_domain_FtaxdetPK();
+						itempk.taxcomcode = TxtComCode.text;
+						itempk.taxcode = taxobj["taxcode"].toString();
+						Ftaxdet.id = itempk;
+						
+						Ftaxdet.taxrate = taxobj["taxrate"].toString();
+						Ftaxdet.taxseq = taxobj["taxseq"].toString();
+						Ftaxdet.taxmode = "0";
+						
+						arr.addItem(Ftaxdet);
+						fTaxdetService.update(Ftaxdet);
+						Alert.show("rate"+taxobj["taxrate"].toString());
+						Alert.show("seq"+taxobj["taxseq"].toString());
+						Alert.show("taxcode"+taxobj["taxcode"].toString());
+						
+					} 
+					
+				}
+				catch(ex:Error)
+				{
+					Alert.show("Error"+ex);
+				}
+			}
+			
+			private function selectval():String{
+				
+				var chkval:String;
+				
+				if(chkboxactiv.selected==true)
+				{
+					chkval="1";
+					
+				}else
+				{
+					chkval="0";
+					
+				}
+				return chkval;
+			}
+			
+			protected function btnList_clickHandler(event:MouseEvent):void
+			{
+				//currentState = "Default";
+			}
+			
+			
+			protected function btnUndo_clickHandler(event:MouseEvent):void
+			{
+				ErrorTipManager.hideAllErrorTips();
+				currentState = "Default";
+				intCurrentRec = intCurrentRec+1;
+				goBack();
+			}
+			
+			
+			protected function btnEdit_clickHandler(event:MouseEvent):void
+			{
+				currentState = "Edit";
+				TxtComName.setFocus();
+				addtaxrecord();
+				
+			}
+			
+			private function goBack():void{
+				if(intCurrentRec > 0){
+					intCurrentRec -= 1;
+				} else intCurrentRec = intTotalRec-1;
+			}
+			
+			private function goNext():void{
+				if(intCurrentRec < (intTotalRec-1)){
+					intCurrentRec += 1;
+				} else intCurrentRec = 0;
+			}
+			
+			private function goTop():void{
+				intCurrentRec = 0;
+			}
+			
+			private function goBottom():void{
+				
+				intCurrentRec = intTotalRec -1;
+			}
+			
+			
+			
+			/* private function filtertaxdet(taxcomcode:String):void
+			{
+			try
+			{
+			if(taxcomcode=="")
+			{
+			return;
+			}
+			dgAr.removeAll();
+			
+			for(var a:int=0;a<ftaxhedAr.length;a++)
+			{
+			var ftaxhedObj:Object = ftaxhedAr.getItemAt(a);
+			var obj:Object = new Object();
+			var stat:Boolean = false;
+			obj["taxcomcode"] = ftaxhedObj["taxcomcode"].toString();
+			
+			
+			for(var b:int=0;b<ftaxdetAr.length;b++)
+			{
+			
+			var ftaxdetObj:Object = ftaxdetAr.getItemAt(b);
+			if(ftaxhedObj["taxcomcode"].toString()==ftaxdetObj["id"]["taxcomcode"].toString() && ftaxdetObj["id"]["taxcomcode"].toString()==taxcomcode && stat==false)
+			{
+			
+			obj["taxcode"] = ftaxdetObj["id"]["taxcode"].toString();
+			obj["taxrate"]= ftaxdetObj["taxrate"].toString();
+			obj["taxseq"]= ftaxdetObj["taxseq"].toString();
+			
+			stat = true;
+			} 
+			} 
+			
+			dgAr.addItem(obj);
+			}
+			}
+			catch(ex:Error)
+			{
+			Alert.show("Error"+ex.message);
+			} 
+			} */
+			
+			
+			
+			protected function TxtComCode_valueCommitHandler(event:FlexEvent):void
+			{
+				if(currentState=="Default")
+				{
+					if(TxtComCode.text!="")
+					{
+						loadTaxCom(TxtComCode.text);
+					}
+				}
+			}
+			
+			private function loadTaxCom(taxcomcode:String):void
+			{
+				try
+				{
+					dgAr.removeAll();
+					for(var b:int=0;b<ftaxdetAr.length;b++)
+					{
+						var detObj:Object = ftaxdetAr.getItemAt(b);
+						if(detObj["id"]["taxcomcode"].toString()==taxcomcode)
+						{
+							for(var c:int=0;c<ftaxAr.length;c++)
+							{
+								var taxObj:Object = ftaxAr.getItemAt(c);
+								if(taxObj["taxcode"].toString()==detObj["id"]["taxcode"].toString())
+								{
+									var fObj:Object = new Object();
+									fObj["taxcode"] = detObj["id"]["taxcode"].toString();
+									fObj["taxrate"] = detObj["taxrate"].toString();
+									fObj["taxseq"] = detObj["taxseq"].toString();
+									fObj["taxname"] = taxObj["taxname"].toString();
+									fObj["taxper"] = taxObj["taxper"].toString();
+									dgAr.addItem(fObj);
+								}
+							}
+						}
+					} 
+				}
+				catch(error:Error)
+				{
+					Alert.show("loadTaxCom: " + error.message)
+				}
+			}
+			
+			/* private function filtertax(taxcomcode:String):void{
+			
+			
+			try
+			{
+			if(taxcomcode=="")
+			{
+			return;
+			}
+			dgAr.removeAll();
+			
+			for(var a:int=0;a<ftaxdetAr.length;a++)
+			{
+			var ftaxdetObj:Object = ftaxdetAr.getItemAt(a);
+			var obj:Object = new Object();
+			var stat:Boolean = false;
+			
+			
+			for(var b:int=0;b<ftaxAr.length;b++)
+			{
+			
+			var ftaxObj:Object = ftaxAr.getItemAt(b);
+			if(ftaxdetObj["id"]["taxcode"].toString()==ftaxObj["taxcode"].toString() && ftaxdetObj["id"]["taxcomcode"].toString()==taxcomcode && stat==false)
+			{
+			obj["taxname"] = ftaxObj["taxname"].toString();
+			obj["taxper"]= ftaxObj["taxper"].toString();
+			stat = true;
+			} 
+			} 
+			
+			dgAr.addItem(obj);
+			}
+			
+			}
+			catch(ex:Error)
+			{
+			Alert.show("FilerTax"+ex.message);
+			}
+			
+			} */
+			
+			
+			
+			protected function btnDelete_clickHandler(event:MouseEvent):void
+			{
+				sEditedAccCode =  TxtComCode.text;
+				Alert.show("Do you want delete Product Code \'" + sEditedAccCode + "\' ?", " - Delete", Alert.YES | Alert.NO, this, deleteFTaxComRec, null, Alert.NO);				
+			}
+			
+			protected function deleteFTaxComRec(event:CloseEvent):void{
+				
+				if (event.detail==Alert.YES)
+				{
+					
+					//fTaxhedService.removeById(Ftaxhed.taxcomcode);
+					deletefTaxResult.token = fTaxhedService.deleterec(Ftaxhed.taxcomcode);
+					Alert.show(" Delete Record \'" +sEditedAccCode+ "\'",title + "- Delete",Alert.OK,null,null,IconInformation,Alert.OK,null);
+					
+				}
+			}
+			
+			
+			protected function btnReload_clickHandler(event:MouseEvent):void
+			{
+				if(currentState=="ReadOnly")
+				{
+					initApp();
+				}
+				
+			}
+			
+			
+			protected function addfTaxhedResultList_resultHandler(event:ResultEvent):void
+			{
+				initApp();
+			}
+			
+			
+			protected function editfTaxhedResultList_resultHandler(event:ResultEvent):void
+			{
+				initApp();
+			}
+			
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				removeFormErrorTips();
+				PopUpManager.removePopUp(this);
+				this.parent.parent.removeChild(this.parent);
+			}
+
+
+			protected function btnClose_clickHandler(event:MouseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+				this.parent.parent.removeChild(this.parent);
+			}
+
+
+			protected function deletefTaxResult_resultHandler(event:ResultEvent):void
+			{
+				
+				initApp();
+				goBack();
+				
+			}
+
+			protected function controlbar2_creationCompleteHandler(event:FlexEvent):void{
+				setPermission();
+			}
+
+
+			protected function btnPrint_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function btnFind_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+		]]>
+	</fx:Script>
+	
+	
+	<s:states>
+		<s:State name="Default"/>
+		<s:State name="Add"/>
+		<s:State name="Edit"/>
+		
+	</s:states>
+	
+	
+	<fx:Declarations>
+		
+		<!--<fTaxhed>-->
+		<services:FtaxhedSRV id="fTaxhedService" endpoint="@Resource(key='url',bundle='resource')"
+							 showBusyCursor="true"
+							 result="fTaxhedService_resultHandler(event)"
+							 fault="fTaxhedService_faultHandler(event)"/>
+		<s:CallResponder id="getfTaxhedResultList"/>
+		<s:CallResponder id="addfTaxhedResultList" result="addfTaxhedResultList_resultHandler(event)"/>
+		<s:CallResponder id="editfTaxhedResultList" result="editfTaxhedResultList_resultHandler(event)"/>
+		<s:CallResponder id="deletefTaxResult" result="deletefTaxResult_resultHandler(event)"/>
+		<valueObjects:Com_dspl_malkey_domain_Ftaxhed id="Ftaxhed"/>
+		
+		<!--<fTaxdet>-->
+		<services:FtaxdetSRV  id="fTaxdetService" endpoint="@Resource(key='url',bundle='resource')"
+							  result="fTaxdetService_resultHandler(event)"
+							  fault="fTaxdetService_faultHandler(event)"/>
+		<s:CallResponder id="getfTaxdetResultList"/>
+		<valueObjects:Com_dspl_malkey_domain_Ftaxdet id="Ftaxdet"/>
+		<!--<fTax>-->
+		<services:FtaxSRV id="fTaxService" endpoint="@Resource(key='url',bundle='resource')"
+						  result="fTaxService_resultHandler(event)"
+						  fault="fTaxService_faultHandler(event)"/>
+		<s:CallResponder id="getfTaxResultList"/>
+		
+		<!-- Input Validations for Manadatory Form Items -->
+		<mx:StringValidator id="svpCode" source="{TxtComCode}" property="text" maxLength="10"/>
+		<mx:StringValidator id="svpName" source="{TxtComName}" property="text"/>
+		
+	</fx:Declarations>
+	<!--	<fx:Binding source="{getfTaxResultList.lastResult.getItemAt(intCurrentRec)}" destination="Ftax"/>-->
+	<!--<fx:Binding source="{getfTaxdetResultList.lastResult.getItemAt(intCurrentRec)}" destination="Ftaxdet"/>-->
+	<fx:Binding source="{getfTaxhedResultList.lastResult.getItemAt(intCurrentRec)}" destination="Ftaxhed"/>
+	
+	
+	<!--<UI Component>-->
+	<!--<s:Panel title="Tax Combination Master File" width="703"  x="10" y="10" height="361">-->
+		
+	
+	<mx:ControlBar x="3" y="-6" horizontalGap="2" height="57" width="698" creationComplete="controlbar2_creationCompleteHandler(event)">
+		<mx:Button  id="btnNew" width="40" height="40"
+					toolTip="New"	
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')"
+					click="btnNew_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>
+		<mx:Button  id="btnEdit" width="40" height="40"
+					toolTip="Edit" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/editD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/edit.png')"
+					click="btnEdit_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>
+		<mx:Button  id="btnDelete" width="40" height="40" 
+					toolTip="Delete" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/cancelD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/cancel.png')"
+					click="btnDelete_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>
+		<mx:Button  id="btnUndo" width="40" height="40" 
+					toolTip="Undo"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/undoD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/undo.png')" 
+					click="btnUndo_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					/>
+		<mx:Button  id="btnTop" width="40" height="40" 
+					toolTip="GoTop" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left2arrow.png')"
+					click="goTop()" 
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>
+		<mx:Button  id="btnBack" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/left1arrow.png')"
+					toolTip="goBack" 
+					click="goBack()" 
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>
+		<mx:Button  id="btnNext" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right1arrow.png')"
+					toolTip="goNext" 
+					click="goNext()"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>
+		<mx:Button  id="btnBottom" width="40" height="40" 
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrowD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/right2arrow.png')"
+					toolTip="goBottom" 
+					click="goBottom()"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>
+		<!--<mx:Button  id="btnPrint" width="40" height="40" 
+					toolTip="Print"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
+					click="btnPrint_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>-->
+		<mx:Button  id="btnFind" width="40" height="40" 
+					toolTip="Find"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/findD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/find.png')" 
+					click="btnFind_clickHandler(event)"
+					enabled.Default="false"
+					enabled.Add="false"
+					enabled.Edit="false"
+					/>
+		<mx:Button  id="btnReload" width="40" height="40"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/reloadD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/reload.png')" 
+					toolTip="Reload"
+					enabled.Default="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					click="btnReload_clickHandler(event)"
+					/>
+		<mx:Button  id="btnSave" width="40" height="40" 
+					toolTip="Save"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/filesaveD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/filesave.png')" 
+					enabled.Default="false"
+					enabled.Add="true"
+					enabled.Edit="true"
+					click="btnSave_clickHandler(event)"
+					/>
+		<mx:Button  id="btnClose" width="40" height="40" 
+					toolTip="Close"
+					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/exitD.png')"
+					icon="@Embed(source='com/dspl/malkey/components/common/icons/exit.png')"
+					enabled="true"
+					click="btnClose_clickHandler(event)"
+					/>
+	</mx:ControlBar>
+		
+		<mx:Form  x="0" y="65" width="691" height="239" height.Default="210" width.Default="692">
+			<mx:FormItem label="Tax  Combination  Code">
+				<!--<mx:TextInput id="TxtComCode"
+				restrict="A-Z 0-9^\\\`\~^_\-"	
+				maxChars="10"
+				enabled.Add="true" width="175"/>-->
+				
+				<controls:_tiMasterFile id="TxtComCode" 
+										editable.Default="false" editable.Add="true" editable.Edit="false"
+										restrict="A-Z 0-9^\\\`\~^_\-"	
+										valueCommit="TxtComCode_valueCommitHandler(event)" 
+										_acDataProvider="{getfTaxhedResultList.lastResult}"
+										_strDetailColCaption="TaxCom Name"
+										_strDetailColumn="taxcomname"
+										_strKeyColCaption="TaxCom Code"
+										_strKeyColumn="taxcomcode"	
+										_strWindowTitle="TaxCom Detail" 
+										text.Default="{Ftaxhed.taxcomcode}"
+										text.Edit="{Ftaxhed.taxcomcode}"  
+										width="175"
+										maxChars="10"
+										enabled.Edit="false"  enabled.Default="true" enabled.Add="true"/>
+			</mx:FormItem>
+			<mx:HBox width="651">
+				<mx:FormItem label="Tax Combination Name">
+					<mx:TextInput id="TxtComName"
+								  maxChars="10"
+								  text.Add=""
+								  text.Default="{((getfTaxhedResultList.lastResult as ArrayCollection).getItemAt(getArrayCollectionIndex(getfTaxhedResultList.lastResult,'taxcomcode',TxtComCode.text)) as Com_dspl_malkey_domain_Ftaxhed).taxcomname}"
+								  text.Edit="{((getfTaxhedResultList.lastResult as ArrayCollection).getItemAt(getArrayCollectionIndex(getfTaxhedResultList.lastResult,'taxcomcode',TxtComCode.text)) as Com_dspl_malkey_domain_Ftaxhed).taxcomname}"
+								  enabled.Add="true" width="347" enabled.Default="false" enabled.Edit="true"/>
+				</mx:FormItem>
+			
+				<mx:CheckBox  id="chkboxactiv" label="Active/InActive" selected="{Ftaxhed.active== '1' ? true : false}"
+							  enabled.Add="true" enabled.Default="false" enabled.Edit="true"/>
+			</mx:HBox>
+			
+			<mx:DataGrid id="taxgrid"  width="648" editable="true" doubleClickEnabled="true" dataProvider="{dgAr}" height="117">
+				<mx:columns>
+					
+					<mx:DataGridColumn dataField="taxcode" headerText.Add="Tax Code" headerText.Edit="Tax Code" headerText.Default="Tax Code" editable.Default="false" editable.Add="true" editable.Edit="true">
+						<mx:itemEditor>
+							<fx:Component>
+								<mx:TextInput
+									enabled="true"
+									editable="false"
+									doubleClickEnabled="true"
+									doubleClick="textinput1_doubleClickHandler(event)"
+									>									
+									
+									<fx:Script>
+										<![CDATA[
+											protected function textinput1_doubleClickHandler(event:MouseEvent):void
+											{
+												outerDocument.showTaxPopup();
+											}
+										]]>
+									</fx:Script>
+									
+								</mx:TextInput>
+							</fx:Component>
+						</mx:itemEditor>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Description" dataField="taxname" editable="false" />
+					<mx:DataGridColumn dataField="taxper" editable="false" headerText.Add="Percentage" headerText.Edit="Percentage" headerText.Default="Percentage" />
+					<mx:DataGridColumn dataField="taxrate" headerText.Add="Rate" headerText.Edit="Rate" headerText.Default="Rate" editable.Default="false" editable.Add="true" editable.Edit="true"/>
+					<mx:DataGridColumn dataField="taxseq" headerText.Add="Sequence" headerText.Edit="Sequence" headerText.Default="Sequence" editable.Default="false" editable.Add="true" editable.Edit="true"/>
+				</mx:columns>
+			</mx:DataGrid>
+			
+			<!--<s:Button label="Button" click="button1_clickHandler(event)"/>-->
+		</mx:Form>
+		
+	<!--</s:Panel>-->
+	
+</s:TitleWindow>	
+	
+

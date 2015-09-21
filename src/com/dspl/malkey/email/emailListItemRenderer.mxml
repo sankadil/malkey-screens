@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="true">
+	
+	<!-- Properties of the parent ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<s:layout>
+		<s:HorizontalLayout verticalAlign="middle"
+							paddingLeft="5" paddingRight="5"
+							paddingTop="5" paddingBottom="5" />
+	</s:layout>
+
+	<!-- Script ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Script>
+		<![CDATA[
+			protected function itemrenderer1_clickHandler(event:MouseEvent):void
+			{
+				launchMsg();
+			}
+			
+			protected function emailMsgDetails(msg:String):String
+			{
+				return msg.replace(/[\r\n]+/g, " ");						// Replace the carriage returns and line feed backs with a space to display a portion of the message body along with the subject
+			}
+			
+			private function launchMsg():void
+			{
+				parentDocument.parentDocument.lstMailbox_clickHandler();	// Execute the corresponding method in the parent module
+			}
+
+		]]>
+	</fx:Script>
+	
+	<!-- Declarations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<fx:Declarations>
+		<mx:DateFormatter id="formatDate" formatString="DD/MM/YYYY"/>
+	</fx:Declarations>
+	
+	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ color="#0A33BB" -->
+	<s:CheckBox id="chkSelect" selected="{data.isdeleted}" change="{data.isdeleted=chkSelect.selected}"/>
+	
+	<s:Label width="190" text="{data.fromemail}"
+			 maxDisplayedLines="1" showTruncationTip="true" buttonMode="true" useHandCursor="true"
+			 fontWeight="{data.foldertype>1 ? 'normal' : data.readstatus==0 ? 'normal' : 'bold'}"
+			 click="launchMsg()"/>
+	
+	<mx:HBox width="750">		
+		<s:Label backgroundColor="#90CEF5" fontFamily="Times New Roman"
+				 maxDisplayedLines="1" buttonMode="true" useHandCursor="true"
+				 text="{data.movedfrom==0 ? '&lt; Inbox &gt;' : '&lt; Sent &gt;'}"
+				 click="launchMsg()" visible="{data.foldertype==3}"/>
+		<s:Label text="{data.subject}"
+				 maxDisplayedLines="1" showTruncationTip="true" buttonMode="true" useHandCursor="true"
+				 fontWeight="{data.foldertype>1 ? 'normal' : data.readstatus==0 ? 'normal' : 'bold'}"
+				 click="launchMsg()"/>
+		<s:Label color="#948E8E" text="{' - ' + emailMsgDetails(data.body)}"
+				 maxDisplayedLines="1" buttonMode="true" useHandCursor="true"
+				 click="launchMsg()"/>
+	</mx:HBox>
+			
+	<s:Label width="75" text="{formatDate.format(data.date)}" 
+			 maxDisplayedLines="1" showTruncationTip="true" buttonMode="true" useHandCursor="true"
+			 fontWeight="{data.foldertype>1 ? 'normal' : data.readstatus==0 ? 'normal' : 'bold'}"
+			 click="launchMsg()"/>
+	
+	<s:BitmapImage source="@Embed(source='com/dspl/malkey/components/common/icons/paperclip.png')" 
+				   visible="{data.attachment=='' ? false : true}"/>
+</s:ItemRenderer>

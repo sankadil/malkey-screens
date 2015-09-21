@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="244" height="254"
+			   title="Reservation Diary"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			   >
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.data.events.DataConflictEvent;
+			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			public var gsJspFileName:String;
+			public var gsTitle:String;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					this.title=gsTitle;
+					setPermission();
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}catch(error:Error){
+					Message.displayAlert(1,"closeForm: " + error.message,"Error",errorCloseHandler);	
+				}
+			}
+
+			protected function btnView_clickHandler(event:MouseEvent):void{
+				try{
+					var request:URLRequest=request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+gsJspFileName+".jsp");
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			protected function btnViewIndividual_clickHandler(event:MouseEvent):void{
+				try{
+					var request:URLRequest=request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+gsJspFileName+".jsp?ct=INDIVIDUAL");
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			protected function btnViewWedding_clickHandler(event:MouseEvent):void{
+				try{
+					var request:URLRequest=request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+gsJspFileName+".jsp?ct=WEDDING");
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			protected function btnViewCorporate_clickHandler(event:MouseEvent):void{
+				try{
+					var request:URLRequest=request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+gsJspFileName+".jsp?ct=CORPORATE");
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			protected function btnViewLT_clickHandler(event:MouseEvent):void{
+				try{
+					var request:URLRequest=request = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/"+gsJspFileName+".jsp?ct=LONGTERM");
+					request.method = URLRequestMethod.POST;
+					navigateToURL(request);
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:Button
+		enabled="false"
+		id="btnView"
+		click="btnView_clickHandler(event)"
+		x="149" y="9" label="View" height="29" width="78"/>
+	
+	<s:Button
+		enabled="{btnView.enabled}"
+		id="btnViewWedding"
+		click="btnViewWedding_clickHandler(event)"
+		x="149" y="50" label="Wedding" height="29" width="78"/>	
+	
+	<s:Button
+		enabled="{btnView.enabled}"
+		id="btnViewCorporate"
+		click="btnViewCorporate_clickHandler(event)"
+		x="149" y="91" label="Corporate" height="29" width="78"/>	
+	
+	<s:Button
+		enabled="{btnView.enabled}"
+		id="btnViewIndividual"
+		click="btnViewIndividual_clickHandler(event)"
+		x="149" y="133" label="Individual" height="29" width="78"/>
+	
+	<s:Button
+		enabled="{btnView.enabled}"
+		id="btnViewLT"
+		click="btnViewLT_clickHandler(event)"
+		x="149" y="173" label="Longterm" height="29" width="78"/>
+
+
+	<s:Label text="Press Button"  fontSize="13" fontWeight="bold" x="12" y="17"/>
+</s:TitleWindow>

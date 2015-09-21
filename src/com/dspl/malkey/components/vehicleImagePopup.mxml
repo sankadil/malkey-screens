@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="598" height="456"
+				close="titlewindow1_closeHandler(event)"
+				title="{gsVehicleDes}"
+				currentState="Default"
+				xmlns:services="com.dspl.malkey.services.*"
+				creationComplete="initApp()"
+				preinitialize="titlewindow1_preinitializeHandler(event)"
+				>
+	<s:states>
+		<s:State name="Default"/>
+	</s:states>
+	<fx:Declarations>
+		<mx:Parallel id="twFade" target="{iVehicle}">
+			<mx:Fade alphaFrom="0" alphaTo="1" duration="300"/>
+		</mx:Parallel>
+		<s:CallResponder 
+			id="crListByRegNo"
+			result="crListByRegNo_resultHandler(event)"
+			fault="crListByRegNo_faultHandler(event)"
+		/>
+		
+		<services:FvehiclepicSRV 
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFvehiclepic" 
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.printing.*;
+			public var giImageCnt:int;
+			[Bindable]
+			public var gsRegno:String="";
+			[Bindable]
+			public var gsVehicleDes:String="";
+			
+			[Bindable]
+			private var lacPicList:ArrayCollection = new ArrayCollection();
+			
+			private var liIndex:int=-1;		
+			
+			private var llImageLoader:Loader = new Loader();
+			
+			private function initApp():void
+			{
+				try
+				{
+					/* crListByRegNo.token = srvFvehiclepic.listByRegNo(regno); */
+					this.addEventListener(KeyboardEvent.KEY_UP,keyUpEvent,false,0,false);
+					this.setFocus();
+				}
+				catch(error:Error)
+				{
+					Alert.show("initApp: " + error.message);
+					closeForm();
+				}
+			}
+			
+			private function keyUpEvent(event:KeyboardEvent):void
+			{
+				if(event.keyCode==27) //Escape
+				{
+					closeForm();
+				}
+				if(event.keyCode==37) //Left
+				{
+					loadPrevImage();
+				}
+				if(event.keyCode==39) //Right
+				{
+					loadNextImage();
+				}
+				this.setFocus();
+			}
+			
+			private function closeForm():void
+			{
+				this.parent.removeChild(this);
+			}
+
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				closeForm();
+			}
+
+			protected function crListByRegNo_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					//Alert.show("test ");
+					lacPicList = event.result as ArrayCollection;
+					//Alert.show("test length "+lacPicList.length);
+					loadNextImage();
+				}
+				catch(error:Error)
+				{
+					closeForm();
+				}
+			}
+			
+			private function loadNextImage():void
+			{
+				try
+				{
+					if((giImageCnt-1)==liIndex)
+					{
+						liIndex = 0;
+					}
+					else 
+					{
+						liIndex += 1;
+					}
+					var o:Object = lacPicList.getItemAt(liIndex);
+					//Alert.show("test [length "+lacPicList.length+"] imageurl "+o["imageurl"].toString());
+					
+					//llImageLoader.addEventListener(Event.COMPLETE,imageLoadComplete,false,0,false);
+					
+					llImageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadImageFromServer_Complete);
+					llImageLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, loadImageFromServer_Error);
+					llImageLoader.load(new URLRequest(o["imageurl"].toString()));
+					updateLabel();
+				}
+				catch(error:Error)
+				{
+					//Alert.show("loadImage: " + error.message);
+				}
+			}
+ 			
+			private function loadImageFromServer_Complete(e:Event):void
+			{
+				try{
+					iVehicle.source = (e.target as LoaderInfo).content;
+				} catch(error:Error){
+					//nCalledVImgNA = 1;
+					//loadImageFromServer(sVehicleImageNotAvailable);
+					//Alert.show("error in loading image");
+				}
+			}
+			
+			private function loadImageFromServer_Error(event:IOErrorEvent):void
+			{
+/* 				if (nCalledVImgNA == 0){
+					nCalledVImgNA = 1;
+					loadImageFromServer(sVehicleImageNotAvailable);
+				} else
+					iVehicle.source = null; */
+				//Alert.show("error in loading image 2");
+			}
+			
+			/*			
+			private function loadBytesHandler(e:Event):void
+			{
+				var loaderInfo:LoaderInfo = (e.target as LoaderInfo); 
+				imgVehicle.source = loaderInfo.content;
+				
+				// Update the image collection
+				var lnDefaultImage:int = aVehiclePic.length==0 ? 1 : 0;
+				createVehiclePicRecord("", lnDefaultImage, oFileRef.name, loaderInfo.bytes);
+				
+				oGenFuncForImageNav.intTotalRecs = aVehiclePic.length;
+				oGenFuncForImageNav.intCurrentRecNo = aVehiclePic.length - 1;		// Navigate to the image just added
+				chkDefaultPic.selected = aVehiclePic[oGenFuncForImageNav.intCurrentRecNo].defaultimage==1 ? true : false;
+				
+				btnClearImage.enabled = true;
+				chkDefaultPic.enabled = true;
+				
+				if (aVehiclePic.length>1){
+					btnPrevPic.enabled = true;
+					btnNextPic.enabled = true;
+				}
+			} */
+			
+			private function loadPrevImage():void
+			{
+				try
+				{
+					if(liIndex==0)
+					{
+						liIndex = (giImageCnt-1);
+						updateLabel();
+					}
+					else 
+					{
+						liIndex -= 1;
+					}
+					var o:Object = lacPicList.getItemAt(liIndex);
+					llImageLoader.load(new URLRequest(o["imageurl"].toString()));
+					updateLabel();
+				}
+				catch(error:Error)
+				{
+					Alert.show("loadPrevImage: " + error.message);
+				}
+			}
+
+			protected function crListByRegNo_faultHandler(event:FaultEvent):void
+			{
+				//Alert.show("test sanka : " + event.message);
+				closeForm();
+			}
+			
+			private function updateLabel():void
+			{
+				lblCurrent.text = ((liIndex+1).toString() + " of " + giImageCnt.toString());
+			}
+
+			protected function titlewindow1_preinitializeHandler(event:FlexEvent):void
+			{
+				llImageLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageReady);
+				crListByRegNo.token = srvFvehiclepic.listByRegNo(gsRegno);
+			}
+			
+			public function onImageReady(event:Event):void 
+			{
+				var img:Bitmap = new Bitmap();
+				img.smoothing = true;
+				img.bitmapData = event.target.content.bitmapData;
+				iVehicle.source = img;
+				twFade.play();
+			}
+
+			// Create a PrintJob instance.
+			private function doPrint():void {
+				// Create an instance of the FlexPrintJob class.
+				var printJob:FlexPrintJob = new FlexPrintJob();
+				
+				// Start the print job.
+				if (printJob.start() != true) return;
+				
+				// Add the object to print. Do not scale it.
+				printJob.addObject(this, FlexPrintJobScaleType.NONE);
+				printJob.addObject(this.iVehicle, FlexPrintJobScaleType.NONE);
+				// Send the job to the printer.
+				printJob.send();
+			}
+			
+			protected function btnNext_clickHandler(event:MouseEvent):void
+			{
+				loadNextImage();
+			}
+
+			protected function btnPrevous_clickHandler(event:MouseEvent):void
+			{
+				loadPrevImage();
+			}
+			
+			
+			//---------------------------------------------------------------------
+
+			//---------------------------------------------------------------------
+		]]>
+	</fx:Script>
+	<mx:Image
+		id="iVehicle"
+		completeEffect="twFade"
+		maintainAspectRatio="false"
+		x="4" y="4" width="589" height="385"
+		/>	
+	<s:Label
+		id="lblCurrent"
+		x="274" y="400" text="1 of 4" fontSize="14" width="45"/>
+	<mx:Button  id="btnPrevous" width="50" height="26" toolTip="Back"  
+				icon="@Embed(source='/com/dspl/malkey/components/common/icons/left1arrow.png')"
+				click="btnPrevous_clickHandler(event)"
+				enabled="true" x="213" y="391"/>
+	<mx:Button  id="btnNext" width="50" height="26" toolTip="Next" 
+				icon="@Embed(source='/com/dspl/malkey/components/common/icons/right1arrow.png')"
+				click="btnNext_clickHandler(event)"
+				enabled="true" x="320" y="391"/>
+	<mx:Button  id="btnPrint" width="50" height="26" toolTip="Print" 
+				icon="@Embed(source='/com/dspl/malkey/components/common/icons/fileprint.png')"
+				click="doPrint()"
+				enabled="true" x="542" y="391"/>
+</s:TitleWindow>

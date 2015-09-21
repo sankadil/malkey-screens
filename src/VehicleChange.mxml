@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:controls="com.dspl.efinac.components.common.controls.*"
+			   minWidth="555" minHeight="600" 
+			   width="575"
+			    xmlns:services="com.dspl.malkey.services.*">
+
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fcolour;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehiclerate;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_view_HireDetailsView;
+			
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			
+			protected function lnkSearch_clickHandler(event:MouseEvent):void
+			{
+				listAllfreservationSRV();
+			}
+			
+			
+			protected function advancedSearchVehicles(arg0:String, arg1:String, arg2:Com_dspl_malkey_view_HireDetailsView, arg3:Boolean):void
+			{
+				advancedSearchVehiclesResult.token = vehiclesearchSRV.advancedSearchVehicles(arg0, arg1, arg2, arg3);
+			}
+			
+			
+			protected function listAllfreservationSRV():void
+			{
+				crFreservationListAllResult.token = freservationSRV.ListAll();
+			}
+			
+
+			protected function advancedSearchVehiclesResult_resultHandler(event:ResultEvent):void
+			{
+				txtVehicleRates.launchSearchGrid();
+			}
+
+
+			protected function crFreservationListAllResult_resultHandler(event:ResultEvent):void
+			{
+				txtReservation.launchSearchGrid();
+			}
+
+
+			protected function advancedSearchVehiclesResult_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function crFreservationListAllResult_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function txtVehicleRates__onReturnFromSearchGridHandler(event:Event):void
+			{
+				Alert.show("txtReservation._nSelectedIndex");
+			}
+
+
+			protected function txtReservation__onReturnFromSearchGridHandler(event:Event):void
+			{
+				var temp:Com_dspl_malkey_domain_Freservation=(crFreservationListAllResult.lastResult.getItemAt(txtReservation._nSelectedIndex) as Com_dspl_malkey_domain_Freservation);
+				txtAgreementNo.text=temp.agrno;
+				txtReservationNo.text=temp.resno;
+				findByID(temp.resno);
+			}
+
+			
+			protected function findByID(arg0:String):void
+			{
+				crfindByIDResult.token = fresvehiclerateSRV.findByID(arg0);
+			}
+			
+
+			protected function crfindByIDResult_resultHandler(event:ResultEvent):void
+			{
+				var temp:Com_dspl_malkey_domain_Fresvehiclerate=crfindByIDResult.lastResult;
+				//txtMOdel.text=temp. 
+				//txtClientType 
+				//txtHireType 
+				//txtRateType 
+				//txtRate 
+				//txtExtraMileRate
+			}
+
+
+			protected function crfindByIDResult_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+		]]>
+	</fx:Script>
+
+	
+	<fx:Declarations>
+		<s:CallResponder id="advancedSearchVehiclesResult"	result="advancedSearchVehiclesResult_resultHandler(event)"	fault="advancedSearchVehiclesResult_faultHandler(event)"/>
+		<s:CallResponder id="crFreservationListAllResult"	result="crFreservationListAllResult_resultHandler(event)"	fault="crFreservationListAllResult_faultHandler(event)"/>
+		<s:CallResponder id="crfindByIDResult"				result="crfindByIDResult_resultHandler(event)"				fault="crfindByIDResult_faultHandler(event)"/>
+		<services:VehiclesearchSRV 		id="vehiclesearchSRV" 		fault="Alert.show('Error')" showBusyCursor="true" 	endpoint="@Resource(key='url', bundle='resource')"/>
+		<services:FreservationSRV 		id="freservationSRV" 		fault="Alert.show('Error')" showBusyCursor="true" 	endpoint="@Resource(key='url', bundle='resource')"/>
+		<services:FresvehiclerateSRV 	id="fresvehiclerateSRV" 	fault="Alert.show('Error')" showBusyCursor="true"	endpoint="@Resource(key='url', bundle='resource')"/>
+	</fx:Declarations>
+	
+	
+	<mx:Form x="26" y="19">
+		<mx:FormItem label="Agreement No" direction="horizontal">
+			<s:TextInput id="txtAgreementNo"/>
+			<mx:LinkButton id="lnkSearch" label="Search" click="lnkSearch_clickHandler(event)"/>
+			<controls:_tiMasterFile id="txtVehicleRates"											
+									_acDataProvider="{advancedSearchVehiclesResult.lastResult}"
+									_strKeyColumn="regno"
+									_strKeyColCaption="Reg: No" 
+									_strDetailColumn="vehimodelid" 
+									_strDetailColCaption="model"
+									_strWindowTitle="Select Vehicle"
+									otherColumns="vehimakeid,vehiclassid,fueltypeid,vehitypeid,colourid"
+									otherColumnHeaderText="Make,Class,Fuel,Type,Colour"
+									dgColWidth="75"
+									editable="false"
+									width="0"
+									visible="false"
+									includeInLayout="false"
+									_onReturnFromSearchGrid="txtVehicleRates__onReturnFromSearchGridHandler(event)"
+									/>
+			<controls:_tiMasterFile id="txtReservation"											
+									_acDataProvider="{crFreservationListAllResult.lastResult}"
+									_strKeyColumn="resno"
+									_strKeyColCaption="Res: No" 
+									_strDetailColumn="agrno" 
+									_strDetailColCaption="agrno"
+									_strWindowTitle="Select Reservation"
+									otherColumns="cohirestsid,hiretypeid,ratetype,dout,din"
+									otherColumnHeaderText="cohirestsid,hiretypeid,ratetype,dout,din"
+									dgColWidth="75"
+									editable="false"
+									width="0"
+									visible="false"
+									includeInLayout="false"
+									_onReturnFromSearchGrid="txtReservation__onReturnFromSearchGridHandler(event)"
+									/>
+		</mx:FormItem>
+		<mx:FormItem label="Reservation No">
+			<s:TextInput id="txtReservationNo"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Form x="27" y="105">
+			<s:Label text="Vehicle Details" color="#062DF4" fontSize="20"/>
+		<mx:FormItem label="Reg No">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Description">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Class">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Type">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Made By">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Model">
+			<s:TextInput/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Form x="293" y="115">
+		<s:Label text="Rate Details" color="#062DF4" fontSize="20"/>
+		<mx:FormItem label="Model">
+			<s:TextInput id="txtMOdel"/>
+		</mx:FormItem>
+		<mx:FormItem label="Client Type">
+			<s:TextInput id="txtClientType"/>
+		</mx:FormItem>
+		<mx:FormItem label="Hire Type">
+			<s:TextInput id="txtHireType"/>
+		</mx:FormItem>
+		<mx:FormItem label="Rate Type">
+			<s:TextInput id="txtRateType"/>
+		</mx:FormItem>
+		<mx:FormItem label="Rate">
+			<s:TextInput id="txtRate"/>
+		</mx:FormItem>
+		<mx:FormItem label="Extra Mile Rate">
+			<s:TextInput id="txtExtraMileRate"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Form x="26" y="355">
+			<s:Label text="Vehicle Details" color="#062DF4" fontSize="20"/>
+		<mx:FormItem label="Reg No">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Description">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Class">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Type">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Made By">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Model">
+			<s:TextInput/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Form x="294" y="353">
+		<s:Label text="Rate Details" color="#062DF4" fontSize="20"/>
+		<mx:FormItem label="Model">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Client Type">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Hire Type">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Rate Type">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Rate">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Extra Mile Rate">
+			<s:TextInput/>
+		</mx:FormItem>
+	</mx:Form>
+</s:Application>

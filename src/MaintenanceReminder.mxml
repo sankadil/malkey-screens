@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="360" height="188"
+			   title="Vehicle Maintenance Activity"
+			   close="closeForm()"
+			   creationComplete="initApp(event)" xmlns:services="com.dspl.malkey.services.*"
+			   >
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+		
+		<!--Service-->
+		<services:FmainttypeSRV 
+			id="srvFmainttype"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		
+		<!--Call Responder-->
+		<s:CallResponder 
+			id="crListAllFmainttype"
+			result="crListAllFmainttype_resultHandler(event)"
+			fault="crListAllFmainttype_faultHandler(event)"
+			/>
+		
+		<!--Service-->
+		<services:FmaintstatusSRV 
+			id="srvFmaintstatus"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		
+		<!--Call Responder-->
+		<s:CallResponder 
+			id="crListAllFmaintstatus"
+			result="crListAllFmaintstatus_resultHandler(event)"
+			fault="crListAllFmaintstatus_faultHandler(event)"
+			/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.data.events.DataConflictEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.StringUtil;
+			
+			import spark.events.IndexChangeEvent;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			[Bindable]
+			private var lacFrequency:ArrayCollection=new ArrayCollection([
+				{des:"All"},
+				{des:"Recurring"},
+				{des:"One-off"}
+			]);
+			[Bindable]
+			private var lacFmainttype:ArrayCollection=new ArrayCollection();
+			[Bindable]
+			private var lacFmaintstatus:ArrayCollection=new ArrayCollection();
+			
+			public var gsType:String;
+			public var gsTitle:String;
+			
+			private function initApp(event:FlexEvent):void{
+				try{
+					setPermission();
+					var curDate:Date=new Date();
+					dfDateFrom.selectedDate=curDate;
+					dfDateTo.selectedDate=curDate;
+					//this.title=gsTitle;
+					loadMasterFiles();
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function loadMasterFiles():void{
+				try{
+					ddFrequency.selectedIndex=0;
+					crListAllFmainttype.token=srvFmainttype.ListAll();
+					crListAllFmaintstatus.token=srvFmaintstatus.ListAll();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMasterFiles: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function closeForm():void{
+				try{
+					this.parent.parent.removeChild(this.parent);
+				}catch(error:Error){
+					Message.displayAlert(1,"closeForm: " + error.message,"Error",errorCloseHandler);	
+				}
+			}
+
+			protected function btnView_clickHandler(event:MouseEvent):void{
+				try{
+					if(dfDateFrom.selectedDate>dfDateTo.selectedDate){
+						Message.displayAlert(2,"Date To Cannot Be Less Than Date From","Warning",null);
+					}else{
+						if(ddFrequency.selectedIndex<0){
+							Message.displayAlert(2,"Select Maintenance Frequency To Continue","Warning",null);
+							return;
+						}
+						if(StringUtil.trim(ddFrequency.selectedItem.des).toLowerCase()=="recurring"){
+							if(ddType.selectedIndex<0){
+								Message.displayAlert(2,"Select Maintenance Type To Continue","Warning",null);
+								return;
+							}
+						}
+						if(ddHireType.selectedIndex<0){
+							Message.displayAlert(2,"Select Maintenance Status To Continue","Warning",null);
+							return;
+						}
+												
+						var dateFrom:String=getDateString(dfDateFrom.selectedDate);
+						var dateTo:String=getDateString(dfDateTo.selectedDate);
+						var maintFrequency:String=StringUtil.trim(ddFrequency.selectedItem.des);
+						var maintType:String="";
+						if(maintFrequency.toLowerCase()=="recurring")
+							maintType=StringUtil.trim(ddType.selectedItem.id);
+						var maintStatus:String=StringUtil.trim(ddHireType.selectedItem.id);
+						
+						var urlString:String=resourceManager.getString("resource","reportingURL",null,null).toString() + "/MaintenanceReminder.jsp?df="+ dateFrom+"&dt="+dateTo+"&mf="+maintFrequency;
+						if(maintType.length>0)
+							urlString+="&mt="+maintType;
+						
+						urlString+="&ms="+maintStatus;
+						
+						var request:URLRequest;
+						request = new URLRequest(urlString);
+						request.method = URLRequestMethod.POST;
+						navigateToURL(request);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",null);
+				}
+			}
+			
+			private function getDateString(dt:Date):String{
+				var year:String=dt.getFullYear().toString();
+				var month:String=(dt.getMonth()+1).toString();
+				var date:String=dt.getDate().toString();
+				if(StringUtil.trim(month).length<2)
+					month="0"+month;
+				if(StringUtil.trim(date).length<2)
+					date="0"+date;
+				return year+"."+month+"."+date;
+			}
+
+			protected function crListAllFmainttype_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Maintenance Type [Error]","Error",errorCloseHandler);
+					else{
+						lacFmainttype.removeAll();
+						var tmpAC:ArrayCollection=event.result as ArrayCollection;
+						var o:Object=new Object();
+						o["id"]="All";
+						o["des"]="All";
+						lacFmainttype.addItem(o);
+						for(var a:int=0;a<tmpAC.length;a++){
+							o=new Object();
+							o["id"]=tmpAC.getItemAt(a).typeid;
+							o["des"]=tmpAC.getItemAt(a).description;
+							lacFmainttype.addItem(o);
+						}
+						//ddType.selectedIndex=0;
+						tmpAC=null;
+						crListAllFmainttype.token=null;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"List Maintenance Type [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crListAllFmainttype_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Maintenance Type [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+
+			protected function crListAllFmaintstatus_resultHandler(event:ResultEvent):void{
+				try{
+					if(event.result==null)
+						Message.displayAlert(1,"Error Loading Maintenance Status [Error]","Error",errorCloseHandler);
+					else{
+						lacFmaintstatus.removeAll();
+						var tmpAC:ArrayCollection=event.result as ArrayCollection;
+						var o:Object=new Object();
+						o["id"]="All";
+						o["des"]="All";
+						lacFmaintstatus.addItem(o);
+						for(var a:int=0;a<tmpAC.length;a++){
+							o=new Object();
+							o["id"]=tmpAC.getItemAt(a).statusid;
+							o["des"]=tmpAC.getItemAt(a).description;
+							lacFmaintstatus.addItem(o);
+						}
+						ddHireType.selectedIndex=0;
+						tmpAC=null;
+						crListAllFmaintstatus.token=null;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"List Maintenance Status [Result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crListAllFmaintstatus_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"List Maintenance Status [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+
+			protected function ddFrequency_changeHandler(event:IndexChangeEvent):void			{
+				if(ddFrequency.selectedIndex>-1){
+					if(StringUtil.trim(ddFrequency.selectedItem.des).toLowerCase()=="recurring"){
+						ddType.enabled=true;
+						ddType.selectedIndex=0;
+					}else{
+						ddType.enabled=false;
+						ddType.selectedIndex=-1;
+					}
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<mx:Form
+		paddingLeft="0"
+		paddingRight="0"
+		paddingTop="0"
+		paddingBottom="0"
+		x="10" y="10" width="250" height="135">
+		<mx:FormItem label="Date From" direction="horizontal">
+			<mx:DateField
+				enabled="{btnView.enabled}"
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				id="dfDateFrom"
+				width="148"/>
+		</mx:FormItem>
+		<mx:FormItem label="Date To">
+			<mx:DateField
+				enabled="{btnView.enabled}"
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				id="dfDateTo"
+				width="148"/>
+		</mx:FormItem>
+		<mx:FormItem label="Frequency">
+			<s:DropDownList
+				enabled="{btnView.enabled}"
+				change="ddFrequency_changeHandler(event)"
+				id="ddFrequency"
+				dataProvider="{lacFrequency}"
+				labelField="des"
+				width="147"/>
+		</mx:FormItem>
+		<mx:FormItem label="Type">
+			<s:DropDownList
+				enabled="false"
+				id="ddType"
+				dataProvider="{lacFmainttype}"
+				labelField="des"
+				 width="147"/>
+		</mx:FormItem>
+		<mx:FormItem label="Status">
+			<s:DropDownList
+				enabled="{btnView.enabled}"
+				id="ddHireType"
+				dataProvider="{lacFmaintstatus}"
+				labelField="des"
+				 width="147"/>
+		</mx:FormItem>
+	</mx:Form>
+	<s:Button
+		id="btnView"
+		click="btnView_clickHandler(event)"
+		x="268" y="10" label="View" height="29" width="78" enabled="false"/>
+</s:TitleWindow>

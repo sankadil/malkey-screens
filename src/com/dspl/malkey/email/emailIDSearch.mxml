@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Project		:	malkey-screens
+Package		:	
+Component	:	emailIDSearch.mxml
+Description	:	
+Module		:	
+Author		:	Fuzuli Hameed
+Created On	:	Jun 30, 2011
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+				layout="vertical" 
+				width="100%" 
+				height="300"
+				showCloseButton="true"
+				xmlns:dsplcomp="com.dspl.efinac.components.common.controls.*"
+				xmlns:dataGridClasses="com.dspl.efinac.components.common.controls.dataGridClasses.*"
+				creationComplete="init()"
+				close="closeForm()">	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.utils.GenericFunctions;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.ICollectionView;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.events.ListEvent;
+			import mx.utils.StringUtil;
+			
+			public var _strSelectedCode:String = "";
+			public var _nSelectedIndex:int=-1;
+			public var _strWindowTitle:String = "Search";
+			public var _strKeyColumn:String = "ID";
+			public var _strDetailColumn:String = "Title";
+			public var _strEmailColumn:String = "Email";
+			public var _strTypeColumn:String = "Type";
+			public var _strRecipients:String = "";
+			public var _strRecipientEmailIDSeperator:String = ";";
+			public var _aRecipients:Array;
+			public var _nUpdateRecipients:int = 0;		// Indicates whether update recipeint list with the changes or not. 0 - Do not update & 1 - Update
+			
+			[Bindable] 
+			public var _acDataProvider:ArrayCollection;
+			[Bindable] 
+			public var dgColWidth:Number;
+			[Bindable]
+			public var _strKeyColCaption:String = "code";
+			[Bindable]
+			public var _strDetailColCaption:String = "title";			
+			[Bindable]
+			public var _strEmailColCaption:String = "email";			
+			[Bindable]
+			public var _strTypeColCaption:String = "type";
+			
+			private var oGenFunctions:GenericFunctions = new GenericFunctions();
+			
+			private function init():void{
+				_nUpdateRecipients = 0
+				title = _strWindowTitle;			// Search Windows title
+				searchBox.setFocus();
+				updateSourceWithSelectedRecipeints();
+			}
+			
+			private function closeForm():void{
+				// Bind to the event of the parent object
+				dispatchEvent(new Event("emailIDSearchClose"));
+			}
+			
+			private function itemDblClick(event:ListEvent):void{
+				// Called when an item in the grid is double clicked
+				var nPositionOfFullStop:int = _strKeyColumn.search("id.")  
+				if (nPositionOfFullStop == -1) 
+					_strSelectedCode = event.currentTarget.selectedItem[_strKeyColumn];
+				else{					
+					var keyFieldName:String = _strKeyColumn.substring(3);	// seperete the field name after "id."
+					_strSelectedCode = event.currentTarget.selectedItem["id"][keyFieldName];
+				}
+				
+				_nSelectedIndex = event.currentTarget.selectedIndex;
+				closeForm();
+			}
+			
+			protected function _grdMasterFileSearch_keyUpHandler(event:KeyboardEvent):void
+			{
+				if(event.keyCode==Keyboard.ENTER)//inside this block is same as itemDblClick(event:ListEvent);
+				{
+					// Called when an item in the grid is press enter
+					var nPositionOfFullStop:int = _strKeyColumn.search("id.")  
+					if (nPositionOfFullStop == -1) 
+						_strSelectedCode = event.currentTarget.selectedItem[_strKeyColumn];
+					else{					
+						var keyFieldName:String = _strKeyColumn.substring(3);	// seperete the field name after "id."
+						_strSelectedCode = event.currentTarget.selectedItem["id"][keyFieldName];
+					}
+					
+					_nSelectedIndex = event.currentTarget.selectedIndex;
+					closeForm();
+				}
+			}
+			
+			private function initGrid():void{
+				// Bind the columns to the related fields and set the caption
+				uCode.dataField = _strKeyColumn;
+				uTitle.dataField = _strDetailColumn;
+				uEmail.dataField = _strEmailColumn;
+				uType.dataField = _strTypeColumn;
+			} 
+			
+			private function updateSourceWithSelectedRecipeints():void
+			{
+				// The recipient list is string of Email ID's seperated by either ";" or ",". In this project Email ID's can belong to either one of the below;
+				//	- Customers	
+				//	- Suppliers
+				//	- Employees
+				//	- Unknown/ New email ID which is not saved in any of the above
+				// So when adding/ removing Email ID's from one of the first 3 catergories, we should ensure that only Email ID's beloging to 
+				// a specific catergory is added/ removed. Email ID's beloging to other catergories should left intact.
+				
+				_aRecipients = new Array();			// Holds the already selected Email ID's
+				
+				if (_strRecipients.length>0){
+					var laRecipients:Array = _strRecipients.split(_strRecipientEmailIDSeperator);
+					
+					for (var i:int=0; i<laRecipients.length; i++){
+						var lcEmail:String = StringUtil.trim(laRecipients[i]);
+						
+						// Verify if the email address existing in the current datasource
+						var liRecIndex:int = oGenFunctions.getArrayCollectionIndex(_acDataProvider, _strEmailColumn, lcEmail);
+						if (liRecIndex>-1){
+							// Mark the email address as selected
+							_acDataProvider[liRecIndex].isSelected = true;
+						}
+						var obj:Object = new Object();
+						obj["email"] = lcEmail;
+						obj["editable"] = liRecIndex;
+						_aRecipients.push(obj);
+					}
+				}
+				
+				// Sort the datasource on selected field
+				var sortFld:SortField = new SortField();
+				sortFld.name = "isSelected";
+				sortFld.caseInsensitive = false;
+				sortFld.numeric = false;
+				sortFld.descending = true;
+				var srt:Sort = new Sort();
+				srt.fields = [sortFld];
+				_acDataProvider.sort = srt;
+				_acDataProvider.refresh();
+			}
+						
+
+			protected function btnOK_clickHandler(event:MouseEvent):void
+			{
+				_nUpdateRecipients = 1;
+				closeForm();
+			}
+			protected function btnCancel_clickHandler(event:MouseEvent):void
+			{
+				_nUpdateRecipients = 0;
+				closeForm();
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:ControlBar height="20%" width="100%">
+		<dsplcomp:SearchBox id="searchBox" target="{_grdMasterFileSearch}"/>
+		<mx:Spacer width="5%" />
+		<mx:Label id="recCount" text="{ICollectionView(_grdMasterFileSearch.dataProvider).length} / {_grdMasterFileSearch.originalCollection.length}" />
+		<mx:Spacer width="100%" />
+		<mx:Button id="btnOK" label="OK" click="btnOK_clickHandler(event)"/>
+		<mx:Button id="btnCancel" label="Cancel" click="btnCancel_clickHandler(event)"/>
+	</mx:ControlBar>
+	
+	<dsplcomp:MDataGrid id="_grdMasterFileSearch" y="47" width="100%" height="80%"
+						doubleClickEnabled="true"
+						dataProvider="{_acDataProvider}"
+						creationComplete="{initGrid()}"
+						itemDoubleClick="itemDblClick(event)"
+						keyUp="_grdMasterFileSearch_keyUpHandler(event)"
+						copyDataProvider="false">
+		
+		<dsplcomp:columns>
+			<mx:DataGridColumn id="uSelect" headerText="Select" width="60"
+							   dataField="isSelected" editable="true" textAlign="center">
+				<mx:itemRenderer>
+					<mx:Component>
+						<!--<mx:Box width="100%" height="100%" horizontalAlign="center">-->
+						<mx:CheckBox label="" selected="{data.isSelected}"
+									 change="checkbox1_changeHandler(event)">
+							
+							<mx:Script>
+								<![CDATA[
+									protected function checkbox1_changeHandler(event:Event):void
+									{
+										data.isSelected = this.selected;
+									}
+								]]>
+							</mx:Script>
+						</mx:CheckBox>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+			
+			<dataGridClasses:MDataGridColumn id="uCode" headerText="{_strKeyColCaption}"
+											 width="150" editable="false"/>
+			
+			<dataGridClasses:MDataGridColumn id="uTitle" headerText="{_strDetailColCaption}"
+											 width="200" editable="false"/>
+
+			<dataGridClasses:MDataGridColumn id="uEmail" headerText="{_strEmailColCaption}"
+											 width="220" editable="false"/>
+
+			<dataGridClasses:MDataGridColumn id="uType" headerText="{_strTypeColCaption}"
+											 width="100" editable="false"/>
+		</dsplcomp:columns>
+	</dsplcomp:MDataGrid>
+</mx:TitleWindow>
+

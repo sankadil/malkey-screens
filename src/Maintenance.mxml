@@ -1,0 +1,1011 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"
+			   creationComplete="initApp(event)"
+			   title="Maintenance"
+			   close="closeForm()"
+			    width="969" height="530" xmlns:services="com.dspl.malkey.services.*" xmlns:components="com.dspl.malkey.components.*">
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.efinac.components.common.controls._tiMasterFile;
+			import com.dspl.malkey.util.Message;
+			import com.dspl.malkey.util.PopupControl;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.core.FlexGlobals;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			include "com/dspl/malkey/util/IPermission.as";
+			public var gsTransCode:String;
+			
+			[Bindable]
+			private var lacMaintList:ArrayCollection = new ArrayCollection();
+			
+			private var lsFilterKey:String="";
+			[Bindable]
+			private var lsFilterCaption:String="";
+			
+			private var lsSelEmpID:String="";
+			
+			//Maintenance Icons
+			[Bindable]
+			[Embed(source="com/dspl/malkey/components/common/icons/complete.png")]
+			private var IconComplete:Class;
+			[Bindable]
+			[Embed(source="com/dspl/malkey/components/common/icons/pending.png")]
+			private var IconPending:Class;
+			[Bindable]
+			[Embed(source="com/dspl/malkey/components/common/icons/hold.png")]
+			private var IconOnHold:Class;
+			[Bindable]
+			[Embed(source="com/dspl/malkey/components/common/icons/discard.png")]
+			private var IconDiscard:Class;
+			
+			[Bindable]
+			private var lacFrequency:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacPriority:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacVehicleMake:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacVehicleModel:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var lacMaintStatus:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			private var lacVehicleList:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			public var lpuPopup:_tiMasterFile = new _tiMasterFile();
+			
+			private var maintenancePopup:maintenancePopUp;
+
+			private function initApp(event:FlexEvent):void{
+				try{
+					updateMaintRecCount();
+					setPermission();
+					this.addEventListener(KeyboardEvent.KEY_DOWN,appKeyDown,false,0,false);
+					loadMasterFiles();
+					setFilterKey();
+					this.setFocus();
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function updateMaintRecCount():void{
+				try{
+					this.title="Maintenance";
+					if(lacMaintList!=null)
+						this.title+="    ["+lacMaintList.length.toString()+" Record(s) Found]";
+				}catch(error:Error){
+					Alert.show("updateMaintRecCount: " + error.message);
+				}
+			}
+			
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			private function appKeyDown(event:KeyboardEvent):void{
+				try{
+					if(btnSearch.enabled==true){
+						if(event.keyCode==114) //F3-Reset
+							resetSearch();
+						else if(event.keyCode==115)//F4-View
+							listMaintenance();
+						else if(event.keyCode==116) //F5-Filter Set Focus
+							txtFilterKey.setFocus();
+						else if(event.keyCode==117) //Change Filter Key
+							setFilterKey();
+						updateMaintRecCount();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"appKeyDown: " + error.message,"Error",null);	
+				}
+			}
+			
+			private function setFilterKey():void{
+				try{
+					if(lsFilterKey=="" || lsFilterKey=="refno"){
+						lsFilterKey="regno";
+						lsFilterCaption = "Filter by Vehicle No.";
+					}else{
+						lsFilterKey="refno";
+						lsFilterCaption = "Filter by Mintenance No.";
+					}
+					setFilterFocusOut();
+					updateMaintRecCount();
+				}catch(error:Error){
+					Message.displayAlert(1,"setFilterKey: " + error.message,"Error",null);
+				}
+			}
+			
+			private function childCloseEvent(event:DataEvent):void
+			{
+				try
+				{
+					if(event.data=="successful")
+					{
+						listMaintenance();
+					}
+				}
+				catch(error:Error)
+				{
+					Alert.show("childCloseEvent: " + error.message);
+				}
+			}
+			
+			private function showPopUp(acDataProvider:ArrayCollection,strKeyColumn:String,strKeyColCaption:String,strDetailColumn:String,strDetailColCaption:String,strWindowTitle:String,eventName:String,eventListener:Function):void
+			{
+				lpuPopup._acDataProvider = acDataProvider;								
+				lpuPopup._strKeyColumn = strKeyColumn;
+				lpuPopup._strKeyColCaption = strKeyColCaption; 
+				lpuPopup._strDetailColumn = strDetailColumn;
+				lpuPopup._strDetailColCaption = strDetailColCaption;
+				lpuPopup._strWindowTitle = strWindowTitle;			
+				lpuPopup._sPostEventToRunPopUpExit = eventName;
+				lpuPopup.addEventListener(eventName,eventListener,false,0,false);
+				lpuPopup.launchSearchGrid(); 
+				lpuPopup.isPopUp=true;
+			}
+			
+			private function loadMasterFiles():void
+			{
+				try
+				{
+					//crListAllVehicleMake.token = srvFvehiclemake.ListAll();
+					/* crListAllVehicleModel.token = srvFvehiclemodel.ListAll(); */
+					loadFrequency();
+					loadPriority();
+					crListAllMaintenanceStatus.token = srvFmaintstatus.ListAll();
+					crGetVehicleDet.token = srvVehicleSearch.getVehicleDet();
+					crListEmployees.token = srvFemployee.getEmployees();
+				}
+				catch(error:Error)
+				{
+					Message.displayAlert(1,"loadMasterFiles: " + error.message,"Error",null);
+				}
+			}
+			
+			private function loadFrequency():void
+			{
+				var o:Object;
+				
+				/* o = new Object();
+				o["description"] = "All";
+				lacFrequency.addItem(o); */
+				
+				o = new Object();
+				o["description"] = "Recurring";
+				lacFrequency.addItem(o);
+				
+				o = new Object();
+				o["description"] = "One-off";
+				lacFrequency.addItem(o);
+				
+				ddFrequency.selectedIndex = 0;
+				updateMFLoadCnt();
+			}
+			
+			private function loadPriority():void
+			{
+				var o:Object;
+				
+				o = new Object();
+				o["description"] = "High";
+				lacPriority.addItem(o);
+				
+				o = new Object();
+				o["description"] = "Medium";
+				lacPriority.addItem(o);
+				
+				o = new Object();
+				o["description"] = "Low";
+				lacPriority.addItem(o);
+				
+				ddPriority.selectedIndex = -1;
+				updateMFLoadCnt();
+			}
+			
+			private var liMFLCnt:int=0;
+			private function updateMFLoadCnt():void{
+				try{
+					liMFLCnt+=1;
+					if(liMFLCnt==5)
+						listMaintenance();
+				}catch(error:Error){
+					Message.displayAlert(1,"updateMFLoadCnt: " + error.message,"Error",null);
+				}
+			}
+			
+			protected function crListAllVehicleMake_resultHandler(event:ResultEvent):void{
+				try{
+					lacVehicleMake.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0){
+						o = new Object();
+						o["vehimakeid"] = "All";
+						o["description"] = "All";
+						lacVehicleMake.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++){
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["vehimakeid"] = obj["vehimakeid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleMake.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleMake = null;
+					if(lacVehicleMake.length>0){
+						ddMake.selectedIndex=0;
+					}
+					crListAllVehicleModel.token = srvFvehiclemodel.ListAll();
+				}catch(error:Error){
+					Message.displayAlert(1,"loadVehicleMake: " + error.message,"Error",null);
+				}
+			}
+			
+			protected function crListAllVehicleMake_faultHandler(event:FaultEvent):void
+			{
+				Message.displayAlert(1,"loadVehicleMake: " + event.fault,"Error",null);
+			}
+			
+			
+			protected function crListAllVehicleModel_resultHandler(event:ResultEvent):void{
+				try{
+					lacVehicleModel.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					if(tmpAc.length>0)
+					{
+						o = new Object();
+						o["vehimakeid"] = "All";
+						o["vehimodelid"] = "All";
+						o["description"] = "All";
+						lacVehicleModel.addItem(o);
+					}
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["vehimakeid"] = obj["id"]["vehimakeid"].toString();
+						o["vehimodelid"] = obj["id"]["vehimodelid"].toString();
+						o["description"] = obj["description"].toString();
+						lacVehicleModel.addItem(o);
+					}
+					tmpAc = null;
+					crListAllVehicleModel = null;
+					lacVehicleModel.filterFunction = filterVehicleModel;
+					lacVehicleModel.refresh();
+					if(lacVehicleModel.length>0)
+					{
+						ddModel.selectedIndex=0;
+					}
+				}
+				catch(error:Error){
+					Message.displayAlert(1,"loadVehicleModel: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crListAllVehicleModel_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"loadVehicleModel: " + event.fault,"Error",errorCloseHandler);
+			}
+			
+			protected function crListAllMaintenanceStatus_resultHandler(event:ResultEvent):void{
+				try{
+					lacMaintStatus.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					/* if(tmpAc.length>0){
+						o = new Object();
+						o["statusid"] = "All";
+						o["description"] = "All";
+						lacMaintStatus.addItem(o);
+					} */
+					for(var a:int=0;a<tmpAc.length;a++){
+						var obj:Object = tmpAc.getItemAt(a);
+						o = new Object();
+						o["statusid"] = obj["statusid"].toString();
+						o["description"] = obj["description"].toString();
+						lacMaintStatus.addItem(o);
+					}
+					tmpAc = null;
+					crListAllMaintenanceStatus = null;
+					lacMaintStatus=SortArray(lacMaintStatus,"description",true,false,true);
+					if(lacMaintStatus.length>0){
+						ddStatus.selectedIndex=0;
+						updateMFLoadCnt();
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"loadMaintStatus: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			protected function crListAllMaintenanceStatus_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"loadMaintStatus: " + event.fault,"Error",errorCloseHandler);
+			}
+			
+			protected function ddMake_changeHandler(event:IndexChangeEvent):void{
+				lacVehicleModel.refresh();
+				ddModel.selectedIndex=0;
+			}
+			
+			private function filterVehicleModel(item:Object):Boolean{
+				try{
+					if(ddMake.selectedIndex>-1){
+						if(item["vehimakeid"].toString()=="All"){
+							return true;
+						}
+						if(ddMake.selectedItem.vehimakeid==item["vehimakeid"].toString()){
+							return true;
+						}else{
+							return false;
+						}
+					}
+				}catch(error:Error){
+					trace("filterVehicleMake: " + error.message);
+					return false;
+				}
+				return false;
+			}
+			
+			private function closeForm():void{
+				this.parent.parent.removeChild(this.parent);
+			}
+			
+			private function commonErrorCloseHandler(event:Event):void
+			{
+				closeForm();
+			}
+
+			protected function datagrid1_clickHandler(event:MouseEvent):void
+			{
+				/* if(dGrid.selectedIndex>-1)
+				{
+					var globalPoint:Point = dGrid.localToGlobal(new Point(dGrid.x,dGrid.y));
+					var minY:Number = (globalPoint.y + dGrid.headerHeight);
+					Alert.show("gpY: " + globalPoint.y.toString() +  "      headerheight: " + dGrid.headerHeight.toString() +  "    minY: " + minY.toString() + "     stageY: " + event.stageY.toString());
+					var maxY:Number = (globalPoint.y + dGrid.headerHeight + (dGrid.rowHeight * mlist.length));
+					if(event.stageY>minY && event.stageY<maxY)
+					{
+						showMenu(event.stageX,event.stageY);
+					}
+				}  */
+			}
+			
+			private var myMenu:Menu;
+			private function showMenu(x:Number,y:Number):void 
+			{
+				myMenu = Menu.createMenu(null, cmenu, false);
+				myMenu.addEventListener(MenuEvent.ITEM_CLICK,mainMenuItemClick,false,0,false);
+				myMenu.labelField="@label";
+				myMenu.show(x,y);
+			}
+			
+			private function mainMenuItemClick(e:MenuEvent):void
+			{
+				switch(e.label.toString())
+				{	
+					case "View":
+						maintenancePopup = new maintenancePopUp();
+						maintenancePopup.gsCurrentState = "View";
+						/* maintenancePopup.setState("View"); */
+						break;
+					case "Edit":
+						if(lsCurStatusId!="pending")
+						{
+							Message.displayAlert(2,"Editing Is Allowed For Pending Maintenance(s) Only","Warning",null);
+							return;
+						}
+						maintenancePopup = new maintenancePopUp();
+						maintenancePopup.gsCurrentState = "Edit";
+						/* maintenancePopup.setState("Edit"); */
+						break;
+					case "Change Status":
+						if(lsCurStatusId=="discard" || lsCurStatusId=="completed")
+						{
+							Message.displayAlert(2,"Change Status Is Allowed For Pending/On Hold Maintenance(s) Only ","Warning",null);
+							return;
+						}
+						maintenancePopup = new maintenancePopUp();
+						maintenancePopup.gsCurrentState = "Change";
+						/* maintenancePopup.setState("Change"); */
+						break;
+				}
+				if(maintenancePopup!=null)
+				{
+					var o:Object = findItem(lacVehicleList,"regno",lsCurRegno);
+					if(o!=null)
+					{
+						maintenancePopup.addEventListener("childClose",childCloseEvent,false,0,false);
+						maintenancePopup.goVehicle=o;
+						maintenancePopup.gsRefNo=lsCurRefNo;
+						showCompPopup(maintenancePopup);
+					} 
+				}
+			}
+			
+			private function showCompPopup(obj:IFlexDisplayObject):void
+			{
+				PopUpManager.addPopUp(obj,this,true,null,null);
+				PopUpManager.centerPopUp(obj);
+				dGrid.selectedIndex=-1;
+			}
+
+			private var lsCurRegno:String="";
+			private var lsCurRefNo:String="";
+			private var lsCurStatusId:String="";
+			protected function dGrid_itemClickHandler(event:ListEvent):void
+			{
+				try
+				{
+					lsCurRefNo="";
+					lsCurRegno="";
+					if(dGrid.selectedIndex>-1)
+					{
+						lsCurStatusId=event.currentTarget.selectedItem.statusid.toString().toLocaleLowerCase();
+						lsCurRegno=event.currentTarget.selectedItem.regno;
+						lsCurRefNo=event.currentTarget.selectedItem.refno;
+						//showMenu(contentMouseX,contentMouseY);
+						//showMenu(mouseX,mouseY);
+						showMenu(FlexGlobals.topLevelApplication.contentMouseX,FlexGlobals.topLevelApplication.contentMouseY);
+					} 
+				}
+				catch(error:Error)
+				{
+					Alert.show("dGrid_itemClickHandler: " + error.message);
+				}
+					
+			}
+			
+			protected function btnReset_clickHandler(event:MouseEvent):void
+			{
+				resetSearch();
+			}
+			
+			private function resetSearch():void{
+				try{
+					ddFrequency.selectedIndex=0;
+					ddPriority.selectedIndex=-1;
+					txtEmployee.text="";
+					lsSelEmpID="";
+					//ddMake.selectedIndex=0;
+					//lacVehicleModel.refresh();
+					//ddModel.selectedIndex=0;
+					ddStatus.selectedIndex=0;
+					dfDueDate.selectedDate=null;
+					updateMaintRecCount();
+				}catch(error:Error){
+					Message.displayAlert(1,"resetSearch: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			public function getIcon(status:String):Class
+			{
+				status = status.toLowerCase();
+				if(status=="completed")
+				{
+					return IconComplete;
+				}
+				else if(status=="pending")
+				{
+					return IconPending;
+				}
+				else if(status=="on hold")
+				{
+					return IconOnHold;
+				}
+				else if(status=="discard")
+				{
+					return IconDiscard;
+				}
+				return null;
+			}
+
+			protected function crGetVehicleDet_resultHandler(event:ResultEvent):void
+			{
+				try
+				{
+					lacVehicleList.removeAll();
+					var tmpAc:ArrayCollection = event.result as ArrayCollection;
+					var o:Object;
+					for(var a:int=0;a<tmpAc.length;a++)
+					{
+						o = new Object();
+						var ob:Object = tmpAc.getItemAt(a);
+						o["regno"] = ob["regno"].toString();
+						o["vehitypeid"] = ob["vehitypeid"].toString();
+						o["vehimakeid"] = ob["vehimakeid"].toString();
+						o["vehimodelid"] = ob["vehimodelid"].toString();
+						o["vehitransid"] = ob["vehitransid"].toString();
+						o["fueltypeid"] = ob["fueltypeid"].toString();
+						o["curmileage"] = ob["curmileage"].toString();
+						if(ob["image"]==null)
+						{
+							o["image"] = "";
+						}
+						else
+						{
+							o["image"] = ob["image"].toString();
+						}
+						lacVehicleList.addItem(o);
+					}
+					updateMFLoadCnt();
+				}catch(error:Error){
+					Message.displayAlert(1,"GetVehicleDet [result]: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+
+			protected function crGetVehicleDet_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"GetVehicleDet [fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+			private function showVehiclePopUp():void
+			{
+				showPopUp(lacVehicleList,"regno","Vehicle No.","vehimodelid","Model","Select Vehicle Number","vehicleSelectionEvent",vehicleSelection);
+			}
+			
+			private function vehicleSelection(event:Event):void
+			{
+				if(lpuPopup.grdSearch._strSelectedCode!="")
+				{
+					var obj:Object = findItem(lacVehicleList,"regno",lpuPopup.grdSearch._strSelectedCode);
+					if(obj!=null)
+					{
+						maintenancePopup = new maintenancePopUp();
+						maintenancePopup.addEventListener("childClose",childCloseEvent,false,0,false);
+						maintenancePopup.gsCurrentState = "Add";
+						maintenancePopup.goVehicle = obj;
+						showCompPopup(maintenancePopup);
+					}
+				}
+			}
+			
+			private function findItem(ac:ArrayCollection,keyfield:String,keyvalue:String):Object
+			{
+				var obj:Object = null;
+				try
+				{
+					//Alert.show("keyfield: " + keyfield + "   keyvalue: " + keyvalue);
+					for(var a:int=0;a<ac.length;a++)
+					{
+						var o:Object = ac.getItemAt(a);
+						trace("o[keyfield]==keyvalue"+o[keyfield]+"=="+keyvalue);
+						if(o[keyfield]==keyvalue)
+						{
+							return o;
+						}
+					}
+				}
+				catch(er:Error)
+				{
+					obj = null;
+					Alert.show("findItem: " + er.message);
+				}
+				return obj;
+			}
+
+			protected function btnNew_clickHandler(event:MouseEvent):void{
+				showVehiclePopUp();
+			}
+
+			protected function btnSearch_clickHandler(event:MouseEvent):void{
+				listMaintenance();
+			}
+			
+			private function listMaintenance():void{
+				try{
+					if(btnSearch.enabled==true){
+						if(ddFrequency.selectedIndex<0){
+							Message.displayAlert(2,"Select Frequency To Continue","Warning",null);
+							return;
+						}if(ddStatus.selectedIndex<0){
+							Message.displayAlert(2,"Select Status To Continue","Warning",null);
+							return;
+						}
+						var paraList:ArrayCollection = new ArrayCollection();
+						var obj:Object;
+						
+						if(ddFrequency.selectedIndex>-1){
+							obj = new Object();
+							obj["frequency"] = ddFrequency.selectedItem.description;
+							paraList.addItem(obj);
+						}
+						if(ddStatus.selectedIndex>-1){
+							obj = new Object();
+							obj["statusid"] = ddStatus.selectedItem.statusid;
+							paraList.addItem(obj);
+						} 
+						if(dfDueDate.selectedDate!=null){
+							obj = new Object();
+							obj["ddue"] = dftSql.format(dfDueDate.selectedDate).toString();
+							paraList.addItem(obj);
+						}
+						if(ddPriority.selectedIndex>-1){
+							obj = new Object();
+							obj["priority"] = ddPriority.selectedItem.description;
+							paraList.addItem(obj);
+						}
+						if(lsSelEmpID.length>0){
+							obj = new Object();
+							obj["assignedto"] = lsSelEmpID;
+							paraList.addItem(obj);
+						}
+						crListMaintenance.token = srvFmaintenance.listMaintenance(paraList);
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"listMaintenance: " + error.message,"Error",null);
+				}
+			}
+
+			protected function crListMaintenance_resultHandler(event:ResultEvent):void{
+				try{
+					lacMaintList.removeAll();
+					lacMaintList = event.result as ArrayCollection;
+					lacMaintList.filterFunction = filterDGVehicles;
+					lacMaintList.refresh();
+					updateMaintRecCount();
+				}catch(error:Error){
+					Message.displayAlert(1,"listMaintenance [Result]: " + event.result.toString(),"Error",null);
+				}
+				crListMaintenance.token = null;
+			}
+
+			protected function crListMaintenance_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"listMaintenance [Fault]: " + event.fault.toString(),"Error",null);
+			}
+			
+			protected function crListEmployees_resultHandler(event:ResultEvent):void{
+				try{
+					updateMFLoadCnt();
+				}catch(error:Error){
+					Message.displayAlert(1,"listMaintenance [Result]: " + event.result.toString(),"Error",null);
+				}
+				crListMaintenance.token = null;
+			}
+			
+			protected function crListEmployees_faultHandler(event:FaultEvent):void{
+				Message.displayAlert(1,"listEmployees [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
+			}
+			
+			private function formatDueDate(item:Object,column:DataGridColumn):String{
+				return dftDisplay.format(item[column.dataField]);	
+			}	
+
+			protected function txtFilterKey_changeHandler(event:TextOperationEvent):void{
+				lacMaintList.refresh();
+				updateMaintRecCount();
+			}
+			
+			private function filterDGVehicles(item:Object):Boolean{
+				try{
+					if(txtFilterKey.text==""){
+						return true;
+					}else{
+						if(item[lsFilterKey].toString().toLowerCase().indexOf(txtFilterKey.text.toLowerCase())>-1){
+							return true;
+						}
+					}
+				}catch(error:Error){
+					trace("filterDGVehicles: " + error.message);	
+				}
+				return false;
+			}
+
+			protected function txtFilterKey_keyDownHandler(event:KeyboardEvent):void{
+				if(event.charCode==27){
+					setFilterFocusOut();
+				}
+			}
+			
+			private function setFilterFocusOut():void{
+				try{
+					txtFilterKey.text="";
+					this.setFocus();
+					txtFilterKey.refreshCaption();
+					lacMaintList.refresh();
+				}catch(error:Error){
+					Message.displayAlert(1,"setFilterFocusOut: " + error.message,"Error",null);
+				}
+			}
+			private function SortArray(arrayObj:ArrayCollection,sortField:String,caseSensitive:Boolean,numericVal:Boolean,descending:Boolean):ArrayCollection
+			{
+				try
+				{
+					var SField:SortField = new SortField();
+					SField.name = sortField;
+					SField.caseInsensitive = caseSensitive;
+					SField.numeric = numericVal;
+					SField.descending = descending;
+					var sort:Sort = new Sort();
+					sort.fields = [SField];
+					arrayObj.sort = sort;
+					arrayObj.refresh();
+				}
+				catch(error:Error)
+				{
+					Alert.show("SortArray: " + error.message);
+				}
+				return arrayObj;
+			}
+			
+			protected function btnEmployee_clickHandler(event:MouseEvent):void{
+				showEmployees();
+			}
+			
+			private var popupcontrol:PopupControl=new PopupControl();
+			private function showEmployees():void{
+				try{
+					if(crListEmployees.lastResult.length<=0)
+						Message.displayAlert(3,"Employees Not Found","",null);
+					else 
+						popupcontrol.showPopUp(crListEmployees.lastResult,"empid","Employee ID","name","Name","Select An Employee","employeeSelection",employeeSelectionHandler,false,"","",180);
+				}catch(error:Error){
+					Message.displayAlert(1,"showEmployees: " + error.message,"Error",null);		
+				}
+			}
+			
+			private function employeeSelectionHandler(event:Event):void{
+				try{
+					if(popupcontrol.lpuPopup.grdSearch._strSelectedCode!=""){
+						lsSelEmpID=popupcontrol.lpuPopup.selectedItem.empid;
+						txtEmployee.text=popupcontrol.lpuPopup.selectedItem.name;
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"agreementSelectionHandler: " + error.message,"Error",null);
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<mx:DateFormatter id="dftSql" formatString="YYYY-MM-DD"/>
+		<mx:DateFormatter id="dftDisplay" formatString="@Resource(key='dateFormat',bundle='resource')"/>
+		<services:FvehiclemakeSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFvehiclemake"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllVehicleMake"
+			result="crListAllVehicleMake_resultHandler(event)"
+			fault="crListAllVehicleMake_faultHandler(event)"
+			/>
+		
+		<services:FvehiclemodelSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFvehiclemodel"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllVehicleModel"
+			result="crListAllVehicleModel_resultHandler(event)"
+			fault="crListAllVehicleModel_faultHandler(event)"
+			/>
+		
+		<services:FmaintstatusSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFmaintstatus"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListAllMaintenanceStatus"
+			result="crListAllMaintenanceStatus_resultHandler(event)"
+			fault="crListAllMaintenanceStatus_faultHandler(event)"
+			/>
+		
+		<services:VehiclesearchSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvVehicleSearch"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crGetVehicleDet"
+			result="crGetVehicleDet_resultHandler(event)"
+			fault="crGetVehicleDet_faultHandler(event)"
+			/>
+		
+		<services:FmaintenanceSRV
+			endpoint="@Resource(key='url',bundle='resource')"
+			id="srvFmaintenance"
+			fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)" showBusyCursor="true"
+			/>
+		<s:CallResponder
+			id="crListMaintenance"
+			result="crListMaintenance_resultHandler(event)"
+			fault="crListMaintenance_faultHandler(event)"
+			/>
+		
+		<services:FemployeeSRV
+			id="srvFemployee"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		
+		<s:CallResponder
+			id="crListEmployees"
+			result="crListEmployees_resultHandler(event)"
+			fault="crListEmployees_faultHandler(event)"
+			/>
+		
+		<fx:XML format="e4x" id="cmenu">
+			<root>
+				<menuitem label="View" enabled="{btnView.enabled}"/>
+				<menuitem label="Edit" enabled="{btnEdit.enabled}"/>
+				<menuitem label="Change Status" enabled="{btnChange.enabled}"/>
+			</root>
+		</fx:XML>
+	</fx:Declarations>
+	<mx:FormItem label="Due Date" x="448" y="10">
+	<mx:DateField 
+		formatString="@Resource(key='dateFormat',bundle='resource')"
+		id="dfDueDate"
+		x="8" 
+		y="3" 
+		width="123" 
+		showToday="true" 
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	
+	<mx:FormItem label="Frequency" x="53" y="11" width="220">
+		<s:DropDownList
+			dataProvider="{lacFrequency}"
+			labelField="description"
+			change="ddMake_changeHandler(event)"
+			id="ddFrequency"
+			x="8" 
+			y="3" 
+			width="141"
+			enabled="{btnSearch.enabled}"
+			/>
+	</mx:FormItem>
+	
+	<mx:FormItem label="Make" x="104" y="-28" width="185" visible="false">
+	<s:DropDownList
+		dataProvider="{lacVehicleMake}"
+		labelField="description"
+		id="ddMake"
+		x="8" 
+		y="3" 
+		width="134"/>
+	</mx:FormItem>
+	<mx:FormItem label="Model" x="292" y="-28" width="245" visible="false">
+	<s:DropDownList
+		dataProvider="{lacVehicleModel}"
+		labelField="description"
+		id="ddModel"
+		x="8" 
+		y="3" 
+		width="189"/>
+	</mx:FormItem>
+	<mx:FormItem label="Status" x="278" y="11" width="162">
+	<s:DropDownList
+		dataProvider="{lacMaintStatus}"
+		labelField="description"
+		id="ddStatus"
+		x="8" 
+		y="3" 
+		width="101"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:LinkButton
+		click="btnSearch_clickHandler(event)"
+		id="btnSearch"
+		x="309" y="44" color="#0A33BB" label="Search"
+		enabled="false"
+		/>
+	<mx:LinkButton
+		id="btnReset"
+		click="btnReset_clickHandler(event)"
+		x="255" y="44" color="#0A33BB" label="Reset"
+		tabIndex="10"
+		enabled="{btnSearch.enabled}"
+		/>
+	<mx:Button  id="btnNew" width="30" height="29" toolTip="New"
+				disabledIcon="@Embed(source='/com/dspl/malkey/components/common/icons/addD.png')"
+				icon="@Embed(source='/com/dspl/malkey/components/common/icons/add.png')"
+				click="btnNew_clickHandler(event)"
+				enabled="false" x="12" y="6"/>
+	<mx:Button  id="btnEdit" visible="false" enabled="false"/>
+	<mx:Button  id="btnView" visible="false" enabled="false"/>
+	<mx:Button  id="btnChange" visible="false" enabled="false"/>
+	<mx:DataGrid
+		dataTipField="actiontaken"
+		id="dGrid" itemClick="dGrid_itemClickHandler(event)" dataProvider="{lacMaintList}" width="940" height="413" fontSize="10" fontFamily="Arial" click="datagrid1_clickHandler(event)" x="12" y="75">
+		<mx:columns>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="refno" headerText="Reference No." width="100"/>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="regno" headerText="Vehicle No." width="80"/>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="frequency" headerText="Frequency" width="70"/>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="typeid" headerText="Maintenance Type"/>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="ddue" headerText="Due Date" labelFunction="formatDueDate" width="80"/>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="assignedto" headerText="Assigned To" width="120"/>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="priority" headerText="Priority" width="60"/>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="comment" headerText="Comment" resizable="true"/>
+			<mx:DataGridColumn
+				showDataTips="true"
+				dataField="statusid" rendererIsEditor="true" headerText="Status" width="90">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:HBox paddingLeft="5">
+						<mx:Image
+							maintainAspectRatio="false"
+							smoothBitmapContent="false"
+							horizontalAlign="right" width="18" height="18" source="{outerDocument.getIcon(data.statusid)}"/>
+						<mx:Label text="{data.statusid}"/>
+						</mx:HBox>								
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+		</mx:columns>
+	</mx:DataGrid>
+	<components:CaptionTextInput
+		toolTip="{'-Press F5 to filter data\r-Press F6 to change filter key'}"
+		_showsCaption="true"
+		_caption="{lsFilterCaption}"
+		id="txtFilterKey" x="800" y="44" width="151" fontSize="11"
+		change="txtFilterKey_changeHandler(event)"
+		tabIndex="13"
+		keyDown="txtFilterKey_keyDownHandler(event)"
+		enabled="{btnSearch.enabled}"
+		/>
+	<mx:FormItem label="Priority" x="53" y="44" width="186" labelWidth="62">
+	<s:DropDownList
+		dataProvider="{lacPriority}"
+		labelField="description"
+		id="ddPriority"
+		x="8" 
+		y="3" 
+		width="101"
+		enabled="{btnSearch.enabled}"
+		/>
+	</mx:FormItem>
+	<mx:FormItem label="Employee" direction="horizontal" x="650" y="11">
+		<s:TextInput
+			editable="false"
+			tabIndex="14"
+			text=""
+			width="197" id="txtEmployee" enabled="false"/>
+		<mx:Button
+			click="btnEmployee_clickHandler(event)"
+			toolTip="Click To Select An Employee"
+			textAlign="left"
+			id="btnEmployee" label=".." width="22" fontWeight="bold" enabled="{btnSearch.enabled}"/>
+	</mx:FormItem>
+	<!--<s:Panel x="19" y="21" width="891" height="486" title="Maintenance">-->
+	<!--</s:Panel>-->
+</s:TitleWindow>

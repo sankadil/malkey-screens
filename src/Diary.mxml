@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="application1_creationCompleteHandler(event)"
+			   width="1250" height="600">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
+
+			[Bindable]
+			private var ar:ArrayCollection = new ArrayCollection();
+			
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				ar.filterFunction = filterDiary;
+				
+				var dt:Date = new Date();
+				var dueDate:Date = new Date();
+				dueDate.setHours(96);
+				txtDate.selectedDate = dt;
+				
+				var o:Object;
+				
+				o = new Object();
+				o["client"] = "Mr.Jayawardena " + '\n' + "Air Port Pickup";
+				o["regno"] = "KD-7549";
+				o["model"] = "Toyota Allion";
+				o["time"] = "10.00 AM";
+				o["hiretype"] = "S/D";
+				o["image"] = "http://carphotos.cardomain.com/ride_images/2/4578/4201/23944600001_large.jpg";
+				o["status"] = "Checked Out";
+				o["date"] = df.format(dt);
+				o["due"] = df.format(dueDate); 
+				ar.addItem(o);
+				
+				o = new Object();
+				o["client"] = "Mr.Perera " + '\n' + "10/5, Shrubbery Gardens," + '\n' + "Colombo 04. 0777123456";
+				o["regno"] = "KJ-2549";
+				o["model"] = "Toyota Prado";
+				o["time"] = "04.00 PM";
+				o["hiretype"] = "W/D";
+				o["image"] = "http://www.anascars.com/image-anas-cars/Toyota_Prado.jpg";
+				o["status"] = "Ready";
+				o["date"] = df.format(dt);
+				o["due"] = df.format(dueDate); 
+				ar.addItem(o);
+				
+				dt.setHours(24);
+				dueDate.setHours(96);
+				
+				o = new Object();
+				o["client"] = "Mrs.Fernando " + '\n' + "38, Railway Avenue, Nugegoda";
+				o["regno"] = "KH-5679";
+				o["model"] = "Benz E Class";
+				o["time"] = "08.00 AM";
+				o["hiretype"] = "W/D";
+				o["image"] = "http://www.lincah.com/wp-content/uploads/2009/08/2010-Carlsson-Mercedes-Benz-E-Class-Coupe-Front-Side-View-588x392.jpg";
+				o["status"] = "Ready";
+				o["date"] = df.format(dt);
+				o["due"] = df.format(dueDate); 
+				ar.addItem(o);
+				
+				ar.refresh();
+			}
+			
+			private function filterDiary(item:Object):Boolean
+			{
+				var str:String = df.format(txtDate.selectedDate);
+				if(item["date"]==str)
+				{
+					return true;
+				}
+				else 
+				{
+					return false;
+				}
+			}
+			
+			private var myMenu:Menu;
+			private function createAndShow(x:Number,y:Number):void 
+			{
+				myMenu = Menu.createMenu(null, myMenuData, false);
+				myMenu.addEventListener(MenuEvent.ITEM_CLICK,mainMenuItemClick,false,0,false);
+				myMenu.labelField="@label";
+				myMenu.show(x, y);
+			}
+			
+			private function menuItemClick(e:MenuEvent):void
+			{
+				Alert.show(e.label.toString());
+				
+			/* 	switch(e.label.toString())
+				{
+					case "View Reservation":
+						obj = new Reservation();
+						break;	
+					case "Check-Out":
+						obj = new Reservation();
+						break;
+					case "Check-In":
+						obj = new Reservation();
+						break;
+				}
+				showPopup(obj); */
+			}
+
+			protected function datagrid1_clickHandler(event:MouseEvent):void
+			{
+				/* if(dGrid.selectedIndex>-1)
+				{
+					var globalPoint:Point = dGrid.localToGlobal(new Point(dGrid.x,dGrid.y));
+					var minY:Number = (globalPoint.y + dGrid.headerHeight); 
+					Alert.show("gpY: " + globalPoint.y.toString() +  "      headerheight: " + dGrid.headerHeight.toString() +  "    minY: " + minY.toString() + "     stageY: " + event.stageY.toString());
+					var maxY:Number = (globalPoint.y + dGrid.headerHeight + (dGrid.rowHeight * ar.length));
+					if(event.stageY>minY && event.stageY<maxY)
+					{
+						showMenu(event.stageX,event.stageY);
+					}
+				}  */
+			}
+
+
+			protected function btnMenu_clickHandler(event:MouseEvent):void
+			{
+				createAndShow(event.stageX,event.stageY);
+			}
+			
+			private function showMenu(x:Number,y:Number):void 
+			{
+				myMenu = Menu.createMenu(null, cmenu, false);
+				myMenu.addEventListener(MenuEvent.ITEM_CLICK,mainMenuItemClick,false,0,false);
+				myMenu.labelField="@label";
+				myMenu.show(x,y);
+			}
+			
+			private function mainMenuItemClick(e:MenuEvent):void
+			{
+				var obj:IFlexDisplayObject;
+				switch(e.label.toString())
+				{	
+					case "New Reservation":
+						obj = new Reservation();
+						break;
+					case "View Reservation":
+						obj = new Reservation();
+						break;
+					case "Check-Out":
+						obj = new Reservation();
+						break;
+					case "Check-In":
+						obj = new Reservation();
+						break;
+					case "Vehicle":
+						obj = new Vehicle();
+						break;
+					case "Maintenance":
+						obj = new Maintenance();
+						break;
+				}
+				showPopup(obj);
+			}
+			
+			private function showPopup(obj:IFlexDisplayObject):void
+			{
+				PopUpManager.addPopUp(obj,this,true,null,null);
+				PopUpManager.centerPopUp(obj);
+			}
+
+			protected function txtDate_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				ar.refresh();
+			}
+
+
+			protected function dGrid_itemClickHandler(event:ListEvent):void
+			{
+				if(dGrid.selectedIndex>-1)
+				{
+					showMenu(contentMouseX,contentMouseY);
+				} 
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>	
+		
+		<fx:XML format="e4x" id="cmenu">
+			<root>
+				<menuitem label="View Reservation"/>
+				<menuitem label="Check-Out"/>
+				<menuitem label="Check-In"/>
+			</root>
+		</fx:XML>
+		
+		<fx:XML format="e4x" id="myMenuData">
+			<root>
+				<menuitem label="Rental" >
+					<menuitem label="New Reservation"/>
+					<menuitem label="Check-Out"/>
+					<menuitem label="Check-In"/>
+				</menuitem>
+				<menuitem label="Administration">
+					<menuitem label="Vehicle"/>
+					<menuitem label="Maintenance"/>
+				</menuitem>
+			</root>
+		</fx:XML>
+		
+		<mx:DateFormatter id="df" formatString="YYYY/MM/DD"/>
+		
+	</fx:Declarations>
+	
+	
+	
+	<mx:DataGrid id="dGrid" itemClick="dGrid_itemClickHandler(event)" click="datagrid1_clickHandler(event)" x="6" y="37" width="99%" height="90%" dataProvider="{ar}" fontSize="13" fontWeight="bold">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Client Details" dataField="client" width="325" resizable="false" sortable="false"/>
+			<mx:DataGridColumn dataField="regno" headerText="Vehicle No." width="125" resizable="false" sortable="false"/>
+			<mx:DataGridColumn dataField="model" headerText="Make &amp; Model" width="150" resizable="false" sortable="false"/>
+			<mx:DataGridColumn dataField="time" headerText="Time" width="100" resizable="false" sortable="false"/>
+			<mx:DataGridColumn dataField="hiretype" headerText="Hire Type" width="100" resizable="false" sortable="false"/>
+			<mx:DataGridColumn headerText="Due In" dataField="due"/>
+			<mx:DataGridColumn dataField="status" headerText="Status" width="100" resizable="false" sortable="false"/>
+			<mx:DataGridColumn headerText="Image" dataField="image" width="100" resizable="false" sortable="false">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:Image source="{data.image}" width="150" height="75"/>
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:FormItem label="Date" x="76" y="7" width="185">
+	<mx:DateField 
+		x="8" 
+		y="3" 
+		width="137" 
+		showToday="true" 
+		id="txtDate" 
+		enabled="true"
+		formatString="YYYY/MM/DD"
+		change="txtDate_changeHandler(event)"
+		/>
+	</mx:FormItem>
+	<mx:FormItem label="Vehicle Type" x="269" y="8">
+	<s:DropDownList
+		x="8" 
+		y="3" 
+		width="124"/>
+	</mx:FormItem>
+	<mx:FormItem label="Model" x="674" y="8.2" width="264">
+	<s:DropDownList
+		x="8" 
+		y="3" 
+		width="210"/>
+	</mx:FormItem>
+	<mx:LinkButton x="937" y="9" color="#0A33BB" label="View"/>
+	<s:Button id="btnMenu" click="btnMenu_clickHandler(event)" x="10.4" y="7" label="Menu" width="56"/>
+	<mx:FormItem label="Make" x="489" y="9" width="177">
+	<s:DropDownList
+		x="8" 
+		y="3" 
+		width="126"/>
+	</mx:FormItem>
+</s:Panel>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="680" height="310"
+			   title="Sub Agreement(s)"
+			   close="closeForm()"
+			   creationComplete="initApp(event)"
+			   >
+	
+	<fx:Declarations>
+		<!--Formatters [Start]-->
+		<mx:DateFormatter 
+			id="dfFormatter" 
+			formatString="@Resource(key='dateFormat',bundle='resource')"
+			/>
+		<!--Formatters [End]-->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.dspl.malkey.util.Message;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			
+			public var gsAgrNo:String;
+			[Bindable]
+			public var gacSAgrList:ArrayCollection;
+
+			protected function closeForm():void{
+				this.parent.removeChild(this);
+			}
+
+			private function errorCloseHandler(event:Event):void{
+				closeForm();
+			}
+			
+			protected function initApp(event:FlexEvent):void{
+				try{
+					if(gsAgrNo==null || gacSAgrList==null){
+						Message.displayAlert(1,"Agreement Number Not Found","Error",errorCloseHandler);
+					}else{
+						
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			public var gacAgrList:ArrayCollection;
+			protected function btnNext_clickHandler(event:MouseEvent):void{
+				try{
+					gacAgrList=new ArrayCollection();
+					var obj:Object;
+					for(var a:int=0;a<gacSAgrList.length;a++){
+						if(gacSAgrList.getItemAt(a).selected.toString()=="true"){
+							obj=new Object();
+							obj["resno"]=gacSAgrList.getItemAt(a).resno;
+							gacAgrList.addItem(obj);
+						}
+					}
+					if(gacAgrList.length<=0){
+						Message.displayAlert(2,"Please Select Sub Agreement(s) To Continue","Warning",null);
+					}else{
+						gacSAgrList=null;
+						dispatchEvent(new Event("subAgreementsSelected",true,true));
+					}
+				}catch(error:Error){
+					Message.displayAlert(1,error.message,"Error",errorCloseHandler);
+				}
+			}
+			
+			private function formatDate(item:Object,column:DataGridColumn):String{
+				try{
+					return dfFormatter.format(item[column.dataField].toString());
+				}catch(error:Error){
+					Message.displayAlert(1,"formatDate: " + error.message,"Error",null);
+				}
+				return null;
+			}
+
+		]]>
+	</fx:Script>
+	<s:Button x="598" y="246" label="Next" enabled="true" id="btnNext" click="btnNext_clickHandler(event)"/>
+	<mx:DataGrid id="dgList" x="14" y="35" width="654" height="207" dataProvider="{gacSAgrList}">
+		<mx:columns>
+			<mx:DataGridColumn dataField="selected" resizable="false" sortable="false" width="30" headerText=" ">
+				<mx:itemRenderer>
+					<fx:Component>
+						<mx:CheckBox
+							paddingLeft="10"
+							change="checkbox1_changeHandler(event)"
+							selected="{data.selected}" 
+							selectedField="selected">
+							
+							<fx:Script>
+								<![CDATA[
+									protected function checkbox1_changeHandler(event:Event):void{
+										var cb:CheckBox = event.target as CheckBox;
+										var o:Object = outerDocument.gacSAgrList.getItemAt(outerDocument.dgList.selectedIndex);
+										o["selected"] = cb.selected;
+									}
+								]]>
+							</fx:Script>
+							
+						</mx:CheckBox>
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+			<mx:DataGridColumn headerText="Sub Agreement No." dataField="resno" resizable="false" sortable="false"/>
+			<mx:DataGridColumn headerText="Vehicle No." dataField="quoteno" resizable="false" sortable="false"/>
+			<mx:DataGridColumn labelFunction="formatDate" headerText="Date Out" dataField="dout" resizable="false" sortable="false"/>
+			<mx:DataGridColumn labelFunction="formatDate" dataField="din" headerText="Date In" resizable="false" sortable="false"/>
+			<mx:DataGridColumn dataField="hiretypeid" headerText="Hire Type" resizable="false" sortable="false"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<s:Label x="14" y="12" text="Please Select Sub Agreement(s) To Continue" fontWeight="bold"/>
+</s:TitleWindow>
