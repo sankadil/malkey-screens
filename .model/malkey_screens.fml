@@ -8212,223 +8212,6 @@
     <property name="subseq" type="integer"/>
     <property name="taxper" type="string"/>
   </entity>
-  <service name="FdebtorSRV">
-    <annotation name="ActionScriptGeneration">
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">com.dspl.malkey.services</item>
-      <item name="Destination">fdebtorSRV</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
-      <item name="contextRoot">/malkey_server</item>
-      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
-      <item name="LINKED_FILE"></item>
-      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">BlazeDS</item>
-    </annotation>
-    <function name="count" return-type="integer">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">integer</item>
-      </annotation>
-    </function>
-    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fdebtor,arg1:opaque[]" return-type="string">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">Com_dspl_malkey_domain_Fdebtor,opaque</item>
-        <item name="returnType">string</item>
-      </annotation>
-    </function>
-    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fdebtor">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="getDebList" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="getDebtorList" arguments="arg0:string,arg1:boolean" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string,boolean</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="getDebtorListRPT" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="getGDebList" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="List" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">integer,integer</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="ListAll" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="listAllNameNIC" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="listAllOptimized" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="listAllOptimizedPage" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">integer,integer</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="listLikeName" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fdebtor[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
-      </annotation>
-    </function>
-    <function name="removeByID" arguments="arg0:string" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="update" arguments="arg0:Com_dspl_malkey_domain_Fdebtor,arg1:opaque[]" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">Com_dspl_malkey_domain_Fdebtor,opaque</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="Com_dspl_malkey_domain_Fdebtor" persistent="true">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fdebtor</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fdebtor</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FemailsSRV,FdebtorSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <annotation name="listAllOptimizedPage">
-      <item name="pagingEnabled">true</item>
-      <item name="positionalPagingParameters">true</item>
-      <item name="pageSize">1000</item>
-      <item name="countOperation">count</item>
-    </annotation>
-    <annotation name="DataManagement">
-      <item name="managingService">FdebtorSRV</item>
-      <item name="fillFunc">listAllOptimizedPage</item>
-    </annotation>
-    <property name="islongterm" type="integer"/>
-    <property name="debstat" type="string" required="true"/>
-    <property name="vatno" type="string" required="true"/>
-    <property name="tel" type="string" required="true"/>
-    <property name="adddate" type="date" required="true"/>
-    <property name="vattyp" type="string" required="true"/>
-    <property name="debadd" type="string" required="true"/>
-    <property name="billmob1" type="string" required="true"/>
-    <property name="crlmt" type="string" required="true"/>
-    <property name="billmob2" type="string" required="true"/>
-    <property name="billname" type="string" required="true"/>
-    <property name="nicno" type="string" required="true"/>
-    <property name="officeadd" type="string" required="true"/>
-    <property name="homeadd" type="string" required="true"/>
-    <property name="svatno" type="string"/>
-    <property name="officemob" type="string" required="true"/>
-    <property name="longterm" type="string" required="true"/>
-    <property name="debname" type="string" required="true"/>
-    <property name="nicimage" type="string" required="true"/>
-    <property name="fax" type="string" required="true"/>
-    <id name="debcode" type="string"/>
-    <property name="curcode" type="string" required="true"/>
-    <property name="addmach" type="string" required="true"/>
-    <property name="nicbackimage" type="string" required="true"/>
-    <property name="adduser" type="string" required="true"/>
-    <property name="passportno" type="string" required="true"/>
-    <property name="debemail" type="string" required="true"/>
-    <property name="nicbackimagedata" type="blob" required="true"/>
-    <property name="debacc" type="string" required="true"/>
-    <property name="ppimage" type="string" required="true"/>
-    <property name="debfax" type="string" required="true"/>
-    <property name="country" type="string" required="true"/>
-    <property name="debtype" type="string" required="true"/>
-    <property name="emailClient" type="boolean" required="true"/>
-    <property name="clienttype" type="string" required="true"/>
-    <property name="email" type="string" required="true"/>
-    <property name="isSelected" type="boolean" required="true"/>
-    <property name="company" type="string" required="true"/>
-    <property name="crepre" type="string" required="true"/>
-    <property name="gid" type="string" required="true"/>
-    <property name="contper" type="string" required="true"/>
-    <property name="officetele" type="string" required="true"/>
-    <property name="homemob" type="string" required="true"/>
-    <property name="nicimagedata" type="blob" required="true"/>
-    <property name="passimagedata" type="blob" required="true"/>
-    <id name="recordid" type="integer"/>
-    <property name="hometele" type="string" required="true"/>
-  </entity>
   <service name="SubCustomerSRV">
     <annotation name="ActionScriptGeneration">
       <item name="ServiceType">RemoteObject</item>
@@ -10337,5 +10120,357 @@
     <property name="timein" type="string" required="true"/>
     <property name="timeout" type="string" required="true"/>
     <property name="dfrom" type="date" required="true"/>
+  </entity>
+  <service name="Fsupplier2SRV">
+    <annotation name="ActionScriptGeneration">
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">com.dspl.malkey.services</item>
+      <item name="Destination">fsupplier2SRV</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
+      <item name="contextRoot">/malkey_server</item>
+      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
+      <item name="LINKED_FILE"></item>
+      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">BlazeDS</item>
+    </annotation>
+    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fsupplier2" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fsupplier2</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="listAll" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
+      </annotation>
+    </function>
+    <function name="list" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">integer,integer</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
+      </annotation>
+    </function>
+    <function name="udpate" arguments="arg0:Com_dspl_malkey_domain_Fsupplier2" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fsupplier2</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fsupplier2">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
+      </annotation>
+    </function>
+    <function name="count" return-type="integer">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">integer</item>
+      </annotation>
+    </function>
+    <function name="listBySupType" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
+      </annotation>
+    </function>
+    <function name="removeByID" arguments="arg0:string" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Com_dspl_malkey_domain_Fsupplier2">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fsupplier2</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fsupplier2</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">Fsupplier2SRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="supfax" type="string"/>
+    <property name="infavor" type="string"/>
+    <property name="adddate" type="date"/>
+    <property name="conflg" type="integer"/>
+    <property name="supflg" type="string"/>
+    <property name="contact" type="string"/>
+    <property name="vatregno" type="string"/>
+    <property name="suptele" type="string"/>
+    <property name="crperiod" type="string"/>
+    <property name="supmobile" type="string"/>
+    <property name="nbtstat" type="string"/>
+    <property name="crlimit" type="string"/>
+    <property name="officeadd" type="string"/>
+    <property name="supname" type="string"/>
+    <property name="supadd3" type="string"/>
+    <property name="supcode" type="string"/>
+    <property name="supemail" type="string"/>
+    <property name="conperson" type="string"/>
+    <property name="curcode" type="string"/>
+    <property name="vatstat" type="string"/>
+    <property name="addmach" type="string"/>
+    <property name="adduser" type="string"/>
+    <property name="suptyp" type="string"/>
+    <property name="isSelected" type="boolean"/>
+    <property name="company" type="string"/>
+    <property name="officetele" type="string"/>
+    <property name="officemobile" type="string"/>
+    <property name="typ" type="string"/>
+    <property name="supadd2" type="string"/>
+    <property name="recordid" type="integer"/>
+    <property name="supadd1" type="string"/>
+    <property name="taxcode" type="string"/>
+    <property name="supacc" type="string"/>
+  </entity>
+  <service name="FdebtorSRV">
+    <annotation name="ActionScriptGeneration">
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">com.dspl.malkey.services</item>
+      <item name="Destination">fdebtorSRV</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
+      <item name="contextRoot">/malkey_server</item>
+      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
+      <item name="LINKED_FILE"></item>
+      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">BlazeDS</item>
+    </annotation>
+    <function name="count" return-type="integer">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">integer</item>
+      </annotation>
+    </function>
+    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fdebtor,arg1:opaque[]" return-type="string">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fdebtor,opaque</item>
+        <item name="returnType">string</item>
+      </annotation>
+    </function>
+    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fdebtor">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="getDebList" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="getDebtorList" arguments="arg0:string,arg1:boolean" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string,boolean</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="getDebtorListRPT" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="getGDebList" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="List" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">integer,integer</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="ListAll" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="listAllNameNIC" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="listAllOptimized" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="listAllOptimizedPage" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">integer,integer</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="listLikeName" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fdebtor[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fdebtor</item>
+      </annotation>
+    </function>
+    <function name="removeByID" arguments="arg0:string" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="update" arguments="arg0:Com_dspl_malkey_domain_Fdebtor,arg1:opaque[]" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fdebtor,opaque</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Com_dspl_malkey_domain_Fdebtor" persistent="true">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fdebtor</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fdebtor</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FemailsSRV,FdebtorSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <annotation name="listAllOptimizedPage">
+      <item name="pagingEnabled">true</item>
+      <item name="positionalPagingParameters">true</item>
+      <item name="pageSize">500</item>
+      <item name="countOperation">count</item>
+    </annotation>
+    <annotation name="DataManagement">
+      <item name="managingService">FdebtorSRV</item>
+      <item name="fillFunc">listAllOptimizedPage</item>
+    </annotation>
+    <property name="islongterm" type="integer"/>
+    <property name="debstat" type="string" required="true"/>
+    <property name="vatno" type="string" required="true"/>
+    <property name="tel" type="string" required="true"/>
+    <property name="adddate" type="date" required="true"/>
+    <property name="vattyp" type="string" required="true"/>
+    <property name="debadd" type="string" required="true"/>
+    <property name="billmob1" type="string" required="true"/>
+    <property name="crlmt" type="string" required="true"/>
+    <property name="billmob2" type="string" required="true"/>
+    <property name="billname" type="string" required="true"/>
+    <property name="nicno" type="string" required="true"/>
+    <property name="officeadd" type="string" required="true"/>
+    <property name="homeadd" type="string" required="true"/>
+    <property name="svatno" type="string"/>
+    <property name="officemob" type="string" required="true"/>
+    <property name="longterm" type="string" required="true"/>
+    <property name="debname" type="string" required="true"/>
+    <property name="nicimage" type="string" required="true"/>
+    <property name="fax" type="string" required="true"/>
+    <id name="debcode" type="string"/>
+    <property name="curcode" type="string" required="true"/>
+    <property name="addmach" type="string" required="true"/>
+    <property name="nicbackimage" type="string" required="true"/>
+    <property name="adduser" type="string" required="true"/>
+    <property name="passportno" type="string" required="true"/>
+    <property name="debemail" type="string" required="true"/>
+    <property name="nicbackimagedata" type="blob" required="true"/>
+    <property name="debacc" type="string" required="true"/>
+    <property name="ppimage" type="string" required="true"/>
+    <property name="debfax" type="string" required="true"/>
+    <property name="country" type="string" required="true"/>
+    <property name="debtype" type="string" required="true"/>
+    <property name="emailClient" type="boolean" required="true"/>
+    <property name="clienttype" type="string" required="true"/>
+    <property name="email" type="string" required="true"/>
+    <property name="isSelected" type="boolean" required="true"/>
+    <property name="company" type="string" required="true"/>
+    <property name="crepre" type="string" required="true"/>
+    <property name="gid" type="string" required="true"/>
+    <property name="contper" type="string" required="true"/>
+    <property name="officetele" type="string" required="true"/>
+    <property name="homemob" type="string" required="true"/>
+    <property name="nicimagedata" type="blob" required="true"/>
+    <property name="passimagedata" type="blob" required="true"/>
+    <id name="recordid" type="integer"/>
+    <property name="hometele" type="string" required="true"/>
   </entity>
 </model>

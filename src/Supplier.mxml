@@ -39,7 +39,7 @@
 		<!--Validators [End]-->
 		
 		<!--Service-->
-		<services:FsupplierSRV
+		<services:Fsupplier2SRV
 			id="srvFsupplierSRV"
 			endpoint="@Resource(key='url',bundle='resource')"
 			/>
@@ -73,7 +73,7 @@
 			import com.dspl.efinac.components.common.controls._tiMasterFile;
 			import com.dspl.malkey.util.ImageBrowser;
 			import com.dspl.malkey.util.Message;
-			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fsupplier;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fsupplier2;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicletype;
 			
 			import mx.collections.ArrayCollection;
@@ -92,7 +92,7 @@
 			public var gsTransCode:String="";
 			
 			[Bindable]
-			private var oOutsideOwnerDetail:Com_dspl_malkey_domain_Fsupplier;
+			private var oOutsideOwnerDetail:Com_dspl_malkey_domain_Fsupplier2;
 			
 			//****** Result & Fault Handlers [Start]
 		
@@ -579,7 +579,7 @@
 			private function save():void{
 				try{
 					if(validateForm()==true){
-						var fsupplier:Com_dspl_malkey_domain_Fsupplier=lacListMF.getItemAt(liCurIndex) as Com_dspl_malkey_domain_Fsupplier;
+						var fsupplier:Com_dspl_malkey_domain_Fsupplier2=lacListMF.getItemAt(liCurIndex) as Com_dspl_malkey_domain_Fsupplier2;
 						fsupplier.supcode=txtOutOwnID.text;
 						fsupplier.supname=txtOutOwnName.text;
 						fsupplier.supadd1=txtOutOwnResAdd1.text;

@@ -56,6 +56,7 @@ Modified By :
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fclienttype;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fhiretype;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fsupplier;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fsupplier2;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicledamage;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicleinventry;
@@ -66,7 +67,6 @@ Modified By :
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
-			import mx.controls.Text;
 			import mx.core.FlexGlobals;
 			import mx.core.IFlexDisplayObject;
 			import mx.effects.easing.*;
@@ -74,14 +74,10 @@ Modified By :
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
-			import mx.graphics.codec.JPEGEncoder;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.ResultEvent;
 			import mx.utils.StringUtil;
 			import mx.validators.Validator;
-			
-			import spark.events.IndexChangeEvent;
-			import spark.events.TextOperationEvent;
 			
 			// Class and variable used in User access level  
 			include "com/dspl/malkey/util/IPermission.as";
@@ -112,7 +108,9 @@ Modified By :
 			[Bindable] 
 			private var sVehiModelID:String = "";
 			[Bindable]
-			private var oOutsideOwnerDetail:Com_dspl_malkey_domain_Fsupplier;
+			private var oOutsideOwnerDetail:Com_dspl_malkey_domain_Fsupplier2;
+/* 			[Bindable]
+			private var oOutsideOwnerDetail:Com_dspl_malkey_domain_Fsupplier;*/
 			[Bindable] 
 			private var nVehicleColour:int = 0;
 			
@@ -796,7 +794,7 @@ Modified By :
 				crVInventryList.token = srvFvinventrylist.ListAll();
 				crRateType.token = srvFratetype.listAll();
 								
-				cr3rdPartyOwners.token = srvFsupplier.listBySupType("T");
+				cr3rdPartyOwners.token = srvFsupplier2SRV.listBySupType("T");
 				crInsFleet.token = srvFsupplier.listBySupType("I");
 				crLeaseCom.token = srvFsupplier.listBySupType("L");
 				crCompany.token = srvFcompany.ListAll();
@@ -930,7 +928,7 @@ Modified By :
 					}
 					
 					if (lnOwnerDetail==-1) 
-						oOutsideOwnerDetail = new Com_dspl_malkey_domain_Fsupplier();
+						oOutsideOwnerDetail = new Com_dspl_malkey_domain_Fsupplier2();
 					else
 						oOutsideOwnerDetail = cr3rdPartyOwners.lastResult.getItemAt(lnOwnerDetail);
 				}
@@ -1876,10 +1874,16 @@ Modified By :
 							   fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
 							   showBusyCursor="true"
 							   endpoint="@Resource(key='url',bundle='resource')"/>
-		<s:CallResponder id="cr3rdPartyOwners"/>
+
 		<s:CallResponder id="crInsFleet"/>
 		<s:CallResponder id="crLeaseCom"/>
 
+		<services:Fsupplier2SRV
+			id="srvFsupplier2SRV"
+			endpoint="@Resource(key='url',bundle='resource')"
+			/>
+		<s:CallResponder id="cr3rdPartyOwners"/>
+		
 		<services:FcompanySRV id="srvFcompany"
 								fault="Alert.show(event.fault.faultString + '\n' + event.fault.faultDetail)"
 								showBusyCursor="true"

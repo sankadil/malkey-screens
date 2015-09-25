@@ -760,10 +760,10 @@
 				crFhirestatusSRVListAll.token = fhirestatusSRV.ListAll();
 			}
 			
-			protected function listAllFreservationSRV():void
+/* 			protected function listAllFreservationSRV():void
 			{
 				crFreservationSRVListAll.token = freservationSRV.ListAll();
-			}
+			} */
 			
 			protected function listByResNoFresvehicleSRV(key:String):void
 			{

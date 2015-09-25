@@ -214,7 +214,7 @@ internal class _Super_FdebtorSRV extends com.adobe.fiber.services.wrapper.Remote
         dmQuery.countOperation = "count";
         dmQuery.pagingEnabled = true;
         dmQuery.positionalPagingParameters = true;
-        dmQuery.pageSize = 1,000;
+        dmQuery.pageSize = 500;
         dmQuery.parameters = "arg0,arg1";
         _com_dspl_malkey_domain_FdebtorRPCDataManager.addManagedOperation(dmQuery);
 
