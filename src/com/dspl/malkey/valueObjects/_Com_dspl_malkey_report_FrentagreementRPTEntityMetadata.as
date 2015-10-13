@@ -20,12 +20,12 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("total", "dratediscount", "resno", "deposit", "xsmilerate", "cidamage", "empname", "dnightoutrate", "gname", "debppno", "agrno", "debbillmob1", "gcompany", "debbillmob2", "companyid", "debadd", "dotratediscount", "description", "chargdays", "dotrate", "mobilephone1", "allotedhours", "cixsmileage", "parentref", "xhours", "noofday", "debname", "gofftele", "ghomeadd", "debnicno", "daddcharges", "depositbal", "regno", "cohirestsid", "debemail", "nettotal", "discount", "ratetype", "cinightout", "cidetenhrs", "nightoutdiscount", "returnaddress", "total_addcharges", "dout", "discount_xhoursamt", "drate", "custdriverdlno", "xhoursamt", "xhourrate", "allotedkms", "discountxhourrate", "total_accessories", "cimileage", "standardrate", "totaltaxable", "remarks", "timein", "comileage", "din", "rate", "vehimodelid", "ciother", "cofuellevel", "hiretypeid", "debvatno", "cidamagers", "discount_xmile", "itinerary", "advancebal", "ghometele", "cifuellevel", "empdlno", "cifueldiff", "debcode", "total_discount", "debfax", "debtel", "comname", "goffadd", "gmobileno", "codamage", "remarks_customer", "vehimakeid", "total_othersrv", "taxamt", "custdrivername", "timeout", "advance");
+    model_internal static var allProperties:Array = new Array("total", "dratediscount", "resno", "deposit", "cidamage", "xsmilerate", "empname", "gname", "dnightoutrate", "debppno", "agrno", "debbillmob1", "gcompany", "debbillmob2", "companyid", "debadd", "dotratediscount", "description", "chargdays", "dotrate", "mobilephone1", "cixsmileage", "allotedhours", "parentref", "xhours", "noofday", "gofftele", "debname", "ghomeadd", "debnicno", "daddcharges", "depositbal", "regno", "cohirestsid", "debemail", "nettotal", "discount", "ratetype", "cinightout", "cidetenhrs", "nightoutdiscount", "total_addcharges", "returnaddress", "dout", "drate", "discount_xhoursamt", "xhourrate", "custdriverdlno", "xhoursamt", "allotedkms", "total_accessories", "discountxhourrate", "cimileage", "standardrate", "totaltaxable", "remarks", "comileage", "timein", "din", "rate", "vehimodelid", "ciother", "hiretypeid", "cofuellevel", "cidamagers", "debvatno", "discount_xmile", "itinerary", "advancebal", "ghometele", "empdlno", "cifuellevel", "cifueldiff", "debcode", "total_discount", "debfax", "debtel", "comname", "goffadd", "gmobileno", "remarks_customer", "codamage", "vehimakeid", "total_othersrv", "taxamt", "custdrivername", "timeout", "advance");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("total", "dratediscount", "resno", "deposit", "xsmilerate", "cidamage", "empname", "dnightoutrate", "gname", "debppno", "agrno", "debbillmob1", "gcompany", "debbillmob2", "companyid", "debadd", "dotratediscount", "description", "chargdays", "dotrate", "mobilephone1", "allotedhours", "cixsmileage", "parentref", "xhours", "noofday", "debname", "gofftele", "ghomeadd", "debnicno", "daddcharges", "depositbal", "regno", "cohirestsid", "debemail", "nettotal", "discount", "ratetype", "cinightout", "cidetenhrs", "nightoutdiscount", "returnaddress", "total_addcharges", "dout", "discount_xhoursamt", "drate", "custdriverdlno", "xhoursamt", "xhourrate", "allotedkms", "discountxhourrate", "total_accessories", "cimileage", "standardrate", "totaltaxable", "remarks", "timein", "comileage", "din", "rate", "vehimodelid", "ciother", "cofuellevel", "hiretypeid", "debvatno", "cidamagers", "discount_xmile", "itinerary", "advancebal", "ghometele", "cifuellevel", "empdlno", "cifueldiff", "debcode", "total_discount", "debfax", "debtel", "comname", "goffadd", "gmobileno", "codamage", "remarks_customer", "vehimakeid", "total_othersrv", "taxamt", "custdrivername", "timeout", "advance");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("total", "dratediscount", "resno", "deposit", "cidamage", "xsmilerate", "empname", "gname", "dnightoutrate", "debppno", "agrno", "debbillmob1", "gcompany", "debbillmob2", "companyid", "debadd", "dotratediscount", "description", "chargdays", "dotrate", "mobilephone1", "cixsmileage", "allotedhours", "parentref", "xhours", "noofday", "gofftele", "debname", "ghomeadd", "debnicno", "daddcharges", "depositbal", "regno", "cohirestsid", "debemail", "nettotal", "discount", "ratetype", "cinightout", "cidetenhrs", "nightoutdiscount", "total_addcharges", "returnaddress", "dout", "drate", "discount_xhoursamt", "xhourrate", "custdriverdlno", "xhoursamt", "allotedkms", "total_accessories", "discountxhourrate", "cimileage", "standardrate", "totaltaxable", "remarks", "comileage", "timein", "din", "rate", "vehimodelid", "ciother", "hiretypeid", "cofuellevel", "cidamagers", "debvatno", "discount_xmile", "itinerary", "advancebal", "ghometele", "empdlno", "cifuellevel", "cifueldiff", "debcode", "total_discount", "debfax", "debtel", "comname", "goffadd", "gmobileno", "remarks_customer", "codamage", "vehimakeid", "total_othersrv", "taxamt", "custdrivername", "timeout", "advance");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("total", "dratediscount", "resno", "deposit", "xsmilerate", "cidamage", "empname", "dnightoutrate", "gname", "debppno", "agrno", "debbillmob1", "gcompany", "debbillmob2", "companyid", "debadd", "dotratediscount", "description", "chargdays", "dotrate", "mobilephone1", "allotedhours", "cixsmileage", "parentref", "xhours", "noofday", "debname", "gofftele", "ghomeadd", "debnicno", "daddcharges", "depositbal", "regno", "cohirestsid", "debemail", "nettotal", "discount", "ratetype", "cinightout", "cidetenhrs", "nightoutdiscount", "returnaddress", "total_addcharges", "dout", "discount_xhoursamt", "drate", "custdriverdlno", "xhoursamt", "xhourrate", "allotedkms", "discountxhourrate", "total_accessories", "cimileage", "standardrate", "totaltaxable", "remarks", "timein", "comileage", "din", "rate", "vehimodelid", "ciother", "cofuellevel", "hiretypeid", "debvatno", "cidamagers", "discount_xmile", "itinerary", "advancebal", "ghometele", "cifuellevel", "empdlno", "cifueldiff", "debcode", "total_discount", "debfax", "debtel", "comname", "goffadd", "gmobileno", "codamage", "remarks_customer", "vehimakeid", "total_othersrv", "taxamt", "custdrivername", "timeout", "advance");
+    model_internal static var dataProperties:Array = new Array("total", "dratediscount", "resno", "deposit", "cidamage", "xsmilerate", "empname", "gname", "dnightoutrate", "debppno", "agrno", "debbillmob1", "gcompany", "debbillmob2", "companyid", "debadd", "dotratediscount", "description", "chargdays", "dotrate", "mobilephone1", "cixsmileage", "allotedhours", "parentref", "xhours", "noofday", "gofftele", "debname", "ghomeadd", "debnicno", "daddcharges", "depositbal", "regno", "cohirestsid", "debemail", "nettotal", "discount", "ratetype", "cinightout", "cidetenhrs", "nightoutdiscount", "total_addcharges", "returnaddress", "dout", "drate", "discount_xhoursamt", "xhourrate", "custdriverdlno", "xhoursamt", "allotedkms", "total_accessories", "discountxhourrate", "cimileage", "standardrate", "totaltaxable", "remarks", "comileage", "timein", "din", "rate", "vehimodelid", "ciother", "hiretypeid", "cofuellevel", "cidamagers", "debvatno", "discount_xmile", "itinerary", "advancebal", "ghometele", "empdlno", "cifuellevel", "cifueldiff", "debcode", "total_discount", "debfax", "debtel", "comname", "goffadd", "gmobileno", "remarks_customer", "codamage", "vehimakeid", "total_othersrv", "taxamt", "custdrivername", "timeout", "advance");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -48,11 +48,11 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
             model_internal::dependentsOnMap["dratediscount"] = new Array();
             model_internal::dependentsOnMap["resno"] = new Array();
             model_internal::dependentsOnMap["deposit"] = new Array();
-            model_internal::dependentsOnMap["xsmilerate"] = new Array();
             model_internal::dependentsOnMap["cidamage"] = new Array();
+            model_internal::dependentsOnMap["xsmilerate"] = new Array();
             model_internal::dependentsOnMap["empname"] = new Array();
-            model_internal::dependentsOnMap["dnightoutrate"] = new Array();
             model_internal::dependentsOnMap["gname"] = new Array();
+            model_internal::dependentsOnMap["dnightoutrate"] = new Array();
             model_internal::dependentsOnMap["debppno"] = new Array();
             model_internal::dependentsOnMap["agrno"] = new Array();
             model_internal::dependentsOnMap["debbillmob1"] = new Array();
@@ -65,13 +65,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
             model_internal::dependentsOnMap["chargdays"] = new Array();
             model_internal::dependentsOnMap["dotrate"] = new Array();
             model_internal::dependentsOnMap["mobilephone1"] = new Array();
-            model_internal::dependentsOnMap["allotedhours"] = new Array();
             model_internal::dependentsOnMap["cixsmileage"] = new Array();
+            model_internal::dependentsOnMap["allotedhours"] = new Array();
             model_internal::dependentsOnMap["parentref"] = new Array();
             model_internal::dependentsOnMap["xhours"] = new Array();
             model_internal::dependentsOnMap["noofday"] = new Array();
-            model_internal::dependentsOnMap["debname"] = new Array();
             model_internal::dependentsOnMap["gofftele"] = new Array();
+            model_internal::dependentsOnMap["debname"] = new Array();
             model_internal::dependentsOnMap["ghomeadd"] = new Array();
             model_internal::dependentsOnMap["debnicno"] = new Array();
             model_internal::dependentsOnMap["daddcharges"] = new Array();
@@ -85,37 +85,37 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
             model_internal::dependentsOnMap["cinightout"] = new Array();
             model_internal::dependentsOnMap["cidetenhrs"] = new Array();
             model_internal::dependentsOnMap["nightoutdiscount"] = new Array();
-            model_internal::dependentsOnMap["returnaddress"] = new Array();
             model_internal::dependentsOnMap["total_addcharges"] = new Array();
+            model_internal::dependentsOnMap["returnaddress"] = new Array();
             model_internal::dependentsOnMap["dout"] = new Array();
-            model_internal::dependentsOnMap["discount_xhoursamt"] = new Array();
             model_internal::dependentsOnMap["drate"] = new Array();
+            model_internal::dependentsOnMap["discount_xhoursamt"] = new Array();
+            model_internal::dependentsOnMap["xhourrate"] = new Array();
             model_internal::dependentsOnMap["custdriverdlno"] = new Array();
             model_internal::dependentsOnMap["xhoursamt"] = new Array();
-            model_internal::dependentsOnMap["xhourrate"] = new Array();
             model_internal::dependentsOnMap["allotedkms"] = new Array();
-            model_internal::dependentsOnMap["discountxhourrate"] = new Array();
             model_internal::dependentsOnMap["total_accessories"] = new Array();
+            model_internal::dependentsOnMap["discountxhourrate"] = new Array();
             model_internal::dependentsOnMap["cimileage"] = new Array();
             model_internal::dependentsOnMap["standardrate"] = new Array();
             model_internal::dependentsOnMap["totaltaxable"] = new Array();
             model_internal::dependentsOnMap["remarks"] = new Array();
-            model_internal::dependentsOnMap["timein"] = new Array();
             model_internal::dependentsOnMap["comileage"] = new Array();
+            model_internal::dependentsOnMap["timein"] = new Array();
             model_internal::dependentsOnMap["din"] = new Array();
             model_internal::dependentsOnMap["rate"] = new Array();
             model_internal::dependentsOnMap["vehimodelid"] = new Array();
             model_internal::dependentsOnMap["ciother"] = new Array();
-            model_internal::dependentsOnMap["cofuellevel"] = new Array();
             model_internal::dependentsOnMap["hiretypeid"] = new Array();
-            model_internal::dependentsOnMap["debvatno"] = new Array();
+            model_internal::dependentsOnMap["cofuellevel"] = new Array();
             model_internal::dependentsOnMap["cidamagers"] = new Array();
+            model_internal::dependentsOnMap["debvatno"] = new Array();
             model_internal::dependentsOnMap["discount_xmile"] = new Array();
             model_internal::dependentsOnMap["itinerary"] = new Array();
             model_internal::dependentsOnMap["advancebal"] = new Array();
             model_internal::dependentsOnMap["ghometele"] = new Array();
-            model_internal::dependentsOnMap["cifuellevel"] = new Array();
             model_internal::dependentsOnMap["empdlno"] = new Array();
+            model_internal::dependentsOnMap["cifuellevel"] = new Array();
             model_internal::dependentsOnMap["cifueldiff"] = new Array();
             model_internal::dependentsOnMap["debcode"] = new Array();
             model_internal::dependentsOnMap["total_discount"] = new Array();
@@ -124,8 +124,8 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
             model_internal::dependentsOnMap["comname"] = new Array();
             model_internal::dependentsOnMap["goffadd"] = new Array();
             model_internal::dependentsOnMap["gmobileno"] = new Array();
-            model_internal::dependentsOnMap["codamage"] = new Array();
             model_internal::dependentsOnMap["remarks_customer"] = new Array();
+            model_internal::dependentsOnMap["codamage"] = new Array();
             model_internal::dependentsOnMap["vehimakeid"] = new Array();
             model_internal::dependentsOnMap["total_othersrv"] = new Array();
             model_internal::dependentsOnMap["taxamt"] = new Array();
@@ -371,13 +371,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isXsmilerateAvailable():Boolean
+    public function get isCidamageAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCidamageAvailable():Boolean
+    public function get isXsmilerateAvailable():Boolean
     {
         return true;
     }
@@ -389,13 +389,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDnightoutrateAvailable():Boolean
+    public function get isGnameAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isGnameAvailable():Boolean
+    public function get isDnightoutrateAvailable():Boolean
     {
         return true;
     }
@@ -473,13 +473,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAllotedhoursAvailable():Boolean
+    public function get isCixsmileageAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCixsmileageAvailable():Boolean
+    public function get isAllotedhoursAvailable():Boolean
     {
         return true;
     }
@@ -503,13 +503,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDebnameAvailable():Boolean
+    public function get isGoffteleAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isGoffteleAvailable():Boolean
+    public function get isDebnameAvailable():Boolean
     {
         return true;
     }
@@ -593,13 +593,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isReturnaddressAvailable():Boolean
+    public function get isTotal_addchargesAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTotal_addchargesAvailable():Boolean
+    public function get isReturnaddressAvailable():Boolean
     {
         return true;
     }
@@ -611,13 +611,19 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
+    public function get isDrateAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isDiscount_xhoursamtAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDrateAvailable():Boolean
+    public function get isXhourrateAvailable():Boolean
     {
         return true;
     }
@@ -635,25 +641,19 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isXhourrateAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isAllotedkmsAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDiscountxhourrateAvailable():Boolean
+    public function get isTotal_accessoriesAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTotal_accessoriesAvailable():Boolean
+    public function get isDiscountxhourrateAvailable():Boolean
     {
         return true;
     }
@@ -683,13 +683,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTimeinAvailable():Boolean
+    public function get isComileageAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isComileageAvailable():Boolean
+    public function get isTimeinAvailable():Boolean
     {
         return true;
     }
@@ -719,25 +719,25 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCofuellevelAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isHiretypeidAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDebvatnoAvailable():Boolean
+    public function get isCofuellevelAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
     public function get isCidamagersAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isDebvatnoAvailable():Boolean
     {
         return true;
     }
@@ -767,13 +767,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCifuellevelAvailable():Boolean
+    public function get isEmpdlnoAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isEmpdlnoAvailable():Boolean
+    public function get isCifuellevelAvailable():Boolean
     {
         return true;
     }
@@ -827,13 +827,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCodamageAvailable():Boolean
+    public function get isRemarks_customerAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isRemarks_customerAvailable():Boolean
+    public function get isCodamageAvailable():Boolean
     {
         return true;
     }
@@ -909,13 +909,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get xsmilerateStyle():com.adobe.fiber.styles.Style
+    public function get cidamageStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cidamageStyle():com.adobe.fiber.styles.Style
+    public function get xsmilerateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -927,13 +927,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get dnightoutrateStyle():com.adobe.fiber.styles.Style
+    public function get gnameStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get gnameStyle():com.adobe.fiber.styles.Style
+    public function get dnightoutrateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1011,13 +1011,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get allotedhoursStyle():com.adobe.fiber.styles.Style
+    public function get cixsmileageStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cixsmileageStyle():com.adobe.fiber.styles.Style
+    public function get allotedhoursStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1041,13 +1041,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get debnameStyle():com.adobe.fiber.styles.Style
+    public function get goffteleStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get goffteleStyle():com.adobe.fiber.styles.Style
+    public function get debnameStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1131,13 +1131,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get returnaddressStyle():com.adobe.fiber.styles.Style
+    public function get total_addchargesStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get total_addchargesStyle():com.adobe.fiber.styles.Style
+    public function get returnaddressStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1149,13 +1149,19 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
+    public function get drateStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get discount_xhoursamtStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get drateStyle():com.adobe.fiber.styles.Style
+    public function get xhourrateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1173,25 +1179,19 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get xhourrateStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get allotedkmsStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get discountxhourrateStyle():com.adobe.fiber.styles.Style
+    public function get total_accessoriesStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get total_accessoriesStyle():com.adobe.fiber.styles.Style
+    public function get discountxhourrateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1221,13 +1221,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get timeinStyle():com.adobe.fiber.styles.Style
+    public function get comileageStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get comileageStyle():com.adobe.fiber.styles.Style
+    public function get timeinStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1257,25 +1257,25 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cofuellevelStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get hiretypeidStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get debvatnoStyle():com.adobe.fiber.styles.Style
+    public function get cofuellevelStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
     public function get cidamagersStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get debvatnoStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1305,13 +1305,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cifuellevelStyle():com.adobe.fiber.styles.Style
+    public function get empdlnoStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get empdlnoStyle():com.adobe.fiber.styles.Style
+    public function get cifuellevelStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1365,13 +1365,13 @@ internal class _Com_dspl_malkey_report_FrentagreementRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get codamageStyle():com.adobe.fiber.styles.Style
+    public function get remarks_customerStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get remarks_customerStyle():com.adobe.fiber.styles.Style
+    public function get codamageStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

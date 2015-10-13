@@ -17,7 +17,7 @@ Modified By :
 			   creationComplete="initApp()"
 			   title="Vehicle Master File"
 			   close="twVehicle_closeHandler(event)"
-			   width="950" height="600" minWidth="916" minHeight="516" 
+			   width="950" height="590" minWidth="916" minHeight="516" 
 			   xmlns:services="com.dspl.malkey.services.*" 
 			   xmlns:valueObjects="com.dspl.malkey.valueObjects.*" 
 			   xmlns:components="com.dspl.malkey.components.*">
@@ -98,9 +98,9 @@ Modified By :
 			[Bindable] 
 			private var sVehicleImageURL:String = "";
 			[Bindable] 
-			private var sLastModBy:String = "";
+			private var sAddedBy:String = "";
 			[Bindable] 
-			private var sLastModDate:String = "";
+			private var sAddedDate:String = "";
 			[Bindable] 
 			private var sVehicleMake:String = "";
 			[Bindable] 
@@ -159,12 +159,15 @@ Modified By :
 				slODOOrgMile.addEventListener("ODOClick",odoOrgrMileOnClick,false,0,false);
 				slODOCurMile.addEventListener("ODOClick",odoCurMileOnClick,false,0,false);
 				
+/* 				nvLeaseCom
+				dvLeaseDStart */
+				
 				// Arrays storing the mandatory fields
 				aMandatoryFldGeneral = [svRegNo, nvClass, nvType, nvMake, nvModel, nvTrans, nvFuel, nvColour, nvEngine, nvSts, nvLoc,  
 										dvPDate, svAvgFuel, svFuelTankVal, nvMainSeat, nvSpareKey, nvOrgMile, nvCurMile];
 				aMandatoryFldOutsideOwner = [svOutOwnName, svOutOwnID, svOutOwnResAdd, svOutOwnResTel, svOutOwnResMob];
 				aMandatoryFldMaintenance = [nvFleet, svInsPolicyNo, svInsCompany, svInsAmt, dvInsDExp, nvPolicyType, dvDEmission, dvDRevLic];
-				aMandatoryFldLeasing = [nvLeaseCom, dvLeaseDStart, svLeaseAmt, svLeaseMonthlyAmt, nvLeaseMonths];
+				aMandatoryFldLeasing = [/*nvLeaseCom,  dvLeaseDStart, */ svLeaseAmt, svLeaseMonthlyAmt, nvLeaseMonths];
 								
 				oGenFunctions.intCurrentRecNo = -1;
 				
@@ -948,9 +951,20 @@ Modified By :
 								
 				
 				// Display last updated info of the record
-				sLastModBy = fTmpVehicle.adduser;
-				sLastModDate = fTmpVehicle.adddate.toDateString();
-								
+				try{
+					if(fTmpVehicle.adddate==null)
+						fTmpVehicle.adddate=new Date();
+					if(fTmpVehicle.modifieddate==null)
+						fTmpVehicle.modifieddate=new Date();
+						
+				sAddedBy = fTmpVehicle.adduser;
+				sAddedDate = fTmpVehicle.adddate.toDateString();
+				lblModifiedBy.text ="Last Modified By: "+ fTmpVehicle.modifieduser+" On :"+fTmpVehicle.modifieddate.toDateString();
+				}
+				catch (myError:Error) 
+				{
+					Alert.show(""+myError.getStackTrace()+"\n"+myError.message+"\n"+myError.errorID+"\n"+myError.toString());
+				}								
 				removeAllCI();		// Remove all damage marks from the Vehicle Diagram Image on "Status" page
 				btnScratch.selected = false;
 				btnDent.selected = false;
@@ -1196,7 +1210,7 @@ Modified By :
 				}
 				
 				// Leasing
-				if (cboLeaseCom.selectedIndex>-1){
+				if (cboLeaseCom.selectedIndex>-1 && cboOwnerType.selectedIndex==0){
 					var laFldLeasingVals:Array = Validator.validateAll(aMandatoryFldLeasing);
 					if (laFldLeasingVals.length > 0){					
 						Alert.show("Unable to save changes since some of Leasing details are missing.", title, Alert.OK, null, null, oGenFunctions.IconWarning);
@@ -1941,8 +1955,8 @@ Modified By :
 		<mx:DateValidator id="dvDRevLic" source="{dfDRevLic}" property="selectedDate" required="true"/>
 		
 		<!-- Maintenance Page Tab : Leasing -->
-		<mx:NumberValidator id="nvLeaseCom" source="{cboLeaseCom}" property="selectedIndex" required="true" minValue="0"/>
-		<mx:DateValidator id="dvLeaseDStart" source="{dfLeaseDStart}" property="selectedDate" required="true"/>
+<!--		<mx:NumberValidator id="nvLeaseCom" source="{cboLeaseCom}" property="selectedIndex" required="false" minValue="-1"/>
+		<mx:DateValidator id="dvLeaseDStart" source="{dfLeaseDStart}" property="selectedDate" required="false"/>-->
 		<mx:StringValidator id="svLeaseAmt" source="{txtLeaseAmt}" property="text" required="true"/>
 		<mx:StringValidator id="svLeaseMonthlyAmt" source="{txtLeaseMonthlyAmt}" property="text" required="true"/>
 		<mx:NumberValidator id="nvLeaseMonths" source="{nsLeaseMonths}" property="value" required="true"/>
@@ -1955,7 +1969,7 @@ Modified By :
 	<!-- UI components ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	
-	<mx:ControlBar x="-1" y="-4" horizontalGap="2" height="57" width="520" creationComplete="controlbar1_creationCompleteHandler(event)">
+	<mx:ControlBar x="-1" y="-4" horizontalGap="2" height="45" width="520" creationComplete="controlbar1_creationCompleteHandler(event)">
 		<mx:Button id="btnNew" width="40" height="40" toolTip="New"
 				   icon="@Embed(source='com/dspl/malkey/components/common/icons/add.png')"
 				   disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/addD.png')"
@@ -2017,7 +2031,7 @@ Modified By :
 				   enabled.Default="true" enabled.New="false" enabled.Edit="false"/>
 	</mx:ControlBar>
 	
-	<mx:TabNavigator id="tnMain" x="11" y="59" width="98%" height="474" creationPolicy="all">
+	<mx:TabNavigator id="tnMain" x="11" y="45" width="98%" height="474" creationPolicy="all">
 		<s:NavigatorContent label="General" id="ncGeneral" width="100%" height="100%">
 			<mx:Form x="10" y="-11" width="330" height="360">
 				<mx:FormItem label="Registration No." direction="horizontal">
@@ -2431,7 +2445,7 @@ Modified By :
 			</mx:Form>
 		</s:NavigatorContent>
 		
-		<s:NavigatorContent label="Maintenance" id="ncMaint" width="100%" height="100%">
+		<s:NavigatorContent label="Maintenance" id="ncMaint" width="100%" height="90%">
 			<mx:Form width="878" height="37" x="12" y="6"
 					 paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="2"
 					 borderAlpha="0.10" borderColor="black" borderStyle="solid" borderVisible="true">
@@ -2677,9 +2691,13 @@ Modified By :
 	
 	
 	<mx:FormItem x="15" y="551" width="500" direction="horizontal">
-		<s:Label text="Last Modified By: {sLastModBy}"/>
+<!--		<s:Label text="Last Modified By: {sAddedBy}"/>
 		<mx:Spacer width="30%"/>
-		<s:Label text="On: {sLastModDate}"/>
+		<s:Label text="On: {sAddedDate}"/>-->
+		
+		<s:Label x="6" y="524" text="Added By: {sAddedBy} On: {sAddedDate}" id="lblAddedBy"/>
+		<s:Label x="400" y="524" text="Last Modified By:" id="lblModifiedBy"/>
+		
 	</mx:FormItem>
 	
 </s:TitleWindow>

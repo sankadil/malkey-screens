@@ -66,12 +66,12 @@ internal class _Super_FgatepassSRV extends com.adobe.fiber.services.wrapper.Remo
         operation = new mx.rpc.remoting.Operation(null, "getEmployeeList");
          operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Femployee;
         operations["getEmployeeList"] = operation;
-        operation = new mx.rpc.remoting.Operation(null, "ListAll");
-         operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fgatepass;
-        operations["ListAll"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "update");
          operation.resultType = Boolean;
         operations["update"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "ListAll");
+         operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fgatepass;
+        operations["ListAll"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "findByPassNo");
          operation.resultType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fgatepass;
         operations["findByPassNo"] = operation;
@@ -276,25 +276,6 @@ internal class _Super_FgatepassSRV extends com.adobe.fiber.services.wrapper.Remo
     }
      
     /**
-      * This method is a generated wrapper used to call the 'ListAll' operation. It returns an mx.rpc.AsyncToken whose 
-      * result property will be populated with the result of the operation when the server response is received. 
-      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
-      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
-      *
-      * @see mx.rpc.AsyncToken
-      * @see mx.rpc.CallResponder 
-      *
-      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
-      */
-    public function ListAll() : mx.rpc.AsyncToken
-    {
-        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("ListAll");
-        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
-
-        return _internal_token;
-    }
-     
-    /**
       * This method is a generated wrapper used to call the 'update' operation. It returns an mx.rpc.AsyncToken whose 
       * result property will be populated with the result of the operation when the server response is received. 
       * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
@@ -309,6 +290,25 @@ internal class _Super_FgatepassSRV extends com.adobe.fiber.services.wrapper.Remo
     {
         var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("update");
         var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0) ;
+
+        return _internal_token;
+    }
+     
+    /**
+      * This method is a generated wrapper used to call the 'ListAll' operation. It returns an mx.rpc.AsyncToken whose 
+      * result property will be populated with the result of the operation when the server response is received. 
+      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+      */
+    public function ListAll() : mx.rpc.AsyncToken
+    {
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("ListAll");
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
 
         return _internal_token;
     }

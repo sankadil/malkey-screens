@@ -63,8 +63,8 @@ public class _Super_Com_dspl_malkey_domain_Fresdriver extends flash.events.Event
     private var _internal_isavailabile : int;
     private var _internal_id : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverPK;
     private var _internal_days : String;
-    private var _internal_priority : int;
     private var _internal_issrv : Boolean;
+    private var _internal_priority : int;
     private var _internal_dispatch : int;
     private var _internal_uuid : String;
     private var _internal_recordid : int;
@@ -155,15 +155,15 @@ public class _Super_Com_dspl_malkey_domain_Fresdriver extends flash.events.Event
     }
 
     [Bindable(event="propertyChange")]
-    public function get priority() : int
-    {
-        return _internal_priority;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get issrv() : Boolean
     {
         return _internal_issrv;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get priority() : int
+    {
+        return _internal_priority;
     }
 
     [Bindable(event="propertyChange")]
@@ -278,16 +278,6 @@ public class _Super_Com_dspl_malkey_domain_Fresdriver extends flash.events.Event
         }
     }
 
-    public function set priority(value:int) : void
-    {
-        var oldValue:int = _internal_priority;
-        if (oldValue !== value)
-        {
-            _internal_priority = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "priority", oldValue, _internal_priority));
-        }
-    }
-
     public function set issrv(value:Boolean) : void
     {
         var oldValue:Boolean = _internal_issrv;
@@ -295,6 +285,16 @@ public class _Super_Com_dspl_malkey_domain_Fresdriver extends flash.events.Event
         {
             _internal_issrv = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "issrv", oldValue, _internal_issrv));
+        }
+    }
+
+    public function set priority(value:int) : void
+    {
+        var oldValue:int = _internal_priority;
+        if (oldValue !== value)
+        {
+            _internal_priority = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "priority", oldValue, _internal_priority));
         }
     }
 

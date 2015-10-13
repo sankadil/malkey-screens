@@ -48,20 +48,20 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
      * properties
      */
     private var _internal_cifuellevel : String;
-    private var _internal_hiretype : String;
     private var _internal_noofday : int;
-    private var _internal_debname : String;
+    private var _internal_hiretype : String;
     private var _internal_model : String;
+    private var _internal_debname : String;
     private var _internal_resno : String;
-    private var _internal_regno : String;
     private var _internal_tel : String;
+    private var _internal_regno : String;
     private var _internal_cimileage : String;
     private var _internal_agrno : String;
     private var _internal_comileage : String;
     private var _internal_hirestatus : String;
     private var _internal_totalmileage : int;
-    private var _internal_debadd : String;
     private var _internal_din : com.dspl.malkey.valueObjects.Java_sql_Timestamp;
+    private var _internal_debadd : String;
     private var _internal_gotime : String;
     private var _internal_cofuellevel : String;
     private var _internal_itinerary : String;
@@ -98,21 +98,15 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
     }
 
     [Bindable(event="propertyChange")]
-    public function get hiretype() : String
-    {
-        return _internal_hiretype;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get noofday() : int
     {
         return _internal_noofday;
     }
 
     [Bindable(event="propertyChange")]
-    public function get debname() : String
+    public function get hiretype() : String
     {
-        return _internal_debname;
+        return _internal_hiretype;
     }
 
     [Bindable(event="propertyChange")]
@@ -122,21 +116,27 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
     }
 
     [Bindable(event="propertyChange")]
+    public function get debname() : String
+    {
+        return _internal_debname;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get resno() : String
     {
         return _internal_resno;
     }
 
     [Bindable(event="propertyChange")]
-    public function get regno() : String
-    {
-        return _internal_regno;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get tel() : String
     {
         return _internal_tel;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get regno() : String
+    {
+        return _internal_regno;
     }
 
     [Bindable(event="propertyChange")]
@@ -170,15 +170,15 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
     }
 
     [Bindable(event="propertyChange")]
-    public function get debadd() : String
-    {
-        return _internal_debadd;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get din() : com.dspl.malkey.valueObjects.Java_sql_Timestamp
     {
         return _internal_din;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get debadd() : String
+    {
+        return _internal_debadd;
     }
 
     [Bindable(event="propertyChange")]
@@ -231,16 +231,6 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
         }
     }
 
-    public function set hiretype(value:String) : void
-    {
-        var oldValue:String = _internal_hiretype;
-        if (oldValue !== value)
-        {
-            _internal_hiretype = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "hiretype", oldValue, _internal_hiretype));
-        }
-    }
-
     public function set noofday(value:int) : void
     {
         var oldValue:int = _internal_noofday;
@@ -251,13 +241,13 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
         }
     }
 
-    public function set debname(value:String) : void
+    public function set hiretype(value:String) : void
     {
-        var oldValue:String = _internal_debname;
+        var oldValue:String = _internal_hiretype;
         if (oldValue !== value)
         {
-            _internal_debname = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debname", oldValue, _internal_debname));
+            _internal_hiretype = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "hiretype", oldValue, _internal_hiretype));
         }
     }
 
@@ -271,6 +261,16 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
         }
     }
 
+    public function set debname(value:String) : void
+    {
+        var oldValue:String = _internal_debname;
+        if (oldValue !== value)
+        {
+            _internal_debname = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debname", oldValue, _internal_debname));
+        }
+    }
+
     public function set resno(value:String) : void
     {
         var oldValue:String = _internal_resno;
@@ -281,16 +281,6 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
         }
     }
 
-    public function set regno(value:String) : void
-    {
-        var oldValue:String = _internal_regno;
-        if (oldValue !== value)
-        {
-            _internal_regno = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "regno", oldValue, _internal_regno));
-        }
-    }
-
     public function set tel(value:String) : void
     {
         var oldValue:String = _internal_tel;
@@ -298,6 +288,16 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
         {
             _internal_tel = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "tel", oldValue, _internal_tel));
+        }
+    }
+
+    public function set regno(value:String) : void
+    {
+        var oldValue:String = _internal_regno;
+        if (oldValue !== value)
+        {
+            _internal_regno = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "regno", oldValue, _internal_regno));
         }
     }
 
@@ -351,16 +351,6 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
         }
     }
 
-    public function set debadd(value:String) : void
-    {
-        var oldValue:String = _internal_debadd;
-        if (oldValue !== value)
-        {
-            _internal_debadd = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debadd", oldValue, _internal_debadd));
-        }
-    }
-
     public function set din(value:com.dspl.malkey.valueObjects.Java_sql_Timestamp) : void
     {
         var oldValue:com.dspl.malkey.valueObjects.Java_sql_Timestamp = _internal_din;
@@ -368,6 +358,16 @@ public class _Super_Com_dspl_malkey_domain_Freservationdiaryrpt extends flash.ev
         {
             _internal_din = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "din", oldValue, _internal_din));
+        }
+    }
+
+    public function set debadd(value:String) : void
+    {
+        var oldValue:String = _internal_debadd;
+        if (oldValue !== value)
+        {
+            _internal_debadd = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debadd", oldValue, _internal_debadd));
         }
     }
 

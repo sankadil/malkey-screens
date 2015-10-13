@@ -52,10 +52,10 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
      */
     private var _internal_regno : String;
     private var _internal_imageurl : String;
-    private var _internal_defaultimage : int;
     private var _internal_recordid : int;
-    private var _internal_imagename : String;
+    private var _internal_defaultimage : int;
     private var _internal_imagedata : ByteArray;
+    private var _internal_imagename : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -74,8 +74,8 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
         // Bind to own data properties for cache invalidation triggering
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "regno", model_internal::setterListenerRegno));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "imageurl", model_internal::setterListenerImageurl));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "imagename", model_internal::setterListenerImagename));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "imagedata", model_internal::setterListenerImagedata));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "imagename", model_internal::setterListenerImagename));
 
     }
 
@@ -96,27 +96,27 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
     }
 
     [Bindable(event="propertyChange")]
-    public function get defaultimage() : int
-    {
-        return _internal_defaultimage;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get recordid() : int
     {
         return _internal_recordid;
     }
 
     [Bindable(event="propertyChange")]
-    public function get imagename() : String
+    public function get defaultimage() : int
     {
-        return _internal_imagename;
+        return _internal_defaultimage;
     }
 
     [Bindable(event="propertyChange")]
     public function get imagedata() : ByteArray
     {
         return _internal_imagedata;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get imagename() : String
+    {
+        return _internal_imagename;
     }
 
     /**
@@ -143,16 +143,6 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
         }
     }
 
-    public function set defaultimage(value:int) : void
-    {
-        var oldValue:int = _internal_defaultimage;
-        if (oldValue !== value)
-        {
-            _internal_defaultimage = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "defaultimage", oldValue, _internal_defaultimage));
-        }
-    }
-
     public function set recordid(value:int) : void
     {
         var oldValue:int = _internal_recordid;
@@ -163,13 +153,13 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
         }
     }
 
-    public function set imagename(value:String) : void
+    public function set defaultimage(value:int) : void
     {
-        var oldValue:String = _internal_imagename;
+        var oldValue:int = _internal_defaultimage;
         if (oldValue !== value)
         {
-            _internal_imagename = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "imagename", oldValue, _internal_imagename));
+            _internal_defaultimage = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "defaultimage", oldValue, _internal_defaultimage));
         }
     }
 
@@ -180,6 +170,16 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
         {
             _internal_imagedata = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "imagedata", oldValue, _internal_imagedata));
+        }
+    }
+
+    public function set imagename(value:String) : void
+    {
+        var oldValue:String = _internal_imagename;
+        if (oldValue !== value)
+        {
+            _internal_imagename = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "imagename", oldValue, _internal_imagename));
         }
     }
 
@@ -205,14 +205,14 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
         _model.invalidateDependentOnImageurl();
     }
 
-    model_internal function setterListenerImagename(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnImagename();
-    }
-
     model_internal function setterListenerImagedata(value:flash.events.Event):void
     {
         _model.invalidateDependentOnImagedata();
+    }
+
+    model_internal function setterListenerImagename(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnImagename();
     }
 
 
@@ -246,15 +246,15 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_imageurlValidationFailureMessages);
         }
-        if (!_model.imagenameIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_imagenameValidationFailureMessages);
-        }
         if (!_model.imagedataIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_imagedataValidationFailureMessages);
+        }
+        if (!_model.imagenameIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_imagenameValidationFailureMessages);
         }
 
         model_internal::_cacheInitialized_isValid = true;
@@ -389,33 +389,6 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfImagename : Array = null;
-    model_internal var _doValidationLastValOfImagename : String;
-
-    model_internal function _doValidationForImagename(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfImagename != null && model_internal::_doValidationLastValOfImagename == value)
-           return model_internal::_doValidationCacheOfImagename ;
-
-        _model.model_internal::_imagenameIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isImagenameAvailable && _internal_imagename == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "imagename is required"));
-        }
-
-        model_internal::_doValidationCacheOfImagename = validationFailures;
-        model_internal::_doValidationLastValOfImagename = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfImagedata : Array = null;
     model_internal var _doValidationLastValOfImagedata : ByteArray;
 
@@ -439,6 +412,33 @@ public class _Super_Com_dspl_malkey_domain_Fvehiclepic extends flash.events.Even
 
         model_internal::_doValidationCacheOfImagedata = validationFailures;
         model_internal::_doValidationLastValOfImagedata = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfImagename : Array = null;
+    model_internal var _doValidationLastValOfImagename : String;
+
+    model_internal function _doValidationForImagename(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfImagename != null && model_internal::_doValidationLastValOfImagename == value)
+           return model_internal::_doValidationCacheOfImagename ;
+
+        _model.model_internal::_imagenameIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isImagenameAvailable && _internal_imagename == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "imagename is required"));
+        }
+
+        model_internal::_doValidationCacheOfImagename = validationFailures;
+        model_internal::_doValidationLastValOfImagename = value;
 
         return validationFailures;
     }

@@ -56,8 +56,8 @@ public class _Super_Com_dspl_malkey_domain_Fresaccs extends flash.events.EventDi
      */
     private var _internal_adduser : String;
     private var _internal_standardrate : String;
-    private var _internal_remarks : String;
     private var _internal_qty : int;
+    private var _internal_remarks : String;
     private var _internal_fresaccrate : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccrate;
     private var _internal_discount : String;
     private var _internal_noofdays : int;
@@ -113,15 +113,15 @@ public class _Super_Com_dspl_malkey_domain_Fresaccs extends flash.events.EventDi
     }
 
     [Bindable(event="propertyChange")]
-    public function get remarks() : String
-    {
-        return _internal_remarks;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get qty() : int
     {
         return _internal_qty;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get remarks() : String
+    {
+        return _internal_remarks;
     }
 
     [Bindable(event="propertyChange")]
@@ -202,16 +202,6 @@ public class _Super_Com_dspl_malkey_domain_Fresaccs extends flash.events.EventDi
         }
     }
 
-    public function set remarks(value:String) : void
-    {
-        var oldValue:String = _internal_remarks;
-        if (oldValue !== value)
-        {
-            _internal_remarks = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "remarks", oldValue, _internal_remarks));
-        }
-    }
-
     public function set qty(value:int) : void
     {
         var oldValue:int = _internal_qty;
@@ -219,6 +209,16 @@ public class _Super_Com_dspl_malkey_domain_Fresaccs extends flash.events.EventDi
         {
             _internal_qty = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "qty", oldValue, _internal_qty));
+        }
+    }
+
+    public function set remarks(value:String) : void
+    {
+        var oldValue:String = _internal_remarks;
+        if (oldValue !== value)
+        {
+            _internal_remarks = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "remarks", oldValue, _internal_remarks));
         }
     }
 

@@ -2362,6 +2362,7 @@
 		>
 		<mx:columns>
 			<mx:DataGridColumn headerText="RES-NO" 		dataField="resno"		/>
+			<mx:DataGridColumn headerText="REG-NO" 		dataField="regno"		/>
 			<mx:DataGridColumn headerText="HIRE-TYPE" 	dataField="hiretypeid" 	labelFunction="lblfhireTypeDescription"/>
 			<mx:DataGridColumn headerText="RATE-TYPE" 	dataField="ratetype" 	labelFunction="lblfrateTypeDescription"/>
 			<mx:DataGridColumn headerText="DATE-OUT" 	dataField="dout"		labelFunction="lblfDout"/>

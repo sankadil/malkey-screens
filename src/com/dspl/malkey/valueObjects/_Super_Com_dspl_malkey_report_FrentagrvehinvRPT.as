@@ -58,8 +58,8 @@ public class _Super_Com_dspl_malkey_report_FrentagrvehinvRPT extends flash.event
     private var _internal_detail3 : String;
     private var _internal_detail4 : String;
     private var _internal_detail1 : String;
-    private var _internal_accessory1 : int;
     private var _internal_detail2 : String;
+    private var _internal_accessory1 : int;
     private var _internal_detail7 : String;
     private var _internal_detail8 : String;
     private var _internal_detail5 : String;
@@ -167,15 +167,15 @@ public class _Super_Com_dspl_malkey_report_FrentagrvehinvRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get accessory1() : int
-    {
-        return _internal_accessory1;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get detail2() : String
     {
         return _internal_detail2;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get accessory1() : int
+    {
+        return _internal_accessory1;
     }
 
     [Bindable(event="propertyChange")]
@@ -342,16 +342,6 @@ public class _Super_Com_dspl_malkey_report_FrentagrvehinvRPT extends flash.event
         }
     }
 
-    public function set accessory1(value:int) : void
-    {
-        var oldValue:int = _internal_accessory1;
-        if (oldValue !== value)
-        {
-            _internal_accessory1 = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "accessory1", oldValue, _internal_accessory1));
-        }
-    }
-
     public function set detail2(value:String) : void
     {
         var oldValue:String = _internal_detail2;
@@ -359,6 +349,16 @@ public class _Super_Com_dspl_malkey_report_FrentagrvehinvRPT extends flash.event
         {
             _internal_detail2 = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "detail2", oldValue, _internal_detail2));
+        }
+    }
+
+    public function set accessory1(value:int) : void
+    {
+        var oldValue:int = _internal_accessory1;
+        if (oldValue !== value)
+        {
+            _internal_accessory1 = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "accessory1", oldValue, _internal_accessory1));
         }
     }
 

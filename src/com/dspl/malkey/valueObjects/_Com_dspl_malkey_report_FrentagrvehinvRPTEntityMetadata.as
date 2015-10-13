@@ -20,12 +20,12 @@ internal class _Com_dspl_malkey_report_FrentagrvehinvRPTEntityMetadata extends c
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("resno", "regno", "accessory9", "accessory8", "accessory7", "accessory6", "accessory5", "accessory4", "accessory3", "accessory2", "detail3", "detail4", "detail1", "accessory1", "detail2", "detail7", "detail8", "detail5", "detail6", "detail9");
+    model_internal static var allProperties:Array = new Array("resno", "regno", "accessory9", "accessory8", "accessory7", "accessory6", "accessory5", "accessory4", "accessory3", "accessory2", "detail3", "detail4", "detail1", "detail2", "accessory1", "detail7", "detail8", "detail5", "detail6", "detail9");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("resno", "regno", "accessory9", "accessory8", "accessory7", "accessory6", "accessory5", "accessory4", "accessory3", "accessory2", "detail3", "detail4", "detail1", "accessory1", "detail2", "detail7", "detail8", "detail5", "detail6", "detail9");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("resno", "regno", "accessory9", "accessory8", "accessory7", "accessory6", "accessory5", "accessory4", "accessory3", "accessory2", "detail3", "detail4", "detail1", "detail2", "accessory1", "detail7", "detail8", "detail5", "detail6", "detail9");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("resno", "regno", "accessory9", "accessory8", "accessory7", "accessory6", "accessory5", "accessory4", "accessory3", "accessory2", "detail3", "detail4", "detail1", "accessory1", "detail2", "detail7", "detail8", "detail5", "detail6", "detail9");
+    model_internal static var dataProperties:Array = new Array("resno", "regno", "accessory9", "accessory8", "accessory7", "accessory6", "accessory5", "accessory4", "accessory3", "accessory2", "detail3", "detail4", "detail1", "detail2", "accessory1", "detail7", "detail8", "detail5", "detail6", "detail9");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -57,8 +57,8 @@ internal class _Com_dspl_malkey_report_FrentagrvehinvRPTEntityMetadata extends c
             model_internal::dependentsOnMap["detail3"] = new Array();
             model_internal::dependentsOnMap["detail4"] = new Array();
             model_internal::dependentsOnMap["detail1"] = new Array();
-            model_internal::dependentsOnMap["accessory1"] = new Array();
             model_internal::dependentsOnMap["detail2"] = new Array();
+            model_internal::dependentsOnMap["accessory1"] = new Array();
             model_internal::dependentsOnMap["detail7"] = new Array();
             model_internal::dependentsOnMap["detail8"] = new Array();
             model_internal::dependentsOnMap["detail5"] = new Array();
@@ -357,13 +357,13 @@ internal class _Com_dspl_malkey_report_FrentagrvehinvRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAccessory1Available():Boolean
+    public function get isDetail2Available():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDetail2Available():Boolean
+    public function get isAccessory1Available():Boolean
     {
         return true;
     }
@@ -487,13 +487,13 @@ internal class _Com_dspl_malkey_report_FrentagrvehinvRPTEntityMetadata extends c
     }
 
     [Bindable(event="propertyChange")]   
-    public function get accessory1Style():com.adobe.fiber.styles.Style
+    public function get detail2Style():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get detail2Style():com.adobe.fiber.styles.Style
+    public function get accessory1Style():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

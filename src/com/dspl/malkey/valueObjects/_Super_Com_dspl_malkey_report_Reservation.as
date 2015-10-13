@@ -54,6 +54,7 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
 
     model_internal static function initRemoteClassAliasAllRelated() : void
     {
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicle.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresvehiclePK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehinv.initRemoteClassAliasSingleChild();
@@ -61,23 +62,22 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehiclerate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicledamage.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicledamage.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccs.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccratePK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccsPK.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresclientdriverPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriverrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverratePK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaddcharge.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaddchargePK.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresclientdriverPK.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothsrv.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresothsrvPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothersrvrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresothersrvratePK.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverPK.initRemoteClassAliasSingleChild();
     }
 
     model_internal var _dminternal_model : _Com_dspl_malkey_report_ReservationEntityMetadata;
@@ -89,20 +89,20 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
     model_internal var _internal_fresvehicle_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicle;
     private var _internal_fresvehicledamage : ArrayCollection;
     model_internal var _internal_fresvehicledamage_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicledamage;
-    private var _internal_freservation : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
     private var _internal_fresaccs : ArrayCollection;
     model_internal var _internal_fresaccs_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccs;
-    private var _internal_fresclientdriver : ArrayCollection;
-    model_internal var _internal_fresclientdriver_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver;
+    private var _internal_freservation : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
     private var _internal_fresdriverrate : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriverrate;
     private var _internal_fresaddcharge : ArrayCollection;
     model_internal var _internal_fresaddcharge_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaddcharge;
+    private var _internal_fresclientdriver : ArrayCollection;
+    model_internal var _internal_fresclientdriver_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver;
+    private var _internal_fresdriver : ArrayCollection;
+    model_internal var _internal_fresdriver_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver;
     private var _internal_fresothsrv : ArrayCollection;
     model_internal var _internal_fresothsrv_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothsrv;
     private var _internal_fresvehinv : ArrayCollection;
     model_internal var _internal_fresvehinv_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehinv;
-    private var _internal_fresdriver : ArrayCollection;
-    model_internal var _internal_fresdriver_leaf:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver;
 
     private static var emptyArray:Array = new Array();
 
@@ -121,14 +121,14 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         // Bind to own data properties for cache invalidation triggering
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresvehicle", model_internal::setterListenerFresvehicle));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresvehicledamage", model_internal::setterListenerFresvehicledamage));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "freservation", model_internal::setterListenerFreservation));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresaccs", model_internal::setterListenerFresaccs));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresclientdriver", model_internal::setterListenerFresclientdriver));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "freservation", model_internal::setterListenerFreservation));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresdriverrate", model_internal::setterListenerFresdriverrate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresaddcharge", model_internal::setterListenerFresaddcharge));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresclientdriver", model_internal::setterListenerFresclientdriver));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresdriver", model_internal::setterListenerFresdriver));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresothsrv", model_internal::setterListenerFresothsrv));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresvehinv", model_internal::setterListenerFresvehinv));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "fresdriver", model_internal::setterListenerFresdriver));
 
     }
 
@@ -149,21 +149,15 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
     }
 
     [Bindable(event="propertyChange")]
-    public function get freservation() : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation
-    {
-        return _internal_freservation;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get fresaccs() : ArrayCollection
     {
         return _internal_fresaccs;
     }
 
     [Bindable(event="propertyChange")]
-    public function get fresclientdriver() : ArrayCollection
+    public function get freservation() : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation
     {
-        return _internal_fresclientdriver;
+        return _internal_freservation;
     }
 
     [Bindable(event="propertyChange")]
@@ -179,6 +173,18 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
     }
 
     [Bindable(event="propertyChange")]
+    public function get fresclientdriver() : ArrayCollection
+    {
+        return _internal_fresclientdriver;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get fresdriver() : ArrayCollection
+    {
+        return _internal_fresdriver;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get fresothsrv() : ArrayCollection
     {
         return _internal_fresothsrv;
@@ -188,12 +194,6 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
     public function get fresvehinv() : ArrayCollection
     {
         return _internal_fresvehinv;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get fresdriver() : ArrayCollection
-    {
-        return _internal_fresdriver;
     }
 
     /**
@@ -242,16 +242,6 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         }
     }
 
-    public function set freservation(value:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation) : void
-    {
-        var oldValue:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation = _internal_freservation;
-        if (oldValue !== value)
-        {
-            _internal_freservation = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "freservation", oldValue, _internal_freservation));
-        }
-    }
-
     public function set fresaccs(value:*) : void
     {
         var oldValue:ArrayCollection = _internal_fresaccs;
@@ -273,24 +263,13 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         }
     }
 
-    public function set fresclientdriver(value:*) : void
+    public function set freservation(value:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation) : void
     {
-        var oldValue:ArrayCollection = _internal_fresclientdriver;
+        var oldValue:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation = _internal_freservation;
         if (oldValue !== value)
         {
-            if (value is ArrayCollection)
-            {
-                _internal_fresclientdriver = value;
-            }
-            else if (value is Array)
-            {
-                _internal_fresclientdriver = new ArrayCollection(value);
-            }
-            else
-            {
-                throw new Error("value of fresclientdriver must be a collection");
-            }
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresclientdriver", oldValue, _internal_fresclientdriver));
+            _internal_freservation = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "freservation", oldValue, _internal_freservation));
         }
     }
 
@@ -322,6 +301,48 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
                 throw new Error("value of fresaddcharge must be a collection");
             }
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresaddcharge", oldValue, _internal_fresaddcharge));
+        }
+    }
+
+    public function set fresclientdriver(value:*) : void
+    {
+        var oldValue:ArrayCollection = _internal_fresclientdriver;
+        if (oldValue !== value)
+        {
+            if (value is ArrayCollection)
+            {
+                _internal_fresclientdriver = value;
+            }
+            else if (value is Array)
+            {
+                _internal_fresclientdriver = new ArrayCollection(value);
+            }
+            else
+            {
+                throw new Error("value of fresclientdriver must be a collection");
+            }
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresclientdriver", oldValue, _internal_fresclientdriver));
+        }
+    }
+
+    public function set fresdriver(value:*) : void
+    {
+        var oldValue:ArrayCollection = _internal_fresdriver;
+        if (oldValue !== value)
+        {
+            if (value is ArrayCollection)
+            {
+                _internal_fresdriver = value;
+            }
+            else if (value is Array)
+            {
+                _internal_fresdriver = new ArrayCollection(value);
+            }
+            else
+            {
+                throw new Error("value of fresdriver must be a collection");
+            }
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresdriver", oldValue, _internal_fresdriver));
         }
     }
 
@@ -367,27 +388,6 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         }
     }
 
-    public function set fresdriver(value:*) : void
-    {
-        var oldValue:ArrayCollection = _internal_fresdriver;
-        if (oldValue !== value)
-        {
-            if (value is ArrayCollection)
-            {
-                _internal_fresdriver = value;
-            }
-            else if (value is Array)
-            {
-                _internal_fresdriver = new ArrayCollection(value);
-            }
-            else
-            {
-                throw new Error("value of fresdriver must be a collection");
-            }
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresdriver", oldValue, _internal_fresdriver));
-        }
-    }
-
     /**
      * Data property setter listeners
      *
@@ -424,11 +424,6 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         _model.invalidateDependentOnFresvehicledamage();
     }
 
-    model_internal function setterListenerFreservation(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnFreservation();
-    }
-
     model_internal function setterListenerFresaccs(value:flash.events.Event):void
     {
         if (value is mx.events.PropertyChangeEvent)
@@ -441,16 +436,9 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         _model.invalidateDependentOnFresaccs();
     }
 
-    model_internal function setterListenerFresclientdriver(value:flash.events.Event):void
+    model_internal function setterListenerFreservation(value:flash.events.Event):void
     {
-        if (value is mx.events.PropertyChangeEvent)
-        {
-            if (mx.events.PropertyChangeEvent(value).newValue)
-            {
-                mx.events.PropertyChangeEvent(value).newValue.addEventListener(mx.events.CollectionEvent.COLLECTION_CHANGE, model_internal::setterListenerFresclientdriver);
-            }
-        }
-        _model.invalidateDependentOnFresclientdriver();
+        _model.invalidateDependentOnFreservation();
     }
 
     model_internal function setterListenerFresdriverrate(value:flash.events.Event):void
@@ -468,6 +456,30 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
             }
         }
         _model.invalidateDependentOnFresaddcharge();
+    }
+
+    model_internal function setterListenerFresclientdriver(value:flash.events.Event):void
+    {
+        if (value is mx.events.PropertyChangeEvent)
+        {
+            if (mx.events.PropertyChangeEvent(value).newValue)
+            {
+                mx.events.PropertyChangeEvent(value).newValue.addEventListener(mx.events.CollectionEvent.COLLECTION_CHANGE, model_internal::setterListenerFresclientdriver);
+            }
+        }
+        _model.invalidateDependentOnFresclientdriver();
+    }
+
+    model_internal function setterListenerFresdriver(value:flash.events.Event):void
+    {
+        if (value is mx.events.PropertyChangeEvent)
+        {
+            if (mx.events.PropertyChangeEvent(value).newValue)
+            {
+                mx.events.PropertyChangeEvent(value).newValue.addEventListener(mx.events.CollectionEvent.COLLECTION_CHANGE, model_internal::setterListenerFresdriver);
+            }
+        }
+        _model.invalidateDependentOnFresdriver();
     }
 
     model_internal function setterListenerFresothsrv(value:flash.events.Event):void
@@ -492,18 +504,6 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
             }
         }
         _model.invalidateDependentOnFresvehinv();
-    }
-
-    model_internal function setterListenerFresdriver(value:flash.events.Event):void
-    {
-        if (value is mx.events.PropertyChangeEvent)
-        {
-            if (mx.events.PropertyChangeEvent(value).newValue)
-            {
-                mx.events.PropertyChangeEvent(value).newValue.addEventListener(mx.events.CollectionEvent.COLLECTION_CHANGE, model_internal::setterListenerFresdriver);
-            }
-        }
-        _model.invalidateDependentOnFresdriver();
     }
 
 
@@ -537,20 +537,15 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_fresvehicledamageValidationFailureMessages);
         }
-        if (!_model.freservationIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_freservationValidationFailureMessages);
-        }
         if (!_model.fresaccsIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_fresaccsValidationFailureMessages);
         }
-        if (!_model.fresclientdriverIsValid)
+        if (!_model.freservationIsValid)
         {
             propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_fresclientdriverValidationFailureMessages);
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_freservationValidationFailureMessages);
         }
         if (!_model.fresdriverrateIsValid)
         {
@@ -562,6 +557,16 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_fresaddchargeValidationFailureMessages);
         }
+        if (!_model.fresclientdriverIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_fresclientdriverValidationFailureMessages);
+        }
+        if (!_model.fresdriverIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_fresdriverValidationFailureMessages);
+        }
         if (!_model.fresothsrvIsValid)
         {
             propertyValidity = false;
@@ -571,11 +576,6 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_fresvehinvValidationFailureMessages);
-        }
-        if (!_model.fresdriverIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_fresdriverValidationFailureMessages);
         }
 
         model_internal::_cacheInitialized_isValid = true;
@@ -710,33 +710,6 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfFreservation : Array = null;
-    model_internal var _doValidationLastValOfFreservation : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
-
-    model_internal function _doValidationForFreservation(valueIn:Object):Array
-    {
-        var value : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation = valueIn as com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
-
-        if (model_internal::_doValidationCacheOfFreservation != null && model_internal::_doValidationLastValOfFreservation == value)
-           return model_internal::_doValidationCacheOfFreservation ;
-
-        _model.model_internal::_freservationIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isFreservationAvailable && _internal_freservation == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "freservation is required"));
-        }
-
-        model_internal::_doValidationCacheOfFreservation = validationFailures;
-        model_internal::_doValidationLastValOfFreservation = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfFresaccs : Array = null;
     model_internal var _doValidationLastValOfFresaccs : ArrayCollection;
 
@@ -764,29 +737,29 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfFresclientdriver : Array = null;
-    model_internal var _doValidationLastValOfFresclientdriver : ArrayCollection;
+    model_internal var _doValidationCacheOfFreservation : Array = null;
+    model_internal var _doValidationLastValOfFreservation : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
 
-    model_internal function _doValidationForFresclientdriver(valueIn:Object):Array
+    model_internal function _doValidationForFreservation(valueIn:Object):Array
     {
-        var value : ArrayCollection = valueIn as ArrayCollection;
+        var value : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation = valueIn as com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation;
 
-        if (model_internal::_doValidationCacheOfFresclientdriver != null && model_internal::_doValidationLastValOfFresclientdriver == value)
-           return model_internal::_doValidationCacheOfFresclientdriver ;
+        if (model_internal::_doValidationCacheOfFreservation != null && model_internal::_doValidationLastValOfFreservation == value)
+           return model_internal::_doValidationCacheOfFreservation ;
 
-        _model.model_internal::_fresclientdriverIsValidCacheInitialized = true;
+        _model.model_internal::_freservationIsValidCacheInitialized = true;
         var validationFailures:Array = new Array();
         var errorMessage:String;
         var failure:Boolean;
 
         var valRes:ValidationResult;
-        if (_model.isFresclientdriverAvailable && _internal_fresclientdriver == null)
+        if (_model.isFreservationAvailable && _internal_freservation == null)
         {
-            validationFailures.push(new ValidationResult(true, "", "", "fresclientdriver is required"));
+            validationFailures.push(new ValidationResult(true, "", "", "freservation is required"));
         }
 
-        model_internal::_doValidationCacheOfFresclientdriver = validationFailures;
-        model_internal::_doValidationLastValOfFresclientdriver = value;
+        model_internal::_doValidationCacheOfFreservation = validationFailures;
+        model_internal::_doValidationLastValOfFreservation = value;
 
         return validationFailures;
     }
@@ -845,6 +818,60 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
         return validationFailures;
     }
     
+    model_internal var _doValidationCacheOfFresclientdriver : Array = null;
+    model_internal var _doValidationLastValOfFresclientdriver : ArrayCollection;
+
+    model_internal function _doValidationForFresclientdriver(valueIn:Object):Array
+    {
+        var value : ArrayCollection = valueIn as ArrayCollection;
+
+        if (model_internal::_doValidationCacheOfFresclientdriver != null && model_internal::_doValidationLastValOfFresclientdriver == value)
+           return model_internal::_doValidationCacheOfFresclientdriver ;
+
+        _model.model_internal::_fresclientdriverIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isFresclientdriverAvailable && _internal_fresclientdriver == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "fresclientdriver is required"));
+        }
+
+        model_internal::_doValidationCacheOfFresclientdriver = validationFailures;
+        model_internal::_doValidationLastValOfFresclientdriver = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfFresdriver : Array = null;
+    model_internal var _doValidationLastValOfFresdriver : ArrayCollection;
+
+    model_internal function _doValidationForFresdriver(valueIn:Object):Array
+    {
+        var value : ArrayCollection = valueIn as ArrayCollection;
+
+        if (model_internal::_doValidationCacheOfFresdriver != null && model_internal::_doValidationLastValOfFresdriver == value)
+           return model_internal::_doValidationCacheOfFresdriver ;
+
+        _model.model_internal::_fresdriverIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isFresdriverAvailable && _internal_fresdriver == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "fresdriver is required"));
+        }
+
+        model_internal::_doValidationCacheOfFresdriver = validationFailures;
+        model_internal::_doValidationLastValOfFresdriver = value;
+
+        return validationFailures;
+    }
+    
     model_internal var _doValidationCacheOfFresothsrv : Array = null;
     model_internal var _doValidationLastValOfFresothsrv : ArrayCollection;
 
@@ -895,33 +922,6 @@ public class _Super_Com_dspl_malkey_report_Reservation extends flash.events.Even
 
         model_internal::_doValidationCacheOfFresvehinv = validationFailures;
         model_internal::_doValidationLastValOfFresvehinv = value;
-
-        return validationFailures;
-    }
-    
-    model_internal var _doValidationCacheOfFresdriver : Array = null;
-    model_internal var _doValidationLastValOfFresdriver : ArrayCollection;
-
-    model_internal function _doValidationForFresdriver(valueIn:Object):Array
-    {
-        var value : ArrayCollection = valueIn as ArrayCollection;
-
-        if (model_internal::_doValidationCacheOfFresdriver != null && model_internal::_doValidationLastValOfFresdriver == value)
-           return model_internal::_doValidationCacheOfFresdriver ;
-
-        _model.model_internal::_fresdriverIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isFresdriverAvailable && _internal_fresdriver == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "fresdriver is required"));
-        }
-
-        model_internal::_doValidationCacheOfFresdriver = validationFailures;
-        model_internal::_doValidationLastValOfFresdriver = value;
 
         return validationFailures;
     }

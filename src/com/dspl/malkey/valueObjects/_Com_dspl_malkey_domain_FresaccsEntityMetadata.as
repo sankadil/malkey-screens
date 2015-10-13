@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FresaccsEntityMetadata extends com.adobe.
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("adduser", "standardrate", "remarks", "qty", "fresaccrate", "discount", "noofdays", "id", "ratetype", "rate", "description", "uuid", "recordid");
+    model_internal static var allProperties:Array = new Array("adduser", "standardrate", "qty", "remarks", "fresaccrate", "discount", "noofdays", "id", "ratetype", "rate", "description", "uuid", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("adduser", "standardrate", "remarks", "qty", "fresaccrate", "discount", "noofdays", "id", "ratetype", "rate", "description", "uuid", "recordid");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("adduser", "standardrate", "remarks", "qty", "fresaccrate", "discount", "noofdays", "id", "ratetype", "rate", "description", "uuid", "recordid");
+    model_internal static var allRequiredProperties:Array = new Array("adduser", "standardrate", "qty", "remarks", "fresaccrate", "discount", "noofdays", "id", "ratetype", "rate", "description", "uuid", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("adduser", "standardrate", "qty", "remarks", "fresaccrate", "discount", "noofdays", "id", "ratetype", "rate", "description", "uuid", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("adduser", "standardrate", "remarks", "qty", "fresaccrate", "discount", "noofdays", "id", "ratetype", "rate", "description", "uuid", "recordid");
+    model_internal static var dataProperties:Array = new Array("adduser", "standardrate", "qty", "remarks", "fresaccrate", "discount", "noofdays", "id", "ratetype", "rate", "description", "uuid", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -98,8 +98,8 @@ internal class _Com_dspl_malkey_domain_FresaccsEntityMetadata extends com.adobe.
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["standardrate"] = new Array();
-            model_internal::dependentsOnMap["remarks"] = new Array();
             model_internal::dependentsOnMap["qty"] = new Array();
+            model_internal::dependentsOnMap["remarks"] = new Array();
             model_internal::dependentsOnMap["fresaccrate"] = new Array();
             model_internal::dependentsOnMap["discount"] = new Array();
             model_internal::dependentsOnMap["noofdays"] = new Array();
@@ -386,13 +386,13 @@ internal class _Com_dspl_malkey_domain_FresaccsEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isRemarksAvailable():Boolean
+    public function get isQtyAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isQtyAvailable():Boolean
+    public function get isRemarksAvailable():Boolean
     {
         return true;
     }
@@ -742,6 +742,12 @@ internal class _Com_dspl_malkey_domain_FresaccsEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
+    public function get qtyStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get remarksStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -839,12 +845,6 @@ internal class _Com_dspl_malkey_domain_FresaccsEntityMetadata extends com.adobe.
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get qtyStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   

@@ -24,6 +24,7 @@ import com.adobe.fiber.valueobjects.AvailablePropertyIterator;
 
 use namespace model_internal;
 
+[Managed]
 [ExcludeClass]
 public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.EventDispatcher implements com.adobe.fiber.valueobjects.IValueObject
 {
@@ -44,6 +45,7 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
     model_internal static function initRemoteClassAliasAllRelated() : void
     {
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_report_Reservation.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicle.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresvehiclePK.initRemoteClassAliasSingleChild();
@@ -52,23 +54,22 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehiclerate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicledamage.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicledamage.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccs.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccratePK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccsPK.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresclientdriverPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriverrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverratePK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaddcharge.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaddchargePK.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresclientdriverPK.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothsrv.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresothsrvPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothersrvrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresothersrvratePK.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverPK.initRemoteClassAliasSingleChild();
     }
 
     model_internal var _dminternal_model : _Com_dspl_malkey_domain_FreservationEntityMetadata;
@@ -89,34 +90,35 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     private var _internal_confirmed : String;
     private var _internal_gotime : String;
     private var _internal_chargdays : int;
-    private var _internal_coLocation : String;
     private var _internal_cixsmileage : int;
-    private var _internal_parentref : String;
+    private var _internal_coLocation : String;
     private var _internal_taxcomcode : String;
+    private var _internal_parentref : String;
     private var _internal_xhours : int;
-    private var _internal_bookdate : Date;
     private var _internal_checkoutdata : ByteArray;
+    private var _internal_bookdate : Date;
     private var _internal_noofday : int;
     private var _internal_depositbal : String;
+    private var _internal_regno : String;
     private var _internal_cancelled : String;
     private var _internal_cohirestsid : String;
-    private var _internal_otherChargersDetails : String;
     private var _internal_checkindata : ByteArray;
     private var _internal_agrdout : Date;
+    private var _internal_otherChargersDetails : String;
     private var _internal_cidetenhrsrs : String;
     private var _internal_nettotal : String;
     private var _internal_invoiced : String;
-    private var _internal_checkin : String;
     private var _internal_ratetype : String;
+    private var _internal_checkin : String;
     private var _internal_cinightout : int;
     private var _internal_cidetenhrs : Number;
-    private var _internal_returnaddress : String;
     private var _internal_total_addcharges : String;
+    private var _internal_returnaddress : String;
     private var _internal_uuid : String;
     private var _internal_cidate : Date;
     private var _internal_checkout : String;
-    private var _internal_recordid : int;
     private var _internal_dout : Date;
+    private var _internal_recordid : int;
     private var _internal_othernaration : String;
     private var _internal_discount_xhoursamt : String;
     private var _internal_childref : String;
@@ -125,22 +127,22 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     private var _internal_invoicedate : Date;
     private var _internal_total_accessories : String;
     private var _internal_cimileage : int;
-    private var _internal_coinspectby : String;
     private var _internal_totaltaxable : String;
+    private var _internal_coinspectby : String;
     private var _internal_remarks : String;
-    private var _internal_comileage : int;
     private var _internal_timein : String;
+    private var _internal_comileage : int;
     private var _internal_ciLocation : String;
-    private var _internal_paytypeid : String;
     private var _internal_copyreason : String;
+    private var _internal_paytypeid : String;
     private var _internal_din : Date;
     private var _internal_agrdin : Date;
     private var _internal_selected : Boolean;
     private var _internal_details : com.dspl.malkey.valueObjects.Com_dspl_malkey_report_Reservation;
     private var _internal_ciother : String;
-    private var _internal_booked : String;
-    private var _internal_hiretypeid : String;
     private var _internal_cofuellevel : int;
+    private var _internal_hiretypeid : String;
+    private var _internal_booked : String;
     private var _internal_discount_xmile : String;
     private var _internal_cidamagers : String;
     private var _internal_itinerary : String;
@@ -150,8 +152,8 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     private var _internal_cifuellevel : int;
     private var _internal_debcode : String;
     private var _internal_cinightoutrs : String;
-    private var _internal_total_discount : String;
     private var _internal_gdout : Date;
+    private var _internal_total_discount : String;
     private var _internal_addmach : String;
     private var _internal_adduser : String;
     private var _internal_canceldate : Date;
@@ -161,8 +163,8 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     private var _internal_taxamt : String;
     private var _internal_cixsmileagers : String;
     private var _internal_quoteno : String;
-    private var _internal_advance : String;
     private var _internal_timeout : String;
+    private var _internal_advance : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -183,33 +185,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         // Bind to own data properties for cache invalidation triggering
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "total", model_internal::setterListenerTotal));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "billbasis", model_internal::setterListenerBillbasis));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "resno", model_internal::setterListenerResno));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "deposit", model_internal::setterListenerDeposit));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cidamage", model_internal::setterListenerCidamage));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adddate", model_internal::setterListenerAdddate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "agrno", model_internal::setterListenerAgrno));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "invoicedApplication", model_internal::setterListenerInvoicedApplication));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "codate", model_internal::setterListenerCodate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "completedate", model_internal::setterListenerCompletedate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "confirmed", model_internal::setterListenerConfirmed));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "gotime", model_internal::setterListenerGotime));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "coLocation", model_internal::setterListenerCoLocation));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "parentref", model_internal::setterListenerParentref));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "taxcomcode", model_internal::setterListenerTaxcomcode));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "bookdate", model_internal::setterListenerBookdate));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "parentref", model_internal::setterListenerParentref));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "checkoutdata", model_internal::setterListenerCheckoutdata));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "bookdate", model_internal::setterListenerBookdate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "depositbal", model_internal::setterListenerDepositbal));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cancelled", model_internal::setterListenerCancelled));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cohirestsid", model_internal::setterListenerCohirestsid));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "otherChargersDetails", model_internal::setterListenerOtherChargersDetails));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "checkindata", model_internal::setterListenerCheckindata));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "agrdout", model_internal::setterListenerAgrdout));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "otherChargersDetails", model_internal::setterListenerOtherChargersDetails));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cidetenhrsrs", model_internal::setterListenerCidetenhrsrs));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "nettotal", model_internal::setterListenerNettotal));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "invoiced", model_internal::setterListenerInvoiced));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "checkin", model_internal::setterListenerCheckin));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "ratetype", model_internal::setterListenerRatetype));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "returnaddress", model_internal::setterListenerReturnaddress));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "checkin", model_internal::setterListenerCheckin));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "total_addcharges", model_internal::setterListenerTotal_addcharges));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "returnaddress", model_internal::setterListenerReturnaddress));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "uuid", model_internal::setterListenerUuid));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cidate", model_internal::setterListenerCidate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "checkout", model_internal::setterListenerCheckout));
@@ -221,19 +223,19 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "xhoursamt", model_internal::setterListenerXhoursamt));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "invoicedate", model_internal::setterListenerInvoicedate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "total_accessories", model_internal::setterListenerTotal_accessories));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "coinspectby", model_internal::setterListenerCoinspectby));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "totaltaxable", model_internal::setterListenerTotaltaxable));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "coinspectby", model_internal::setterListenerCoinspectby));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "remarks", model_internal::setterListenerRemarks));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "timein", model_internal::setterListenerTimein));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "ciLocation", model_internal::setterListenerCiLocation));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "paytypeid", model_internal::setterListenerPaytypeid));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "copyreason", model_internal::setterListenerCopyreason));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "paytypeid", model_internal::setterListenerPaytypeid));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "din", model_internal::setterListenerDin));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "agrdin", model_internal::setterListenerAgrdin));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "details", model_internal::setterListenerDetails));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "ciother", model_internal::setterListenerCiother));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "booked", model_internal::setterListenerBooked));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "hiretypeid", model_internal::setterListenerHiretypeid));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "booked", model_internal::setterListenerBooked));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "discount_xmile", model_internal::setterListenerDiscount_xmile));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cidamagers", model_internal::setterListenerCidamagers));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "itinerary", model_internal::setterListenerItinerary));
@@ -242,8 +244,8 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cifueldiff", model_internal::setterListenerCifueldiff));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "debcode", model_internal::setterListenerDebcode));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cinightoutrs", model_internal::setterListenerCinightoutrs));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "total_discount", model_internal::setterListenerTotal_discount));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "gdout", model_internal::setterListenerGdout));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "total_discount", model_internal::setterListenerTotal_discount));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "addmach", model_internal::setterListenerAddmach));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adduser", model_internal::setterListenerAdduser));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "canceldate", model_internal::setterListenerCanceldate));
@@ -253,8 +255,8 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "taxamt", model_internal::setterListenerTaxamt));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "cixsmileagers", model_internal::setterListenerCixsmileagers));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "quoteno", model_internal::setterListenerQuoteno));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "advance", model_internal::setterListenerAdvance));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "timeout", model_internal::setterListenerTimeout));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "advance", model_internal::setterListenerAdvance));
 
     }
 
@@ -341,21 +343,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get coLocation() : String
-    {
-        return _internal_coLocation;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get cixsmileage() : int
     {
         return _internal_cixsmileage;
     }
 
     [Bindable(event="propertyChange")]
-    public function get parentref() : String
+    public function get coLocation() : String
     {
-        return _internal_parentref;
+        return _internal_coLocation;
     }
 
     [Bindable(event="propertyChange")]
@@ -365,21 +361,27 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
+    public function get parentref() : String
+    {
+        return _internal_parentref;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get xhours() : int
     {
         return _internal_xhours;
     }
 
     [Bindable(event="propertyChange")]
-    public function get bookdate() : Date
-    {
-        return _internal_bookdate;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get checkoutdata() : ByteArray
     {
         return _internal_checkoutdata;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get bookdate() : Date
+    {
+        return _internal_bookdate;
     }
 
     [Bindable(event="propertyChange")]
@@ -395,6 +397,12 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
+    public function get regno() : String
+    {
+        return _internal_regno;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get cancelled() : String
     {
         return _internal_cancelled;
@@ -407,12 +415,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get otherChargersDetails() : String
-    {
-        return _internal_otherChargersDetails;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get checkindata() : ByteArray
     {
         return _internal_checkindata;
@@ -422,6 +424,12 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     public function get agrdout() : Date
     {
         return _internal_agrdout;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get otherChargersDetails() : String
+    {
+        return _internal_otherChargersDetails;
     }
 
     [Bindable(event="propertyChange")]
@@ -443,15 +451,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get checkin() : String
-    {
-        return _internal_checkin;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get ratetype() : String
     {
         return _internal_ratetype;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get checkin() : String
+    {
+        return _internal_checkin;
     }
 
     [Bindable(event="propertyChange")]
@@ -467,15 +475,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get returnaddress() : String
-    {
-        return _internal_returnaddress;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get total_addcharges() : String
     {
         return _internal_total_addcharges;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get returnaddress() : String
+    {
+        return _internal_returnaddress;
     }
 
     [Bindable(event="propertyChange")]
@@ -497,15 +505,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get recordid() : int
-    {
-        return _internal_recordid;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get dout() : Date
     {
         return _internal_dout;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get recordid() : int
+    {
+        return _internal_recordid;
     }
 
     [Bindable(event="propertyChange")]
@@ -557,15 +565,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get coinspectby() : String
-    {
-        return _internal_coinspectby;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get totaltaxable() : String
     {
         return _internal_totaltaxable;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get coinspectby() : String
+    {
+        return _internal_coinspectby;
     }
 
     [Bindable(event="propertyChange")]
@@ -575,15 +583,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get comileage() : int
-    {
-        return _internal_comileage;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get timein() : String
     {
         return _internal_timein;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get comileage() : int
+    {
+        return _internal_comileage;
     }
 
     [Bindable(event="propertyChange")]
@@ -593,15 +601,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get paytypeid() : String
-    {
-        return _internal_paytypeid;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get copyreason() : String
     {
         return _internal_copyreason;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get paytypeid() : String
+    {
+        return _internal_paytypeid;
     }
 
     [Bindable(event="propertyChange")]
@@ -635,9 +643,9 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get booked() : String
+    public function get cofuellevel() : int
     {
-        return _internal_booked;
+        return _internal_cofuellevel;
     }
 
     [Bindable(event="propertyChange")]
@@ -647,9 +655,9 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get cofuellevel() : int
+    public function get booked() : String
     {
-        return _internal_cofuellevel;
+        return _internal_booked;
     }
 
     [Bindable(event="propertyChange")]
@@ -707,15 +715,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get total_discount() : String
-    {
-        return _internal_total_discount;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get gdout() : Date
     {
         return _internal_gdout;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get total_discount() : String
+    {
+        return _internal_total_discount;
     }
 
     [Bindable(event="propertyChange")]
@@ -773,15 +781,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get advance() : String
-    {
-        return _internal_advance;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get timeout() : String
     {
         return _internal_timeout;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get advance() : String
+    {
+        return _internal_advance;
     }
 
     /**
@@ -794,7 +802,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_total = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total", oldValue, _internal_total));
         }
     }
 
@@ -804,7 +811,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_billbasis = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "billbasis", oldValue, _internal_billbasis));
         }
     }
 
@@ -814,7 +820,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_resno = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "resno", oldValue, _internal_resno));
         }
     }
 
@@ -824,7 +829,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_deposit = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "deposit", oldValue, _internal_deposit));
         }
     }
 
@@ -834,7 +838,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cidamage = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cidamage", oldValue, _internal_cidamage));
         }
     }
 
@@ -844,7 +847,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_adddate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adddate", oldValue, _internal_adddate));
         }
     }
 
@@ -854,7 +856,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_agrno = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "agrno", oldValue, _internal_agrno));
         }
     }
 
@@ -864,7 +865,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_invoicedApplication = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "invoicedApplication", oldValue, _internal_invoicedApplication));
         }
     }
 
@@ -874,7 +874,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_codate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "codate", oldValue, _internal_codate));
         }
     }
 
@@ -884,7 +883,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_completedate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "completedate", oldValue, _internal_completedate));
         }
     }
 
@@ -894,7 +892,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_confirmed = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "confirmed", oldValue, _internal_confirmed));
         }
     }
 
@@ -904,7 +901,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_gotime = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gotime", oldValue, _internal_gotime));
         }
     }
 
@@ -914,17 +910,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_chargdays = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "chargdays", oldValue, _internal_chargdays));
-        }
-    }
-
-    public function set coLocation(value:String) : void
-    {
-        var oldValue:String = _internal_coLocation;
-        if (oldValue !== value)
-        {
-            _internal_coLocation = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coLocation", oldValue, _internal_coLocation));
         }
     }
 
@@ -934,17 +919,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cixsmileage = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cixsmileage", oldValue, _internal_cixsmileage));
         }
     }
 
-    public function set parentref(value:String) : void
+    public function set coLocation(value:String) : void
     {
-        var oldValue:String = _internal_parentref;
+        var oldValue:String = _internal_coLocation;
         if (oldValue !== value)
         {
-            _internal_parentref = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "parentref", oldValue, _internal_parentref));
+            _internal_coLocation = value;
         }
     }
 
@@ -954,7 +937,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_taxcomcode = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "taxcomcode", oldValue, _internal_taxcomcode));
+        }
+    }
+
+    public function set parentref(value:String) : void
+    {
+        var oldValue:String = _internal_parentref;
+        if (oldValue !== value)
+        {
+            _internal_parentref = value;
         }
     }
 
@@ -964,17 +955,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_xhours = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "xhours", oldValue, _internal_xhours));
-        }
-    }
-
-    public function set bookdate(value:Date) : void
-    {
-        var oldValue:Date = _internal_bookdate;
-        if (oldValue !== value)
-        {
-            _internal_bookdate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookdate", oldValue, _internal_bookdate));
         }
     }
 
@@ -984,7 +964,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_checkoutdata = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkoutdata", oldValue, _internal_checkoutdata));
+        }
+    }
+
+    public function set bookdate(value:Date) : void
+    {
+        var oldValue:Date = _internal_bookdate;
+        if (oldValue !== value)
+        {
+            _internal_bookdate = value;
         }
     }
 
@@ -994,7 +982,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_noofday = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "noofday", oldValue, _internal_noofday));
         }
     }
 
@@ -1004,7 +991,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_depositbal = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "depositbal", oldValue, _internal_depositbal));
+        }
+    }
+
+    public function set regno(value:String) : void
+    {
+        var oldValue:String = _internal_regno;
+        if (oldValue !== value)
+        {
+            _internal_regno = value;
         }
     }
 
@@ -1014,7 +1009,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cancelled = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cancelled", oldValue, _internal_cancelled));
         }
     }
 
@@ -1024,17 +1018,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cohirestsid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cohirestsid", oldValue, _internal_cohirestsid));
-        }
-    }
-
-    public function set otherChargersDetails(value:String) : void
-    {
-        var oldValue:String = _internal_otherChargersDetails;
-        if (oldValue !== value)
-        {
-            _internal_otherChargersDetails = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "otherChargersDetails", oldValue, _internal_otherChargersDetails));
         }
     }
 
@@ -1044,7 +1027,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_checkindata = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkindata", oldValue, _internal_checkindata));
         }
     }
 
@@ -1054,7 +1036,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_agrdout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "agrdout", oldValue, _internal_agrdout));
+        }
+    }
+
+    public function set otherChargersDetails(value:String) : void
+    {
+        var oldValue:String = _internal_otherChargersDetails;
+        if (oldValue !== value)
+        {
+            _internal_otherChargersDetails = value;
         }
     }
 
@@ -1064,7 +1054,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cidetenhrsrs = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cidetenhrsrs", oldValue, _internal_cidetenhrsrs));
         }
     }
 
@@ -1074,7 +1063,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_nettotal = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "nettotal", oldValue, _internal_nettotal));
         }
     }
 
@@ -1084,17 +1072,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_invoiced = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "invoiced", oldValue, _internal_invoiced));
-        }
-    }
-
-    public function set checkin(value:String) : void
-    {
-        var oldValue:String = _internal_checkin;
-        if (oldValue !== value)
-        {
-            _internal_checkin = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkin", oldValue, _internal_checkin));
         }
     }
 
@@ -1104,7 +1081,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_ratetype = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "ratetype", oldValue, _internal_ratetype));
+        }
+    }
+
+    public function set checkin(value:String) : void
+    {
+        var oldValue:String = _internal_checkin;
+        if (oldValue !== value)
+        {
+            _internal_checkin = value;
         }
     }
 
@@ -1114,7 +1099,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cinightout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cinightout", oldValue, _internal_cinightout));
         }
     }
 
@@ -1124,17 +1108,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (isNaN(_internal_cidetenhrs) == true || Math.abs(oldValue - value) > epsilon)
         {
             _internal_cidetenhrs = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cidetenhrs", oldValue, _internal_cidetenhrs));
-        }
-    }
-
-    public function set returnaddress(value:String) : void
-    {
-        var oldValue:String = _internal_returnaddress;
-        if (oldValue !== value)
-        {
-            _internal_returnaddress = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "returnaddress", oldValue, _internal_returnaddress));
         }
     }
 
@@ -1144,7 +1117,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_total_addcharges = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_addcharges", oldValue, _internal_total_addcharges));
+        }
+    }
+
+    public function set returnaddress(value:String) : void
+    {
+        var oldValue:String = _internal_returnaddress;
+        if (oldValue !== value)
+        {
+            _internal_returnaddress = value;
         }
     }
 
@@ -1154,7 +1135,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_uuid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "uuid", oldValue, _internal_uuid));
         }
     }
 
@@ -1164,7 +1144,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cidate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cidate", oldValue, _internal_cidate));
         }
     }
 
@@ -1174,17 +1153,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_checkout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkout", oldValue, _internal_checkout));
-        }
-    }
-
-    public function set recordid(value:int) : void
-    {
-        var oldValue:int = _internal_recordid;
-        if (oldValue !== value)
-        {
-            _internal_recordid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "recordid", oldValue, _internal_recordid));
         }
     }
 
@@ -1194,7 +1162,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_dout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dout", oldValue, _internal_dout));
+        }
+    }
+
+    public function set recordid(value:int) : void
+    {
+        var oldValue:int = _internal_recordid;
+        if (oldValue !== value)
+        {
+            _internal_recordid = value;
         }
     }
 
@@ -1204,7 +1180,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_othernaration = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "othernaration", oldValue, _internal_othernaration));
         }
     }
 
@@ -1214,7 +1189,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_discount_xhoursamt = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "discount_xhoursamt", oldValue, _internal_discount_xhoursamt));
         }
     }
 
@@ -1224,7 +1198,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_childref = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "childref", oldValue, _internal_childref));
         }
     }
 
@@ -1234,7 +1207,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_confirmdate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "confirmdate", oldValue, _internal_confirmdate));
         }
     }
 
@@ -1244,7 +1216,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_xhoursamt = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "xhoursamt", oldValue, _internal_xhoursamt));
         }
     }
 
@@ -1254,7 +1225,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_invoicedate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "invoicedate", oldValue, _internal_invoicedate));
         }
     }
 
@@ -1264,7 +1234,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_total_accessories = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_accessories", oldValue, _internal_total_accessories));
         }
     }
 
@@ -1274,17 +1243,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cimileage = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cimileage", oldValue, _internal_cimileage));
-        }
-    }
-
-    public function set coinspectby(value:String) : void
-    {
-        var oldValue:String = _internal_coinspectby;
-        if (oldValue !== value)
-        {
-            _internal_coinspectby = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coinspectby", oldValue, _internal_coinspectby));
         }
     }
 
@@ -1294,7 +1252,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_totaltaxable = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "totaltaxable", oldValue, _internal_totaltaxable));
+        }
+    }
+
+    public function set coinspectby(value:String) : void
+    {
+        var oldValue:String = _internal_coinspectby;
+        if (oldValue !== value)
+        {
+            _internal_coinspectby = value;
         }
     }
 
@@ -1304,17 +1270,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_remarks = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "remarks", oldValue, _internal_remarks));
-        }
-    }
-
-    public function set comileage(value:int) : void
-    {
-        var oldValue:int = _internal_comileage;
-        if (oldValue !== value)
-        {
-            _internal_comileage = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "comileage", oldValue, _internal_comileage));
         }
     }
 
@@ -1324,7 +1279,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_timein = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "timein", oldValue, _internal_timein));
+        }
+    }
+
+    public function set comileage(value:int) : void
+    {
+        var oldValue:int = _internal_comileage;
+        if (oldValue !== value)
+        {
+            _internal_comileage = value;
         }
     }
 
@@ -1334,17 +1297,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_ciLocation = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "ciLocation", oldValue, _internal_ciLocation));
-        }
-    }
-
-    public function set paytypeid(value:String) : void
-    {
-        var oldValue:String = _internal_paytypeid;
-        if (oldValue !== value)
-        {
-            _internal_paytypeid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "paytypeid", oldValue, _internal_paytypeid));
         }
     }
 
@@ -1354,7 +1306,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_copyreason = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "copyreason", oldValue, _internal_copyreason));
+        }
+    }
+
+    public function set paytypeid(value:String) : void
+    {
+        var oldValue:String = _internal_paytypeid;
+        if (oldValue !== value)
+        {
+            _internal_paytypeid = value;
         }
     }
 
@@ -1364,7 +1324,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_din = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "din", oldValue, _internal_din));
         }
     }
 
@@ -1374,7 +1333,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_agrdin = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "agrdin", oldValue, _internal_agrdin));
         }
     }
 
@@ -1384,7 +1342,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_selected = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "selected", oldValue, _internal_selected));
         }
     }
 
@@ -1394,7 +1351,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_details = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "details", oldValue, _internal_details));
         }
     }
 
@@ -1404,27 +1360,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_ciother = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "ciother", oldValue, _internal_ciother));
-        }
-    }
-
-    public function set booked(value:String) : void
-    {
-        var oldValue:String = _internal_booked;
-        if (oldValue !== value)
-        {
-            _internal_booked = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "booked", oldValue, _internal_booked));
-        }
-    }
-
-    public function set hiretypeid(value:String) : void
-    {
-        var oldValue:String = _internal_hiretypeid;
-        if (oldValue !== value)
-        {
-            _internal_hiretypeid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "hiretypeid", oldValue, _internal_hiretypeid));
         }
     }
 
@@ -1434,7 +1369,24 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cofuellevel = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cofuellevel", oldValue, _internal_cofuellevel));
+        }
+    }
+
+    public function set hiretypeid(value:String) : void
+    {
+        var oldValue:String = _internal_hiretypeid;
+        if (oldValue !== value)
+        {
+            _internal_hiretypeid = value;
+        }
+    }
+
+    public function set booked(value:String) : void
+    {
+        var oldValue:String = _internal_booked;
+        if (oldValue !== value)
+        {
+            _internal_booked = value;
         }
     }
 
@@ -1444,7 +1396,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_discount_xmile = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "discount_xmile", oldValue, _internal_discount_xmile));
         }
     }
 
@@ -1454,7 +1405,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cidamagers = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cidamagers", oldValue, _internal_cidamagers));
         }
     }
 
@@ -1464,7 +1414,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_itinerary = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "itinerary", oldValue, _internal_itinerary));
         }
     }
 
@@ -1474,7 +1423,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_advancebal = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "advancebal", oldValue, _internal_advancebal));
         }
     }
 
@@ -1484,7 +1432,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_completed = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "completed", oldValue, _internal_completed));
         }
     }
 
@@ -1494,7 +1441,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cifueldiff = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cifueldiff", oldValue, _internal_cifueldiff));
         }
     }
 
@@ -1504,7 +1450,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cifuellevel = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cifuellevel", oldValue, _internal_cifuellevel));
         }
     }
 
@@ -1514,7 +1459,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_debcode = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debcode", oldValue, _internal_debcode));
         }
     }
 
@@ -1524,17 +1468,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cinightoutrs = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cinightoutrs", oldValue, _internal_cinightoutrs));
-        }
-    }
-
-    public function set total_discount(value:String) : void
-    {
-        var oldValue:String = _internal_total_discount;
-        if (oldValue !== value)
-        {
-            _internal_total_discount = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_discount", oldValue, _internal_total_discount));
         }
     }
 
@@ -1544,7 +1477,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_gdout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gdout", oldValue, _internal_gdout));
+        }
+    }
+
+    public function set total_discount(value:String) : void
+    {
+        var oldValue:String = _internal_total_discount;
+        if (oldValue !== value)
+        {
+            _internal_total_discount = value;
         }
     }
 
@@ -1554,7 +1495,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_addmach = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "addmach", oldValue, _internal_addmach));
         }
     }
 
@@ -1564,7 +1504,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_adduser = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduser", oldValue, _internal_adduser));
         }
     }
 
@@ -1574,7 +1513,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_canceldate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "canceldate", oldValue, _internal_canceldate));
         }
     }
 
@@ -1584,7 +1522,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_remarks_customer = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "remarks_customer", oldValue, _internal_remarks_customer));
         }
     }
 
@@ -1594,7 +1531,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_codamage = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "codamage", oldValue, _internal_codamage));
         }
     }
 
@@ -1604,7 +1540,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_total_othersrv = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_othersrv", oldValue, _internal_total_othersrv));
         }
     }
 
@@ -1614,7 +1549,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_taxamt = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "taxamt", oldValue, _internal_taxamt));
         }
     }
 
@@ -1624,7 +1558,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_cixsmileagers = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cixsmileagers", oldValue, _internal_cixsmileagers));
         }
     }
 
@@ -1634,17 +1567,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_quoteno = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "quoteno", oldValue, _internal_quoteno));
-        }
-    }
-
-    public function set advance(value:String) : void
-    {
-        var oldValue:String = _internal_advance;
-        if (oldValue !== value)
-        {
-            _internal_advance = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "advance", oldValue, _internal_advance));
         }
     }
 
@@ -1654,7 +1576,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         if (oldValue !== value)
         {
             _internal_timeout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "timeout", oldValue, _internal_timeout));
+        }
+    }
+
+    public function set advance(value:String) : void
+    {
+        var oldValue:String = _internal_advance;
+        if (oldValue !== value)
+        {
+            _internal_advance = value;
         }
     }
 
@@ -1680,11 +1610,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnBillbasis();
     }
 
-    model_internal function setterListenerResno(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnResno();
-    }
-
     model_internal function setterListenerDeposit(value:flash.events.Event):void
     {
         _model.invalidateDependentOnDeposit();
@@ -1703,6 +1628,11 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     model_internal function setterListenerAgrno(value:flash.events.Event):void
     {
         _model.invalidateDependentOnAgrno();
+    }
+
+    model_internal function setterListenerInvoicedApplication(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnInvoicedApplication();
     }
 
     model_internal function setterListenerCodate(value:flash.events.Event):void
@@ -1730,24 +1660,24 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnCoLocation();
     }
 
-    model_internal function setterListenerParentref(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnParentref();
-    }
-
     model_internal function setterListenerTaxcomcode(value:flash.events.Event):void
     {
         _model.invalidateDependentOnTaxcomcode();
     }
 
-    model_internal function setterListenerBookdate(value:flash.events.Event):void
+    model_internal function setterListenerParentref(value:flash.events.Event):void
     {
-        _model.invalidateDependentOnBookdate();
+        _model.invalidateDependentOnParentref();
     }
 
     model_internal function setterListenerCheckoutdata(value:flash.events.Event):void
     {
         _model.invalidateDependentOnCheckoutdata();
+    }
+
+    model_internal function setterListenerBookdate(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnBookdate();
     }
 
     model_internal function setterListenerDepositbal(value:flash.events.Event):void
@@ -1765,11 +1695,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnCohirestsid();
     }
 
-    model_internal function setterListenerOtherChargersDetails(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnOtherChargersDetails();
-    }
-
     model_internal function setterListenerCheckindata(value:flash.events.Event):void
     {
         _model.invalidateDependentOnCheckindata();
@@ -1778,6 +1703,11 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
     model_internal function setterListenerAgrdout(value:flash.events.Event):void
     {
         _model.invalidateDependentOnAgrdout();
+    }
+
+    model_internal function setterListenerOtherChargersDetails(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnOtherChargersDetails();
     }
 
     model_internal function setterListenerCidetenhrsrs(value:flash.events.Event):void
@@ -1795,24 +1725,24 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnInvoiced();
     }
 
-    model_internal function setterListenerCheckin(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnCheckin();
-    }
-
     model_internal function setterListenerRatetype(value:flash.events.Event):void
     {
         _model.invalidateDependentOnRatetype();
     }
 
-    model_internal function setterListenerReturnaddress(value:flash.events.Event):void
+    model_internal function setterListenerCheckin(value:flash.events.Event):void
     {
-        _model.invalidateDependentOnReturnaddress();
+        _model.invalidateDependentOnCheckin();
     }
 
     model_internal function setterListenerTotal_addcharges(value:flash.events.Event):void
     {
         _model.invalidateDependentOnTotal_addcharges();
+    }
+
+    model_internal function setterListenerReturnaddress(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnReturnaddress();
     }
 
     model_internal function setterListenerUuid(value:flash.events.Event):void
@@ -1870,14 +1800,14 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnTotal_accessories();
     }
 
-    model_internal function setterListenerCoinspectby(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnCoinspectby();
-    }
-
     model_internal function setterListenerTotaltaxable(value:flash.events.Event):void
     {
         _model.invalidateDependentOnTotaltaxable();
+    }
+
+    model_internal function setterListenerCoinspectby(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnCoinspectby();
     }
 
     model_internal function setterListenerRemarks(value:flash.events.Event):void
@@ -1895,14 +1825,14 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnCiLocation();
     }
 
-    model_internal function setterListenerPaytypeid(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnPaytypeid();
-    }
-
     model_internal function setterListenerCopyreason(value:flash.events.Event):void
     {
         _model.invalidateDependentOnCopyreason();
+    }
+
+    model_internal function setterListenerPaytypeid(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnPaytypeid();
     }
 
     model_internal function setterListenerDin(value:flash.events.Event):void
@@ -1925,14 +1855,14 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnCiother();
     }
 
-    model_internal function setterListenerBooked(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnBooked();
-    }
-
     model_internal function setterListenerHiretypeid(value:flash.events.Event):void
     {
         _model.invalidateDependentOnHiretypeid();
+    }
+
+    model_internal function setterListenerBooked(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnBooked();
     }
 
     model_internal function setterListenerDiscount_xmile(value:flash.events.Event):void
@@ -1975,14 +1905,14 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnCinightoutrs();
     }
 
-    model_internal function setterListenerTotal_discount(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnTotal_discount();
-    }
-
     model_internal function setterListenerGdout(value:flash.events.Event):void
     {
         _model.invalidateDependentOnGdout();
+    }
+
+    model_internal function setterListenerTotal_discount(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnTotal_discount();
     }
 
     model_internal function setterListenerAddmach(value:flash.events.Event):void
@@ -2030,14 +1960,14 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         _model.invalidateDependentOnQuoteno();
     }
 
-    model_internal function setterListenerAdvance(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnAdvance();
-    }
-
     model_internal function setterListenerTimeout(value:flash.events.Event):void
     {
         _model.invalidateDependentOnTimeout();
+    }
+
+    model_internal function setterListenerAdvance(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnAdvance();
     }
 
 
@@ -2071,11 +2001,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_billbasisValidationFailureMessages);
         }
-        if (!_model.resnoIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_resnoValidationFailureMessages);
-        }
         if (!_model.depositIsValid)
         {
             propertyValidity = false;
@@ -2095,6 +2020,11 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_agrnoValidationFailureMessages);
+        }
+        if (!_model.invoicedApplicationIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_invoicedApplicationValidationFailureMessages);
         }
         if (!_model.codateIsValid)
         {
@@ -2121,25 +2051,25 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_coLocationValidationFailureMessages);
         }
-        if (!_model.parentrefIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_parentrefValidationFailureMessages);
-        }
         if (!_model.taxcomcodeIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_taxcomcodeValidationFailureMessages);
         }
-        if (!_model.bookdateIsValid)
+        if (!_model.parentrefIsValid)
         {
             propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_bookdateValidationFailureMessages);
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_parentrefValidationFailureMessages);
         }
         if (!_model.checkoutdataIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_checkoutdataValidationFailureMessages);
+        }
+        if (!_model.bookdateIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_bookdateValidationFailureMessages);
         }
         if (!_model.depositbalIsValid)
         {
@@ -2156,11 +2086,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_cohirestsidValidationFailureMessages);
         }
-        if (!_model.otherChargersDetailsIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_otherChargersDetailsValidationFailureMessages);
-        }
         if (!_model.checkindataIsValid)
         {
             propertyValidity = false;
@@ -2170,6 +2095,11 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_agrdoutValidationFailureMessages);
+        }
+        if (!_model.otherChargersDetailsIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_otherChargersDetailsValidationFailureMessages);
         }
         if (!_model.cidetenhrsrsIsValid)
         {
@@ -2186,25 +2116,25 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_invoicedValidationFailureMessages);
         }
-        if (!_model.checkinIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_checkinValidationFailureMessages);
-        }
         if (!_model.ratetypeIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_ratetypeValidationFailureMessages);
         }
-        if (!_model.returnaddressIsValid)
+        if (!_model.checkinIsValid)
         {
             propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_returnaddressValidationFailureMessages);
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_checkinValidationFailureMessages);
         }
         if (!_model.total_addchargesIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_total_addchargesValidationFailureMessages);
+        }
+        if (!_model.returnaddressIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_returnaddressValidationFailureMessages);
         }
         if (!_model.uuidIsValid)
         {
@@ -2261,15 +2191,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_total_accessoriesValidationFailureMessages);
         }
-        if (!_model.coinspectbyIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_coinspectbyValidationFailureMessages);
-        }
         if (!_model.totaltaxableIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_totaltaxableValidationFailureMessages);
+        }
+        if (!_model.coinspectbyIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_coinspectbyValidationFailureMessages);
         }
         if (!_model.remarksIsValid)
         {
@@ -2286,15 +2216,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_ciLocationValidationFailureMessages);
         }
-        if (!_model.paytypeidIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_paytypeidValidationFailureMessages);
-        }
         if (!_model.copyreasonIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_copyreasonValidationFailureMessages);
+        }
+        if (!_model.paytypeidIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_paytypeidValidationFailureMessages);
         }
         if (!_model.dinIsValid)
         {
@@ -2316,15 +2246,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_ciotherValidationFailureMessages);
         }
-        if (!_model.bookedIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_bookedValidationFailureMessages);
-        }
         if (!_model.hiretypeidIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_hiretypeidValidationFailureMessages);
+        }
+        if (!_model.bookedIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_bookedValidationFailureMessages);
         }
         if (!_model.discount_xmileIsValid)
         {
@@ -2366,15 +2296,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_cinightoutrsValidationFailureMessages);
         }
-        if (!_model.total_discountIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_total_discountValidationFailureMessages);
-        }
         if (!_model.gdoutIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_gdoutValidationFailureMessages);
+        }
+        if (!_model.total_discountIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_total_discountValidationFailureMessages);
         }
         if (!_model.addmachIsValid)
         {
@@ -2421,15 +2351,15 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_quotenoValidationFailureMessages);
         }
-        if (!_model.advanceIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_advanceValidationFailureMessages);
-        }
         if (!_model.timeoutIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_timeoutValidationFailureMessages);
+        }
+        if (!_model.advanceIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_advanceValidationFailureMessages);
         }
 
         model_internal::_cacheInitialized_isValid = true;
@@ -2564,33 +2494,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfResno : Array = null;
-    model_internal var _doValidationLastValOfResno : String;
-
-    model_internal function _doValidationForResno(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfResno != null && model_internal::_doValidationLastValOfResno == value)
-           return model_internal::_doValidationCacheOfResno ;
-
-        _model.model_internal::_resnoIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isResnoAvailable && _internal_resno == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "resno is required"));
-        }
-
-        model_internal::_doValidationCacheOfResno = validationFailures;
-        model_internal::_doValidationLastValOfResno = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfDeposit : Array = null;
     model_internal var _doValidationLastValOfDeposit : String;
 
@@ -2695,6 +2598,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfAgrno = validationFailures;
         model_internal::_doValidationLastValOfAgrno = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfInvoicedApplication : Array = null;
+    model_internal var _doValidationLastValOfInvoicedApplication : String;
+
+    model_internal function _doValidationForInvoicedApplication(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfInvoicedApplication != null && model_internal::_doValidationLastValOfInvoicedApplication == value)
+           return model_internal::_doValidationCacheOfInvoicedApplication ;
+
+        _model.model_internal::_invoicedApplicationIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isInvoicedApplicationAvailable && _internal_invoicedApplication == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "invoicedApplication is required"));
+        }
+
+        model_internal::_doValidationCacheOfInvoicedApplication = validationFailures;
+        model_internal::_doValidationLastValOfInvoicedApplication = value;
 
         return validationFailures;
     }
@@ -2834,33 +2764,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfParentref : Array = null;
-    model_internal var _doValidationLastValOfParentref : String;
-
-    model_internal function _doValidationForParentref(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfParentref != null && model_internal::_doValidationLastValOfParentref == value)
-           return model_internal::_doValidationCacheOfParentref ;
-
-        _model.model_internal::_parentrefIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isParentrefAvailable && _internal_parentref == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "parentref is required"));
-        }
-
-        model_internal::_doValidationCacheOfParentref = validationFailures;
-        model_internal::_doValidationLastValOfParentref = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfTaxcomcode : Array = null;
     model_internal var _doValidationLastValOfTaxcomcode : String;
 
@@ -2888,29 +2791,29 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfBookdate : Array = null;
-    model_internal var _doValidationLastValOfBookdate : Date;
+    model_internal var _doValidationCacheOfParentref : Array = null;
+    model_internal var _doValidationLastValOfParentref : String;
 
-    model_internal function _doValidationForBookdate(valueIn:Object):Array
+    model_internal function _doValidationForParentref(valueIn:Object):Array
     {
-        var value : Date = valueIn as Date;
+        var value : String = valueIn as String;
 
-        if (model_internal::_doValidationCacheOfBookdate != null && model_internal::_doValidationLastValOfBookdate == value)
-           return model_internal::_doValidationCacheOfBookdate ;
+        if (model_internal::_doValidationCacheOfParentref != null && model_internal::_doValidationLastValOfParentref == value)
+           return model_internal::_doValidationCacheOfParentref ;
 
-        _model.model_internal::_bookdateIsValidCacheInitialized = true;
+        _model.model_internal::_parentrefIsValidCacheInitialized = true;
         var validationFailures:Array = new Array();
         var errorMessage:String;
         var failure:Boolean;
 
         var valRes:ValidationResult;
-        if (_model.isBookdateAvailable && _internal_bookdate == null)
+        if (_model.isParentrefAvailable && _internal_parentref == null)
         {
-            validationFailures.push(new ValidationResult(true, "", "", "bookdate is required"));
+            validationFailures.push(new ValidationResult(true, "", "", "parentref is required"));
         }
 
-        model_internal::_doValidationCacheOfBookdate = validationFailures;
-        model_internal::_doValidationLastValOfBookdate = value;
+        model_internal::_doValidationCacheOfParentref = validationFailures;
+        model_internal::_doValidationLastValOfParentref = value;
 
         return validationFailures;
     }
@@ -2938,6 +2841,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfCheckoutdata = validationFailures;
         model_internal::_doValidationLastValOfCheckoutdata = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfBookdate : Array = null;
+    model_internal var _doValidationLastValOfBookdate : Date;
+
+    model_internal function _doValidationForBookdate(valueIn:Object):Array
+    {
+        var value : Date = valueIn as Date;
+
+        if (model_internal::_doValidationCacheOfBookdate != null && model_internal::_doValidationLastValOfBookdate == value)
+           return model_internal::_doValidationCacheOfBookdate ;
+
+        _model.model_internal::_bookdateIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isBookdateAvailable && _internal_bookdate == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "bookdate is required"));
+        }
+
+        model_internal::_doValidationCacheOfBookdate = validationFailures;
+        model_internal::_doValidationLastValOfBookdate = value;
 
         return validationFailures;
     }
@@ -3023,33 +2953,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfOtherChargersDetails : Array = null;
-    model_internal var _doValidationLastValOfOtherChargersDetails : String;
-
-    model_internal function _doValidationForOtherChargersDetails(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfOtherChargersDetails != null && model_internal::_doValidationLastValOfOtherChargersDetails == value)
-           return model_internal::_doValidationCacheOfOtherChargersDetails ;
-
-        _model.model_internal::_otherChargersDetailsIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isOtherChargersDetailsAvailable && _internal_otherChargersDetails == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "otherChargersDetails is required"));
-        }
-
-        model_internal::_doValidationCacheOfOtherChargersDetails = validationFailures;
-        model_internal::_doValidationLastValOfOtherChargersDetails = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfCheckindata : Array = null;
     model_internal var _doValidationLastValOfCheckindata : ByteArray;
 
@@ -3100,6 +3003,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfAgrdout = validationFailures;
         model_internal::_doValidationLastValOfAgrdout = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfOtherChargersDetails : Array = null;
+    model_internal var _doValidationLastValOfOtherChargersDetails : String;
+
+    model_internal function _doValidationForOtherChargersDetails(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfOtherChargersDetails != null && model_internal::_doValidationLastValOfOtherChargersDetails == value)
+           return model_internal::_doValidationCacheOfOtherChargersDetails ;
+
+        _model.model_internal::_otherChargersDetailsIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isOtherChargersDetailsAvailable && _internal_otherChargersDetails == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "otherChargersDetails is required"));
+        }
+
+        model_internal::_doValidationCacheOfOtherChargersDetails = validationFailures;
+        model_internal::_doValidationLastValOfOtherChargersDetails = value;
 
         return validationFailures;
     }
@@ -3185,33 +3115,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfCheckin : Array = null;
-    model_internal var _doValidationLastValOfCheckin : String;
-
-    model_internal function _doValidationForCheckin(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfCheckin != null && model_internal::_doValidationLastValOfCheckin == value)
-           return model_internal::_doValidationCacheOfCheckin ;
-
-        _model.model_internal::_checkinIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isCheckinAvailable && _internal_checkin == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "checkin is required"));
-        }
-
-        model_internal::_doValidationCacheOfCheckin = validationFailures;
-        model_internal::_doValidationLastValOfCheckin = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfRatetype : Array = null;
     model_internal var _doValidationLastValOfRatetype : String;
 
@@ -3239,29 +3142,29 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfReturnaddress : Array = null;
-    model_internal var _doValidationLastValOfReturnaddress : String;
+    model_internal var _doValidationCacheOfCheckin : Array = null;
+    model_internal var _doValidationLastValOfCheckin : String;
 
-    model_internal function _doValidationForReturnaddress(valueIn:Object):Array
+    model_internal function _doValidationForCheckin(valueIn:Object):Array
     {
         var value : String = valueIn as String;
 
-        if (model_internal::_doValidationCacheOfReturnaddress != null && model_internal::_doValidationLastValOfReturnaddress == value)
-           return model_internal::_doValidationCacheOfReturnaddress ;
+        if (model_internal::_doValidationCacheOfCheckin != null && model_internal::_doValidationLastValOfCheckin == value)
+           return model_internal::_doValidationCacheOfCheckin ;
 
-        _model.model_internal::_returnaddressIsValidCacheInitialized = true;
+        _model.model_internal::_checkinIsValidCacheInitialized = true;
         var validationFailures:Array = new Array();
         var errorMessage:String;
         var failure:Boolean;
 
         var valRes:ValidationResult;
-        if (_model.isReturnaddressAvailable && _internal_returnaddress == null)
+        if (_model.isCheckinAvailable && _internal_checkin == null)
         {
-            validationFailures.push(new ValidationResult(true, "", "", "returnaddress is required"));
+            validationFailures.push(new ValidationResult(true, "", "", "checkin is required"));
         }
 
-        model_internal::_doValidationCacheOfReturnaddress = validationFailures;
-        model_internal::_doValidationLastValOfReturnaddress = value;
+        model_internal::_doValidationCacheOfCheckin = validationFailures;
+        model_internal::_doValidationLastValOfCheckin = value;
 
         return validationFailures;
     }
@@ -3289,6 +3192,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfTotal_addcharges = validationFailures;
         model_internal::_doValidationLastValOfTotal_addcharges = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfReturnaddress : Array = null;
+    model_internal var _doValidationLastValOfReturnaddress : String;
+
+    model_internal function _doValidationForReturnaddress(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfReturnaddress != null && model_internal::_doValidationLastValOfReturnaddress == value)
+           return model_internal::_doValidationCacheOfReturnaddress ;
+
+        _model.model_internal::_returnaddressIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isReturnaddressAvailable && _internal_returnaddress == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "returnaddress is required"));
+        }
+
+        model_internal::_doValidationCacheOfReturnaddress = validationFailures;
+        model_internal::_doValidationLastValOfReturnaddress = value;
 
         return validationFailures;
     }
@@ -3590,33 +3520,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfCoinspectby : Array = null;
-    model_internal var _doValidationLastValOfCoinspectby : String;
-
-    model_internal function _doValidationForCoinspectby(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfCoinspectby != null && model_internal::_doValidationLastValOfCoinspectby == value)
-           return model_internal::_doValidationCacheOfCoinspectby ;
-
-        _model.model_internal::_coinspectbyIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isCoinspectbyAvailable && _internal_coinspectby == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "coinspectby is required"));
-        }
-
-        model_internal::_doValidationCacheOfCoinspectby = validationFailures;
-        model_internal::_doValidationLastValOfCoinspectby = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfTotaltaxable : Array = null;
     model_internal var _doValidationLastValOfTotaltaxable : String;
 
@@ -3640,6 +3543,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfTotaltaxable = validationFailures;
         model_internal::_doValidationLastValOfTotaltaxable = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfCoinspectby : Array = null;
+    model_internal var _doValidationLastValOfCoinspectby : String;
+
+    model_internal function _doValidationForCoinspectby(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfCoinspectby != null && model_internal::_doValidationLastValOfCoinspectby == value)
+           return model_internal::_doValidationCacheOfCoinspectby ;
+
+        _model.model_internal::_coinspectbyIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isCoinspectbyAvailable && _internal_coinspectby == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "coinspectby is required"));
+        }
+
+        model_internal::_doValidationCacheOfCoinspectby = validationFailures;
+        model_internal::_doValidationLastValOfCoinspectby = value;
 
         return validationFailures;
     }
@@ -3725,33 +3655,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfPaytypeid : Array = null;
-    model_internal var _doValidationLastValOfPaytypeid : String;
-
-    model_internal function _doValidationForPaytypeid(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfPaytypeid != null && model_internal::_doValidationLastValOfPaytypeid == value)
-           return model_internal::_doValidationCacheOfPaytypeid ;
-
-        _model.model_internal::_paytypeidIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isPaytypeidAvailable && _internal_paytypeid == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "paytypeid is required"));
-        }
-
-        model_internal::_doValidationCacheOfPaytypeid = validationFailures;
-        model_internal::_doValidationLastValOfPaytypeid = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfCopyreason : Array = null;
     model_internal var _doValidationLastValOfCopyreason : String;
 
@@ -3775,6 +3678,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfCopyreason = validationFailures;
         model_internal::_doValidationLastValOfCopyreason = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfPaytypeid : Array = null;
+    model_internal var _doValidationLastValOfPaytypeid : String;
+
+    model_internal function _doValidationForPaytypeid(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfPaytypeid != null && model_internal::_doValidationLastValOfPaytypeid == value)
+           return model_internal::_doValidationCacheOfPaytypeid ;
+
+        _model.model_internal::_paytypeidIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isPaytypeidAvailable && _internal_paytypeid == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "paytypeid is required"));
+        }
+
+        model_internal::_doValidationCacheOfPaytypeid = validationFailures;
+        model_internal::_doValidationLastValOfPaytypeid = value;
 
         return validationFailures;
     }
@@ -3887,33 +3817,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfBooked : Array = null;
-    model_internal var _doValidationLastValOfBooked : String;
-
-    model_internal function _doValidationForBooked(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfBooked != null && model_internal::_doValidationLastValOfBooked == value)
-           return model_internal::_doValidationCacheOfBooked ;
-
-        _model.model_internal::_bookedIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isBookedAvailable && _internal_booked == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "booked is required"));
-        }
-
-        model_internal::_doValidationCacheOfBooked = validationFailures;
-        model_internal::_doValidationLastValOfBooked = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfHiretypeid : Array = null;
     model_internal var _doValidationLastValOfHiretypeid : String;
 
@@ -3937,6 +3840,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfHiretypeid = validationFailures;
         model_internal::_doValidationLastValOfHiretypeid = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfBooked : Array = null;
+    model_internal var _doValidationLastValOfBooked : String;
+
+    model_internal function _doValidationForBooked(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfBooked != null && model_internal::_doValidationLastValOfBooked == value)
+           return model_internal::_doValidationCacheOfBooked ;
+
+        _model.model_internal::_bookedIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isBookedAvailable && _internal_booked == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "booked is required"));
+        }
+
+        model_internal::_doValidationCacheOfBooked = validationFailures;
+        model_internal::_doValidationLastValOfBooked = value;
 
         return validationFailures;
     }
@@ -4157,33 +4087,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfTotal_discount : Array = null;
-    model_internal var _doValidationLastValOfTotal_discount : String;
-
-    model_internal function _doValidationForTotal_discount(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfTotal_discount != null && model_internal::_doValidationLastValOfTotal_discount == value)
-           return model_internal::_doValidationCacheOfTotal_discount ;
-
-        _model.model_internal::_total_discountIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isTotal_discountAvailable && _internal_total_discount == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "total_discount is required"));
-        }
-
-        model_internal::_doValidationCacheOfTotal_discount = validationFailures;
-        model_internal::_doValidationLastValOfTotal_discount = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfGdout : Array = null;
     model_internal var _doValidationLastValOfGdout : Date;
 
@@ -4207,6 +4110,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfGdout = validationFailures;
         model_internal::_doValidationLastValOfGdout = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfTotal_discount : Array = null;
+    model_internal var _doValidationLastValOfTotal_discount : String;
+
+    model_internal function _doValidationForTotal_discount(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfTotal_discount != null && model_internal::_doValidationLastValOfTotal_discount == value)
+           return model_internal::_doValidationCacheOfTotal_discount ;
+
+        _model.model_internal::_total_discountIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isTotal_discountAvailable && _internal_total_discount == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "total_discount is required"));
+        }
+
+        model_internal::_doValidationCacheOfTotal_discount = validationFailures;
+        model_internal::_doValidationLastValOfTotal_discount = value;
 
         return validationFailures;
     }
@@ -4454,33 +4384,6 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfAdvance : Array = null;
-    model_internal var _doValidationLastValOfAdvance : String;
-
-    model_internal function _doValidationForAdvance(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfAdvance != null && model_internal::_doValidationLastValOfAdvance == value)
-           return model_internal::_doValidationCacheOfAdvance ;
-
-        _model.model_internal::_advanceIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isAdvanceAvailable && _internal_advance == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "advance is required"));
-        }
-
-        model_internal::_doValidationCacheOfAdvance = validationFailures;
-        model_internal::_doValidationLastValOfAdvance = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfTimeout : Array = null;
     model_internal var _doValidationLastValOfTimeout : String;
 
@@ -4504,6 +4407,33 @@ public class _Super_Com_dspl_malkey_domain_Freservation extends flash.events.Eve
 
         model_internal::_doValidationCacheOfTimeout = validationFailures;
         model_internal::_doValidationLastValOfTimeout = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfAdvance : Array = null;
+    model_internal var _doValidationLastValOfAdvance : String;
+
+    model_internal function _doValidationForAdvance(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfAdvance != null && model_internal::_doValidationLastValOfAdvance == value)
+           return model_internal::_doValidationCacheOfAdvance ;
+
+        _model.model_internal::_advanceIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isAdvanceAvailable && _internal_advance == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "advance is required"));
+        }
+
+        model_internal::_doValidationCacheOfAdvance = validationFailures;
+        model_internal::_doValidationLastValOfAdvance = value;
 
         return validationFailures;
     }

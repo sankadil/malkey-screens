@@ -51,8 +51,8 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
      */
     private var _internal_xvalue : String;
     private var _internal_regno : String;
-    private var _internal_yvalue : String;
     private var _internal_seq : int;
+    private var _internal_yvalue : String;
     private var _internal_adduser : String;
     private var _internal_damagetype : int;
     private var _internal_uuid : String;
@@ -98,15 +98,15 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get yvalue() : String
-    {
-        return _internal_yvalue;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get seq() : int
     {
         return _internal_seq;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get yvalue() : String
+    {
+        return _internal_yvalue;
     }
 
     [Bindable(event="propertyChange")]
@@ -157,16 +157,6 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
         }
     }
 
-    public function set yvalue(value:String) : void
-    {
-        var oldValue:String = _internal_yvalue;
-        if (oldValue !== value)
-        {
-            _internal_yvalue = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "yvalue", oldValue, _internal_yvalue));
-        }
-    }
-
     public function set seq(value:int) : void
     {
         var oldValue:int = _internal_seq;
@@ -174,6 +164,16 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
         {
             _internal_seq = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "seq", oldValue, _internal_seq));
+        }
+    }
+
+    public function set yvalue(value:String) : void
+    {
+        var oldValue:String = _internal_yvalue;
+        if (oldValue !== value)
+        {
+            _internal_yvalue = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "yvalue", oldValue, _internal_yvalue));
         }
     }
 

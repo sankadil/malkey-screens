@@ -20,12 +20,12 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "codate", "invoicedApplication", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "taxcomcode", "parentref", "xhours", "checkoutdata", "bookdate", "noofday", "depositbal", "regno", "cancelled", "cohirestsid", "checkindata", "agrdout", "otherChargersDetails", "cidetenhrsrs", "nettotal", "invoiced", "checkin", "ratetype", "cinightout", "cidetenhrs", "total_addcharges", "returnaddress", "uuid", "cidate", "checkout", "dout", "recordid", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "coinspectby", "totaltaxable", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "agrdin", "selected", "details", "dateFormaterIn", "ciother", "booked", "hiretypeid", "cofuellevel", "discount_xmile", "cidamagers", "itinerary", "advancebal", "dateFormaterOut", "completed", "cifuellevel", "cifueldiff", "customerType", "debcode", "cinightoutrs", "gdout", "total_discount", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "timeout", "advance");
+    model_internal static var allProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "parentref", "taxcomcode", "xhours", "bookdate", "checkoutdata", "noofday", "depositbal", "regno", "cohirestsid", "cancelled", "otherChargersDetails", "checkindata", "agrdout", "cidetenhrsrs", "nettotal", "invoiced", "ratetype", "checkin", "cinightout", "cidetenhrs", "returnaddress", "total_addcharges", "uuid", "cidate", "checkout", "recordid", "dout", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "totaltaxable", "coinspectby", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "selected", "agrdin", "details", "dateFormaterIn", "ciother", "hiretypeid", "cofuellevel", "booked", "discount_xmile", "cidamagers", "itinerary", "advancebal", "dateFormaterOut", "completed", "cifueldiff", "cifuellevel", "customerType", "debcode", "cinightoutrs", "total_discount", "gdout", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "advance", "timeout");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "codate", "invoicedApplication", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "taxcomcode", "parentref", "xhours", "checkoutdata", "bookdate", "noofday", "depositbal", "regno", "cancelled", "cohirestsid", "checkindata", "agrdout", "otherChargersDetails", "cidetenhrsrs", "nettotal", "invoiced", "checkin", "ratetype", "cinightout", "cidetenhrs", "total_addcharges", "returnaddress", "uuid", "cidate", "checkout", "dout", "recordid", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "coinspectby", "totaltaxable", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "agrdin", "selected", "details", "dateFormaterIn", "ciother", "booked", "hiretypeid", "cofuellevel", "discount_xmile", "cidamagers", "itinerary", "advancebal", "dateFormaterOut", "completed", "cifuellevel", "cifueldiff", "customerType", "debcode", "cinightoutrs", "gdout", "total_discount", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "timeout", "advance");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "parentref", "taxcomcode", "xhours", "bookdate", "checkoutdata", "noofday", "depositbal", "regno", "cohirestsid", "cancelled", "otherChargersDetails", "checkindata", "agrdout", "cidetenhrsrs", "nettotal", "invoiced", "ratetype", "checkin", "cinightout", "cidetenhrs", "returnaddress", "total_addcharges", "uuid", "cidate", "checkout", "recordid", "dout", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "totaltaxable", "coinspectby", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "selected", "agrdin", "details", "dateFormaterIn", "ciother", "hiretypeid", "cofuellevel", "booked", "discount_xmile", "cidamagers", "itinerary", "advancebal", "dateFormaterOut", "completed", "cifueldiff", "cifuellevel", "customerType", "debcode", "cinightoutrs", "total_discount", "gdout", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "advance", "timeout");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "codate", "invoicedApplication", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "taxcomcode", "parentref", "xhours", "checkoutdata", "bookdate", "noofday", "depositbal", "regno", "cancelled", "cohirestsid", "checkindata", "agrdout", "otherChargersDetails", "cidetenhrsrs", "nettotal", "invoiced", "checkin", "ratetype", "cinightout", "cidetenhrs", "total_addcharges", "returnaddress", "uuid", "cidate", "checkout", "dout", "recordid", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "coinspectby", "totaltaxable", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "agrdin", "selected", "details", "dateFormaterIn", "ciother", "booked", "hiretypeid", "cofuellevel", "discount_xmile", "cidamagers", "itinerary", "advancebal", "dateFormaterOut", "completed", "cifuellevel", "cifueldiff", "customerType", "debcode", "cinightoutrs", "gdout", "total_discount", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "timeout", "advance");
+    model_internal static var dataProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "parentref", "taxcomcode", "xhours", "bookdate", "checkoutdata", "noofday", "depositbal", "regno", "cohirestsid", "cancelled", "otherChargersDetails", "checkindata", "agrdout", "cidetenhrsrs", "nettotal", "invoiced", "ratetype", "checkin", "cinightout", "cidetenhrs", "returnaddress", "total_addcharges", "uuid", "cidate", "checkout", "recordid", "dout", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "totaltaxable", "coinspectby", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "selected", "agrdin", "details", "dateFormaterIn", "ciother", "hiretypeid", "cofuellevel", "booked", "discount_xmile", "cidamagers", "itinerary", "advancebal", "dateFormaterOut", "completed", "cifueldiff", "cifuellevel", "customerType", "debcode", "cinightoutrs", "total_discount", "gdout", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "advance", "timeout");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -51,41 +51,41 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
             model_internal::dependentsOnMap["cidamage"] = new Array();
             model_internal::dependentsOnMap["adddate"] = new Array();
             model_internal::dependentsOnMap["agrno"] = new Array();
-            model_internal::dependentsOnMap["codate"] = new Array();
             model_internal::dependentsOnMap["invoicedApplication"] = new Array();
+            model_internal::dependentsOnMap["codate"] = new Array();
             model_internal::dependentsOnMap["completedate"] = new Array();
             model_internal::dependentsOnMap["confirmed"] = new Array();
             model_internal::dependentsOnMap["gotime"] = new Array();
             model_internal::dependentsOnMap["chargdays"] = new Array();
             model_internal::dependentsOnMap["coLocation"] = new Array();
             model_internal::dependentsOnMap["cixsmileage"] = new Array();
-            model_internal::dependentsOnMap["taxcomcode"] = new Array();
             model_internal::dependentsOnMap["parentref"] = new Array();
+            model_internal::dependentsOnMap["taxcomcode"] = new Array();
             model_internal::dependentsOnMap["xhours"] = new Array();
-            model_internal::dependentsOnMap["checkoutdata"] = new Array();
             model_internal::dependentsOnMap["bookdate"] = new Array();
+            model_internal::dependentsOnMap["checkoutdata"] = new Array();
             model_internal::dependentsOnMap["noofday"] = new Array();
             model_internal::dependentsOnMap["depositbal"] = new Array();
             model_internal::dependentsOnMap["regno"] = new Array();
-            model_internal::dependentsOnMap["cancelled"] = new Array();
             model_internal::dependentsOnMap["cohirestsid"] = new Array();
+            model_internal::dependentsOnMap["cancelled"] = new Array();
+            model_internal::dependentsOnMap["otherChargersDetails"] = new Array();
             model_internal::dependentsOnMap["checkindata"] = new Array();
             model_internal::dependentsOnMap["agrdout"] = new Array();
-            model_internal::dependentsOnMap["otherChargersDetails"] = new Array();
             model_internal::dependentsOnMap["cidetenhrsrs"] = new Array();
             model_internal::dependentsOnMap["nettotal"] = new Array();
             model_internal::dependentsOnMap["invoiced"] = new Array();
-            model_internal::dependentsOnMap["checkin"] = new Array();
             model_internal::dependentsOnMap["ratetype"] = new Array();
+            model_internal::dependentsOnMap["checkin"] = new Array();
             model_internal::dependentsOnMap["cinightout"] = new Array();
             model_internal::dependentsOnMap["cidetenhrs"] = new Array();
-            model_internal::dependentsOnMap["total_addcharges"] = new Array();
             model_internal::dependentsOnMap["returnaddress"] = new Array();
+            model_internal::dependentsOnMap["total_addcharges"] = new Array();
             model_internal::dependentsOnMap["uuid"] = new Array();
             model_internal::dependentsOnMap["cidate"] = new Array();
             model_internal::dependentsOnMap["checkout"] = new Array();
-            model_internal::dependentsOnMap["dout"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
+            model_internal::dependentsOnMap["dout"] = new Array();
             model_internal::dependentsOnMap["othernaration"] = new Array();
             model_internal::dependentsOnMap["discount_xhoursamt"] = new Array();
             model_internal::dependentsOnMap["childref"] = new Array();
@@ -94,8 +94,8 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
             model_internal::dependentsOnMap["invoicedate"] = new Array();
             model_internal::dependentsOnMap["total_accessories"] = new Array();
             model_internal::dependentsOnMap["cimileage"] = new Array();
-            model_internal::dependentsOnMap["coinspectby"] = new Array();
             model_internal::dependentsOnMap["totaltaxable"] = new Array();
+            model_internal::dependentsOnMap["coinspectby"] = new Array();
             model_internal::dependentsOnMap["remarks"] = new Array();
             model_internal::dependentsOnMap["timein"] = new Array();
             model_internal::dependentsOnMap["comileage"] = new Array();
@@ -103,27 +103,27 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
             model_internal::dependentsOnMap["copyreason"] = new Array();
             model_internal::dependentsOnMap["paytypeid"] = new Array();
             model_internal::dependentsOnMap["din"] = new Array();
-            model_internal::dependentsOnMap["agrdin"] = new Array();
             model_internal::dependentsOnMap["selected"] = new Array();
+            model_internal::dependentsOnMap["agrdin"] = new Array();
             model_internal::dependentsOnMap["details"] = new Array();
             model_internal::dependentsOnMap["dateFormaterIn"] = new Array();
             model_internal::dependentsOnMap["ciother"] = new Array();
-            model_internal::dependentsOnMap["booked"] = new Array();
             model_internal::dependentsOnMap["hiretypeid"] = new Array();
             model_internal::dependentsOnMap["cofuellevel"] = new Array();
+            model_internal::dependentsOnMap["booked"] = new Array();
             model_internal::dependentsOnMap["discount_xmile"] = new Array();
             model_internal::dependentsOnMap["cidamagers"] = new Array();
             model_internal::dependentsOnMap["itinerary"] = new Array();
             model_internal::dependentsOnMap["advancebal"] = new Array();
             model_internal::dependentsOnMap["dateFormaterOut"] = new Array();
             model_internal::dependentsOnMap["completed"] = new Array();
-            model_internal::dependentsOnMap["cifuellevel"] = new Array();
             model_internal::dependentsOnMap["cifueldiff"] = new Array();
+            model_internal::dependentsOnMap["cifuellevel"] = new Array();
             model_internal::dependentsOnMap["customerType"] = new Array();
             model_internal::dependentsOnMap["debcode"] = new Array();
             model_internal::dependentsOnMap["cinightoutrs"] = new Array();
-            model_internal::dependentsOnMap["gdout"] = new Array();
             model_internal::dependentsOnMap["total_discount"] = new Array();
+            model_internal::dependentsOnMap["gdout"] = new Array();
             model_internal::dependentsOnMap["addmach"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["canceldate"] = new Array();
@@ -133,8 +133,8 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
             model_internal::dependentsOnMap["taxamt"] = new Array();
             model_internal::dependentsOnMap["cixsmileagers"] = new Array();
             model_internal::dependentsOnMap["quoteno"] = new Array();
-            model_internal::dependentsOnMap["timeout"] = new Array();
             model_internal::dependentsOnMap["advance"] = new Array();
+            model_internal::dependentsOnMap["timeout"] = new Array();
 
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -392,13 +392,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCodateAvailable():Boolean
+    public function get isInvoicedApplicationAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isInvoicedApplicationAvailable():Boolean
+    public function get isCodateAvailable():Boolean
     {
         return true;
     }
@@ -440,13 +440,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTaxcomcodeAvailable():Boolean
+    public function get isParentrefAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isParentrefAvailable():Boolean
+    public function get isTaxcomcodeAvailable():Boolean
     {
         return true;
     }
@@ -458,13 +458,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCheckoutdataAvailable():Boolean
+    public function get isBookdateAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isBookdateAvailable():Boolean
+    public function get isCheckoutdataAvailable():Boolean
     {
         return true;
     }
@@ -488,13 +488,19 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
+    public function get isCohirestsidAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isCancelledAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCohirestsidAvailable():Boolean
+    public function get isOtherChargersDetailsAvailable():Boolean
     {
         return true;
     }
@@ -507,12 +513,6 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
 
     [Bindable(event="propertyChange")]
     public function get isAgrdoutAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get isOtherChargersDetailsAvailable():Boolean
     {
         return true;
     }
@@ -536,13 +536,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCheckinAvailable():Boolean
+    public function get isRatetypeAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isRatetypeAvailable():Boolean
+    public function get isCheckinAvailable():Boolean
     {
         return true;
     }
@@ -560,13 +560,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTotal_addchargesAvailable():Boolean
+    public function get isReturnaddressAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isReturnaddressAvailable():Boolean
+    public function get isTotal_addchargesAvailable():Boolean
     {
         return true;
     }
@@ -590,13 +590,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDoutAvailable():Boolean
+    public function get isRecordidAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isRecordidAvailable():Boolean
+    public function get isDoutAvailable():Boolean
     {
         return true;
     }
@@ -650,13 +650,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCoinspectbyAvailable():Boolean
+    public function get isTotaltaxableAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTotaltaxableAvailable():Boolean
+    public function get isCoinspectbyAvailable():Boolean
     {
         return true;
     }
@@ -704,13 +704,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAgrdinAvailable():Boolean
+    public function get isSelectedAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isSelectedAvailable():Boolean
+    public function get isAgrdinAvailable():Boolean
     {
         return true;
     }
@@ -734,12 +734,6 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isBookedAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isHiretypeidAvailable():Boolean
     {
         return true;
@@ -747,6 +741,12 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
 
     [Bindable(event="propertyChange")]
     public function get isCofuellevelAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isBookedAvailable():Boolean
     {
         return true;
     }
@@ -788,13 +788,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCifuellevelAvailable():Boolean
+    public function get isCifueldiffAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCifueldiffAvailable():Boolean
+    public function get isCifuellevelAvailable():Boolean
     {
         return true;
     }
@@ -818,13 +818,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isGdoutAvailable():Boolean
+    public function get isTotal_discountAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTotal_discountAvailable():Boolean
+    public function get isGdoutAvailable():Boolean
     {
         return true;
     }
@@ -884,13 +884,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTimeoutAvailable():Boolean
+    public function get isAdvanceAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAdvanceAvailable():Boolean
+    public function get isTimeoutAvailable():Boolean
     {
         return true;
     }
@@ -948,13 +948,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get codateStyle():com.adobe.fiber.styles.Style
+    public function get invoicedApplicationStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get invoicedApplicationStyle():com.adobe.fiber.styles.Style
+    public function get codateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -996,13 +996,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get taxcomcodeStyle():com.adobe.fiber.styles.Style
+    public function get parentrefStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get parentrefStyle():com.adobe.fiber.styles.Style
+    public function get taxcomcodeStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1014,13 +1014,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get checkoutdataStyle():com.adobe.fiber.styles.Style
+    public function get bookdateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get bookdateStyle():com.adobe.fiber.styles.Style
+    public function get checkoutdataStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1044,13 +1044,19 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
+    public function get cohirestsidStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get cancelledStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cohirestsidStyle():com.adobe.fiber.styles.Style
+    public function get otherChargersDetailsStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1063,12 +1069,6 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
 
     [Bindable(event="propertyChange")]   
     public function get agrdoutStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get otherChargersDetailsStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1092,13 +1092,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get checkinStyle():com.adobe.fiber.styles.Style
+    public function get ratetypeStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get ratetypeStyle():com.adobe.fiber.styles.Style
+    public function get checkinStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1116,13 +1116,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get total_addchargesStyle():com.adobe.fiber.styles.Style
+    public function get returnaddressStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get returnaddressStyle():com.adobe.fiber.styles.Style
+    public function get total_addchargesStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1146,13 +1146,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get doutStyle():com.adobe.fiber.styles.Style
+    public function get recordidStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get recordidStyle():com.adobe.fiber.styles.Style
+    public function get doutStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1206,13 +1206,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get coinspectbyStyle():com.adobe.fiber.styles.Style
+    public function get totaltaxableStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get totaltaxableStyle():com.adobe.fiber.styles.Style
+    public function get coinspectbyStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1260,13 +1260,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get agrdinStyle():com.adobe.fiber.styles.Style
+    public function get selectedStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get selectedStyle():com.adobe.fiber.styles.Style
+    public function get agrdinStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1290,12 +1290,6 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get bookedStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get hiretypeidStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -1303,6 +1297,12 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
 
     [Bindable(event="propertyChange")]   
     public function get cofuellevelStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get bookedStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1344,13 +1344,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cifuellevelStyle():com.adobe.fiber.styles.Style
+    public function get cifueldiffStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cifueldiffStyle():com.adobe.fiber.styles.Style
+    public function get cifuellevelStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1374,13 +1374,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get gdoutStyle():com.adobe.fiber.styles.Style
+    public function get total_discountStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get total_discountStyle():com.adobe.fiber.styles.Style
+    public function get gdoutStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -1440,13 +1440,13 @@ internal class _Com_dspl_malkey_view_FreservationViewEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get timeoutStyle():com.adobe.fiber.styles.Style
+    public function get advanceStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get advanceStyle():com.adobe.fiber.styles.Style
+    public function get timeoutStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

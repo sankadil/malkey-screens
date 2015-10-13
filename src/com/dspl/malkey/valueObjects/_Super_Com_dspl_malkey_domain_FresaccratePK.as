@@ -52,8 +52,8 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
     private var _internal_dto : Date;
     private var _internal_ratetype : String;
     private var _internal_resno : String;
-    private var _internal_clienttype : String;
     private var _internal_accid : String;
+    private var _internal_clienttype : String;
     private var _internal_dfrom : Date;
 
     private static var emptyArray:Array = new Array();
@@ -74,8 +74,8 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "dto", model_internal::setterListenerDto));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "ratetype", model_internal::setterListenerRatetype));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "resno", model_internal::setterListenerResno));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "clienttype", model_internal::setterListenerClienttype));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "accid", model_internal::setterListenerAccid));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "clienttype", model_internal::setterListenerClienttype));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "dfrom", model_internal::setterListenerDfrom));
 
     }
@@ -103,15 +103,15 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
     }
 
     [Bindable(event="propertyChange")]
-    public function get clienttype() : String
-    {
-        return _internal_clienttype;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get accid() : String
     {
         return _internal_accid;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get clienttype() : String
+    {
+        return _internal_clienttype;
     }
 
     [Bindable(event="propertyChange")]
@@ -154,16 +154,6 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
         }
     }
 
-    public function set clienttype(value:String) : void
-    {
-        var oldValue:String = _internal_clienttype;
-        if (oldValue !== value)
-        {
-            _internal_clienttype = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "clienttype", oldValue, _internal_clienttype));
-        }
-    }
-
     public function set accid(value:String) : void
     {
         var oldValue:String = _internal_accid;
@@ -171,6 +161,16 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
         {
             _internal_accid = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "accid", oldValue, _internal_accid));
+        }
+    }
+
+    public function set clienttype(value:String) : void
+    {
+        var oldValue:String = _internal_clienttype;
+        if (oldValue !== value)
+        {
+            _internal_clienttype = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "clienttype", oldValue, _internal_clienttype));
         }
     }
 
@@ -211,14 +211,14 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
         _model.invalidateDependentOnResno();
     }
 
-    model_internal function setterListenerClienttype(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnClienttype();
-    }
-
     model_internal function setterListenerAccid(value:flash.events.Event):void
     {
         _model.invalidateDependentOnAccid();
+    }
+
+    model_internal function setterListenerClienttype(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnClienttype();
     }
 
     model_internal function setterListenerDfrom(value:flash.events.Event):void
@@ -262,15 +262,15 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_resnoValidationFailureMessages);
         }
-        if (!_model.clienttypeIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_clienttypeValidationFailureMessages);
-        }
         if (!_model.accidIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_accidValidationFailureMessages);
+        }
+        if (!_model.clienttypeIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_clienttypeValidationFailureMessages);
         }
         if (!_model.dfromIsValid)
         {
@@ -437,33 +437,6 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfClienttype : Array = null;
-    model_internal var _doValidationLastValOfClienttype : String;
-
-    model_internal function _doValidationForClienttype(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfClienttype != null && model_internal::_doValidationLastValOfClienttype == value)
-           return model_internal::_doValidationCacheOfClienttype ;
-
-        _model.model_internal::_clienttypeIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isClienttypeAvailable && _internal_clienttype == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "clienttype is required"));
-        }
-
-        model_internal::_doValidationCacheOfClienttype = validationFailures;
-        model_internal::_doValidationLastValOfClienttype = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfAccid : Array = null;
     model_internal var _doValidationLastValOfAccid : String;
 
@@ -487,6 +460,33 @@ public class _Super_Com_dspl_malkey_domain_FresaccratePK extends flash.events.Ev
 
         model_internal::_doValidationCacheOfAccid = validationFailures;
         model_internal::_doValidationLastValOfAccid = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfClienttype : Array = null;
+    model_internal var _doValidationLastValOfClienttype : String;
+
+    model_internal function _doValidationForClienttype(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfClienttype != null && model_internal::_doValidationLastValOfClienttype == value)
+           return model_internal::_doValidationCacheOfClienttype ;
+
+        _model.model_internal::_clienttypeIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isClienttypeAvailable && _internal_clienttype == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "clienttype is required"));
+        }
+
+        model_internal::_doValidationCacheOfClienttype = validationFailures;
+        model_internal::_doValidationLastValOfClienttype = value;
 
         return validationFailures;
     }

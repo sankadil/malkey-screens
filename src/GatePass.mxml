@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" width="680" height="530"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="980" height="530"
 			   close="closeForm()"
 			   creationComplete="initApp(event)"
-			   title="Gate Pass"
-			    currentState="Default" xmlns:services="com.dspl.malkey.services.*">
+			    currentState="Default" xmlns:services="com.dspl.malkey.services.*" title.Out="Gate Pass" title.In="Gate Pass">
 	<s:states>
 		<s:State name="Default"/>
 		<s:State name="Out"/>
@@ -255,6 +254,10 @@
 						fgatepass.outdate=dfDate.selectedDate;
 						fgatepass.outtime=getTime();
 						fgatepass.outmileage=getCurrentMileage();
+						
+						fgatepass.indateexpected=dfDateExpectedIn.selectedDate;
+						fgatepass.intimeexpected=getTimeExpected();
+						
 						if(fgatepass.outmileage<0){							
 							displaySaveError();
 							return;
@@ -308,6 +311,21 @@
 					return hour+":"+min+" "+ddMidDay.selectedItem.des;
 				}catch(error:Error){
 					Message.displayAlert(1,"getTime: " + error.message,"Error",null);
+				}
+				return null;
+			}
+			private function getTimeExpected():String{
+				try{
+					var hour:String=StringUtil.trim(nsHourExpectedIn.value.toString());
+					var min:String=StringUtil.trim(nsMinExpectedIn.value.toString());
+					if(hour.length<2)
+						hour="0"+hour;
+					if(min.length<2)
+						min="0"+min;
+					if(ddMidDayExpectedIn.selectedIndex>-1)
+					return hour+":"+min+" "+ddMidDayExpectedIn.selectedItem.des;
+				}catch(error:Error){
+					Message.displayAlert(1,"getTimeExpected: " + error.message,"Error",null);
 				}
 				return null;
 			}
@@ -470,15 +488,32 @@
 				}
 			}
 			
+/* 			private function setDateTimeExpected(fgatepass:Com_dspl_malkey_domain_Fgatepass):void{
+				try{
+					var tmpDt:Date=new Date();
+					dfDateExpectedIn.selectedDate=tmpDt;
+					if(tmpDt.getHours()>12){
+						nsHourExpectedIn.value=tmpDt.getHours()-12;
+						ddMidDayExpectedIn.selectedIndex=1;
+					}else{ 
+						nsHourExpectedIn.value=tmpDt.getHours();
+						ddMidDayExpectedIn.selectedIndex=0;
+					}
+					nsMinExpectedIn.value=tmpDt.getMinutes();
+				}catch(error:Error){
+					Message.displayAlert(1,"undoForm: " + error.message,"Error",loadErrorHandler);
+				}
+			} */
+			
 			private function successfulCloseHandler(event:Event):void{
 				if(currentState=="Out")
-					displayGatePass();
+					displayGatePass(lsRefNo);
 				undoForm();
 			}
 			
-			private function displayGatePass():void{
+			private function displayGatePass(passno:String):void{
 				try{
-					var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/GatePass.jsp?pn="+ lsRefNo);
+					var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/GatePass.jsp?pn="+ passno);
 					request.method = URLRequestMethod.POST;
 					navigateToURL(request);
 				}catch(error:Error){
@@ -515,6 +550,12 @@
 					txtFrom.errorString="";
 					txtTo.text="";
 					txtTo.errorString="";
+
+					dfDateExpectedIn.selectedDate=null;
+					dfDateExpectedIn.errorString="";
+					nsHourExpectedIn.value=1;
+					nsMinExpectedIn.value=0;
+					ddMidDayExpectedIn.selectedIndex=-1;
 					
 					setModifiedByDet();
 					setState("Default");
@@ -685,6 +726,7 @@
 					this.title=lsTitle+"  ["+fgatepass.passno+" - "+ dfFormatter.format(fgatepass.outdate) +"]" 
 					txtPassno.text=fgatepass.passno;
 					setDateTime();
+					//setDateTimeExpected(fgatepass);
 					txtRegNo.text=fgatepass.regno;
 					txtMake.text=fgatepass.vehimakeid;
 					txtModel.text=fgatepass.vehimodelid;
@@ -1047,6 +1089,14 @@
 				Message.displayAlert(1,"List All Locations [Fault]: " + event.fault.toString(),"Error",errorCloseHandler);
 			}
 
+
+			protected function btnPrint_clickHandler(event:MouseEvent):void
+			{
+				
+				if(txtPassno.text!=null)
+				displayGatePass(txtPassno.text);
+			}
+
 		]]>
 	</fx:Script>
 	<mx:ControlBar x="3" y="-6" horizontalGap="2" height="57" width="651" creationComplete="controlbar1_creationCompleteHandler(event)">
@@ -1083,8 +1133,9 @@
 					disabledIcon="@Embed(source='com/dspl/malkey/components/common/icons/fileprintD.png')"
 					icon="@Embed(source='com/dspl/malkey/components/common/icons/fileprint.png')" 
 					enabled="false"
-		 			enabled.Out="false"
-					enabled.In="false"
+		 			enabled.Out="true"
+					enabled.In="true"
+					click="btnPrint_clickHandler(event)"
 					/>
 		<mx:Button  id="btnReload" width="40" height="40"
 					click="btnReload_clickHandler(event)"
@@ -1127,6 +1178,7 @@
 						 maxChars="10"
 			/>
 		</mx:FormItem>
+		
 		<mx:FormItem label="Date" required="true" fontWeight="bold">
 			<mx:DateField
 				formatString="@Resource(key='dateFormat',bundle='resource')"
@@ -1298,5 +1350,56 @@
 			</mx:FormItem>
 		</mx:Form>
 	</mx:VBox>
+	
+	<mx:VBox x="670" y="54" height="421" width="300"
+			 paddingLeft="5"
+			 paddingRight="0"
+			 paddingBottom="0"
+			 borderAlpha="20" borderColor="#C0C0C0" borderStyle="solid" borderVisible="true"
+			 >
+		<mx:Label text="ENTER EXPECTED ARIVAL TIME" fontWeight="bold" color="GREEN" paddingTop="3" />		
+		<mx:Label text="[ALERT GENERATION PURPOSE]" fontWeight="bold" color="GREEN" paddingTop="3" />		
+		<mx:FormItem label="Date" required="true" fontWeight="bold"  color="GREEN">
+			<mx:DateField
+				formatString="@Resource(key='dateFormat',bundle='resource')"
+				enabled="false" id="dfDateExpectedIn"
+				width="100" enabled.Out="true" enabled.In="true"/>
+		</mx:FormItem>
+		<mx:FormItem label="Time" required="true"  fontWeight="bold" direction="horizontal"
+					 paddingBottom="5"
+					 horizontalGap="0"
+					 color="GREEN"
+					 >
+			<s:NumericStepper 
+				enabled.Default="false"
+				enabled.Out="true"
+				id="nsHourExpectedIn"
+				width="50"
+				minimum="1"
+				maximum="12"
+				enabled.In="true"/>
+			<mx:Label text="Hr." 
+					  paddingTop="3"
+					  />
+			<s:NumericStepper 
+				enabled.Default="false"
+				enabled.Out="true"
+				id="nsMinExpectedIn"
+				width="50"
+				minimum="0"
+				maximum="59"
+				enabled.In="true"/>
+			<mx:Label text="Min." 
+					  paddingTop="3"
+					  />
+			<s:DropDownList textAlign="left"
+							dataProvider="{lacMidDay}"
+							labelField="des"
+							id="ddMidDayExpectedIn"
+							width="56" height="23" 
+							enabled.Default="false"
+							enabled.Out="true" enabled.In="true"/> 
+		</mx:FormItem>
+		</mx:VBox>
 	<s:Label x="8" y="480" text="Last Modified By:" id="lblModifiedBy"/>
 </s:TitleWindow>

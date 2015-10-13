@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "parentref", "taxcomcode", "xhours", "bookdate", "checkoutdata", "noofday", "depositbal", "cancelled", "cohirestsid", "otherChargersDetails", "checkindata", "agrdout", "cidetenhrsrs", "nettotal", "invoiced", "checkin", "ratetype", "cinightout", "cidetenhrs", "returnaddress", "total_addcharges", "uuid", "cidate", "checkout", "recordid", "dout", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "coinspectby", "totaltaxable", "remarks", "comileage", "timein", "ciLocation", "paytypeid", "copyreason", "din", "agrdin", "selected", "details", "ciother", "booked", "hiretypeid", "cofuellevel", "discount_xmile", "cidamagers", "itinerary", "advancebal", "completed", "cifueldiff", "cifuellevel", "debcode", "cinightoutrs", "total_discount", "gdout", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "advance", "timeout");
+    model_internal static var allProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "cixsmileage", "coLocation", "taxcomcode", "parentref", "xhours", "checkoutdata", "bookdate", "noofday", "depositbal", "regno", "cancelled", "cohirestsid", "checkindata", "agrdout", "otherChargersDetails", "cidetenhrsrs", "nettotal", "invoiced", "ratetype", "checkin", "cinightout", "cidetenhrs", "total_addcharges", "returnaddress", "uuid", "cidate", "checkout", "dout", "recordid", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "totaltaxable", "coinspectby", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "agrdin", "selected", "details", "ciother", "cofuellevel", "hiretypeid", "booked", "discount_xmile", "cidamagers", "itinerary", "advancebal", "completed", "cifueldiff", "cifuellevel", "debcode", "cinightoutrs", "gdout", "total_discount", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "timeout", "advance");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "codate", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "parentref", "taxcomcode", "xhours", "bookdate", "checkoutdata", "noofday", "depositbal", "cancelled", "cohirestsid", "otherChargersDetails", "checkindata", "agrdout", "cidetenhrsrs", "nettotal", "invoiced", "checkin", "ratetype", "cinightout", "cidetenhrs", "returnaddress", "total_addcharges", "uuid", "cidate", "checkout", "recordid", "dout", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "coinspectby", "totaltaxable", "remarks", "comileage", "timein", "ciLocation", "paytypeid", "copyreason", "din", "agrdin", "selected", "details", "ciother", "booked", "hiretypeid", "cofuellevel", "discount_xmile", "cidamagers", "itinerary", "advancebal", "completed", "cifueldiff", "cifuellevel", "debcode", "cinightoutrs", "total_discount", "gdout", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "advance", "timeout");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "parentref", "taxcomcode", "xhours", "bookdate", "checkoutdata", "noofday", "depositbal", "cancelled", "cohirestsid", "otherChargersDetails", "checkindata", "agrdout", "cidetenhrsrs", "nettotal", "invoiced", "checkin", "ratetype", "cinightout", "cidetenhrs", "returnaddress", "total_addcharges", "uuid", "cidate", "checkout", "recordid", "dout", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "coinspectby", "totaltaxable", "remarks", "comileage", "timein", "ciLocation", "paytypeid", "copyreason", "din", "agrdin", "selected", "details", "ciother", "booked", "hiretypeid", "cofuellevel", "discount_xmile", "cidamagers", "itinerary", "advancebal", "completed", "cifueldiff", "cifuellevel", "debcode", "cinightoutrs", "total_discount", "gdout", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "advance", "timeout");
+    model_internal static var allRequiredProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "cixsmileage", "coLocation", "taxcomcode", "parentref", "xhours", "checkoutdata", "bookdate", "noofday", "depositbal", "cancelled", "cohirestsid", "checkindata", "agrdout", "otherChargersDetails", "cidetenhrsrs", "nettotal", "invoiced", "ratetype", "checkin", "cinightout", "cidetenhrs", "total_addcharges", "returnaddress", "uuid", "cidate", "checkout", "dout", "recordid", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "totaltaxable", "coinspectby", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "agrdin", "selected", "details", "ciother", "cofuellevel", "hiretypeid", "booked", "discount_xmile", "cidamagers", "itinerary", "advancebal", "completed", "cifueldiff", "cifuellevel", "debcode", "cinightoutrs", "gdout", "total_discount", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "timeout", "advance");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "cixsmileage", "coLocation", "taxcomcode", "parentref", "xhours", "checkoutdata", "bookdate", "noofday", "depositbal", "regno", "cancelled", "cohirestsid", "checkindata", "agrdout", "otherChargersDetails", "cidetenhrsrs", "nettotal", "invoiced", "ratetype", "checkin", "cinightout", "cidetenhrs", "total_addcharges", "returnaddress", "uuid", "cidate", "checkout", "dout", "recordid", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "totaltaxable", "coinspectby", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "agrdin", "selected", "details", "ciother", "cofuellevel", "hiretypeid", "booked", "discount_xmile", "cidamagers", "itinerary", "advancebal", "completed", "cifueldiff", "cifuellevel", "debcode", "cinightoutrs", "gdout", "total_discount", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "timeout", "advance");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "coLocation", "cixsmileage", "parentref", "taxcomcode", "xhours", "bookdate", "checkoutdata", "noofday", "depositbal", "cancelled", "cohirestsid", "otherChargersDetails", "checkindata", "agrdout", "cidetenhrsrs", "nettotal", "invoiced", "checkin", "ratetype", "cinightout", "cidetenhrs", "returnaddress", "total_addcharges", "uuid", "cidate", "checkout", "recordid", "dout", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "coinspectby", "totaltaxable", "remarks", "comileage", "timein", "ciLocation", "paytypeid", "copyreason", "din", "agrdin", "selected", "details", "ciother", "booked", "hiretypeid", "cofuellevel", "discount_xmile", "cidamagers", "itinerary", "advancebal", "completed", "cifueldiff", "cifuellevel", "debcode", "cinightoutrs", "total_discount", "gdout", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "advance", "timeout");
+    model_internal static var dataProperties:Array = new Array("total", "billbasis", "resno", "deposit", "cidamage", "adddate", "agrno", "invoicedApplication", "codate", "completedate", "confirmed", "gotime", "chargdays", "cixsmileage", "coLocation", "taxcomcode", "parentref", "xhours", "checkoutdata", "bookdate", "noofday", "depositbal", "regno", "cancelled", "cohirestsid", "checkindata", "agrdout", "otherChargersDetails", "cidetenhrsrs", "nettotal", "invoiced", "ratetype", "checkin", "cinightout", "cidetenhrs", "total_addcharges", "returnaddress", "uuid", "cidate", "checkout", "dout", "recordid", "othernaration", "discount_xhoursamt", "childref", "confirmdate", "xhoursamt", "invoicedate", "total_accessories", "cimileage", "totaltaxable", "coinspectby", "remarks", "timein", "comileage", "ciLocation", "copyreason", "paytypeid", "din", "agrdin", "selected", "details", "ciother", "cofuellevel", "hiretypeid", "booked", "discount_xmile", "cidamagers", "itinerary", "advancebal", "completed", "cifueldiff", "cifuellevel", "debcode", "cinightoutrs", "gdout", "total_discount", "addmach", "adduser", "canceldate", "remarks_customer", "codamage", "total_othersrv", "taxamt", "cixsmileagers", "quoteno", "timeout", "advance");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -45,11 +45,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _billbasisValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _billbasisIsValidCacheInitialized:Boolean = false;
     model_internal var _billbasisValidationFailureMessages:Array;
-    
-    model_internal var _resnoIsValid:Boolean;
-    model_internal var _resnoValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _resnoIsValidCacheInitialized:Boolean = false;
-    model_internal var _resnoValidationFailureMessages:Array;
     
     model_internal var _depositIsValid:Boolean;
     model_internal var _depositValidator:com.adobe.fiber.styles.StyleValidator;
@@ -70,6 +65,11 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _agrnoValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _agrnoIsValidCacheInitialized:Boolean = false;
     model_internal var _agrnoValidationFailureMessages:Array;
+    
+    model_internal var _invoicedApplicationIsValid:Boolean;
+    model_internal var _invoicedApplicationValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _invoicedApplicationIsValidCacheInitialized:Boolean = false;
+    model_internal var _invoicedApplicationValidationFailureMessages:Array;
     
     model_internal var _codateIsValid:Boolean;
     model_internal var _codateValidator:com.adobe.fiber.styles.StyleValidator;
@@ -96,25 +96,25 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _coLocationIsValidCacheInitialized:Boolean = false;
     model_internal var _coLocationValidationFailureMessages:Array;
     
-    model_internal var _parentrefIsValid:Boolean;
-    model_internal var _parentrefValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _parentrefIsValidCacheInitialized:Boolean = false;
-    model_internal var _parentrefValidationFailureMessages:Array;
-    
     model_internal var _taxcomcodeIsValid:Boolean;
     model_internal var _taxcomcodeValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _taxcomcodeIsValidCacheInitialized:Boolean = false;
     model_internal var _taxcomcodeValidationFailureMessages:Array;
     
-    model_internal var _bookdateIsValid:Boolean;
-    model_internal var _bookdateValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _bookdateIsValidCacheInitialized:Boolean = false;
-    model_internal var _bookdateValidationFailureMessages:Array;
+    model_internal var _parentrefIsValid:Boolean;
+    model_internal var _parentrefValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _parentrefIsValidCacheInitialized:Boolean = false;
+    model_internal var _parentrefValidationFailureMessages:Array;
     
     model_internal var _checkoutdataIsValid:Boolean;
     model_internal var _checkoutdataValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _checkoutdataIsValidCacheInitialized:Boolean = false;
     model_internal var _checkoutdataValidationFailureMessages:Array;
+    
+    model_internal var _bookdateIsValid:Boolean;
+    model_internal var _bookdateValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _bookdateIsValidCacheInitialized:Boolean = false;
+    model_internal var _bookdateValidationFailureMessages:Array;
     
     model_internal var _depositbalIsValid:Boolean;
     model_internal var _depositbalValidator:com.adobe.fiber.styles.StyleValidator;
@@ -131,11 +131,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _cohirestsidIsValidCacheInitialized:Boolean = false;
     model_internal var _cohirestsidValidationFailureMessages:Array;
     
-    model_internal var _otherChargersDetailsIsValid:Boolean;
-    model_internal var _otherChargersDetailsValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _otherChargersDetailsIsValidCacheInitialized:Boolean = false;
-    model_internal var _otherChargersDetailsValidationFailureMessages:Array;
-    
     model_internal var _checkindataIsValid:Boolean;
     model_internal var _checkindataValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _checkindataIsValidCacheInitialized:Boolean = false;
@@ -145,6 +140,11 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _agrdoutValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _agrdoutIsValidCacheInitialized:Boolean = false;
     model_internal var _agrdoutValidationFailureMessages:Array;
+    
+    model_internal var _otherChargersDetailsIsValid:Boolean;
+    model_internal var _otherChargersDetailsValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _otherChargersDetailsIsValidCacheInitialized:Boolean = false;
+    model_internal var _otherChargersDetailsValidationFailureMessages:Array;
     
     model_internal var _cidetenhrsrsIsValid:Boolean;
     model_internal var _cidetenhrsrsValidator:com.adobe.fiber.styles.StyleValidator;
@@ -161,25 +161,25 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _invoicedIsValidCacheInitialized:Boolean = false;
     model_internal var _invoicedValidationFailureMessages:Array;
     
-    model_internal var _checkinIsValid:Boolean;
-    model_internal var _checkinValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _checkinIsValidCacheInitialized:Boolean = false;
-    model_internal var _checkinValidationFailureMessages:Array;
-    
     model_internal var _ratetypeIsValid:Boolean;
     model_internal var _ratetypeValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _ratetypeIsValidCacheInitialized:Boolean = false;
     model_internal var _ratetypeValidationFailureMessages:Array;
     
-    model_internal var _returnaddressIsValid:Boolean;
-    model_internal var _returnaddressValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _returnaddressIsValidCacheInitialized:Boolean = false;
-    model_internal var _returnaddressValidationFailureMessages:Array;
+    model_internal var _checkinIsValid:Boolean;
+    model_internal var _checkinValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _checkinIsValidCacheInitialized:Boolean = false;
+    model_internal var _checkinValidationFailureMessages:Array;
     
     model_internal var _total_addchargesIsValid:Boolean;
     model_internal var _total_addchargesValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _total_addchargesIsValidCacheInitialized:Boolean = false;
     model_internal var _total_addchargesValidationFailureMessages:Array;
+    
+    model_internal var _returnaddressIsValid:Boolean;
+    model_internal var _returnaddressValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _returnaddressIsValidCacheInitialized:Boolean = false;
+    model_internal var _returnaddressValidationFailureMessages:Array;
     
     model_internal var _uuidIsValid:Boolean;
     model_internal var _uuidValidator:com.adobe.fiber.styles.StyleValidator;
@@ -236,15 +236,15 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _total_accessoriesIsValidCacheInitialized:Boolean = false;
     model_internal var _total_accessoriesValidationFailureMessages:Array;
     
-    model_internal var _coinspectbyIsValid:Boolean;
-    model_internal var _coinspectbyValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _coinspectbyIsValidCacheInitialized:Boolean = false;
-    model_internal var _coinspectbyValidationFailureMessages:Array;
-    
     model_internal var _totaltaxableIsValid:Boolean;
     model_internal var _totaltaxableValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _totaltaxableIsValidCacheInitialized:Boolean = false;
     model_internal var _totaltaxableValidationFailureMessages:Array;
+    
+    model_internal var _coinspectbyIsValid:Boolean;
+    model_internal var _coinspectbyValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _coinspectbyIsValidCacheInitialized:Boolean = false;
+    model_internal var _coinspectbyValidationFailureMessages:Array;
     
     model_internal var _remarksIsValid:Boolean;
     model_internal var _remarksValidator:com.adobe.fiber.styles.StyleValidator;
@@ -261,15 +261,15 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _ciLocationIsValidCacheInitialized:Boolean = false;
     model_internal var _ciLocationValidationFailureMessages:Array;
     
-    model_internal var _paytypeidIsValid:Boolean;
-    model_internal var _paytypeidValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _paytypeidIsValidCacheInitialized:Boolean = false;
-    model_internal var _paytypeidValidationFailureMessages:Array;
-    
     model_internal var _copyreasonIsValid:Boolean;
     model_internal var _copyreasonValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _copyreasonIsValidCacheInitialized:Boolean = false;
     model_internal var _copyreasonValidationFailureMessages:Array;
+    
+    model_internal var _paytypeidIsValid:Boolean;
+    model_internal var _paytypeidValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _paytypeidIsValidCacheInitialized:Boolean = false;
+    model_internal var _paytypeidValidationFailureMessages:Array;
     
     model_internal var _dinIsValid:Boolean;
     model_internal var _dinValidator:com.adobe.fiber.styles.StyleValidator;
@@ -291,15 +291,15 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _ciotherIsValidCacheInitialized:Boolean = false;
     model_internal var _ciotherValidationFailureMessages:Array;
     
-    model_internal var _bookedIsValid:Boolean;
-    model_internal var _bookedValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _bookedIsValidCacheInitialized:Boolean = false;
-    model_internal var _bookedValidationFailureMessages:Array;
-    
     model_internal var _hiretypeidIsValid:Boolean;
     model_internal var _hiretypeidValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _hiretypeidIsValidCacheInitialized:Boolean = false;
     model_internal var _hiretypeidValidationFailureMessages:Array;
+    
+    model_internal var _bookedIsValid:Boolean;
+    model_internal var _bookedValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _bookedIsValidCacheInitialized:Boolean = false;
+    model_internal var _bookedValidationFailureMessages:Array;
     
     model_internal var _discount_xmileIsValid:Boolean;
     model_internal var _discount_xmileValidator:com.adobe.fiber.styles.StyleValidator;
@@ -341,15 +341,15 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _cinightoutrsIsValidCacheInitialized:Boolean = false;
     model_internal var _cinightoutrsValidationFailureMessages:Array;
     
-    model_internal var _total_discountIsValid:Boolean;
-    model_internal var _total_discountValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _total_discountIsValidCacheInitialized:Boolean = false;
-    model_internal var _total_discountValidationFailureMessages:Array;
-    
     model_internal var _gdoutIsValid:Boolean;
     model_internal var _gdoutValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _gdoutIsValidCacheInitialized:Boolean = false;
     model_internal var _gdoutValidationFailureMessages:Array;
+    
+    model_internal var _total_discountIsValid:Boolean;
+    model_internal var _total_discountValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _total_discountIsValidCacheInitialized:Boolean = false;
+    model_internal var _total_discountValidationFailureMessages:Array;
     
     model_internal var _addmachIsValid:Boolean;
     model_internal var _addmachValidator:com.adobe.fiber.styles.StyleValidator;
@@ -396,15 +396,15 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     model_internal var _quotenoIsValidCacheInitialized:Boolean = false;
     model_internal var _quotenoValidationFailureMessages:Array;
     
-    model_internal var _advanceIsValid:Boolean;
-    model_internal var _advanceValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _advanceIsValidCacheInitialized:Boolean = false;
-    model_internal var _advanceValidationFailureMessages:Array;
-    
     model_internal var _timeoutIsValid:Boolean;
     model_internal var _timeoutValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _timeoutIsValidCacheInitialized:Boolean = false;
     model_internal var _timeoutValidationFailureMessages:Array;
+    
+    model_internal var _advanceIsValid:Boolean;
+    model_internal var _advanceValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _advanceIsValidCacheInitialized:Boolean = false;
+    model_internal var _advanceValidationFailureMessages:Array;
 
     model_internal var _instance:_Super_Com_dspl_malkey_domain_Freservation;
     model_internal static var _nullStyle:com.adobe.fiber.styles.Style = new com.adobe.fiber.styles.Style();
@@ -429,34 +429,35 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::dependentsOnMap["confirmed"] = new Array();
             model_internal::dependentsOnMap["gotime"] = new Array();
             model_internal::dependentsOnMap["chargdays"] = new Array();
-            model_internal::dependentsOnMap["coLocation"] = new Array();
             model_internal::dependentsOnMap["cixsmileage"] = new Array();
-            model_internal::dependentsOnMap["parentref"] = new Array();
+            model_internal::dependentsOnMap["coLocation"] = new Array();
             model_internal::dependentsOnMap["taxcomcode"] = new Array();
+            model_internal::dependentsOnMap["parentref"] = new Array();
             model_internal::dependentsOnMap["xhours"] = new Array();
-            model_internal::dependentsOnMap["bookdate"] = new Array();
             model_internal::dependentsOnMap["checkoutdata"] = new Array();
+            model_internal::dependentsOnMap["bookdate"] = new Array();
             model_internal::dependentsOnMap["noofday"] = new Array();
             model_internal::dependentsOnMap["depositbal"] = new Array();
+            model_internal::dependentsOnMap["regno"] = new Array();
             model_internal::dependentsOnMap["cancelled"] = new Array();
             model_internal::dependentsOnMap["cohirestsid"] = new Array();
-            model_internal::dependentsOnMap["otherChargersDetails"] = new Array();
             model_internal::dependentsOnMap["checkindata"] = new Array();
             model_internal::dependentsOnMap["agrdout"] = new Array();
+            model_internal::dependentsOnMap["otherChargersDetails"] = new Array();
             model_internal::dependentsOnMap["cidetenhrsrs"] = new Array();
             model_internal::dependentsOnMap["nettotal"] = new Array();
             model_internal::dependentsOnMap["invoiced"] = new Array();
-            model_internal::dependentsOnMap["checkin"] = new Array();
             model_internal::dependentsOnMap["ratetype"] = new Array();
+            model_internal::dependentsOnMap["checkin"] = new Array();
             model_internal::dependentsOnMap["cinightout"] = new Array();
             model_internal::dependentsOnMap["cidetenhrs"] = new Array();
-            model_internal::dependentsOnMap["returnaddress"] = new Array();
             model_internal::dependentsOnMap["total_addcharges"] = new Array();
+            model_internal::dependentsOnMap["returnaddress"] = new Array();
             model_internal::dependentsOnMap["uuid"] = new Array();
             model_internal::dependentsOnMap["cidate"] = new Array();
             model_internal::dependentsOnMap["checkout"] = new Array();
-            model_internal::dependentsOnMap["recordid"] = new Array();
             model_internal::dependentsOnMap["dout"] = new Array();
+            model_internal::dependentsOnMap["recordid"] = new Array();
             model_internal::dependentsOnMap["othernaration"] = new Array();
             model_internal::dependentsOnMap["discount_xhoursamt"] = new Array();
             model_internal::dependentsOnMap["childref"] = new Array();
@@ -465,22 +466,22 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::dependentsOnMap["invoicedate"] = new Array();
             model_internal::dependentsOnMap["total_accessories"] = new Array();
             model_internal::dependentsOnMap["cimileage"] = new Array();
-            model_internal::dependentsOnMap["coinspectby"] = new Array();
             model_internal::dependentsOnMap["totaltaxable"] = new Array();
+            model_internal::dependentsOnMap["coinspectby"] = new Array();
             model_internal::dependentsOnMap["remarks"] = new Array();
-            model_internal::dependentsOnMap["comileage"] = new Array();
             model_internal::dependentsOnMap["timein"] = new Array();
+            model_internal::dependentsOnMap["comileage"] = new Array();
             model_internal::dependentsOnMap["ciLocation"] = new Array();
-            model_internal::dependentsOnMap["paytypeid"] = new Array();
             model_internal::dependentsOnMap["copyreason"] = new Array();
+            model_internal::dependentsOnMap["paytypeid"] = new Array();
             model_internal::dependentsOnMap["din"] = new Array();
             model_internal::dependentsOnMap["agrdin"] = new Array();
             model_internal::dependentsOnMap["selected"] = new Array();
             model_internal::dependentsOnMap["details"] = new Array();
             model_internal::dependentsOnMap["ciother"] = new Array();
-            model_internal::dependentsOnMap["booked"] = new Array();
-            model_internal::dependentsOnMap["hiretypeid"] = new Array();
             model_internal::dependentsOnMap["cofuellevel"] = new Array();
+            model_internal::dependentsOnMap["hiretypeid"] = new Array();
+            model_internal::dependentsOnMap["booked"] = new Array();
             model_internal::dependentsOnMap["discount_xmile"] = new Array();
             model_internal::dependentsOnMap["cidamagers"] = new Array();
             model_internal::dependentsOnMap["itinerary"] = new Array();
@@ -490,8 +491,8 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::dependentsOnMap["cifuellevel"] = new Array();
             model_internal::dependentsOnMap["debcode"] = new Array();
             model_internal::dependentsOnMap["cinightoutrs"] = new Array();
-            model_internal::dependentsOnMap["total_discount"] = new Array();
             model_internal::dependentsOnMap["gdout"] = new Array();
+            model_internal::dependentsOnMap["total_discount"] = new Array();
             model_internal::dependentsOnMap["addmach"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["canceldate"] = new Array();
@@ -501,8 +502,8 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::dependentsOnMap["taxamt"] = new Array();
             model_internal::dependentsOnMap["cixsmileagers"] = new Array();
             model_internal::dependentsOnMap["quoteno"] = new Array();
-            model_internal::dependentsOnMap["advance"] = new Array();
             model_internal::dependentsOnMap["timeout"] = new Array();
+            model_internal::dependentsOnMap["advance"] = new Array();
 
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -519,11 +520,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_billbasisValidator.requiredFieldError = "billbasis is required";
         //model_internal::_billbasisValidator.source = model_internal::_instance;
         //model_internal::_billbasisValidator.property = "billbasis";
-        model_internal::_resnoValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForResno);
-        model_internal::_resnoValidator.required = true;
-        model_internal::_resnoValidator.requiredFieldError = "resno is required";
-        //model_internal::_resnoValidator.source = model_internal::_instance;
-        //model_internal::_resnoValidator.property = "resno";
         model_internal::_depositValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForDeposit);
         model_internal::_depositValidator.required = true;
         model_internal::_depositValidator.requiredFieldError = "deposit is required";
@@ -544,6 +540,11 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_agrnoValidator.requiredFieldError = "agrno is required";
         //model_internal::_agrnoValidator.source = model_internal::_instance;
         //model_internal::_agrnoValidator.property = "agrno";
+        model_internal::_invoicedApplicationValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForInvoicedApplication);
+        model_internal::_invoicedApplicationValidator.required = true;
+        model_internal::_invoicedApplicationValidator.requiredFieldError = "invoicedApplication is required";
+        //model_internal::_invoicedApplicationValidator.source = model_internal::_instance;
+        //model_internal::_invoicedApplicationValidator.property = "invoicedApplication";
         model_internal::_codateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCodate);
         model_internal::_codateValidator.required = true;
         model_internal::_codateValidator.requiredFieldError = "codate is required";
@@ -569,26 +570,26 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_coLocationValidator.requiredFieldError = "coLocation is required";
         //model_internal::_coLocationValidator.source = model_internal::_instance;
         //model_internal::_coLocationValidator.property = "coLocation";
-        model_internal::_parentrefValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForParentref);
-        model_internal::_parentrefValidator.required = true;
-        model_internal::_parentrefValidator.requiredFieldError = "parentref is required";
-        //model_internal::_parentrefValidator.source = model_internal::_instance;
-        //model_internal::_parentrefValidator.property = "parentref";
         model_internal::_taxcomcodeValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForTaxcomcode);
         model_internal::_taxcomcodeValidator.required = true;
         model_internal::_taxcomcodeValidator.requiredFieldError = "taxcomcode is required";
         //model_internal::_taxcomcodeValidator.source = model_internal::_instance;
         //model_internal::_taxcomcodeValidator.property = "taxcomcode";
-        model_internal::_bookdateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForBookdate);
-        model_internal::_bookdateValidator.required = true;
-        model_internal::_bookdateValidator.requiredFieldError = "bookdate is required";
-        //model_internal::_bookdateValidator.source = model_internal::_instance;
-        //model_internal::_bookdateValidator.property = "bookdate";
+        model_internal::_parentrefValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForParentref);
+        model_internal::_parentrefValidator.required = true;
+        model_internal::_parentrefValidator.requiredFieldError = "parentref is required";
+        //model_internal::_parentrefValidator.source = model_internal::_instance;
+        //model_internal::_parentrefValidator.property = "parentref";
         model_internal::_checkoutdataValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCheckoutdata);
         model_internal::_checkoutdataValidator.required = true;
         model_internal::_checkoutdataValidator.requiredFieldError = "checkoutdata is required";
         //model_internal::_checkoutdataValidator.source = model_internal::_instance;
         //model_internal::_checkoutdataValidator.property = "checkoutdata";
+        model_internal::_bookdateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForBookdate);
+        model_internal::_bookdateValidator.required = true;
+        model_internal::_bookdateValidator.requiredFieldError = "bookdate is required";
+        //model_internal::_bookdateValidator.source = model_internal::_instance;
+        //model_internal::_bookdateValidator.property = "bookdate";
         model_internal::_depositbalValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForDepositbal);
         model_internal::_depositbalValidator.required = true;
         model_internal::_depositbalValidator.requiredFieldError = "depositbal is required";
@@ -604,11 +605,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_cohirestsidValidator.requiredFieldError = "cohirestsid is required";
         //model_internal::_cohirestsidValidator.source = model_internal::_instance;
         //model_internal::_cohirestsidValidator.property = "cohirestsid";
-        model_internal::_otherChargersDetailsValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForOtherChargersDetails);
-        model_internal::_otherChargersDetailsValidator.required = true;
-        model_internal::_otherChargersDetailsValidator.requiredFieldError = "otherChargersDetails is required";
-        //model_internal::_otherChargersDetailsValidator.source = model_internal::_instance;
-        //model_internal::_otherChargersDetailsValidator.property = "otherChargersDetails";
         model_internal::_checkindataValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCheckindata);
         model_internal::_checkindataValidator.required = true;
         model_internal::_checkindataValidator.requiredFieldError = "checkindata is required";
@@ -619,6 +615,11 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_agrdoutValidator.requiredFieldError = "agrdout is required";
         //model_internal::_agrdoutValidator.source = model_internal::_instance;
         //model_internal::_agrdoutValidator.property = "agrdout";
+        model_internal::_otherChargersDetailsValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForOtherChargersDetails);
+        model_internal::_otherChargersDetailsValidator.required = true;
+        model_internal::_otherChargersDetailsValidator.requiredFieldError = "otherChargersDetails is required";
+        //model_internal::_otherChargersDetailsValidator.source = model_internal::_instance;
+        //model_internal::_otherChargersDetailsValidator.property = "otherChargersDetails";
         model_internal::_cidetenhrsrsValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCidetenhrsrs);
         model_internal::_cidetenhrsrsValidator.required = true;
         model_internal::_cidetenhrsrsValidator.requiredFieldError = "cidetenhrsrs is required";
@@ -634,26 +635,26 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_invoicedValidator.requiredFieldError = "invoiced is required";
         //model_internal::_invoicedValidator.source = model_internal::_instance;
         //model_internal::_invoicedValidator.property = "invoiced";
-        model_internal::_checkinValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCheckin);
-        model_internal::_checkinValidator.required = true;
-        model_internal::_checkinValidator.requiredFieldError = "checkin is required";
-        //model_internal::_checkinValidator.source = model_internal::_instance;
-        //model_internal::_checkinValidator.property = "checkin";
         model_internal::_ratetypeValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForRatetype);
         model_internal::_ratetypeValidator.required = true;
         model_internal::_ratetypeValidator.requiredFieldError = "ratetype is required";
         //model_internal::_ratetypeValidator.source = model_internal::_instance;
         //model_internal::_ratetypeValidator.property = "ratetype";
-        model_internal::_returnaddressValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForReturnaddress);
-        model_internal::_returnaddressValidator.required = true;
-        model_internal::_returnaddressValidator.requiredFieldError = "returnaddress is required";
-        //model_internal::_returnaddressValidator.source = model_internal::_instance;
-        //model_internal::_returnaddressValidator.property = "returnaddress";
+        model_internal::_checkinValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCheckin);
+        model_internal::_checkinValidator.required = true;
+        model_internal::_checkinValidator.requiredFieldError = "checkin is required";
+        //model_internal::_checkinValidator.source = model_internal::_instance;
+        //model_internal::_checkinValidator.property = "checkin";
         model_internal::_total_addchargesValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForTotal_addcharges);
         model_internal::_total_addchargesValidator.required = true;
         model_internal::_total_addchargesValidator.requiredFieldError = "total_addcharges is required";
         //model_internal::_total_addchargesValidator.source = model_internal::_instance;
         //model_internal::_total_addchargesValidator.property = "total_addcharges";
+        model_internal::_returnaddressValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForReturnaddress);
+        model_internal::_returnaddressValidator.required = true;
+        model_internal::_returnaddressValidator.requiredFieldError = "returnaddress is required";
+        //model_internal::_returnaddressValidator.source = model_internal::_instance;
+        //model_internal::_returnaddressValidator.property = "returnaddress";
         model_internal::_uuidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForUuid);
         model_internal::_uuidValidator.required = true;
         model_internal::_uuidValidator.requiredFieldError = "uuid is required";
@@ -709,16 +710,16 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_total_accessoriesValidator.requiredFieldError = "total_accessories is required";
         //model_internal::_total_accessoriesValidator.source = model_internal::_instance;
         //model_internal::_total_accessoriesValidator.property = "total_accessories";
-        model_internal::_coinspectbyValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCoinspectby);
-        model_internal::_coinspectbyValidator.required = true;
-        model_internal::_coinspectbyValidator.requiredFieldError = "coinspectby is required";
-        //model_internal::_coinspectbyValidator.source = model_internal::_instance;
-        //model_internal::_coinspectbyValidator.property = "coinspectby";
         model_internal::_totaltaxableValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForTotaltaxable);
         model_internal::_totaltaxableValidator.required = true;
         model_internal::_totaltaxableValidator.requiredFieldError = "totaltaxable is required";
         //model_internal::_totaltaxableValidator.source = model_internal::_instance;
         //model_internal::_totaltaxableValidator.property = "totaltaxable";
+        model_internal::_coinspectbyValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCoinspectby);
+        model_internal::_coinspectbyValidator.required = true;
+        model_internal::_coinspectbyValidator.requiredFieldError = "coinspectby is required";
+        //model_internal::_coinspectbyValidator.source = model_internal::_instance;
+        //model_internal::_coinspectbyValidator.property = "coinspectby";
         model_internal::_remarksValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForRemarks);
         model_internal::_remarksValidator.required = true;
         model_internal::_remarksValidator.requiredFieldError = "remarks is required";
@@ -734,16 +735,16 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_ciLocationValidator.requiredFieldError = "ciLocation is required";
         //model_internal::_ciLocationValidator.source = model_internal::_instance;
         //model_internal::_ciLocationValidator.property = "ciLocation";
-        model_internal::_paytypeidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForPaytypeid);
-        model_internal::_paytypeidValidator.required = true;
-        model_internal::_paytypeidValidator.requiredFieldError = "paytypeid is required";
-        //model_internal::_paytypeidValidator.source = model_internal::_instance;
-        //model_internal::_paytypeidValidator.property = "paytypeid";
         model_internal::_copyreasonValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForCopyreason);
         model_internal::_copyreasonValidator.required = true;
         model_internal::_copyreasonValidator.requiredFieldError = "copyreason is required";
         //model_internal::_copyreasonValidator.source = model_internal::_instance;
         //model_internal::_copyreasonValidator.property = "copyreason";
+        model_internal::_paytypeidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForPaytypeid);
+        model_internal::_paytypeidValidator.required = true;
+        model_internal::_paytypeidValidator.requiredFieldError = "paytypeid is required";
+        //model_internal::_paytypeidValidator.source = model_internal::_instance;
+        //model_internal::_paytypeidValidator.property = "paytypeid";
         model_internal::_dinValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForDin);
         model_internal::_dinValidator.required = true;
         model_internal::_dinValidator.requiredFieldError = "din is required";
@@ -764,16 +765,16 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_ciotherValidator.requiredFieldError = "ciother is required";
         //model_internal::_ciotherValidator.source = model_internal::_instance;
         //model_internal::_ciotherValidator.property = "ciother";
-        model_internal::_bookedValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForBooked);
-        model_internal::_bookedValidator.required = true;
-        model_internal::_bookedValidator.requiredFieldError = "booked is required";
-        //model_internal::_bookedValidator.source = model_internal::_instance;
-        //model_internal::_bookedValidator.property = "booked";
         model_internal::_hiretypeidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForHiretypeid);
         model_internal::_hiretypeidValidator.required = true;
         model_internal::_hiretypeidValidator.requiredFieldError = "hiretypeid is required";
         //model_internal::_hiretypeidValidator.source = model_internal::_instance;
         //model_internal::_hiretypeidValidator.property = "hiretypeid";
+        model_internal::_bookedValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForBooked);
+        model_internal::_bookedValidator.required = true;
+        model_internal::_bookedValidator.requiredFieldError = "booked is required";
+        //model_internal::_bookedValidator.source = model_internal::_instance;
+        //model_internal::_bookedValidator.property = "booked";
         model_internal::_discount_xmileValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForDiscount_xmile);
         model_internal::_discount_xmileValidator.required = true;
         model_internal::_discount_xmileValidator.requiredFieldError = "discount_xmile is required";
@@ -814,16 +815,16 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_cinightoutrsValidator.requiredFieldError = "cinightoutrs is required";
         //model_internal::_cinightoutrsValidator.source = model_internal::_instance;
         //model_internal::_cinightoutrsValidator.property = "cinightoutrs";
-        model_internal::_total_discountValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForTotal_discount);
-        model_internal::_total_discountValidator.required = true;
-        model_internal::_total_discountValidator.requiredFieldError = "total_discount is required";
-        //model_internal::_total_discountValidator.source = model_internal::_instance;
-        //model_internal::_total_discountValidator.property = "total_discount";
         model_internal::_gdoutValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForGdout);
         model_internal::_gdoutValidator.required = true;
         model_internal::_gdoutValidator.requiredFieldError = "gdout is required";
         //model_internal::_gdoutValidator.source = model_internal::_instance;
         //model_internal::_gdoutValidator.property = "gdout";
+        model_internal::_total_discountValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForTotal_discount);
+        model_internal::_total_discountValidator.required = true;
+        model_internal::_total_discountValidator.requiredFieldError = "total_discount is required";
+        //model_internal::_total_discountValidator.source = model_internal::_instance;
+        //model_internal::_total_discountValidator.property = "total_discount";
         model_internal::_addmachValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAddmach);
         model_internal::_addmachValidator.required = true;
         model_internal::_addmachValidator.requiredFieldError = "addmach is required";
@@ -869,16 +870,16 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         model_internal::_quotenoValidator.requiredFieldError = "quoteno is required";
         //model_internal::_quotenoValidator.source = model_internal::_instance;
         //model_internal::_quotenoValidator.property = "quoteno";
-        model_internal::_advanceValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdvance);
-        model_internal::_advanceValidator.required = true;
-        model_internal::_advanceValidator.requiredFieldError = "advance is required";
-        //model_internal::_advanceValidator.source = model_internal::_instance;
-        //model_internal::_advanceValidator.property = "advance";
         model_internal::_timeoutValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForTimeout);
         model_internal::_timeoutValidator.required = true;
         model_internal::_timeoutValidator.requiredFieldError = "timeout is required";
         //model_internal::_timeoutValidator.source = model_internal::_instance;
         //model_internal::_timeoutValidator.property = "timeout";
+        model_internal::_advanceValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdvance);
+        model_internal::_advanceValidator.required = true;
+        model_internal::_advanceValidator.requiredFieldError = "advance is required";
+        //model_internal::_advanceValidator.source = model_internal::_instance;
+        //model_internal::_advanceValidator.property = "advance";
     }
 
     override public function getEntityName():String
@@ -1013,6 +1014,7 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     override public function getIdentityMap():Object
     {
         var returnMap:Object = new Object();
+        returnMap["resno"] = model_internal::_instance.resno;
 
         return returnMap;
     }
@@ -1166,19 +1168,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCoLocationAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isCixsmileageAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isParentrefAvailable():Boolean
+    public function get isCoLocationAvailable():Boolean
     {
         return true;
     }
@@ -1190,19 +1186,25 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
+    public function get isParentrefAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isXhoursAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isBookdateAvailable():Boolean
+    public function get isCheckoutdataAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCheckoutdataAvailable():Boolean
+    public function get isBookdateAvailable():Boolean
     {
         return true;
     }
@@ -1220,6 +1222,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
+    public function get isRegnoAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isCancelledAvailable():Boolean
     {
         return true;
@@ -1232,12 +1240,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isOtherChargersDetailsAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isCheckindataAvailable():Boolean
     {
         return true;
@@ -1245,6 +1247,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
 
     [Bindable(event="propertyChange")]
     public function get isAgrdoutAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isOtherChargersDetailsAvailable():Boolean
     {
         return true;
     }
@@ -1268,13 +1276,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCheckinAvailable():Boolean
+    public function get isRatetypeAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isRatetypeAvailable():Boolean
+    public function get isCheckinAvailable():Boolean
     {
         return true;
     }
@@ -1292,13 +1300,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isReturnaddressAvailable():Boolean
+    public function get isTotal_addchargesAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTotal_addchargesAvailable():Boolean
+    public function get isReturnaddressAvailable():Boolean
     {
         return true;
     }
@@ -1322,13 +1330,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isRecordidAvailable():Boolean
+    public function get isDoutAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDoutAvailable():Boolean
+    public function get isRecordidAvailable():Boolean
     {
         return true;
     }
@@ -1382,13 +1390,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCoinspectbyAvailable():Boolean
+    public function get isTotaltaxableAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTotaltaxableAvailable():Boolean
+    public function get isCoinspectbyAvailable():Boolean
     {
         return true;
     }
@@ -1400,13 +1408,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isComileageAvailable():Boolean
+    public function get isTimeinAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTimeinAvailable():Boolean
+    public function get isComileageAvailable():Boolean
     {
         return true;
     }
@@ -1418,13 +1426,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isPaytypeidAvailable():Boolean
+    public function get isCopyreasonAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCopyreasonAvailable():Boolean
+    public function get isPaytypeidAvailable():Boolean
     {
         return true;
     }
@@ -1460,7 +1468,7 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isBookedAvailable():Boolean
+    public function get isCofuellevelAvailable():Boolean
     {
         return true;
     }
@@ -1472,7 +1480,7 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isCofuellevelAvailable():Boolean
+    public function get isBookedAvailable():Boolean
     {
         return true;
     }
@@ -1532,13 +1540,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTotal_discountAvailable():Boolean
+    public function get isGdoutAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isGdoutAvailable():Boolean
+    public function get isTotal_discountAvailable():Boolean
     {
         return true;
     }
@@ -1598,13 +1606,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAdvanceAvailable():Boolean
+    public function get isTimeoutAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTimeoutAvailable():Boolean
+    public function get isAdvanceAvailable():Boolean
     {
         return true;
     }
@@ -1627,14 +1635,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_instance.model_internal::_doValidationCacheOfBillbasis = null;
             model_internal::calculateBillbasisIsValid();
-        }
-    }
-    public function invalidateDependentOnResno():void
-    {
-        if (model_internal::_resnoIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfResno = null;
-            model_internal::calculateResnoIsValid();
         }
     }
     public function invalidateDependentOnDeposit():void
@@ -1667,6 +1667,14 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_instance.model_internal::_doValidationCacheOfAgrno = null;
             model_internal::calculateAgrnoIsValid();
+        }
+    }
+    public function invalidateDependentOnInvoicedApplication():void
+    {
+        if (model_internal::_invoicedApplicationIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfInvoicedApplication = null;
+            model_internal::calculateInvoicedApplicationIsValid();
         }
     }
     public function invalidateDependentOnCodate():void
@@ -1709,14 +1717,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateCoLocationIsValid();
         }
     }
-    public function invalidateDependentOnParentref():void
-    {
-        if (model_internal::_parentrefIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfParentref = null;
-            model_internal::calculateParentrefIsValid();
-        }
-    }
     public function invalidateDependentOnTaxcomcode():void
     {
         if (model_internal::_taxcomcodeIsValidCacheInitialized )
@@ -1725,12 +1725,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateTaxcomcodeIsValid();
         }
     }
-    public function invalidateDependentOnBookdate():void
+    public function invalidateDependentOnParentref():void
     {
-        if (model_internal::_bookdateIsValidCacheInitialized )
+        if (model_internal::_parentrefIsValidCacheInitialized )
         {
-            model_internal::_instance.model_internal::_doValidationCacheOfBookdate = null;
-            model_internal::calculateBookdateIsValid();
+            model_internal::_instance.model_internal::_doValidationCacheOfParentref = null;
+            model_internal::calculateParentrefIsValid();
         }
     }
     public function invalidateDependentOnCheckoutdata():void
@@ -1739,6 +1739,14 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_instance.model_internal::_doValidationCacheOfCheckoutdata = null;
             model_internal::calculateCheckoutdataIsValid();
+        }
+    }
+    public function invalidateDependentOnBookdate():void
+    {
+        if (model_internal::_bookdateIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfBookdate = null;
+            model_internal::calculateBookdateIsValid();
         }
     }
     public function invalidateDependentOnDepositbal():void
@@ -1765,14 +1773,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateCohirestsidIsValid();
         }
     }
-    public function invalidateDependentOnOtherChargersDetails():void
-    {
-        if (model_internal::_otherChargersDetailsIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfOtherChargersDetails = null;
-            model_internal::calculateOtherChargersDetailsIsValid();
-        }
-    }
     public function invalidateDependentOnCheckindata():void
     {
         if (model_internal::_checkindataIsValidCacheInitialized )
@@ -1787,6 +1787,14 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_instance.model_internal::_doValidationCacheOfAgrdout = null;
             model_internal::calculateAgrdoutIsValid();
+        }
+    }
+    public function invalidateDependentOnOtherChargersDetails():void
+    {
+        if (model_internal::_otherChargersDetailsIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfOtherChargersDetails = null;
+            model_internal::calculateOtherChargersDetailsIsValid();
         }
     }
     public function invalidateDependentOnCidetenhrsrs():void
@@ -1813,14 +1821,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateInvoicedIsValid();
         }
     }
-    public function invalidateDependentOnCheckin():void
-    {
-        if (model_internal::_checkinIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfCheckin = null;
-            model_internal::calculateCheckinIsValid();
-        }
-    }
     public function invalidateDependentOnRatetype():void
     {
         if (model_internal::_ratetypeIsValidCacheInitialized )
@@ -1829,12 +1829,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateRatetypeIsValid();
         }
     }
-    public function invalidateDependentOnReturnaddress():void
+    public function invalidateDependentOnCheckin():void
     {
-        if (model_internal::_returnaddressIsValidCacheInitialized )
+        if (model_internal::_checkinIsValidCacheInitialized )
         {
-            model_internal::_instance.model_internal::_doValidationCacheOfReturnaddress = null;
-            model_internal::calculateReturnaddressIsValid();
+            model_internal::_instance.model_internal::_doValidationCacheOfCheckin = null;
+            model_internal::calculateCheckinIsValid();
         }
     }
     public function invalidateDependentOnTotal_addcharges():void
@@ -1843,6 +1843,14 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_instance.model_internal::_doValidationCacheOfTotal_addcharges = null;
             model_internal::calculateTotal_addchargesIsValid();
+        }
+    }
+    public function invalidateDependentOnReturnaddress():void
+    {
+        if (model_internal::_returnaddressIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfReturnaddress = null;
+            model_internal::calculateReturnaddressIsValid();
         }
     }
     public function invalidateDependentOnUuid():void
@@ -1933,20 +1941,20 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateTotal_accessoriesIsValid();
         }
     }
-    public function invalidateDependentOnCoinspectby():void
-    {
-        if (model_internal::_coinspectbyIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfCoinspectby = null;
-            model_internal::calculateCoinspectbyIsValid();
-        }
-    }
     public function invalidateDependentOnTotaltaxable():void
     {
         if (model_internal::_totaltaxableIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfTotaltaxable = null;
             model_internal::calculateTotaltaxableIsValid();
+        }
+    }
+    public function invalidateDependentOnCoinspectby():void
+    {
+        if (model_internal::_coinspectbyIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfCoinspectby = null;
+            model_internal::calculateCoinspectbyIsValid();
         }
     }
     public function invalidateDependentOnRemarks():void
@@ -1973,20 +1981,20 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateCiLocationIsValid();
         }
     }
-    public function invalidateDependentOnPaytypeid():void
-    {
-        if (model_internal::_paytypeidIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfPaytypeid = null;
-            model_internal::calculatePaytypeidIsValid();
-        }
-    }
     public function invalidateDependentOnCopyreason():void
     {
         if (model_internal::_copyreasonIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfCopyreason = null;
             model_internal::calculateCopyreasonIsValid();
+        }
+    }
+    public function invalidateDependentOnPaytypeid():void
+    {
+        if (model_internal::_paytypeidIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfPaytypeid = null;
+            model_internal::calculatePaytypeidIsValid();
         }
     }
     public function invalidateDependentOnDin():void
@@ -2021,20 +2029,20 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateCiotherIsValid();
         }
     }
-    public function invalidateDependentOnBooked():void
-    {
-        if (model_internal::_bookedIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfBooked = null;
-            model_internal::calculateBookedIsValid();
-        }
-    }
     public function invalidateDependentOnHiretypeid():void
     {
         if (model_internal::_hiretypeidIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfHiretypeid = null;
             model_internal::calculateHiretypeidIsValid();
+        }
+    }
+    public function invalidateDependentOnBooked():void
+    {
+        if (model_internal::_bookedIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfBooked = null;
+            model_internal::calculateBookedIsValid();
         }
     }
     public function invalidateDependentOnDiscount_xmile():void
@@ -2101,20 +2109,20 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateCinightoutrsIsValid();
         }
     }
-    public function invalidateDependentOnTotal_discount():void
-    {
-        if (model_internal::_total_discountIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfTotal_discount = null;
-            model_internal::calculateTotal_discountIsValid();
-        }
-    }
     public function invalidateDependentOnGdout():void
     {
         if (model_internal::_gdoutIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfGdout = null;
             model_internal::calculateGdoutIsValid();
+        }
+    }
+    public function invalidateDependentOnTotal_discount():void
+    {
+        if (model_internal::_total_discountIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfTotal_discount = null;
+            model_internal::calculateTotal_discountIsValid();
         }
     }
     public function invalidateDependentOnAddmach():void
@@ -2189,20 +2197,20 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             model_internal::calculateQuotenoIsValid();
         }
     }
-    public function invalidateDependentOnAdvance():void
-    {
-        if (model_internal::_advanceIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfAdvance = null;
-            model_internal::calculateAdvanceIsValid();
-        }
-    }
     public function invalidateDependentOnTimeout():void
     {
         if (model_internal::_timeoutIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfTimeout = null;
             model_internal::calculateTimeoutIsValid();
+        }
+    }
+    public function invalidateDependentOnAdvance():void
+    {
+        if (model_internal::_advanceIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfAdvance = null;
+            model_internal::calculateAdvanceIsValid();
         }
     }
 
@@ -2415,100 +2423,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     public function get resnoStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
-    }
-
-    public function get resnoValidator() : StyleValidator
-    {
-        return model_internal::_resnoValidator;
-    }
-
-    model_internal function set _resnoIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_resnoIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_resnoIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "resnoIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get resnoIsValid():Boolean
-    {
-        if (!model_internal::_resnoIsValidCacheInitialized)
-        {
-            model_internal::calculateResnoIsValid();
-        }
-
-        return model_internal::_resnoIsValid;
-    }
-
-    model_internal function calculateResnoIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_resnoValidator.validate(model_internal::_instance.resno)
-        model_internal::_resnoIsValid_der = (valRes.results == null);
-        model_internal::_resnoIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::resnoValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::resnoValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get resnoValidationFailureMessages():Array
-    {
-        if (model_internal::_resnoValidationFailureMessages == null)
-            model_internal::calculateResnoIsValid();
-
-        return _resnoValidationFailureMessages;
-    }
-
-    model_internal function set resnoValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_resnoValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_resnoValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "resnoValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
     }
 
     [Bindable(event="propertyChange")]   
@@ -2915,6 +2829,100 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     public function get invoicedApplicationStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
+    }
+
+    public function get invoicedApplicationValidator() : StyleValidator
+    {
+        return model_internal::_invoicedApplicationValidator;
+    }
+
+    model_internal function set _invoicedApplicationIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_invoicedApplicationIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_invoicedApplicationIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "invoicedApplicationIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get invoicedApplicationIsValid():Boolean
+    {
+        if (!model_internal::_invoicedApplicationIsValidCacheInitialized)
+        {
+            model_internal::calculateInvoicedApplicationIsValid();
+        }
+
+        return model_internal::_invoicedApplicationIsValid;
+    }
+
+    model_internal function calculateInvoicedApplicationIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_invoicedApplicationValidator.validate(model_internal::_instance.invoicedApplication)
+        model_internal::_invoicedApplicationIsValid_der = (valRes.results == null);
+        model_internal::_invoicedApplicationIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::invoicedApplicationValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::invoicedApplicationValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get invoicedApplicationValidationFailureMessages():Array
+    {
+        if (model_internal::_invoicedApplicationValidationFailureMessages == null)
+            model_internal::calculateInvoicedApplicationIsValid();
+
+        return _invoicedApplicationValidationFailureMessages;
+    }
+
+    model_internal function set invoicedApplicationValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_invoicedApplicationValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_invoicedApplicationValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "invoicedApplicationValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
     }
 
     [Bindable(event="propertyChange")]   
@@ -3324,6 +3332,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
+    public function get cixsmileageStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get coLocationStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -3414,112 +3428,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_coLocationValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coLocationValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get cixsmileageStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get parentrefStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get parentrefValidator() : StyleValidator
-    {
-        return model_internal::_parentrefValidator;
-    }
-
-    model_internal function set _parentrefIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_parentrefIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_parentrefIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "parentrefIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get parentrefIsValid():Boolean
-    {
-        if (!model_internal::_parentrefIsValidCacheInitialized)
-        {
-            model_internal::calculateParentrefIsValid();
-        }
-
-        return model_internal::_parentrefIsValid;
-    }
-
-    model_internal function calculateParentrefIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_parentrefValidator.validate(model_internal::_instance.parentref)
-        model_internal::_parentrefIsValid_der = (valRes.results == null);
-        model_internal::_parentrefIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::parentrefValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::parentrefValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get parentrefValidationFailureMessages():Array
-    {
-        if (model_internal::_parentrefValidationFailureMessages == null)
-            model_internal::calculateParentrefIsValid();
-
-        return _parentrefValidationFailureMessages;
-    }
-
-    model_internal function set parentrefValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_parentrefValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_parentrefValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "parentrefValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -3630,50 +3538,44 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get xhoursStyle():com.adobe.fiber.styles.Style
+    public function get parentrefStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
-    [Bindable(event="propertyChange")]   
-    public function get bookdateStyle():com.adobe.fiber.styles.Style
+    public function get parentrefValidator() : StyleValidator
     {
-        return model_internal::_nullStyle;
+        return model_internal::_parentrefValidator;
     }
 
-    public function get bookdateValidator() : StyleValidator
+    model_internal function set _parentrefIsValid_der(value:Boolean):void 
     {
-        return model_internal::_bookdateValidator;
-    }
-
-    model_internal function set _bookdateIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_bookdateIsValid;         
+        var oldValue:Boolean = model_internal::_parentrefIsValid;         
         if (oldValue !== value)
         {
-            model_internal::_bookdateIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookdateIsValid", oldValue, value));
+            model_internal::_parentrefIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "parentrefIsValid", oldValue, value));
         }                             
     }
 
     [Bindable(event="propertyChange")]
-    public function get bookdateIsValid():Boolean
+    public function get parentrefIsValid():Boolean
     {
-        if (!model_internal::_bookdateIsValidCacheInitialized)
+        if (!model_internal::_parentrefIsValidCacheInitialized)
         {
-            model_internal::calculateBookdateIsValid();
+            model_internal::calculateParentrefIsValid();
         }
 
-        return model_internal::_bookdateIsValid;
+        return model_internal::_parentrefIsValid;
     }
 
-    model_internal function calculateBookdateIsValid():void
+    model_internal function calculateParentrefIsValid():void
     {
-        var valRes:ValidationResultEvent = model_internal::_bookdateValidator.validate(model_internal::_instance.bookdate)
-        model_internal::_bookdateIsValid_der = (valRes.results == null);
-        model_internal::_bookdateIsValidCacheInitialized = true;
+        var valRes:ValidationResultEvent = model_internal::_parentrefValidator.validate(model_internal::_instance.parentref)
+        model_internal::_parentrefIsValid_der = (valRes.results == null);
+        model_internal::_parentrefIsValidCacheInitialized = true;
         if (valRes.results == null)
-             model_internal::bookdateValidationFailureMessages_der = emptyArray;
+             model_internal::parentrefValidationFailureMessages_der = emptyArray;
         else
         {
             var _valFailures:Array = new Array();
@@ -3681,22 +3583,22 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 _valFailures.push(valRes.results[a].errorMessage);
             }
-            model_internal::bookdateValidationFailureMessages_der = _valFailures;
+            model_internal::parentrefValidationFailureMessages_der = _valFailures;
         }
     }
 
     [Bindable(event="propertyChange")]
-    public function get bookdateValidationFailureMessages():Array
+    public function get parentrefValidationFailureMessages():Array
     {
-        if (model_internal::_bookdateValidationFailureMessages == null)
-            model_internal::calculateBookdateIsValid();
+        if (model_internal::_parentrefValidationFailureMessages == null)
+            model_internal::calculateParentrefIsValid();
 
-        return _bookdateValidationFailureMessages;
+        return _parentrefValidationFailureMessages;
     }
 
-    model_internal function set bookdateValidationFailureMessages_der(value:Array) : void
+    model_internal function set parentrefValidationFailureMessages_der(value:Array) : void
     {
-        var oldValue:Array = model_internal::_bookdateValidationFailureMessages;
+        var oldValue:Array = model_internal::_parentrefValidationFailureMessages;
 
         var needUpdate : Boolean = false;
         if (oldValue == null)
@@ -3724,8 +3626,8 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
 
         if (needUpdate)
         {
-            model_internal::_bookdateValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookdateValidationFailureMessages", oldValue, value));
+            model_internal::_parentrefValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "parentrefValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -3733,6 +3635,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get xhoursStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -3826,6 +3734,106 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_checkoutdataValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkoutdataValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get bookdateStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get bookdateValidator() : StyleValidator
+    {
+        return model_internal::_bookdateValidator;
+    }
+
+    model_internal function set _bookdateIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_bookdateIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_bookdateIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookdateIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get bookdateIsValid():Boolean
+    {
+        if (!model_internal::_bookdateIsValidCacheInitialized)
+        {
+            model_internal::calculateBookdateIsValid();
+        }
+
+        return model_internal::_bookdateIsValid;
+    }
+
+    model_internal function calculateBookdateIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_bookdateValidator.validate(model_internal::_instance.bookdate)
+        model_internal::_bookdateIsValid_der = (valRes.results == null);
+        model_internal::_bookdateIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::bookdateValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::bookdateValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get bookdateValidationFailureMessages():Array
+    {
+        if (model_internal::_bookdateValidationFailureMessages == null)
+            model_internal::calculateBookdateIsValid();
+
+        return _bookdateValidationFailureMessages;
+    }
+
+    model_internal function set bookdateValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_bookdateValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_bookdateValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookdateValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -3939,6 +3947,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get regnoStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -4142,106 +4156,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get otherChargersDetailsStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get otherChargersDetailsValidator() : StyleValidator
-    {
-        return model_internal::_otherChargersDetailsValidator;
-    }
-
-    model_internal function set _otherChargersDetailsIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_otherChargersDetailsIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_otherChargersDetailsIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "otherChargersDetailsIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get otherChargersDetailsIsValid():Boolean
-    {
-        if (!model_internal::_otherChargersDetailsIsValidCacheInitialized)
-        {
-            model_internal::calculateOtherChargersDetailsIsValid();
-        }
-
-        return model_internal::_otherChargersDetailsIsValid;
-    }
-
-    model_internal function calculateOtherChargersDetailsIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_otherChargersDetailsValidator.validate(model_internal::_instance.otherChargersDetails)
-        model_internal::_otherChargersDetailsIsValid_der = (valRes.results == null);
-        model_internal::_otherChargersDetailsIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::otherChargersDetailsValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::otherChargersDetailsValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get otherChargersDetailsValidationFailureMessages():Array
-    {
-        if (model_internal::_otherChargersDetailsValidationFailureMessages == null)
-            model_internal::calculateOtherChargersDetailsIsValid();
-
-        return _otherChargersDetailsValidationFailureMessages;
-    }
-
-    model_internal function set otherChargersDetailsValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_otherChargersDetailsValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_otherChargersDetailsValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "otherChargersDetailsValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get checkindataStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -4432,6 +4346,106 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_agrdoutValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "agrdoutValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get otherChargersDetailsStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get otherChargersDetailsValidator() : StyleValidator
+    {
+        return model_internal::_otherChargersDetailsValidator;
+    }
+
+    model_internal function set _otherChargersDetailsIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_otherChargersDetailsIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_otherChargersDetailsIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "otherChargersDetailsIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get otherChargersDetailsIsValid():Boolean
+    {
+        if (!model_internal::_otherChargersDetailsIsValidCacheInitialized)
+        {
+            model_internal::calculateOtherChargersDetailsIsValid();
+        }
+
+        return model_internal::_otherChargersDetailsIsValid;
+    }
+
+    model_internal function calculateOtherChargersDetailsIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_otherChargersDetailsValidator.validate(model_internal::_instance.otherChargersDetails)
+        model_internal::_otherChargersDetailsIsValid_der = (valRes.results == null);
+        model_internal::_otherChargersDetailsIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::otherChargersDetailsValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::otherChargersDetailsValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get otherChargersDetailsValidationFailureMessages():Array
+    {
+        if (model_internal::_otherChargersDetailsValidationFailureMessages == null)
+            model_internal::calculateOtherChargersDetailsIsValid();
+
+        return _otherChargersDetailsValidationFailureMessages;
+    }
+
+    model_internal function set otherChargersDetailsValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_otherChargersDetailsValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_otherChargersDetailsValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "otherChargersDetailsValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -4742,106 +4756,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get checkinStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get checkinValidator() : StyleValidator
-    {
-        return model_internal::_checkinValidator;
-    }
-
-    model_internal function set _checkinIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_checkinIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_checkinIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkinIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get checkinIsValid():Boolean
-    {
-        if (!model_internal::_checkinIsValidCacheInitialized)
-        {
-            model_internal::calculateCheckinIsValid();
-        }
-
-        return model_internal::_checkinIsValid;
-    }
-
-    model_internal function calculateCheckinIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_checkinValidator.validate(model_internal::_instance.checkin)
-        model_internal::_checkinIsValid_der = (valRes.results == null);
-        model_internal::_checkinIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::checkinValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::checkinValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get checkinValidationFailureMessages():Array
-    {
-        if (model_internal::_checkinValidationFailureMessages == null)
-            model_internal::calculateCheckinIsValid();
-
-        return _checkinValidationFailureMessages;
-    }
-
-    model_internal function set checkinValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_checkinValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_checkinValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkinValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get ratetypeStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -4942,56 +4856,44 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cinightoutStyle():com.adobe.fiber.styles.Style
+    public function get checkinStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
-    [Bindable(event="propertyChange")]   
-    public function get cidetenhrsStyle():com.adobe.fiber.styles.Style
+    public function get checkinValidator() : StyleValidator
     {
-        return model_internal::_nullStyle;
+        return model_internal::_checkinValidator;
     }
 
-    [Bindable(event="propertyChange")]   
-    public function get returnaddressStyle():com.adobe.fiber.styles.Style
+    model_internal function set _checkinIsValid_der(value:Boolean):void 
     {
-        return model_internal::_nullStyle;
-    }
-
-    public function get returnaddressValidator() : StyleValidator
-    {
-        return model_internal::_returnaddressValidator;
-    }
-
-    model_internal function set _returnaddressIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_returnaddressIsValid;         
+        var oldValue:Boolean = model_internal::_checkinIsValid;         
         if (oldValue !== value)
         {
-            model_internal::_returnaddressIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "returnaddressIsValid", oldValue, value));
+            model_internal::_checkinIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkinIsValid", oldValue, value));
         }                             
     }
 
     [Bindable(event="propertyChange")]
-    public function get returnaddressIsValid():Boolean
+    public function get checkinIsValid():Boolean
     {
-        if (!model_internal::_returnaddressIsValidCacheInitialized)
+        if (!model_internal::_checkinIsValidCacheInitialized)
         {
-            model_internal::calculateReturnaddressIsValid();
+            model_internal::calculateCheckinIsValid();
         }
 
-        return model_internal::_returnaddressIsValid;
+        return model_internal::_checkinIsValid;
     }
 
-    model_internal function calculateReturnaddressIsValid():void
+    model_internal function calculateCheckinIsValid():void
     {
-        var valRes:ValidationResultEvent = model_internal::_returnaddressValidator.validate(model_internal::_instance.returnaddress)
-        model_internal::_returnaddressIsValid_der = (valRes.results == null);
-        model_internal::_returnaddressIsValidCacheInitialized = true;
+        var valRes:ValidationResultEvent = model_internal::_checkinValidator.validate(model_internal::_instance.checkin)
+        model_internal::_checkinIsValid_der = (valRes.results == null);
+        model_internal::_checkinIsValidCacheInitialized = true;
         if (valRes.results == null)
-             model_internal::returnaddressValidationFailureMessages_der = emptyArray;
+             model_internal::checkinValidationFailureMessages_der = emptyArray;
         else
         {
             var _valFailures:Array = new Array();
@@ -4999,22 +4901,22 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 _valFailures.push(valRes.results[a].errorMessage);
             }
-            model_internal::returnaddressValidationFailureMessages_der = _valFailures;
+            model_internal::checkinValidationFailureMessages_der = _valFailures;
         }
     }
 
     [Bindable(event="propertyChange")]
-    public function get returnaddressValidationFailureMessages():Array
+    public function get checkinValidationFailureMessages():Array
     {
-        if (model_internal::_returnaddressValidationFailureMessages == null)
-            model_internal::calculateReturnaddressIsValid();
+        if (model_internal::_checkinValidationFailureMessages == null)
+            model_internal::calculateCheckinIsValid();
 
-        return _returnaddressValidationFailureMessages;
+        return _checkinValidationFailureMessages;
     }
 
-    model_internal function set returnaddressValidationFailureMessages_der(value:Array) : void
+    model_internal function set checkinValidationFailureMessages_der(value:Array) : void
     {
-        var oldValue:Array = model_internal::_returnaddressValidationFailureMessages;
+        var oldValue:Array = model_internal::_checkinValidationFailureMessages;
 
         var needUpdate : Boolean = false;
         if (oldValue == null)
@@ -5042,8 +4944,8 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
 
         if (needUpdate)
         {
-            model_internal::_returnaddressValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "returnaddressValidationFailureMessages", oldValue, value));
+            model_internal::_checkinValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkinValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -5051,6 +4953,18 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get cinightoutStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get cidetenhrsStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -5144,6 +5058,106 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_total_addchargesValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_addchargesValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get returnaddressStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get returnaddressValidator() : StyleValidator
+    {
+        return model_internal::_returnaddressValidator;
+    }
+
+    model_internal function set _returnaddressIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_returnaddressIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_returnaddressIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "returnaddressIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get returnaddressIsValid():Boolean
+    {
+        if (!model_internal::_returnaddressIsValidCacheInitialized)
+        {
+            model_internal::calculateReturnaddressIsValid();
+        }
+
+        return model_internal::_returnaddressIsValid;
+    }
+
+    model_internal function calculateReturnaddressIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_returnaddressValidator.validate(model_internal::_instance.returnaddress)
+        model_internal::_returnaddressIsValid_der = (valRes.results == null);
+        model_internal::_returnaddressIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::returnaddressValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::returnaddressValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get returnaddressValidationFailureMessages():Array
+    {
+        if (model_internal::_returnaddressValidationFailureMessages == null)
+            model_internal::calculateReturnaddressIsValid();
+
+        return _returnaddressValidationFailureMessages;
+    }
+
+    model_internal function set returnaddressValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_returnaddressValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_returnaddressValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "returnaddressValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -5454,12 +5468,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get recordidStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get doutStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -5557,6 +5565,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get recordidStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -6266,106 +6280,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get coinspectbyStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get coinspectbyValidator() : StyleValidator
-    {
-        return model_internal::_coinspectbyValidator;
-    }
-
-    model_internal function set _coinspectbyIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_coinspectbyIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_coinspectbyIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coinspectbyIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get coinspectbyIsValid():Boolean
-    {
-        if (!model_internal::_coinspectbyIsValidCacheInitialized)
-        {
-            model_internal::calculateCoinspectbyIsValid();
-        }
-
-        return model_internal::_coinspectbyIsValid;
-    }
-
-    model_internal function calculateCoinspectbyIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_coinspectbyValidator.validate(model_internal::_instance.coinspectby)
-        model_internal::_coinspectbyIsValid_der = (valRes.results == null);
-        model_internal::_coinspectbyIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::coinspectbyValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::coinspectbyValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get coinspectbyValidationFailureMessages():Array
-    {
-        if (model_internal::_coinspectbyValidationFailureMessages == null)
-            model_internal::calculateCoinspectbyIsValid();
-
-        return _coinspectbyValidationFailureMessages;
-    }
-
-    model_internal function set coinspectbyValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_coinspectbyValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_coinspectbyValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coinspectbyValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get totaltaxableStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -6456,6 +6370,106 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_totaltaxableValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "totaltaxableValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get coinspectbyStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get coinspectbyValidator() : StyleValidator
+    {
+        return model_internal::_coinspectbyValidator;
+    }
+
+    model_internal function set _coinspectbyIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_coinspectbyIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_coinspectbyIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coinspectbyIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get coinspectbyIsValid():Boolean
+    {
+        if (!model_internal::_coinspectbyIsValidCacheInitialized)
+        {
+            model_internal::calculateCoinspectbyIsValid();
+        }
+
+        return model_internal::_coinspectbyIsValid;
+    }
+
+    model_internal function calculateCoinspectbyIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_coinspectbyValidator.validate(model_internal::_instance.coinspectby)
+        model_internal::_coinspectbyIsValid_der = (valRes.results == null);
+        model_internal::_coinspectbyIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::coinspectbyValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::coinspectbyValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get coinspectbyValidationFailureMessages():Array
+    {
+        if (model_internal::_coinspectbyValidationFailureMessages == null)
+            model_internal::calculateCoinspectbyIsValid();
+
+        return _coinspectbyValidationFailureMessages;
+    }
+
+    model_internal function set coinspectbyValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_coinspectbyValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_coinspectbyValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coinspectbyValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -6566,12 +6580,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get comileageStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get timeinStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -6669,6 +6677,12 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get comileageStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -6772,106 +6786,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get paytypeidStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get paytypeidValidator() : StyleValidator
-    {
-        return model_internal::_paytypeidValidator;
-    }
-
-    model_internal function set _paytypeidIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_paytypeidIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_paytypeidIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "paytypeidIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get paytypeidIsValid():Boolean
-    {
-        if (!model_internal::_paytypeidIsValidCacheInitialized)
-        {
-            model_internal::calculatePaytypeidIsValid();
-        }
-
-        return model_internal::_paytypeidIsValid;
-    }
-
-    model_internal function calculatePaytypeidIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_paytypeidValidator.validate(model_internal::_instance.paytypeid)
-        model_internal::_paytypeidIsValid_der = (valRes.results == null);
-        model_internal::_paytypeidIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::paytypeidValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::paytypeidValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get paytypeidValidationFailureMessages():Array
-    {
-        if (model_internal::_paytypeidValidationFailureMessages == null)
-            model_internal::calculatePaytypeidIsValid();
-
-        return _paytypeidValidationFailureMessages;
-    }
-
-    model_internal function set paytypeidValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_paytypeidValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_paytypeidValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "paytypeidValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get copyreasonStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -6962,6 +6876,106 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_copyreasonValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "copyreasonValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get paytypeidStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get paytypeidValidator() : StyleValidator
+    {
+        return model_internal::_paytypeidValidator;
+    }
+
+    model_internal function set _paytypeidIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_paytypeidIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_paytypeidIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "paytypeidIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get paytypeidIsValid():Boolean
+    {
+        if (!model_internal::_paytypeidIsValidCacheInitialized)
+        {
+            model_internal::calculatePaytypeidIsValid();
+        }
+
+        return model_internal::_paytypeidIsValid;
+    }
+
+    model_internal function calculatePaytypeidIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_paytypeidValidator.validate(model_internal::_instance.paytypeid)
+        model_internal::_paytypeidIsValid_der = (valRes.results == null);
+        model_internal::_paytypeidIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::paytypeidValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::paytypeidValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get paytypeidValidationFailureMessages():Array
+    {
+        if (model_internal::_paytypeidValidationFailureMessages == null)
+            model_internal::calculatePaytypeidIsValid();
+
+        return _paytypeidValidationFailureMessages;
+    }
+
+    model_internal function set paytypeidValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_paytypeidValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_paytypeidValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "paytypeidValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -7378,103 +7392,9 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get bookedStyle():com.adobe.fiber.styles.Style
+    public function get cofuellevelStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
-    }
-
-    public function get bookedValidator() : StyleValidator
-    {
-        return model_internal::_bookedValidator;
-    }
-
-    model_internal function set _bookedIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_bookedIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_bookedIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookedIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get bookedIsValid():Boolean
-    {
-        if (!model_internal::_bookedIsValidCacheInitialized)
-        {
-            model_internal::calculateBookedIsValid();
-        }
-
-        return model_internal::_bookedIsValid;
-    }
-
-    model_internal function calculateBookedIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_bookedValidator.validate(model_internal::_instance.booked)
-        model_internal::_bookedIsValid_der = (valRes.results == null);
-        model_internal::_bookedIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::bookedValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::bookedValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get bookedValidationFailureMessages():Array
-    {
-        if (model_internal::_bookedValidationFailureMessages == null)
-            model_internal::calculateBookedIsValid();
-
-        return _bookedValidationFailureMessages;
-    }
-
-    model_internal function set bookedValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_bookedValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_bookedValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookedValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
     }
 
     [Bindable(event="propertyChange")]   
@@ -7578,9 +7498,103 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get cofuellevelStyle():com.adobe.fiber.styles.Style
+    public function get bookedStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
+    }
+
+    public function get bookedValidator() : StyleValidator
+    {
+        return model_internal::_bookedValidator;
+    }
+
+    model_internal function set _bookedIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_bookedIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_bookedIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookedIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get bookedIsValid():Boolean
+    {
+        if (!model_internal::_bookedIsValidCacheInitialized)
+        {
+            model_internal::calculateBookedIsValid();
+        }
+
+        return model_internal::_bookedIsValid;
+    }
+
+    model_internal function calculateBookedIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_bookedValidator.validate(model_internal::_instance.booked)
+        model_internal::_bookedIsValid_der = (valRes.results == null);
+        model_internal::_bookedIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::bookedValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::bookedValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get bookedValidationFailureMessages():Array
+    {
+        if (model_internal::_bookedValidationFailureMessages == null)
+            model_internal::calculateBookedIsValid();
+
+        return _bookedValidationFailureMessages;
+    }
+
+    model_internal function set bookedValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_bookedValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_bookedValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookedValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
     }
 
     [Bindable(event="propertyChange")]   
@@ -8390,106 +8404,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get total_discountStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get total_discountValidator() : StyleValidator
-    {
-        return model_internal::_total_discountValidator;
-    }
-
-    model_internal function set _total_discountIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_total_discountIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_total_discountIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_discountIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get total_discountIsValid():Boolean
-    {
-        if (!model_internal::_total_discountIsValidCacheInitialized)
-        {
-            model_internal::calculateTotal_discountIsValid();
-        }
-
-        return model_internal::_total_discountIsValid;
-    }
-
-    model_internal function calculateTotal_discountIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_total_discountValidator.validate(model_internal::_instance.total_discount)
-        model_internal::_total_discountIsValid_der = (valRes.results == null);
-        model_internal::_total_discountIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::total_discountValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::total_discountValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get total_discountValidationFailureMessages():Array
-    {
-        if (model_internal::_total_discountValidationFailureMessages == null)
-            model_internal::calculateTotal_discountIsValid();
-
-        return _total_discountValidationFailureMessages;
-    }
-
-    model_internal function set total_discountValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_total_discountValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_total_discountValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_discountValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get gdoutStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -8580,6 +8494,106 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         {
             model_internal::_gdoutValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gdoutValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get total_discountStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get total_discountValidator() : StyleValidator
+    {
+        return model_internal::_total_discountValidator;
+    }
+
+    model_internal function set _total_discountIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_total_discountIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_total_discountIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_discountIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get total_discountIsValid():Boolean
+    {
+        if (!model_internal::_total_discountIsValidCacheInitialized)
+        {
+            model_internal::calculateTotal_discountIsValid();
+        }
+
+        return model_internal::_total_discountIsValid;
+    }
+
+    model_internal function calculateTotal_discountIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_total_discountValidator.validate(model_internal::_instance.total_discount)
+        model_internal::_total_discountIsValid_der = (valRes.results == null);
+        model_internal::_total_discountIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::total_discountValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::total_discountValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get total_discountValidationFailureMessages():Array
+    {
+        if (model_internal::_total_discountValidationFailureMessages == null)
+            model_internal::calculateTotal_discountIsValid();
+
+        return _total_discountValidationFailureMessages;
+    }
+
+    model_internal function set total_discountValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_total_discountValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_total_discountValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_discountValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -9490,106 +9504,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get advanceStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get advanceValidator() : StyleValidator
-    {
-        return model_internal::_advanceValidator;
-    }
-
-    model_internal function set _advanceIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_advanceIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_advanceIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "advanceIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get advanceIsValid():Boolean
-    {
-        if (!model_internal::_advanceIsValidCacheInitialized)
-        {
-            model_internal::calculateAdvanceIsValid();
-        }
-
-        return model_internal::_advanceIsValid;
-    }
-
-    model_internal function calculateAdvanceIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_advanceValidator.validate(model_internal::_instance.advance)
-        model_internal::_advanceIsValid_der = (valRes.results == null);
-        model_internal::_advanceIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::advanceValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::advanceValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get advanceValidationFailureMessages():Array
-    {
-        if (model_internal::_advanceValidationFailureMessages == null)
-            model_internal::calculateAdvanceIsValid();
-
-        return _advanceValidationFailureMessages;
-    }
-
-    model_internal function set advanceValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_advanceValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_advanceValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "advanceValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get timeoutStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -9689,6 +9603,106 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
         }
     }
 
+    [Bindable(event="propertyChange")]   
+    public function get advanceStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get advanceValidator() : StyleValidator
+    {
+        return model_internal::_advanceValidator;
+    }
+
+    model_internal function set _advanceIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_advanceIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_advanceIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "advanceIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get advanceIsValid():Boolean
+    {
+        if (!model_internal::_advanceIsValidCacheInitialized)
+        {
+            model_internal::calculateAdvanceIsValid();
+        }
+
+        return model_internal::_advanceIsValid;
+    }
+
+    model_internal function calculateAdvanceIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_advanceValidator.validate(model_internal::_instance.advance)
+        model_internal::_advanceIsValid_der = (valRes.results == null);
+        model_internal::_advanceIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::advanceValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::advanceValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get advanceValidationFailureMessages():Array
+    {
+        if (model_internal::_advanceValidationFailureMessages == null)
+            model_internal::calculateAdvanceIsValid();
+
+        return _advanceValidationFailureMessages;
+    }
+
+    model_internal function set advanceValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_advanceValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_advanceValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "advanceValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
 
      /**
      * 
@@ -9722,10 +9736,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return billbasisValidationFailureMessages;
             }
-            case("resno"):
-            {
-                return resnoValidationFailureMessages;
-            }
             case("deposit"):
             {
                 return depositValidationFailureMessages;
@@ -9741,6 +9751,10 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             case("agrno"):
             {
                 return agrnoValidationFailureMessages;
+            }
+            case("invoicedApplication"):
+            {
+                return invoicedApplicationValidationFailureMessages;
             }
             case("codate"):
             {
@@ -9762,21 +9776,21 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return coLocationValidationFailureMessages;
             }
-            case("parentref"):
-            {
-                return parentrefValidationFailureMessages;
-            }
             case("taxcomcode"):
             {
                 return taxcomcodeValidationFailureMessages;
             }
-            case("bookdate"):
+            case("parentref"):
             {
-                return bookdateValidationFailureMessages;
+                return parentrefValidationFailureMessages;
             }
             case("checkoutdata"):
             {
                 return checkoutdataValidationFailureMessages;
+            }
+            case("bookdate"):
+            {
+                return bookdateValidationFailureMessages;
             }
             case("depositbal"):
             {
@@ -9790,10 +9804,6 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return cohirestsidValidationFailureMessages;
             }
-            case("otherChargersDetails"):
-            {
-                return otherChargersDetailsValidationFailureMessages;
-            }
             case("checkindata"):
             {
                 return checkindataValidationFailureMessages;
@@ -9801,6 +9811,10 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             case("agrdout"):
             {
                 return agrdoutValidationFailureMessages;
+            }
+            case("otherChargersDetails"):
+            {
+                return otherChargersDetailsValidationFailureMessages;
             }
             case("cidetenhrsrs"):
             {
@@ -9814,21 +9828,21 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return invoicedValidationFailureMessages;
             }
-            case("checkin"):
-            {
-                return checkinValidationFailureMessages;
-            }
             case("ratetype"):
             {
                 return ratetypeValidationFailureMessages;
             }
-            case("returnaddress"):
+            case("checkin"):
             {
-                return returnaddressValidationFailureMessages;
+                return checkinValidationFailureMessages;
             }
             case("total_addcharges"):
             {
                 return total_addchargesValidationFailureMessages;
+            }
+            case("returnaddress"):
+            {
+                return returnaddressValidationFailureMessages;
             }
             case("uuid"):
             {
@@ -9874,13 +9888,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return total_accessoriesValidationFailureMessages;
             }
-            case("coinspectby"):
-            {
-                return coinspectbyValidationFailureMessages;
-            }
             case("totaltaxable"):
             {
                 return totaltaxableValidationFailureMessages;
+            }
+            case("coinspectby"):
+            {
+                return coinspectbyValidationFailureMessages;
             }
             case("remarks"):
             {
@@ -9894,13 +9908,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return ciLocationValidationFailureMessages;
             }
-            case("paytypeid"):
-            {
-                return paytypeidValidationFailureMessages;
-            }
             case("copyreason"):
             {
                 return copyreasonValidationFailureMessages;
+            }
+            case("paytypeid"):
+            {
+                return paytypeidValidationFailureMessages;
             }
             case("din"):
             {
@@ -9918,13 +9932,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return ciotherValidationFailureMessages;
             }
-            case("booked"):
-            {
-                return bookedValidationFailureMessages;
-            }
             case("hiretypeid"):
             {
                 return hiretypeidValidationFailureMessages;
+            }
+            case("booked"):
+            {
+                return bookedValidationFailureMessages;
             }
             case("discount_xmile"):
             {
@@ -9958,13 +9972,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return cinightoutrsValidationFailureMessages;
             }
-            case("total_discount"):
-            {
-                return total_discountValidationFailureMessages;
-            }
             case("gdout"):
             {
                 return gdoutValidationFailureMessages;
+            }
+            case("total_discount"):
+            {
+                return total_discountValidationFailureMessages;
             }
             case("addmach"):
             {
@@ -10002,13 +10016,13 @@ internal class _Com_dspl_malkey_domain_FreservationEntityMetadata extends com.ad
             {
                 return quotenoValidationFailureMessages;
             }
-            case("advance"):
-            {
-                return advanceValidationFailureMessages;
-            }
             case("timeout"):
             {
                 return timeoutValidationFailureMessages;
+            }
+            case("advance"):
+            {
+                return advanceValidationFailureMessages;
             }
             default:
             {

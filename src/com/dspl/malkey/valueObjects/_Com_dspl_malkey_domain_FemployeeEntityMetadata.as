@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("joindate", "dlfrontimagedata", "curtele", "homeadd2", "homeadd3", "adddate", "empstat", "remarks", "empid", "curadd2", "curadd1", "nicno", "curadd3", "name", "homeadd1", "mobilephone1", "mobilephone2", "dlbackimagedata", "dldexp", "dlfrontimage", "nicimage", "emptype", "dlno", "etfno", "addmach", "adduser", "dlbackimage", "nicbackimage", "nicbackimagedata", "ppimage", "photo", "dldissue", "ppno", "photodata", "isSelected", "email", "dob", "nicimagedata", "epfno", "recordid", "hometele");
+    model_internal static var allProperties:Array = new Array("joindate", "dlfrontimagedata", "curtele", "homeadd2", "homeadd3", "adddate", "empstat", "remarks", "empid", "curadd2", "curadd1", "nicno", "curadd3", "name", "homeadd1", "mobilephone1", "mobilephone2", "dlbackimagedata", "dldexp", "dlfrontimage", "nicimage", "emptype", "dlno", "etfno", "addmach", "dlbackimage", "adduser", "nicbackimage", "nicbackimagedata", "ppimage", "photo", "dldissue", "ppno", "photodata", "email", "isSelected", "dob", "nicimagedata", "epfno", "recordid", "hometele");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("joindate", "dlfrontimagedata", "curtele", "homeadd2", "homeadd3", "adddate", "empstat", "remarks", "empid", "curadd2", "curadd1", "nicno", "curadd3", "name", "homeadd1", "mobilephone1", "mobilephone2", "dlbackimagedata", "dldexp", "dlfrontimage", "nicimage", "emptype", "dlno", "etfno", "addmach", "adduser", "dlbackimage", "nicbackimage", "nicbackimagedata", "ppimage", "photo", "dldissue", "ppno", "photodata", "isSelected", "email", "dob", "nicimagedata", "epfno", "recordid", "hometele");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("joindate", "dlfrontimagedata", "curtele", "homeadd2", "homeadd3", "adddate", "empstat", "remarks", "empid", "curadd2", "curadd1", "nicno", "curadd3", "name", "homeadd1", "mobilephone1", "mobilephone2", "dlbackimagedata", "dldexp", "dlfrontimage", "nicimage", "emptype", "dlno", "etfno", "addmach", "adduser", "dlbackimage", "nicbackimage", "nicbackimagedata", "ppimage", "photo", "dldissue", "ppno", "photodata", "isSelected", "email", "dob", "nicimagedata", "epfno", "recordid", "hometele");
+    model_internal static var allRequiredProperties:Array = new Array("joindate", "dlfrontimagedata", "curtele", "homeadd2", "homeadd3", "adddate", "empstat", "remarks", "empid", "curadd2", "curadd1", "nicno", "curadd3", "name", "homeadd1", "mobilephone1", "mobilephone2", "dlbackimagedata", "dldexp", "dlfrontimage", "nicimage", "emptype", "dlno", "etfno", "addmach", "dlbackimage", "adduser", "nicbackimage", "nicbackimagedata", "ppimage", "photo", "dldissue", "ppno", "photodata", "email", "isSelected", "dob", "nicimagedata", "epfno", "recordid", "hometele");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("joindate", "dlfrontimagedata", "curtele", "homeadd2", "homeadd3", "adddate", "empstat", "remarks", "empid", "curadd2", "curadd1", "nicno", "curadd3", "name", "homeadd1", "mobilephone1", "mobilephone2", "dlbackimagedata", "dldexp", "dlfrontimage", "nicimage", "emptype", "dlno", "etfno", "addmach", "dlbackimage", "adduser", "nicbackimage", "nicbackimagedata", "ppimage", "photo", "dldissue", "ppno", "photodata", "email", "isSelected", "dob", "nicimagedata", "epfno", "recordid", "hometele");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("joindate", "dlfrontimagedata", "curtele", "homeadd2", "homeadd3", "adddate", "empstat", "remarks", "empid", "curadd2", "curadd1", "nicno", "curadd3", "name", "homeadd1", "mobilephone1", "mobilephone2", "dlbackimagedata", "dldexp", "dlfrontimage", "nicimage", "emptype", "dlno", "etfno", "addmach", "adduser", "dlbackimage", "nicbackimage", "nicbackimagedata", "ppimage", "photo", "dldissue", "ppno", "photodata", "isSelected", "email", "dob", "nicimagedata", "epfno", "recordid", "hometele");
+    model_internal static var dataProperties:Array = new Array("joindate", "dlfrontimagedata", "curtele", "homeadd2", "homeadd3", "adddate", "empstat", "remarks", "empid", "curadd2", "curadd1", "nicno", "curadd3", "name", "homeadd1", "mobilephone1", "mobilephone2", "dlbackimagedata", "dldexp", "dlfrontimage", "nicimage", "emptype", "dlno", "etfno", "addmach", "dlbackimage", "adduser", "nicbackimage", "nicbackimagedata", "ppimage", "photo", "dldissue", "ppno", "photodata", "email", "isSelected", "dob", "nicimagedata", "epfno", "recordid", "hometele");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -161,15 +161,15 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
     model_internal var _addmachIsValidCacheInitialized:Boolean = false;
     model_internal var _addmachValidationFailureMessages:Array;
     
-    model_internal var _adduserIsValid:Boolean;
-    model_internal var _adduserValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _adduserIsValidCacheInitialized:Boolean = false;
-    model_internal var _adduserValidationFailureMessages:Array;
-    
     model_internal var _dlbackimageIsValid:Boolean;
     model_internal var _dlbackimageValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _dlbackimageIsValidCacheInitialized:Boolean = false;
     model_internal var _dlbackimageValidationFailureMessages:Array;
+    
+    model_internal var _adduserIsValid:Boolean;
+    model_internal var _adduserValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _adduserIsValidCacheInitialized:Boolean = false;
+    model_internal var _adduserValidationFailureMessages:Array;
     
     model_internal var _nicbackimageIsValid:Boolean;
     model_internal var _nicbackimageValidator:com.adobe.fiber.styles.StyleValidator;
@@ -266,8 +266,8 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
             model_internal::dependentsOnMap["dlno"] = new Array();
             model_internal::dependentsOnMap["etfno"] = new Array();
             model_internal::dependentsOnMap["addmach"] = new Array();
-            model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["dlbackimage"] = new Array();
+            model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["nicbackimage"] = new Array();
             model_internal::dependentsOnMap["nicbackimagedata"] = new Array();
             model_internal::dependentsOnMap["ppimage"] = new Array();
@@ -275,8 +275,8 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
             model_internal::dependentsOnMap["dldissue"] = new Array();
             model_internal::dependentsOnMap["ppno"] = new Array();
             model_internal::dependentsOnMap["photodata"] = new Array();
-            model_internal::dependentsOnMap["isSelected"] = new Array();
             model_internal::dependentsOnMap["email"] = new Array();
+            model_internal::dependentsOnMap["isSelected"] = new Array();
             model_internal::dependentsOnMap["dob"] = new Array();
             model_internal::dependentsOnMap["nicimagedata"] = new Array();
             model_internal::dependentsOnMap["epfno"] = new Array();
@@ -413,16 +413,16 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
         model_internal::_addmachValidator.requiredFieldError = "addmach is required";
         //model_internal::_addmachValidator.source = model_internal::_instance;
         //model_internal::_addmachValidator.property = "addmach";
-        model_internal::_adduserValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdduser);
-        model_internal::_adduserValidator.required = true;
-        model_internal::_adduserValidator.requiredFieldError = "adduser is required";
-        //model_internal::_adduserValidator.source = model_internal::_instance;
-        //model_internal::_adduserValidator.property = "adduser";
         model_internal::_dlbackimageValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForDlbackimage);
         model_internal::_dlbackimageValidator.required = true;
         model_internal::_dlbackimageValidator.requiredFieldError = "dlbackimage is required";
         //model_internal::_dlbackimageValidator.source = model_internal::_instance;
         //model_internal::_dlbackimageValidator.property = "dlbackimage";
+        model_internal::_adduserValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdduser);
+        model_internal::_adduserValidator.required = true;
+        model_internal::_adduserValidator.requiredFieldError = "adduser is required";
+        //model_internal::_adduserValidator.source = model_internal::_instance;
+        //model_internal::_adduserValidator.property = "adduser";
         model_internal::_nicbackimageValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForNicbackimage);
         model_internal::_nicbackimageValidator.required = true;
         model_internal::_nicbackimageValidator.requiredFieldError = "nicbackimage is required";
@@ -842,13 +842,13 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAdduserAvailable():Boolean
+    public function get isDlbackimageAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDlbackimageAvailable():Boolean
+    public function get isAdduserAvailable():Boolean
     {
         return true;
     }
@@ -896,13 +896,13 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]
-    public function get isIsSelectedAvailable():Boolean
+    public function get isEmailAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isEmailAvailable():Boolean
+    public function get isIsSelectedAvailable():Boolean
     {
         return true;
     }
@@ -1141,20 +1141,20 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
             model_internal::calculateAddmachIsValid();
         }
     }
-    public function invalidateDependentOnAdduser():void
-    {
-        if (model_internal::_adduserIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfAdduser = null;
-            model_internal::calculateAdduserIsValid();
-        }
-    }
     public function invalidateDependentOnDlbackimage():void
     {
         if (model_internal::_dlbackimageIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfDlbackimage = null;
             model_internal::calculateDlbackimageIsValid();
+        }
+    }
+    public function invalidateDependentOnAdduser():void
+    {
+        if (model_internal::_adduserIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfAdduser = null;
+            model_internal::calculateAdduserIsValid();
         }
     }
     public function invalidateDependentOnNicbackimage():void
@@ -3760,106 +3760,6 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]   
-    public function get adduserStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get adduserValidator() : StyleValidator
-    {
-        return model_internal::_adduserValidator;
-    }
-
-    model_internal function set _adduserIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_adduserIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_adduserIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get adduserIsValid():Boolean
-    {
-        if (!model_internal::_adduserIsValidCacheInitialized)
-        {
-            model_internal::calculateAdduserIsValid();
-        }
-
-        return model_internal::_adduserIsValid;
-    }
-
-    model_internal function calculateAdduserIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_adduserValidator.validate(model_internal::_instance.adduser)
-        model_internal::_adduserIsValid_der = (valRes.results == null);
-        model_internal::_adduserIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::adduserValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::adduserValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get adduserValidationFailureMessages():Array
-    {
-        if (model_internal::_adduserValidationFailureMessages == null)
-            model_internal::calculateAdduserIsValid();
-
-        return _adduserValidationFailureMessages;
-    }
-
-    model_internal function set adduserValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_adduserValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_adduserValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get dlbackimageStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -3950,6 +3850,106 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
         {
             model_internal::_dlbackimageValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dlbackimageValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get adduserStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get adduserValidator() : StyleValidator
+    {
+        return model_internal::_adduserValidator;
+    }
+
+    model_internal function set _adduserIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_adduserIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_adduserIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adduserIsValid():Boolean
+    {
+        if (!model_internal::_adduserIsValidCacheInitialized)
+        {
+            model_internal::calculateAdduserIsValid();
+        }
+
+        return model_internal::_adduserIsValid;
+    }
+
+    model_internal function calculateAdduserIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_adduserValidator.validate(model_internal::_instance.adduser)
+        model_internal::_adduserIsValid_der = (valRes.results == null);
+        model_internal::_adduserIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::adduserValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::adduserValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adduserValidationFailureMessages():Array
+    {
+        if (model_internal::_adduserValidationFailureMessages == null)
+            model_internal::calculateAdduserIsValid();
+
+        return _adduserValidationFailureMessages;
+    }
+
+    model_internal function set adduserValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_adduserValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_adduserValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -4660,12 +4660,6 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]   
-    public function get isSelectedStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get emailStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -4763,6 +4757,12 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get isSelectedStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -5296,13 +5296,13 @@ internal class _Com_dspl_malkey_domain_FemployeeEntityMetadata extends com.adobe
             {
                 return addmachValidationFailureMessages;
             }
-            case("adduser"):
-            {
-                return adduserValidationFailureMessages;
-            }
             case("dlbackimage"):
             {
                 return dlbackimageValidationFailureMessages;
+            }
+            case("adduser"):
+            {
+                return adduserValidationFailureMessages;
             }
             case("nicbackimage"):
             {

@@ -463,6 +463,7 @@
 			
 			private function save():void{
 				cursorManager.setBusyCursor();
+				auDriverDet();
 				try{
 					if(currentState=="Add"){
 						fdebtor=new Com_dspl_malkey_domain_Fdebtor();
@@ -1284,10 +1285,12 @@
 					ErrorTipManager.removeAllErrorTips();
 					resetErrorString();
 					setModifiedByDet("");	
+					setAddedByDet("");	
 					setCtrlVal(liCurIndex);
 				}else if(state=="Add"){
 					resetForm();
 					setModifiedByDet("N/A");
+					setAddedByDet("N/A");
 					ddStatus.selectedIndex=0;
 					tnCusNavigator.selectedIndex=0;		
 				}else if(state=="Edit"){
@@ -1327,6 +1330,10 @@
 			private function setModifiedByDet(val:String):void{
 				lblModifiedBy.text="Last Modified By: ";
 				lblModifiedBy.text+=val;
+			}
+			private function setAddedByDet(val:String):void{
+				lblAddedBy.text="Added By: ";
+				lblAddedBy.text+=val;
 			}
 			
 			private function closeForm():void{
@@ -2255,7 +2262,10 @@
 					}
 					
 					//Set Modified By 
-					setModifiedByDet(fdebtor.adduser);
+					if(fdebtor.modifieddate!=null)
+					setModifiedByDet(fdebtor.modifieduser +" ["+fdebtor.modifieddate.toDateString()+"]");
+					if(fdebtor.adddate!=null)
+					setAddedByDet(fdebtor.adduser+" ["+fdebtor.adddate.toDateString()+"]");
 					
 					//Load Guarantor Details
 					if(fdebtor.gid!="")
@@ -3374,5 +3384,6 @@
 				</mx:Form>
 		</s:NavigatorContent>
 	</mx:TabNavigator>
-	<s:Label x="6" y="524" text="Last Modified By:" id="lblModifiedBy"/>
+	<s:Label x="6" y="524" text="Added By:" id="lblAddedBy"/>
+	<s:Label x="400" y="524" text="Last Modified By:" id="lblModifiedBy"/>
 </s:TitleWindow>

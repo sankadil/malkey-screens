@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FresdriverEntityMetadata extends com.adob
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("srvid", "timemalkeyout", "fresdriverrate", "dmalkeyout", "adduser", "remarks", "isavailabile", "id", "days", "priority", "issrv", "dispatch", "uuid", "recordid");
+    model_internal static var allProperties:Array = new Array("srvid", "timemalkeyout", "fresdriverrate", "dmalkeyout", "adduser", "remarks", "isavailabile", "id", "days", "issrv", "priority", "dispatch", "uuid", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("srvid", "timemalkeyout", "fresdriverrate", "dmalkeyout", "adduser", "remarks", "isavailabile", "id", "days", "priority", "issrv", "dispatch", "uuid", "recordid");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("srvid", "timemalkeyout", "fresdriverrate", "dmalkeyout", "adduser", "remarks", "isavailabile", "id", "days", "priority", "issrv", "dispatch", "uuid", "recordid");
+    model_internal static var allRequiredProperties:Array = new Array("srvid", "timemalkeyout", "fresdriverrate", "dmalkeyout", "adduser", "remarks", "isavailabile", "id", "days", "issrv", "priority", "dispatch", "uuid", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("srvid", "timemalkeyout", "fresdriverrate", "dmalkeyout", "adduser", "remarks", "isavailabile", "id", "days", "issrv", "priority", "dispatch", "uuid", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("srvid", "timemalkeyout", "fresdriverrate", "dmalkeyout", "adduser", "remarks", "isavailabile", "id", "days", "priority", "issrv", "dispatch", "uuid", "recordid");
+    model_internal static var dataProperties:Array = new Array("srvid", "timemalkeyout", "fresdriverrate", "dmalkeyout", "adduser", "remarks", "isavailabile", "id", "days", "issrv", "priority", "dispatch", "uuid", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -100,8 +100,8 @@ internal class _Com_dspl_malkey_domain_FresdriverEntityMetadata extends com.adob
             model_internal::dependentsOnMap["isavailabile"] = new Array();
             model_internal::dependentsOnMap["id"] = new Array();
             model_internal::dependentsOnMap["days"] = new Array();
-            model_internal::dependentsOnMap["priority"] = new Array();
             model_internal::dependentsOnMap["issrv"] = new Array();
+            model_internal::dependentsOnMap["priority"] = new Array();
             model_internal::dependentsOnMap["dispatch"] = new Array();
             model_internal::dependentsOnMap["uuid"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
@@ -419,13 +419,13 @@ internal class _Com_dspl_malkey_domain_FresdriverEntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get isPriorityAvailable():Boolean
+    public function get isIssrvAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isIssrvAvailable():Boolean
+    public function get isPriorityAvailable():Boolean
     {
         return true;
     }
@@ -1337,13 +1337,13 @@ internal class _Com_dspl_malkey_domain_FresdriverEntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]   
-    public function get priorityStyle():com.adobe.fiber.styles.Style
+    public function get issrvStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get issrvStyle():com.adobe.fiber.styles.Style
+    public function get priorityStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

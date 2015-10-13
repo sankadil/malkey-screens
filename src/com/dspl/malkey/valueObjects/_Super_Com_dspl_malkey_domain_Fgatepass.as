@@ -49,17 +49,19 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
      */
     private var _internal_outfromlocdes : String;
     private var _internal_bcode : String;
-    private var _internal_adddate : Date;
     private var _internal_locationtype : String;
+    private var _internal_adddate : Date;
     private var _internal_remarks : String;
     private var _internal_outdate : Date;
     private var _internal_inmileage : int;
     private var _internal_indate : Date;
-    private var _internal_empid : String;
     private var _internal_intoloc : String;
+    private var _internal_empid : String;
     private var _internal_locationid : String;
     private var _internal_tsoutdate : com.dspl.malkey.valueObjects.Java_sql_Timestamp;
     private var _internal_vehimodelid : String;
+    private var _internal_intimeexpected : String;
+    private var _internal_indateexpected : Date;
     private var _internal_name : String;
     private var _internal_txndate : Date;
     private var _internal_outfromloc : String;
@@ -68,8 +70,8 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
     private var _internal_outtime : String;
     private var _internal_outfuellevel : int;
     private var _internal_infromloc : String;
-    private var _internal_status : String;
     private var _internal_infuellevel : int;
+    private var _internal_status : String;
     private var _internal_addmach : String;
     private var _internal_regno : String;
     private var _internal_adduser : String;
@@ -117,15 +119,15 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
     }
 
     [Bindable(event="propertyChange")]
-    public function get adddate() : Date
-    {
-        return _internal_adddate;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get locationtype() : String
     {
         return _internal_locationtype;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adddate() : Date
+    {
+        return _internal_adddate;
     }
 
     [Bindable(event="propertyChange")]
@@ -153,15 +155,15 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
     }
 
     [Bindable(event="propertyChange")]
-    public function get empid() : String
-    {
-        return _internal_empid;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get intoloc() : String
     {
         return _internal_intoloc;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get empid() : String
+    {
+        return _internal_empid;
     }
 
     [Bindable(event="propertyChange")]
@@ -180,6 +182,18 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
     public function get vehimodelid() : String
     {
         return _internal_vehimodelid;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get intimeexpected() : String
+    {
+        return _internal_intimeexpected;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get indateexpected() : Date
+    {
+        return _internal_indateexpected;
     }
 
     [Bindable(event="propertyChange")]
@@ -231,15 +245,15 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
     }
 
     [Bindable(event="propertyChange")]
-    public function get status() : String
-    {
-        return _internal_status;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get infuellevel() : int
     {
         return _internal_infuellevel;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get status() : String
+    {
+        return _internal_status;
     }
 
     [Bindable(event="propertyChange")]
@@ -332,16 +346,6 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
         }
     }
 
-    public function set adddate(value:Date) : void
-    {
-        var oldValue:Date = _internal_adddate;
-        if (oldValue !== value)
-        {
-            _internal_adddate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adddate", oldValue, _internal_adddate));
-        }
-    }
-
     public function set locationtype(value:String) : void
     {
         var oldValue:String = _internal_locationtype;
@@ -349,6 +353,16 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
         {
             _internal_locationtype = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "locationtype", oldValue, _internal_locationtype));
+        }
+    }
+
+    public function set adddate(value:Date) : void
+    {
+        var oldValue:Date = _internal_adddate;
+        if (oldValue !== value)
+        {
+            _internal_adddate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adddate", oldValue, _internal_adddate));
         }
     }
 
@@ -392,16 +406,6 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
         }
     }
 
-    public function set empid(value:String) : void
-    {
-        var oldValue:String = _internal_empid;
-        if (oldValue !== value)
-        {
-            _internal_empid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "empid", oldValue, _internal_empid));
-        }
-    }
-
     public function set intoloc(value:String) : void
     {
         var oldValue:String = _internal_intoloc;
@@ -409,6 +413,16 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
         {
             _internal_intoloc = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "intoloc", oldValue, _internal_intoloc));
+        }
+    }
+
+    public function set empid(value:String) : void
+    {
+        var oldValue:String = _internal_empid;
+        if (oldValue !== value)
+        {
+            _internal_empid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "empid", oldValue, _internal_empid));
         }
     }
 
@@ -439,6 +453,26 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
         {
             _internal_vehimodelid = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vehimodelid", oldValue, _internal_vehimodelid));
+        }
+    }
+
+    public function set intimeexpected(value:String) : void
+    {
+        var oldValue:String = _internal_intimeexpected;
+        if (oldValue !== value)
+        {
+            _internal_intimeexpected = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "intimeexpected", oldValue, _internal_intimeexpected));
+        }
+    }
+
+    public function set indateexpected(value:Date) : void
+    {
+        var oldValue:Date = _internal_indateexpected;
+        if (oldValue !== value)
+        {
+            _internal_indateexpected = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "indateexpected", oldValue, _internal_indateexpected));
         }
     }
 
@@ -522,16 +556,6 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
         }
     }
 
-    public function set status(value:String) : void
-    {
-        var oldValue:String = _internal_status;
-        if (oldValue !== value)
-        {
-            _internal_status = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "status", oldValue, _internal_status));
-        }
-    }
-
     public function set infuellevel(value:int) : void
     {
         var oldValue:int = _internal_infuellevel;
@@ -539,6 +563,16 @@ public class _Super_Com_dspl_malkey_domain_Fgatepass extends flash.events.EventD
         {
             _internal_infuellevel = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "infuellevel", oldValue, _internal_infuellevel));
+        }
+    }
+
+    public function set status(value:String) : void
+    {
+        var oldValue:String = _internal_status;
+        if (oldValue !== value)
+        {
+            _internal_status = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "status", oldValue, _internal_status));
         }
     }
 

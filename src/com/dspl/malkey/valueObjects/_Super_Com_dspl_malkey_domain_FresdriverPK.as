@@ -49,12 +49,12 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
     /**
      * properties
      */
-    private var _internal_din : Date;
     private var _internal_empid : String;
+    private var _internal_din : Date;
     private var _internal_resno : String;
     private var _internal_timein : String;
-    private var _internal_dout : Date;
     private var _internal_timeout : String;
+    private var _internal_dout : Date;
 
     private static var emptyArray:Array = new Array();
 
@@ -71,12 +71,12 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
         _model = new _Com_dspl_malkey_domain_FresdriverPKEntityMetadata(this);
 
         // Bind to own data properties for cache invalidation triggering
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "din", model_internal::setterListenerDin));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "empid", model_internal::setterListenerEmpid));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "din", model_internal::setterListenerDin));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "resno", model_internal::setterListenerResno));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "timein", model_internal::setterListenerTimein));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "dout", model_internal::setterListenerDout));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "timeout", model_internal::setterListenerTimeout));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "dout", model_internal::setterListenerDout));
 
     }
 
@@ -85,15 +85,15 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
      */
 
     [Bindable(event="propertyChange")]
-    public function get din() : Date
-    {
-        return _internal_din;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get empid() : String
     {
         return _internal_empid;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get din() : Date
+    {
+        return _internal_din;
     }
 
     [Bindable(event="propertyChange")]
@@ -109,30 +109,20 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
     }
 
     [Bindable(event="propertyChange")]
-    public function get dout() : Date
-    {
-        return _internal_dout;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get timeout() : String
     {
         return _internal_timeout;
     }
 
+    [Bindable(event="propertyChange")]
+    public function get dout() : Date
+    {
+        return _internal_dout;
+    }
+
     /**
      * data property setters
      */
-
-    public function set din(value:Date) : void
-    {
-        var oldValue:Date = _internal_din;
-        if (oldValue !== value)
-        {
-            _internal_din = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "din", oldValue, _internal_din));
-        }
-    }
 
     public function set empid(value:String) : void
     {
@@ -141,6 +131,16 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
         {
             _internal_empid = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "empid", oldValue, _internal_empid));
+        }
+    }
+
+    public function set din(value:Date) : void
+    {
+        var oldValue:Date = _internal_din;
+        if (oldValue !== value)
+        {
+            _internal_din = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "din", oldValue, _internal_din));
         }
     }
 
@@ -164,16 +164,6 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
         }
     }
 
-    public function set dout(value:Date) : void
-    {
-        var oldValue:Date = _internal_dout;
-        if (oldValue !== value)
-        {
-            _internal_dout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dout", oldValue, _internal_dout));
-        }
-    }
-
     public function set timeout(value:String) : void
     {
         var oldValue:String = _internal_timeout;
@@ -181,6 +171,16 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
         {
             _internal_timeout = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "timeout", oldValue, _internal_timeout));
+        }
+    }
+
+    public function set dout(value:Date) : void
+    {
+        var oldValue:Date = _internal_dout;
+        if (oldValue !== value)
+        {
+            _internal_dout = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dout", oldValue, _internal_dout));
         }
     }
 
@@ -196,14 +196,14 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
      *  - the validity of the property (and the containing entity) if the given data property is required.
      */
 
-    model_internal function setterListenerDin(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnDin();
-    }
-
     model_internal function setterListenerEmpid(value:flash.events.Event):void
     {
         _model.invalidateDependentOnEmpid();
+    }
+
+    model_internal function setterListenerDin(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnDin();
     }
 
     model_internal function setterListenerResno(value:flash.events.Event):void
@@ -216,14 +216,14 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
         _model.invalidateDependentOnTimein();
     }
 
-    model_internal function setterListenerDout(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnDout();
-    }
-
     model_internal function setterListenerTimeout(value:flash.events.Event):void
     {
         _model.invalidateDependentOnTimeout();
+    }
+
+    model_internal function setterListenerDout(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnDout();
     }
 
 
@@ -247,15 +247,15 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
         var validationFailureMessages:Array = new Array();
 
         var propertyValidity:Boolean = true;
-        if (!_model.dinIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_dinValidationFailureMessages);
-        }
         if (!_model.empidIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_empidValidationFailureMessages);
+        }
+        if (!_model.dinIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_dinValidationFailureMessages);
         }
         if (!_model.resnoIsValid)
         {
@@ -267,15 +267,15 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_timeinValidationFailureMessages);
         }
-        if (!_model.doutIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_doutValidationFailureMessages);
-        }
         if (!_model.timeoutIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_timeoutValidationFailureMessages);
+        }
+        if (!_model.doutIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_doutValidationFailureMessages);
         }
 
         model_internal::_cacheInitialized_isValid = true;
@@ -356,33 +356,6 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
         }
     }
 
-    model_internal var _doValidationCacheOfDin : Array = null;
-    model_internal var _doValidationLastValOfDin : Date;
-
-    model_internal function _doValidationForDin(valueIn:Object):Array
-    {
-        var value : Date = valueIn as Date;
-
-        if (model_internal::_doValidationCacheOfDin != null && model_internal::_doValidationLastValOfDin == value)
-           return model_internal::_doValidationCacheOfDin ;
-
-        _model.model_internal::_dinIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isDinAvailable && _internal_din == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "din is required"));
-        }
-
-        model_internal::_doValidationCacheOfDin = validationFailures;
-        model_internal::_doValidationLastValOfDin = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfEmpid : Array = null;
     model_internal var _doValidationLastValOfEmpid : String;
 
@@ -406,6 +379,33 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
 
         model_internal::_doValidationCacheOfEmpid = validationFailures;
         model_internal::_doValidationLastValOfEmpid = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfDin : Array = null;
+    model_internal var _doValidationLastValOfDin : Date;
+
+    model_internal function _doValidationForDin(valueIn:Object):Array
+    {
+        var value : Date = valueIn as Date;
+
+        if (model_internal::_doValidationCacheOfDin != null && model_internal::_doValidationLastValOfDin == value)
+           return model_internal::_doValidationCacheOfDin ;
+
+        _model.model_internal::_dinIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isDinAvailable && _internal_din == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "din is required"));
+        }
+
+        model_internal::_doValidationCacheOfDin = validationFailures;
+        model_internal::_doValidationLastValOfDin = value;
 
         return validationFailures;
     }
@@ -464,33 +464,6 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfDout : Array = null;
-    model_internal var _doValidationLastValOfDout : Date;
-
-    model_internal function _doValidationForDout(valueIn:Object):Array
-    {
-        var value : Date = valueIn as Date;
-
-        if (model_internal::_doValidationCacheOfDout != null && model_internal::_doValidationLastValOfDout == value)
-           return model_internal::_doValidationCacheOfDout ;
-
-        _model.model_internal::_doutIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isDoutAvailable && _internal_dout == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "dout is required"));
-        }
-
-        model_internal::_doValidationCacheOfDout = validationFailures;
-        model_internal::_doValidationLastValOfDout = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfTimeout : Array = null;
     model_internal var _doValidationLastValOfTimeout : String;
 
@@ -514,6 +487,33 @@ public class _Super_Com_dspl_malkey_domain_FresdriverPK extends flash.events.Eve
 
         model_internal::_doValidationCacheOfTimeout = validationFailures;
         model_internal::_doValidationLastValOfTimeout = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfDout : Array = null;
+    model_internal var _doValidationLastValOfDout : Date;
+
+    model_internal function _doValidationForDout(valueIn:Object):Array
+    {
+        var value : Date = valueIn as Date;
+
+        if (model_internal::_doValidationCacheOfDout != null && model_internal::_doValidationLastValOfDout == value)
+           return model_internal::_doValidationCacheOfDout ;
+
+        _model.model_internal::_doutIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isDoutAvailable && _internal_dout == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "dout is required"));
+        }
+
+        model_internal::_doValidationCacheOfDout = validationFailures;
+        model_internal::_doValidationLastValOfDout = value;
 
         return validationFailures;
     }

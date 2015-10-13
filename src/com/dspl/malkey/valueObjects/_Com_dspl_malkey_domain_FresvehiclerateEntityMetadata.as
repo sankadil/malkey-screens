@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("total", "resno", "xhourrate", "xsmilerate", "allotedkms", "discountxhourrate", "addmach", "standardrate", "adduser", "adddate", "discount", "ratetype", "rate", "vehimodelid", "clienttype", "hiretypeid", "allotedhours", "uuid", "recordid");
+    model_internal static var allProperties:Array = new Array("total", "resno", "xhourrate", "xsmilerate", "allotedkms", "discountxhourrate", "addmach", "adduser", "standardrate", "adddate", "discount", "ratetype", "rate", "vehimodelid", "clienttype", "hiretypeid", "allotedhours", "uuid", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("total", "resno", "xhourrate", "xsmilerate", "allotedkms", "discountxhourrate", "addmach", "standardrate", "adduser", "adddate", "discount", "ratetype", "rate", "vehimodelid", "clienttype", "hiretypeid", "allotedhours", "uuid", "recordid");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("total", "resno", "xhourrate", "xsmilerate", "allotedkms", "discountxhourrate", "addmach", "standardrate", "adduser", "adddate", "discount", "ratetype", "rate", "vehimodelid", "clienttype", "hiretypeid", "allotedhours", "uuid", "recordid");
+    model_internal static var allRequiredProperties:Array = new Array("total", "resno", "xhourrate", "xsmilerate", "allotedkms", "discountxhourrate", "addmach", "adduser", "standardrate", "adddate", "discount", "ratetype", "rate", "vehimodelid", "clienttype", "hiretypeid", "allotedhours", "uuid", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("total", "resno", "xhourrate", "xsmilerate", "allotedkms", "discountxhourrate", "addmach", "adduser", "standardrate", "adddate", "discount", "ratetype", "rate", "vehimodelid", "clienttype", "hiretypeid", "allotedhours", "uuid", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("total", "resno", "xhourrate", "xsmilerate", "allotedkms", "discountxhourrate", "addmach", "standardrate", "adduser", "adddate", "discount", "ratetype", "rate", "vehimodelid", "clienttype", "hiretypeid", "allotedhours", "uuid", "recordid");
+    model_internal static var dataProperties:Array = new Array("total", "resno", "xhourrate", "xsmilerate", "allotedkms", "discountxhourrate", "addmach", "adduser", "standardrate", "adddate", "discount", "ratetype", "rate", "vehimodelid", "clienttype", "hiretypeid", "allotedhours", "uuid", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -61,15 +61,15 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
     model_internal var _addmachIsValidCacheInitialized:Boolean = false;
     model_internal var _addmachValidationFailureMessages:Array;
     
-    model_internal var _standardrateIsValid:Boolean;
-    model_internal var _standardrateValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _standardrateIsValidCacheInitialized:Boolean = false;
-    model_internal var _standardrateValidationFailureMessages:Array;
-    
     model_internal var _adduserIsValid:Boolean;
     model_internal var _adduserValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _adduserIsValidCacheInitialized:Boolean = false;
     model_internal var _adduserValidationFailureMessages:Array;
+    
+    model_internal var _standardrateIsValid:Boolean;
+    model_internal var _standardrateValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _standardrateIsValidCacheInitialized:Boolean = false;
+    model_internal var _standardrateValidationFailureMessages:Array;
     
     model_internal var _adddateIsValid:Boolean;
     model_internal var _adddateValidator:com.adobe.fiber.styles.StyleValidator;
@@ -128,8 +128,8 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
             model_internal::dependentsOnMap["allotedkms"] = new Array();
             model_internal::dependentsOnMap["discountxhourrate"] = new Array();
             model_internal::dependentsOnMap["addmach"] = new Array();
-            model_internal::dependentsOnMap["standardrate"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
+            model_internal::dependentsOnMap["standardrate"] = new Array();
             model_internal::dependentsOnMap["adddate"] = new Array();
             model_internal::dependentsOnMap["discount"] = new Array();
             model_internal::dependentsOnMap["ratetype"] = new Array();
@@ -171,16 +171,16 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
         model_internal::_addmachValidator.requiredFieldError = "addmach is required";
         //model_internal::_addmachValidator.source = model_internal::_instance;
         //model_internal::_addmachValidator.property = "addmach";
-        model_internal::_standardrateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForStandardrate);
-        model_internal::_standardrateValidator.required = true;
-        model_internal::_standardrateValidator.requiredFieldError = "standardrate is required";
-        //model_internal::_standardrateValidator.source = model_internal::_instance;
-        //model_internal::_standardrateValidator.property = "standardrate";
         model_internal::_adduserValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdduser);
         model_internal::_adduserValidator.required = true;
         model_internal::_adduserValidator.requiredFieldError = "adduser is required";
         //model_internal::_adduserValidator.source = model_internal::_instance;
         //model_internal::_adduserValidator.property = "adduser";
+        model_internal::_standardrateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForStandardrate);
+        model_internal::_standardrateValidator.required = true;
+        model_internal::_standardrateValidator.requiredFieldError = "standardrate is required";
+        //model_internal::_standardrateValidator.source = model_internal::_instance;
+        //model_internal::_standardrateValidator.property = "standardrate";
         model_internal::_adddateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdddate);
         model_internal::_adddateValidator.required = true;
         model_internal::_adddateValidator.requiredFieldError = "adddate is required";
@@ -472,13 +472,13 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
     }
 
     [Bindable(event="propertyChange")]
-    public function get isStandardrateAvailable():Boolean
+    public function get isAdduserAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAdduserAvailable():Boolean
+    public function get isStandardrateAvailable():Boolean
     {
         return true;
     }
@@ -587,20 +587,20 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
             model_internal::calculateAddmachIsValid();
         }
     }
-    public function invalidateDependentOnStandardrate():void
-    {
-        if (model_internal::_standardrateIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfStandardrate = null;
-            model_internal::calculateStandardrateIsValid();
-        }
-    }
     public function invalidateDependentOnAdduser():void
     {
         if (model_internal::_adduserIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfAdduser = null;
             model_internal::calculateAdduserIsValid();
+        }
+    }
+    public function invalidateDependentOnStandardrate():void
+    {
+        if (model_internal::_standardrateIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfStandardrate = null;
+            model_internal::calculateStandardrateIsValid();
         }
     }
     public function invalidateDependentOnAdddate():void
@@ -1186,106 +1186,6 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
     }
 
     [Bindable(event="propertyChange")]   
-    public function get standardrateStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get standardrateValidator() : StyleValidator
-    {
-        return model_internal::_standardrateValidator;
-    }
-
-    model_internal function set _standardrateIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_standardrateIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_standardrateIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "standardrateIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get standardrateIsValid():Boolean
-    {
-        if (!model_internal::_standardrateIsValidCacheInitialized)
-        {
-            model_internal::calculateStandardrateIsValid();
-        }
-
-        return model_internal::_standardrateIsValid;
-    }
-
-    model_internal function calculateStandardrateIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_standardrateValidator.validate(model_internal::_instance.standardrate)
-        model_internal::_standardrateIsValid_der = (valRes.results == null);
-        model_internal::_standardrateIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::standardrateValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::standardrateValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get standardrateValidationFailureMessages():Array
-    {
-        if (model_internal::_standardrateValidationFailureMessages == null)
-            model_internal::calculateStandardrateIsValid();
-
-        return _standardrateValidationFailureMessages;
-    }
-
-    model_internal function set standardrateValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_standardrateValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_standardrateValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "standardrateValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get adduserStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -1376,6 +1276,106 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
         {
             model_internal::_adduserValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get standardrateStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get standardrateValidator() : StyleValidator
+    {
+        return model_internal::_standardrateValidator;
+    }
+
+    model_internal function set _standardrateIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_standardrateIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_standardrateIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "standardrateIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get standardrateIsValid():Boolean
+    {
+        if (!model_internal::_standardrateIsValidCacheInitialized)
+        {
+            model_internal::calculateStandardrateIsValid();
+        }
+
+        return model_internal::_standardrateIsValid;
+    }
+
+    model_internal function calculateStandardrateIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_standardrateValidator.validate(model_internal::_instance.standardrate)
+        model_internal::_standardrateIsValid_der = (valRes.results == null);
+        model_internal::_standardrateIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::standardrateValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::standardrateValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get standardrateValidationFailureMessages():Array
+    {
+        if (model_internal::_standardrateValidationFailureMessages == null)
+            model_internal::calculateStandardrateIsValid();
+
+        return _standardrateValidationFailureMessages;
+    }
+
+    model_internal function set standardrateValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_standardrateValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_standardrateValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "standardrateValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -2242,13 +2242,13 @@ internal class _Com_dspl_malkey_domain_FresvehiclerateEntityMetadata extends com
             {
                 return addmachValidationFailureMessages;
             }
-            case("standardrate"):
-            {
-                return standardrateValidationFailureMessages;
-            }
             case("adduser"):
             {
                 return adduserValidationFailureMessages;
+            }
+            case("standardrate"):
+            {
+                return standardrateValidationFailureMessages;
             }
             case("adddate"):
             {

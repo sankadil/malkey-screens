@@ -202,7 +202,7 @@ internal class _Super_FdebtorSRV extends com.adobe.fiber.services.wrapper.Remote
 
         _com_dspl_malkey_domain_FdebtorRPCDataManager.destination = "com_dspl_malkey_domain_FdebtorRPCDataManager";
         _com_dspl_malkey_domain_FdebtorRPCDataManager.service = _serviceControl;        
-        _com_dspl_malkey_domain_FdebtorRPCDataManager.identities =  "debcode,recordid";      
+        _com_dspl_malkey_domain_FdebtorRPCDataManager.identities =  "recordid,debcode";      
         _com_dspl_malkey_domain_FdebtorRPCDataManager.itemClass = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdebtor; 
 
 
@@ -211,6 +211,14 @@ internal class _Super_FdebtorSRV extends com.adobe.fiber.services.wrapper.Remote
         var dmQuery : mx.data.ManagedQuery;
 
         dmQuery = new mx.data.ManagedQuery("listAllOptimizedPage");
+        dmQuery.countOperation = "count";
+        dmQuery.pagingEnabled = true;
+        dmQuery.positionalPagingParameters = true;
+        dmQuery.pageSize = 500;
+        dmQuery.parameters = "arg0,arg1";
+        _com_dspl_malkey_domain_FdebtorRPCDataManager.addManagedOperation(dmQuery);
+
+        dmQuery = new mx.data.ManagedQuery("List");
         dmQuery.countOperation = "count";
         dmQuery.pagingEnabled = true;
         dmQuery.positionalPagingParameters = true;
@@ -367,10 +375,10 @@ internal class _Super_FdebtorSRV extends com.adobe.fiber.services.wrapper.Remote
       *
       * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
       */
-    public function List(arg0:int, arg1:int) : mx.rpc.AsyncToken
+    public function List() : mx.rpc.AsyncToken
     {
         var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("List");
-        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0,arg1) ;
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
 
         return _internal_token;
     }

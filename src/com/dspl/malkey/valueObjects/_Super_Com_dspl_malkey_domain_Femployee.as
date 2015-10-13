@@ -75,8 +75,8 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
     private var _internal_dlno : String;
     private var _internal_etfno : String;
     private var _internal_addmach : String;
-    private var _internal_adduser : String;
     private var _internal_dlbackimage : String;
+    private var _internal_adduser : String;
     private var _internal_nicbackimage : String;
     private var _internal_nicbackimagedata : ByteArray;
     private var _internal_ppimage : String;
@@ -84,8 +84,8 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
     private var _internal_dldissue : Date;
     private var _internal_ppno : String;
     private var _internal_photodata : ByteArray;
-    private var _internal_isSelected : Boolean;
     private var _internal_email : String;
+    private var _internal_isSelected : Boolean;
     private var _internal_dob : Date;
     private var _internal_nicimagedata : ByteArray;
     private var _internal_epfno : String;
@@ -132,8 +132,8 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "dlno", model_internal::setterListenerDlno));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "etfno", model_internal::setterListenerEtfno));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "addmach", model_internal::setterListenerAddmach));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adduser", model_internal::setterListenerAdduser));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "dlbackimage", model_internal::setterListenerDlbackimage));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adduser", model_internal::setterListenerAdduser));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "nicbackimage", model_internal::setterListenerNicbackimage));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "nicbackimagedata", model_internal::setterListenerNicbackimagedata));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "ppimage", model_internal::setterListenerPpimage));
@@ -304,15 +304,15 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
     }
 
     [Bindable(event="propertyChange")]
-    public function get adduser() : String
-    {
-        return _internal_adduser;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get dlbackimage() : String
     {
         return _internal_dlbackimage;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adduser() : String
+    {
+        return _internal_adduser;
     }
 
     [Bindable(event="propertyChange")]
@@ -358,15 +358,15 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
     }
 
     [Bindable(event="propertyChange")]
-    public function get isSelected() : Boolean
-    {
-        return _internal_isSelected;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get email() : String
     {
         return _internal_email;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isSelected() : Boolean
+    {
+        return _internal_isSelected;
     }
 
     [Bindable(event="propertyChange")]
@@ -653,16 +653,6 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
         }
     }
 
-    public function set adduser(value:String) : void
-    {
-        var oldValue:String = _internal_adduser;
-        if (oldValue !== value)
-        {
-            _internal_adduser = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduser", oldValue, _internal_adduser));
-        }
-    }
-
     public function set dlbackimage(value:String) : void
     {
         var oldValue:String = _internal_dlbackimage;
@@ -670,6 +660,16 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
         {
             _internal_dlbackimage = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dlbackimage", oldValue, _internal_dlbackimage));
+        }
+    }
+
+    public function set adduser(value:String) : void
+    {
+        var oldValue:String = _internal_adduser;
+        if (oldValue !== value)
+        {
+            _internal_adduser = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduser", oldValue, _internal_adduser));
         }
     }
 
@@ -743,16 +743,6 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
         }
     }
 
-    public function set isSelected(value:Boolean) : void
-    {
-        var oldValue:Boolean = _internal_isSelected;
-        if (oldValue !== value)
-        {
-            _internal_isSelected = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "isSelected", oldValue, _internal_isSelected));
-        }
-    }
-
     public function set email(value:String) : void
     {
         var oldValue:String = _internal_email;
@@ -760,6 +750,16 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
         {
             _internal_email = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "email", oldValue, _internal_email));
+        }
+    }
+
+    public function set isSelected(value:Boolean) : void
+    {
+        var oldValue:Boolean = _internal_isSelected;
+        if (oldValue !== value)
+        {
+            _internal_isSelected = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "isSelected", oldValue, _internal_isSelected));
         }
     }
 
@@ -950,14 +950,14 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
         _model.invalidateDependentOnAddmach();
     }
 
-    model_internal function setterListenerAdduser(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnAdduser();
-    }
-
     model_internal function setterListenerDlbackimage(value:flash.events.Event):void
     {
         _model.invalidateDependentOnDlbackimage();
+    }
+
+    model_internal function setterListenerAdduser(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnAdduser();
     }
 
     model_internal function setterListenerNicbackimage(value:flash.events.Event):void
@@ -1166,15 +1166,15 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_addmachValidationFailureMessages);
         }
-        if (!_model.adduserIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_adduserValidationFailureMessages);
-        }
         if (!_model.dlbackimageIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_dlbackimageValidationFailureMessages);
+        }
+        if (!_model.adduserIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_adduserValidationFailureMessages);
         }
         if (!_model.nicbackimageIsValid)
         {
@@ -1990,33 +1990,6 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfAdduser : Array = null;
-    model_internal var _doValidationLastValOfAdduser : String;
-
-    model_internal function _doValidationForAdduser(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfAdduser != null && model_internal::_doValidationLastValOfAdduser == value)
-           return model_internal::_doValidationCacheOfAdduser ;
-
-        _model.model_internal::_adduserIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isAdduserAvailable && _internal_adduser == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "adduser is required"));
-        }
-
-        model_internal::_doValidationCacheOfAdduser = validationFailures;
-        model_internal::_doValidationLastValOfAdduser = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfDlbackimage : Array = null;
     model_internal var _doValidationLastValOfDlbackimage : String;
 
@@ -2040,6 +2013,33 @@ public class _Super_Com_dspl_malkey_domain_Femployee extends flash.events.EventD
 
         model_internal::_doValidationCacheOfDlbackimage = validationFailures;
         model_internal::_doValidationLastValOfDlbackimage = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfAdduser : Array = null;
+    model_internal var _doValidationLastValOfAdduser : String;
+
+    model_internal function _doValidationForAdduser(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfAdduser != null && model_internal::_doValidationLastValOfAdduser == value)
+           return model_internal::_doValidationCacheOfAdduser ;
+
+        _model.model_internal::_adduserIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isAdduserAvailable && _internal_adduser == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "adduser is required"));
+        }
+
+        model_internal::_doValidationCacheOfAdduser = validationFailures;
+        model_internal::_doValidationLastValOfAdduser = value;
 
         return validationFailures;
     }

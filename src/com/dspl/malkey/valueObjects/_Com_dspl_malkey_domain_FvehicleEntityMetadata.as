@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("vintage", "demission", "seatingcapacity", "adddate", "inspolicyno", "fueltypeid", "chassisno", "mainseats", "locationid", "description", "engineno", "value", "insncb", "year", "ownertype", "status", "ownercompanyid", "regno", "leasemonthlyamt", "vehistsid", "image", "ownerid", "fleetid", "fuellevel", "uuid", "make", "fuelconsump", "jumpseats", "recordid", "colourid", "tsdpurchase", "vehiclassid", "inscompany", "inspolexces", "leasedlastpay", "drevlicense", "leasecomid", "selected", "vehimodelid", "fueltankval", "dummyvehi", "leasedstart", "leaseamt", "curmileage", "insamount", "insdexpiry", "vehitransid", "addmach", "adduser", "vehitypeid", "leasenoofmonth", "dfitness", "vehimakeid", "dpurchase", "orgmileage", "sparekeys", "engsizeid", "policyid");
+    model_internal static var allProperties:Array = new Array("vintage", "demission", "modifieddate", "seatingcapacity", "adddate", "inspolicyno", "fueltypeid", "chassisno", "mainseats", "locationid", "description", "value", "engineno", "year", "insncb", "ownertype", "status", "ownercompanyid", "regno", "leasemonthlyamt", "vehistsid", "image", "ownerid", "fleetid", "fuellevel", "uuid", "make", "jumpseats", "fuelconsump", "recordid", "colourid", "tsdpurchase", "inscompany", "vehiclassid", "inspolexces", "leasedlastpay", "drevlicense", "modifiedmach", "leasecomid", "selected", "vehimodelid", "fueltankval", "dummyvehi", "leasedstart", "curmileage", "leaseamt", "insamount", "modifieduser", "insdexpiry", "vehitransid", "addmach", "adduser", "vehitypeid", "dfitness", "leasenoofmonth", "vehimakeid", "orgmileage", "dpurchase", "sparekeys", "engsizeid", "policyid");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("demission", "seatingcapacity", "adddate", "inspolicyno", "fueltypeid", "chassisno", "mainseats", "locationid", "description", "engineno", "value", "insncb", "year", "ownertype", "status", "ownercompanyid", "regno", "leasemonthlyamt", "vehistsid", "image", "ownerid", "fleetid", "fuellevel", "uuid", "make", "fuelconsump", "jumpseats", "recordid", "colourid", "tsdpurchase", "vehiclassid", "inscompany", "inspolexces", "leasedlastpay", "drevlicense", "leasecomid", "selected", "vehimodelid", "fueltankval", "dummyvehi", "leasedstart", "leaseamt", "curmileage", "insamount", "insdexpiry", "vehitransid", "addmach", "adduser", "vehitypeid", "leasenoofmonth", "dfitness", "vehimakeid", "dpurchase", "orgmileage", "sparekeys", "engsizeid", "policyid");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("vintage", "demission", "seatingcapacity", "adddate", "inspolicyno", "fueltypeid", "chassisno", "mainseats", "locationid", "description", "engineno", "value", "insncb", "year", "ownertype", "status", "ownercompanyid", "regno", "leasemonthlyamt", "vehistsid", "image", "ownerid", "fleetid", "fuellevel", "uuid", "make", "fuelconsump", "jumpseats", "recordid", "colourid", "tsdpurchase", "vehiclassid", "inscompany", "inspolexces", "leasedlastpay", "drevlicense", "leasecomid", "selected", "vehimodelid", "fueltankval", "dummyvehi", "leasedstart", "leaseamt", "curmileage", "insamount", "insdexpiry", "vehitransid", "addmach", "adduser", "vehitypeid", "leasenoofmonth", "dfitness", "vehimakeid", "dpurchase", "orgmileage", "sparekeys", "engsizeid", "policyid");
+    model_internal static var allRequiredProperties:Array = new Array("demission", "modifieddate", "seatingcapacity", "adddate", "inspolicyno", "fueltypeid", "chassisno", "mainseats", "locationid", "description", "value", "engineno", "year", "insncb", "ownertype", "status", "ownercompanyid", "regno", "leasemonthlyamt", "vehistsid", "image", "ownerid", "fleetid", "fuellevel", "uuid", "make", "jumpseats", "fuelconsump", "recordid", "colourid", "tsdpurchase", "inscompany", "vehiclassid", "inspolexces", "leasedlastpay", "drevlicense", "modifiedmach", "leasecomid", "selected", "vehimodelid", "fueltankval", "dummyvehi", "leasedstart", "curmileage", "leaseamt", "insamount", "modifieduser", "insdexpiry", "vehitransid", "addmach", "adduser", "vehitypeid", "dfitness", "leasenoofmonth", "vehimakeid", "orgmileage", "dpurchase", "sparekeys", "engsizeid", "policyid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("vintage", "demission", "modifieddate", "seatingcapacity", "adddate", "inspolicyno", "fueltypeid", "chassisno", "mainseats", "locationid", "description", "value", "engineno", "year", "insncb", "ownertype", "status", "ownercompanyid", "regno", "leasemonthlyamt", "vehistsid", "image", "ownerid", "fleetid", "fuellevel", "uuid", "make", "jumpseats", "fuelconsump", "recordid", "colourid", "tsdpurchase", "inscompany", "vehiclassid", "inspolexces", "leasedlastpay", "drevlicense", "modifiedmach", "leasecomid", "selected", "vehimodelid", "fueltankval", "dummyvehi", "leasedstart", "curmileage", "leaseamt", "insamount", "modifieduser", "insdexpiry", "vehitransid", "addmach", "adduser", "vehitypeid", "dfitness", "leasenoofmonth", "vehimakeid", "orgmileage", "dpurchase", "sparekeys", "engsizeid", "policyid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("vintage", "demission", "seatingcapacity", "adddate", "inspolicyno", "fueltypeid", "chassisno", "mainseats", "locationid", "description", "engineno", "value", "insncb", "year", "ownertype", "status", "ownercompanyid", "regno", "leasemonthlyamt", "vehistsid", "image", "ownerid", "fleetid", "fuellevel", "uuid", "make", "fuelconsump", "jumpseats", "recordid", "colourid", "tsdpurchase", "vehiclassid", "inscompany", "inspolexces", "leasedlastpay", "drevlicense", "leasecomid", "selected", "vehimodelid", "fueltankval", "dummyvehi", "leasedstart", "leaseamt", "curmileage", "insamount", "insdexpiry", "vehitransid", "addmach", "adduser", "vehitypeid", "leasenoofmonth", "dfitness", "vehimakeid", "dpurchase", "orgmileage", "sparekeys", "engsizeid", "policyid");
+    model_internal static var dataProperties:Array = new Array("vintage", "demission", "modifieddate", "seatingcapacity", "adddate", "inspolicyno", "fueltypeid", "chassisno", "mainseats", "locationid", "description", "value", "engineno", "year", "insncb", "ownertype", "status", "ownercompanyid", "regno", "leasemonthlyamt", "vehistsid", "image", "ownerid", "fleetid", "fuellevel", "uuid", "make", "jumpseats", "fuelconsump", "recordid", "colourid", "tsdpurchase", "inscompany", "vehiclassid", "inspolexces", "leasedlastpay", "drevlicense", "modifiedmach", "leasecomid", "selected", "vehimodelid", "fueltankval", "dummyvehi", "leasedstart", "curmileage", "leaseamt", "insamount", "modifieduser", "insdexpiry", "vehitransid", "addmach", "adduser", "vehitypeid", "dfitness", "leasenoofmonth", "vehimakeid", "orgmileage", "dpurchase", "sparekeys", "engsizeid", "policyid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -40,6 +40,11 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     model_internal var _demissionValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _demissionIsValidCacheInitialized:Boolean = false;
     model_internal var _demissionValidationFailureMessages:Array;
+    
+    model_internal var _modifieddateIsValid:Boolean;
+    model_internal var _modifieddateValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _modifieddateIsValidCacheInitialized:Boolean = false;
+    model_internal var _modifieddateValidationFailureMessages:Array;
     
     model_internal var _seatingcapacityIsValid:Boolean;
     model_internal var _seatingcapacityValidator:com.adobe.fiber.styles.StyleValidator;
@@ -76,15 +81,15 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     model_internal var _descriptionIsValidCacheInitialized:Boolean = false;
     model_internal var _descriptionValidationFailureMessages:Array;
     
-    model_internal var _enginenoIsValid:Boolean;
-    model_internal var _enginenoValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _enginenoIsValidCacheInitialized:Boolean = false;
-    model_internal var _enginenoValidationFailureMessages:Array;
-    
     model_internal var _valueIsValid:Boolean;
     model_internal var _valueValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _valueIsValidCacheInitialized:Boolean = false;
     model_internal var _valueValidationFailureMessages:Array;
+    
+    model_internal var _enginenoIsValid:Boolean;
+    model_internal var _enginenoValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _enginenoIsValidCacheInitialized:Boolean = false;
+    model_internal var _enginenoValidationFailureMessages:Array;
     
     model_internal var _insncbIsValid:Boolean;
     model_internal var _insncbValidator:com.adobe.fiber.styles.StyleValidator;
@@ -161,15 +166,15 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     model_internal var _tsdpurchaseIsValidCacheInitialized:Boolean = false;
     model_internal var _tsdpurchaseValidationFailureMessages:Array;
     
-    model_internal var _vehiclassidIsValid:Boolean;
-    model_internal var _vehiclassidValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _vehiclassidIsValidCacheInitialized:Boolean = false;
-    model_internal var _vehiclassidValidationFailureMessages:Array;
-    
     model_internal var _inscompanyIsValid:Boolean;
     model_internal var _inscompanyValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _inscompanyIsValidCacheInitialized:Boolean = false;
     model_internal var _inscompanyValidationFailureMessages:Array;
+    
+    model_internal var _vehiclassidIsValid:Boolean;
+    model_internal var _vehiclassidValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _vehiclassidIsValidCacheInitialized:Boolean = false;
+    model_internal var _vehiclassidValidationFailureMessages:Array;
     
     model_internal var _inspolexcesIsValid:Boolean;
     model_internal var _inspolexcesValidator:com.adobe.fiber.styles.StyleValidator;
@@ -185,6 +190,11 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     model_internal var _drevlicenseValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _drevlicenseIsValidCacheInitialized:Boolean = false;
     model_internal var _drevlicenseValidationFailureMessages:Array;
+    
+    model_internal var _modifiedmachIsValid:Boolean;
+    model_internal var _modifiedmachValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _modifiedmachIsValidCacheInitialized:Boolean = false;
+    model_internal var _modifiedmachValidationFailureMessages:Array;
     
     model_internal var _leasecomidIsValid:Boolean;
     model_internal var _leasecomidValidator:com.adobe.fiber.styles.StyleValidator;
@@ -215,6 +225,11 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     model_internal var _insamountValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _insamountIsValidCacheInitialized:Boolean = false;
     model_internal var _insamountValidationFailureMessages:Array;
+    
+    model_internal var _modifieduserIsValid:Boolean;
+    model_internal var _modifieduserValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _modifieduserIsValidCacheInitialized:Boolean = false;
+    model_internal var _modifieduserValidationFailureMessages:Array;
     
     model_internal var _insdexpiryIsValid:Boolean;
     model_internal var _insdexpiryValidator:com.adobe.fiber.styles.StyleValidator;
@@ -278,6 +293,7 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["vintage"] = new Array();
             model_internal::dependentsOnMap["demission"] = new Array();
+            model_internal::dependentsOnMap["modifieddate"] = new Array();
             model_internal::dependentsOnMap["seatingcapacity"] = new Array();
             model_internal::dependentsOnMap["adddate"] = new Array();
             model_internal::dependentsOnMap["inspolicyno"] = new Array();
@@ -286,10 +302,10 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             model_internal::dependentsOnMap["mainseats"] = new Array();
             model_internal::dependentsOnMap["locationid"] = new Array();
             model_internal::dependentsOnMap["description"] = new Array();
-            model_internal::dependentsOnMap["engineno"] = new Array();
             model_internal::dependentsOnMap["value"] = new Array();
-            model_internal::dependentsOnMap["insncb"] = new Array();
+            model_internal::dependentsOnMap["engineno"] = new Array();
             model_internal::dependentsOnMap["year"] = new Array();
+            model_internal::dependentsOnMap["insncb"] = new Array();
             model_internal::dependentsOnMap["ownertype"] = new Array();
             model_internal::dependentsOnMap["status"] = new Array();
             model_internal::dependentsOnMap["ownercompanyid"] = new Array();
@@ -302,35 +318,37 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             model_internal::dependentsOnMap["fuellevel"] = new Array();
             model_internal::dependentsOnMap["uuid"] = new Array();
             model_internal::dependentsOnMap["make"] = new Array();
-            model_internal::dependentsOnMap["fuelconsump"] = new Array();
             model_internal::dependentsOnMap["jumpseats"] = new Array();
+            model_internal::dependentsOnMap["fuelconsump"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
             model_internal::dependentsOnMap["colourid"] = new Array();
             model_internal::dependentsOnMap["tsdpurchase"] = new Array();
-            model_internal::dependentsOnMap["vehiclassid"] = new Array();
             model_internal::dependentsOnMap["inscompany"] = new Array();
+            model_internal::dependentsOnMap["vehiclassid"] = new Array();
             model_internal::dependentsOnMap["inspolexces"] = new Array();
             model_internal::dependentsOnMap["leasedlastpay"] = new Array();
             model_internal::dependentsOnMap["drevlicense"] = new Array();
+            model_internal::dependentsOnMap["modifiedmach"] = new Array();
             model_internal::dependentsOnMap["leasecomid"] = new Array();
             model_internal::dependentsOnMap["selected"] = new Array();
             model_internal::dependentsOnMap["vehimodelid"] = new Array();
             model_internal::dependentsOnMap["fueltankval"] = new Array();
             model_internal::dependentsOnMap["dummyvehi"] = new Array();
             model_internal::dependentsOnMap["leasedstart"] = new Array();
-            model_internal::dependentsOnMap["leaseamt"] = new Array();
             model_internal::dependentsOnMap["curmileage"] = new Array();
+            model_internal::dependentsOnMap["leaseamt"] = new Array();
             model_internal::dependentsOnMap["insamount"] = new Array();
+            model_internal::dependentsOnMap["modifieduser"] = new Array();
             model_internal::dependentsOnMap["insdexpiry"] = new Array();
             model_internal::dependentsOnMap["vehitransid"] = new Array();
             model_internal::dependentsOnMap["addmach"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["vehitypeid"] = new Array();
-            model_internal::dependentsOnMap["leasenoofmonth"] = new Array();
             model_internal::dependentsOnMap["dfitness"] = new Array();
+            model_internal::dependentsOnMap["leasenoofmonth"] = new Array();
             model_internal::dependentsOnMap["vehimakeid"] = new Array();
-            model_internal::dependentsOnMap["dpurchase"] = new Array();
             model_internal::dependentsOnMap["orgmileage"] = new Array();
+            model_internal::dependentsOnMap["dpurchase"] = new Array();
             model_internal::dependentsOnMap["sparekeys"] = new Array();
             model_internal::dependentsOnMap["engsizeid"] = new Array();
             model_internal::dependentsOnMap["policyid"] = new Array();
@@ -345,6 +363,11 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         model_internal::_demissionValidator.requiredFieldError = "demission is required";
         //model_internal::_demissionValidator.source = model_internal::_instance;
         //model_internal::_demissionValidator.property = "demission";
+        model_internal::_modifieddateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForModifieddate);
+        model_internal::_modifieddateValidator.required = true;
+        model_internal::_modifieddateValidator.requiredFieldError = "modifieddate is required";
+        //model_internal::_modifieddateValidator.source = model_internal::_instance;
+        //model_internal::_modifieddateValidator.property = "modifieddate";
         model_internal::_seatingcapacityValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForSeatingcapacity);
         model_internal::_seatingcapacityValidator.required = true;
         model_internal::_seatingcapacityValidator.requiredFieldError = "seatingcapacity is required";
@@ -380,16 +403,16 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         model_internal::_descriptionValidator.requiredFieldError = "description is required";
         //model_internal::_descriptionValidator.source = model_internal::_instance;
         //model_internal::_descriptionValidator.property = "description";
-        model_internal::_enginenoValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForEngineno);
-        model_internal::_enginenoValidator.required = true;
-        model_internal::_enginenoValidator.requiredFieldError = "engineno is required";
-        //model_internal::_enginenoValidator.source = model_internal::_instance;
-        //model_internal::_enginenoValidator.property = "engineno";
         model_internal::_valueValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForValue);
         model_internal::_valueValidator.required = true;
         model_internal::_valueValidator.requiredFieldError = "value is required";
         //model_internal::_valueValidator.source = model_internal::_instance;
         //model_internal::_valueValidator.property = "value";
+        model_internal::_enginenoValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForEngineno);
+        model_internal::_enginenoValidator.required = true;
+        model_internal::_enginenoValidator.requiredFieldError = "engineno is required";
+        //model_internal::_enginenoValidator.source = model_internal::_instance;
+        //model_internal::_enginenoValidator.property = "engineno";
         model_internal::_insncbValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForInsncb);
         model_internal::_insncbValidator.required = true;
         model_internal::_insncbValidator.requiredFieldError = "insncb is required";
@@ -465,16 +488,16 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         model_internal::_tsdpurchaseValidator.requiredFieldError = "tsdpurchase is required";
         //model_internal::_tsdpurchaseValidator.source = model_internal::_instance;
         //model_internal::_tsdpurchaseValidator.property = "tsdpurchase";
-        model_internal::_vehiclassidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForVehiclassid);
-        model_internal::_vehiclassidValidator.required = true;
-        model_internal::_vehiclassidValidator.requiredFieldError = "vehiclassid is required";
-        //model_internal::_vehiclassidValidator.source = model_internal::_instance;
-        //model_internal::_vehiclassidValidator.property = "vehiclassid";
         model_internal::_inscompanyValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForInscompany);
         model_internal::_inscompanyValidator.required = true;
         model_internal::_inscompanyValidator.requiredFieldError = "inscompany is required";
         //model_internal::_inscompanyValidator.source = model_internal::_instance;
         //model_internal::_inscompanyValidator.property = "inscompany";
+        model_internal::_vehiclassidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForVehiclassid);
+        model_internal::_vehiclassidValidator.required = true;
+        model_internal::_vehiclassidValidator.requiredFieldError = "vehiclassid is required";
+        //model_internal::_vehiclassidValidator.source = model_internal::_instance;
+        //model_internal::_vehiclassidValidator.property = "vehiclassid";
         model_internal::_inspolexcesValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForInspolexces);
         model_internal::_inspolexcesValidator.required = true;
         model_internal::_inspolexcesValidator.requiredFieldError = "inspolexces is required";
@@ -490,6 +513,11 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         model_internal::_drevlicenseValidator.requiredFieldError = "drevlicense is required";
         //model_internal::_drevlicenseValidator.source = model_internal::_instance;
         //model_internal::_drevlicenseValidator.property = "drevlicense";
+        model_internal::_modifiedmachValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForModifiedmach);
+        model_internal::_modifiedmachValidator.required = true;
+        model_internal::_modifiedmachValidator.requiredFieldError = "modifiedmach is required";
+        //model_internal::_modifiedmachValidator.source = model_internal::_instance;
+        //model_internal::_modifiedmachValidator.property = "modifiedmach";
         model_internal::_leasecomidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForLeasecomid);
         model_internal::_leasecomidValidator.required = true;
         model_internal::_leasecomidValidator.requiredFieldError = "leasecomid is required";
@@ -520,6 +548,11 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         model_internal::_insamountValidator.requiredFieldError = "insamount is required";
         //model_internal::_insamountValidator.source = model_internal::_instance;
         //model_internal::_insamountValidator.property = "insamount";
+        model_internal::_modifieduserValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForModifieduser);
+        model_internal::_modifieduserValidator.required = true;
+        model_internal::_modifieduserValidator.requiredFieldError = "modifieduser is required";
+        //model_internal::_modifieduserValidator.source = model_internal::_instance;
+        //model_internal::_modifieduserValidator.property = "modifieduser";
         model_internal::_insdexpiryValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForInsdexpiry);
         model_internal::_insdexpiryValidator.required = true;
         model_internal::_insdexpiryValidator.requiredFieldError = "insdexpiry is required";
@@ -791,6 +824,12 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]
+    public function get isModifieddateAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isSeatingcapacityAvailable():Boolean
     {
         return true;
@@ -839,25 +878,25 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isEnginenoAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isValueAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isInsncbAvailable():Boolean
+    public function get isEnginenoAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
     public function get isYearAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isInsncbAvailable():Boolean
     {
         return true;
     }
@@ -935,13 +974,13 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isFuelconsumpAvailable():Boolean
+    public function get isJumpseatsAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isJumpseatsAvailable():Boolean
+    public function get isFuelconsumpAvailable():Boolean
     {
         return true;
     }
@@ -965,13 +1004,13 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isVehiclassidAvailable():Boolean
+    public function get isInscompanyAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isInscompanyAvailable():Boolean
+    public function get isVehiclassidAvailable():Boolean
     {
         return true;
     }
@@ -990,6 +1029,12 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
 
     [Bindable(event="propertyChange")]
     public function get isDrevlicenseAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isModifiedmachAvailable():Boolean
     {
         return true;
     }
@@ -1031,19 +1076,25 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isLeaseamtAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isCurmileageAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
+    public function get isLeaseamtAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isInsamountAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isModifieduserAvailable():Boolean
     {
         return true;
     }
@@ -1079,13 +1130,13 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isLeasenoofmonthAvailable():Boolean
+    public function get isDfitnessAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDfitnessAvailable():Boolean
+    public function get isLeasenoofmonthAvailable():Boolean
     {
         return true;
     }
@@ -1097,13 +1148,13 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDpurchaseAvailable():Boolean
+    public function get isOrgmileageAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isOrgmileageAvailable():Boolean
+    public function get isDpurchaseAvailable():Boolean
     {
         return true;
     }
@@ -1136,6 +1187,14 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         {
             model_internal::_instance.model_internal::_doValidationCacheOfDemission = null;
             model_internal::calculateDemissionIsValid();
+        }
+    }
+    public function invalidateDependentOnModifieddate():void
+    {
+        if (model_internal::_modifieddateIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfModifieddate = null;
+            model_internal::calculateModifieddateIsValid();
         }
     }
     public function invalidateDependentOnSeatingcapacity():void
@@ -1194,20 +1253,20 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             model_internal::calculateDescriptionIsValid();
         }
     }
-    public function invalidateDependentOnEngineno():void
-    {
-        if (model_internal::_enginenoIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfEngineno = null;
-            model_internal::calculateEnginenoIsValid();
-        }
-    }
     public function invalidateDependentOnValue():void
     {
         if (model_internal::_valueIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfValue = null;
             model_internal::calculateValueIsValid();
+        }
+    }
+    public function invalidateDependentOnEngineno():void
+    {
+        if (model_internal::_enginenoIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfEngineno = null;
+            model_internal::calculateEnginenoIsValid();
         }
     }
     public function invalidateDependentOnInsncb():void
@@ -1330,20 +1389,20 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             model_internal::calculateTsdpurchaseIsValid();
         }
     }
-    public function invalidateDependentOnVehiclassid():void
-    {
-        if (model_internal::_vehiclassidIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfVehiclassid = null;
-            model_internal::calculateVehiclassidIsValid();
-        }
-    }
     public function invalidateDependentOnInscompany():void
     {
         if (model_internal::_inscompanyIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfInscompany = null;
             model_internal::calculateInscompanyIsValid();
+        }
+    }
+    public function invalidateDependentOnVehiclassid():void
+    {
+        if (model_internal::_vehiclassidIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfVehiclassid = null;
+            model_internal::calculateVehiclassidIsValid();
         }
     }
     public function invalidateDependentOnInspolexces():void
@@ -1368,6 +1427,14 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         {
             model_internal::_instance.model_internal::_doValidationCacheOfDrevlicense = null;
             model_internal::calculateDrevlicenseIsValid();
+        }
+    }
+    public function invalidateDependentOnModifiedmach():void
+    {
+        if (model_internal::_modifiedmachIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfModifiedmach = null;
+            model_internal::calculateModifiedmachIsValid();
         }
     }
     public function invalidateDependentOnLeasecomid():void
@@ -1416,6 +1483,14 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         {
             model_internal::_instance.model_internal::_doValidationCacheOfInsamount = null;
             model_internal::calculateInsamountIsValid();
+        }
+    }
+    public function invalidateDependentOnModifieduser():void
+    {
+        if (model_internal::_modifieduserIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfModifieduser = null;
+            model_internal::calculateModifieduserIsValid();
         }
     }
     public function invalidateDependentOnInsdexpiry():void
@@ -1601,6 +1676,106 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         {
             model_internal::_demissionValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "demissionValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get modifieddateStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get modifieddateValidator() : StyleValidator
+    {
+        return model_internal::_modifieddateValidator;
+    }
+
+    model_internal function set _modifieddateIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_modifieddateIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_modifieddateIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifieddateIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get modifieddateIsValid():Boolean
+    {
+        if (!model_internal::_modifieddateIsValidCacheInitialized)
+        {
+            model_internal::calculateModifieddateIsValid();
+        }
+
+        return model_internal::_modifieddateIsValid;
+    }
+
+    model_internal function calculateModifieddateIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_modifieddateValidator.validate(model_internal::_instance.modifieddate)
+        model_internal::_modifieddateIsValid_der = (valRes.results == null);
+        model_internal::_modifieddateIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::modifieddateValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::modifieddateValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get modifieddateValidationFailureMessages():Array
+    {
+        if (model_internal::_modifieddateValidationFailureMessages == null)
+            model_internal::calculateModifieddateIsValid();
+
+        return _modifieddateValidationFailureMessages;
+    }
+
+    model_internal function set modifieddateValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_modifieddateValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_modifieddateValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifieddateValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -2317,106 +2492,6 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get enginenoStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get enginenoValidator() : StyleValidator
-    {
-        return model_internal::_enginenoValidator;
-    }
-
-    model_internal function set _enginenoIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_enginenoIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_enginenoIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "enginenoIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get enginenoIsValid():Boolean
-    {
-        if (!model_internal::_enginenoIsValidCacheInitialized)
-        {
-            model_internal::calculateEnginenoIsValid();
-        }
-
-        return model_internal::_enginenoIsValid;
-    }
-
-    model_internal function calculateEnginenoIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_enginenoValidator.validate(model_internal::_instance.engineno)
-        model_internal::_enginenoIsValid_der = (valRes.results == null);
-        model_internal::_enginenoIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::enginenoValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::enginenoValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get enginenoValidationFailureMessages():Array
-    {
-        if (model_internal::_enginenoValidationFailureMessages == null)
-            model_internal::calculateEnginenoIsValid();
-
-        return _enginenoValidationFailureMessages;
-    }
-
-    model_internal function set enginenoValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_enginenoValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_enginenoValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "enginenoValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get valueStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -2517,6 +2592,112 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
+    public function get enginenoStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get enginenoValidator() : StyleValidator
+    {
+        return model_internal::_enginenoValidator;
+    }
+
+    model_internal function set _enginenoIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_enginenoIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_enginenoIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "enginenoIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get enginenoIsValid():Boolean
+    {
+        if (!model_internal::_enginenoIsValidCacheInitialized)
+        {
+            model_internal::calculateEnginenoIsValid();
+        }
+
+        return model_internal::_enginenoIsValid;
+    }
+
+    model_internal function calculateEnginenoIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_enginenoValidator.validate(model_internal::_instance.engineno)
+        model_internal::_enginenoIsValid_der = (valRes.results == null);
+        model_internal::_enginenoIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::enginenoValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::enginenoValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get enginenoValidationFailureMessages():Array
+    {
+        if (model_internal::_enginenoValidationFailureMessages == null)
+            model_internal::calculateEnginenoIsValid();
+
+        return _enginenoValidationFailureMessages;
+    }
+
+    model_internal function set enginenoValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_enginenoValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_enginenoValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "enginenoValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get yearStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get insncbStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -2614,12 +2795,6 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get yearStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -3729,6 +3904,12 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
+    public function get jumpseatsStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get fuelconsumpStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -3826,12 +4007,6 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get jumpseatsStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -4041,106 +4216,6 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get vehiclassidStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get vehiclassidValidator() : StyleValidator
-    {
-        return model_internal::_vehiclassidValidator;
-    }
-
-    model_internal function set _vehiclassidIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_vehiclassidIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_vehiclassidIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vehiclassidIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get vehiclassidIsValid():Boolean
-    {
-        if (!model_internal::_vehiclassidIsValidCacheInitialized)
-        {
-            model_internal::calculateVehiclassidIsValid();
-        }
-
-        return model_internal::_vehiclassidIsValid;
-    }
-
-    model_internal function calculateVehiclassidIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_vehiclassidValidator.validate(model_internal::_instance.vehiclassid)
-        model_internal::_vehiclassidIsValid_der = (valRes.results == null);
-        model_internal::_vehiclassidIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::vehiclassidValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::vehiclassidValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get vehiclassidValidationFailureMessages():Array
-    {
-        if (model_internal::_vehiclassidValidationFailureMessages == null)
-            model_internal::calculateVehiclassidIsValid();
-
-        return _vehiclassidValidationFailureMessages;
-    }
-
-    model_internal function set vehiclassidValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_vehiclassidValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_vehiclassidValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vehiclassidValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get inscompanyStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -4231,6 +4306,106 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         {
             model_internal::_inscompanyValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "inscompanyValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get vehiclassidStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get vehiclassidValidator() : StyleValidator
+    {
+        return model_internal::_vehiclassidValidator;
+    }
+
+    model_internal function set _vehiclassidIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_vehiclassidIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_vehiclassidIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vehiclassidIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get vehiclassidIsValid():Boolean
+    {
+        if (!model_internal::_vehiclassidIsValidCacheInitialized)
+        {
+            model_internal::calculateVehiclassidIsValid();
+        }
+
+        return model_internal::_vehiclassidIsValid;
+    }
+
+    model_internal function calculateVehiclassidIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_vehiclassidValidator.validate(model_internal::_instance.vehiclassid)
+        model_internal::_vehiclassidIsValid_der = (valRes.results == null);
+        model_internal::_vehiclassidIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::vehiclassidValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::vehiclassidValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get vehiclassidValidationFailureMessages():Array
+    {
+        if (model_internal::_vehiclassidValidationFailureMessages == null)
+            model_internal::calculateVehiclassidIsValid();
+
+        return _vehiclassidValidationFailureMessages;
+    }
+
+    model_internal function set vehiclassidValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_vehiclassidValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_vehiclassidValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vehiclassidValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -4531,6 +4706,106 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         {
             model_internal::_drevlicenseValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "drevlicenseValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get modifiedmachStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get modifiedmachValidator() : StyleValidator
+    {
+        return model_internal::_modifiedmachValidator;
+    }
+
+    model_internal function set _modifiedmachIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_modifiedmachIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_modifiedmachIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifiedmachIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get modifiedmachIsValid():Boolean
+    {
+        if (!model_internal::_modifiedmachIsValidCacheInitialized)
+        {
+            model_internal::calculateModifiedmachIsValid();
+        }
+
+        return model_internal::_modifiedmachIsValid;
+    }
+
+    model_internal function calculateModifiedmachIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_modifiedmachValidator.validate(model_internal::_instance.modifiedmach)
+        model_internal::_modifiedmachIsValid_der = (valRes.results == null);
+        model_internal::_modifiedmachIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::modifiedmachValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::modifiedmachValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get modifiedmachValidationFailureMessages():Array
+    {
+        if (model_internal::_modifiedmachValidationFailureMessages == null)
+            model_internal::calculateModifiedmachIsValid();
+
+        return _modifiedmachValidationFailureMessages;
+    }
+
+    model_internal function set modifiedmachValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_modifiedmachValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_modifiedmachValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifiedmachValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -4953,6 +5228,12 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
+    public function get curmileageStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get leaseamtStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -5053,12 +5334,6 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get curmileageStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get insamountStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -5149,6 +5424,106 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
         {
             model_internal::_insamountValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "insamountValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get modifieduserStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get modifieduserValidator() : StyleValidator
+    {
+        return model_internal::_modifieduserValidator;
+    }
+
+    model_internal function set _modifieduserIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_modifieduserIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_modifieduserIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifieduserIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get modifieduserIsValid():Boolean
+    {
+        if (!model_internal::_modifieduserIsValidCacheInitialized)
+        {
+            model_internal::calculateModifieduserIsValid();
+        }
+
+        return model_internal::_modifieduserIsValid;
+    }
+
+    model_internal function calculateModifieduserIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_modifieduserValidator.validate(model_internal::_instance.modifieduser)
+        model_internal::_modifieduserIsValid_der = (valRes.results == null);
+        model_internal::_modifieduserIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::modifieduserValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::modifieduserValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get modifieduserValidationFailureMessages():Array
+    {
+        if (model_internal::_modifieduserValidationFailureMessages == null)
+            model_internal::calculateModifieduserIsValid();
+
+        return _modifieduserValidationFailureMessages;
+    }
+
+    model_internal function set modifieduserValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_modifieduserValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_modifieduserValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifieduserValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -5659,12 +6034,6 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
-    public function get leasenoofmonthStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get dfitnessStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -5762,6 +6131,12 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get leasenoofmonthStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -5865,6 +6240,12 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
     }
 
     [Bindable(event="propertyChange")]   
+    public function get orgmileageStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get dpurchaseStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -5962,12 +6343,6 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get orgmileageStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
@@ -6205,6 +6580,10 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             {
                 return demissionValidationFailureMessages;
             }
+            case("modifieddate"):
+            {
+                return modifieddateValidationFailureMessages;
+            }
             case("seatingcapacity"):
             {
                 return seatingcapacityValidationFailureMessages;
@@ -6233,13 +6612,13 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             {
                 return descriptionValidationFailureMessages;
             }
-            case("engineno"):
-            {
-                return enginenoValidationFailureMessages;
-            }
             case("value"):
             {
                 return valueValidationFailureMessages;
+            }
+            case("engineno"):
+            {
+                return enginenoValidationFailureMessages;
             }
             case("insncb"):
             {
@@ -6301,13 +6680,13 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             {
                 return tsdpurchaseValidationFailureMessages;
             }
-            case("vehiclassid"):
-            {
-                return vehiclassidValidationFailureMessages;
-            }
             case("inscompany"):
             {
                 return inscompanyValidationFailureMessages;
+            }
+            case("vehiclassid"):
+            {
+                return vehiclassidValidationFailureMessages;
             }
             case("inspolexces"):
             {
@@ -6320,6 +6699,10 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             case("drevlicense"):
             {
                 return drevlicenseValidationFailureMessages;
+            }
+            case("modifiedmach"):
+            {
+                return modifiedmachValidationFailureMessages;
             }
             case("leasecomid"):
             {
@@ -6344,6 +6727,10 @@ internal class _Com_dspl_malkey_domain_FvehicleEntityMetadata extends com.adobe.
             case("insamount"):
             {
                 return insamountValidationFailureMessages;
+            }
+            case("modifieduser"):
+            {
+                return modifieduserValidationFailureMessages;
             }
             case("insdexpiry"):
             {

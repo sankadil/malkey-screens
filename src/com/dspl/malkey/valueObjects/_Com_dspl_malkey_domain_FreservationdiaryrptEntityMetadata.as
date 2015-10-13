@@ -20,12 +20,12 @@ internal class _Com_dspl_malkey_domain_FreservationdiaryrptEntityMetadata extend
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("cifuellevel", "hiretype", "noofday", "debname", "model", "resno", "regno", "tel", "cimileage", "agrno", "comileage", "hirestatus", "totalmileage", "debadd", "din", "gotime", "cofuellevel", "itinerary", "driver", "make", "dout");
+    model_internal static var allProperties:Array = new Array("cifuellevel", "noofday", "hiretype", "model", "debname", "resno", "tel", "regno", "cimileage", "agrno", "comileage", "hirestatus", "totalmileage", "din", "debadd", "gotime", "cofuellevel", "itinerary", "driver", "make", "dout");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("cifuellevel", "hiretype", "noofday", "debname", "model", "resno", "regno", "tel", "cimileage", "agrno", "comileage", "hirestatus", "totalmileage", "debadd", "din", "gotime", "cofuellevel", "itinerary", "driver", "make", "dout");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("cifuellevel", "noofday", "hiretype", "model", "debname", "resno", "tel", "regno", "cimileage", "agrno", "comileage", "hirestatus", "totalmileage", "din", "debadd", "gotime", "cofuellevel", "itinerary", "driver", "make", "dout");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("cifuellevel", "hiretype", "noofday", "debname", "model", "resno", "regno", "tel", "cimileage", "agrno", "comileage", "hirestatus", "totalmileage", "debadd", "din", "gotime", "cofuellevel", "itinerary", "driver", "make", "dout");
+    model_internal static var dataProperties:Array = new Array("cifuellevel", "noofday", "hiretype", "model", "debname", "resno", "tel", "regno", "cimileage", "agrno", "comileage", "hirestatus", "totalmileage", "din", "debadd", "gotime", "cofuellevel", "itinerary", "driver", "make", "dout");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -45,20 +45,20 @@ internal class _Com_dspl_malkey_domain_FreservationdiaryrptEntityMetadata extend
             // depenents map
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["cifuellevel"] = new Array();
-            model_internal::dependentsOnMap["hiretype"] = new Array();
             model_internal::dependentsOnMap["noofday"] = new Array();
-            model_internal::dependentsOnMap["debname"] = new Array();
+            model_internal::dependentsOnMap["hiretype"] = new Array();
             model_internal::dependentsOnMap["model"] = new Array();
+            model_internal::dependentsOnMap["debname"] = new Array();
             model_internal::dependentsOnMap["resno"] = new Array();
-            model_internal::dependentsOnMap["regno"] = new Array();
             model_internal::dependentsOnMap["tel"] = new Array();
+            model_internal::dependentsOnMap["regno"] = new Array();
             model_internal::dependentsOnMap["cimileage"] = new Array();
             model_internal::dependentsOnMap["agrno"] = new Array();
             model_internal::dependentsOnMap["comileage"] = new Array();
             model_internal::dependentsOnMap["hirestatus"] = new Array();
             model_internal::dependentsOnMap["totalmileage"] = new Array();
-            model_internal::dependentsOnMap["debadd"] = new Array();
             model_internal::dependentsOnMap["din"] = new Array();
+            model_internal::dependentsOnMap["debadd"] = new Array();
             model_internal::dependentsOnMap["gotime"] = new Array();
             model_internal::dependentsOnMap["cofuellevel"] = new Array();
             model_internal::dependentsOnMap["itinerary"] = new Array();
@@ -286,19 +286,13 @@ internal class _Com_dspl_malkey_domain_FreservationdiaryrptEntityMetadata extend
     }
 
     [Bindable(event="propertyChange")]
-    public function get isHiretypeAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isNoofdayAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDebnameAvailable():Boolean
+    public function get isHiretypeAvailable():Boolean
     {
         return true;
     }
@@ -310,19 +304,25 @@ internal class _Com_dspl_malkey_domain_FreservationdiaryrptEntityMetadata extend
     }
 
     [Bindable(event="propertyChange")]
+    public function get isDebnameAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isResnoAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isRegnoAvailable():Boolean
+    public function get isTelAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isTelAvailable():Boolean
+    public function get isRegnoAvailable():Boolean
     {
         return true;
     }
@@ -358,13 +358,13 @@ internal class _Com_dspl_malkey_domain_FreservationdiaryrptEntityMetadata extend
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDebaddAvailable():Boolean
+    public function get isDinAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isDinAvailable():Boolean
+    public function get isDebaddAvailable():Boolean
     {
         return true;
     }
@@ -422,19 +422,13 @@ internal class _Com_dspl_malkey_domain_FreservationdiaryrptEntityMetadata extend
     }
 
     [Bindable(event="propertyChange")]   
-    public function get hiretypeStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get noofdayStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get debnameStyle():com.adobe.fiber.styles.Style
+    public function get hiretypeStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -446,19 +440,25 @@ internal class _Com_dspl_malkey_domain_FreservationdiaryrptEntityMetadata extend
     }
 
     [Bindable(event="propertyChange")]   
+    public function get debnameStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get resnoStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get regnoStyle():com.adobe.fiber.styles.Style
+    public function get telStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get telStyle():com.adobe.fiber.styles.Style
+    public function get regnoStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -494,13 +494,13 @@ internal class _Com_dspl_malkey_domain_FreservationdiaryrptEntityMetadata extend
     }
 
     [Bindable(event="propertyChange")]   
-    public function get debaddStyle():com.adobe.fiber.styles.Style
+    public function get dinStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get dinStyle():com.adobe.fiber.styles.Style
+    public function get debaddStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

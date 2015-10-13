@@ -30,14 +30,14 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("fresvehicle", "fresvehicledamage", "freservation", "fresaccs", "fresclientdriver", "fresdriverrate", "fresaddcharge", "fresothsrv", "fresvehinv", "fresdriver");
-    model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("fresvehicle", "fresvehicledamage", "freservation", "fresaccs", "fresclientdriver", "fresdriverrate", "fresaddcharge", "fresothsrv", "fresvehinv", "fresdriver");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("fresvehicle", "fresvehicledamage", "freservation", "fresaccs", "fresclientdriver", "fresdriverrate", "fresaddcharge", "fresothsrv", "fresvehinv", "fresdriver");
+    model_internal static var allProperties:Array = new Array("fresvehicle", "fresvehicledamage", "fresaccs", "freservation", "fresdriverrate", "fresaddcharge", "fresclientdriver", "fresdriver", "fresothsrv", "fresvehinv");
+    model_internal static var allAssociationProperties:Array = new Array("freservation");
+    model_internal static var allRequiredProperties:Array = new Array("fresvehicle", "fresvehicledamage", "fresaccs", "freservation", "fresdriverrate", "fresaddcharge", "fresclientdriver", "fresdriver", "fresothsrv", "fresvehinv");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("fresvehicle", "fresvehicledamage", "fresaccs", "freservation", "fresdriverrate", "fresaddcharge", "fresclientdriver", "fresdriver", "fresothsrv", "fresvehinv");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("fresvehicle", "fresvehicledamage", "freservation", "fresaccs", "fresclientdriver", "fresdriverrate", "fresaddcharge", "fresothsrv", "fresvehinv", "fresdriver");
+    model_internal static var dataProperties:Array = new Array("fresvehicle", "fresvehicledamage", "fresaccs", "freservation", "fresdriverrate", "fresaddcharge", "fresclientdriver", "fresdriver", "fresothsrv", "fresvehinv");
     model_internal static var derivedProperties:Array = new Array();
-    model_internal static var collectionProperties:Array = new Array("fresvehicle", "fresvehicledamage", "fresaccs", "fresclientdriver", "fresaddcharge", "fresothsrv", "fresvehinv", "fresdriver");
+    model_internal static var collectionProperties:Array = new Array("fresvehicle", "fresvehicledamage", "fresaccs", "fresaddcharge", "fresclientdriver", "fresdriver", "fresothsrv", "fresvehinv");
     model_internal static var collectionBaseMap:Object;
     model_internal static var entityName:String = "Com_dspl_malkey_report_Reservation";
     model_internal static var dependentsOnMap:Object;
@@ -54,20 +54,15 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
     model_internal var _fresvehicledamageIsValidCacheInitialized:Boolean = false;
     model_internal var _fresvehicledamageValidationFailureMessages:Array;
     
-    model_internal var _freservationIsValid:Boolean;
-    model_internal var _freservationValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _freservationIsValidCacheInitialized:Boolean = false;
-    model_internal var _freservationValidationFailureMessages:Array;
-    
     model_internal var _fresaccsIsValid:Boolean;
     model_internal var _fresaccsValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _fresaccsIsValidCacheInitialized:Boolean = false;
     model_internal var _fresaccsValidationFailureMessages:Array;
     
-    model_internal var _fresclientdriverIsValid:Boolean;
-    model_internal var _fresclientdriverValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _fresclientdriverIsValidCacheInitialized:Boolean = false;
-    model_internal var _fresclientdriverValidationFailureMessages:Array;
+    model_internal var _freservationIsValid:Boolean;
+    model_internal var _freservationValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _freservationIsValidCacheInitialized:Boolean = false;
+    model_internal var _freservationValidationFailureMessages:Array;
     
     model_internal var _fresdriverrateIsValid:Boolean;
     model_internal var _fresdriverrateValidator:com.adobe.fiber.styles.StyleValidator;
@@ -79,6 +74,16 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
     model_internal var _fresaddchargeIsValidCacheInitialized:Boolean = false;
     model_internal var _fresaddchargeValidationFailureMessages:Array;
     
+    model_internal var _fresclientdriverIsValid:Boolean;
+    model_internal var _fresclientdriverValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _fresclientdriverIsValidCacheInitialized:Boolean = false;
+    model_internal var _fresclientdriverValidationFailureMessages:Array;
+    
+    model_internal var _fresdriverIsValid:Boolean;
+    model_internal var _fresdriverValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _fresdriverIsValidCacheInitialized:Boolean = false;
+    model_internal var _fresdriverValidationFailureMessages:Array;
+    
     model_internal var _fresothsrvIsValid:Boolean;
     model_internal var _fresothsrvValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _fresothsrvIsValidCacheInitialized:Boolean = false;
@@ -88,11 +93,6 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
     model_internal var _fresvehinvValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _fresvehinvIsValidCacheInitialized:Boolean = false;
     model_internal var _fresvehinvValidationFailureMessages:Array;
-    
-    model_internal var _fresdriverIsValid:Boolean;
-    model_internal var _fresdriverValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _fresdriverIsValidCacheInitialized:Boolean = false;
-    model_internal var _fresdriverValidationFailureMessages:Array;
 
     model_internal var _instance:_Super_Com_dspl_malkey_report_Reservation;
     model_internal static var _nullStyle:com.adobe.fiber.styles.Style = new com.adobe.fiber.styles.Style();
@@ -106,25 +106,25 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["fresvehicle"] = new Array();
             model_internal::dependentsOnMap["fresvehicledamage"] = new Array();
-            model_internal::dependentsOnMap["freservation"] = new Array();
             model_internal::dependentsOnMap["fresaccs"] = new Array();
-            model_internal::dependentsOnMap["fresclientdriver"] = new Array();
+            model_internal::dependentsOnMap["freservation"] = new Array();
             model_internal::dependentsOnMap["fresdriverrate"] = new Array();
             model_internal::dependentsOnMap["fresaddcharge"] = new Array();
+            model_internal::dependentsOnMap["fresclientdriver"] = new Array();
+            model_internal::dependentsOnMap["fresdriver"] = new Array();
             model_internal::dependentsOnMap["fresothsrv"] = new Array();
             model_internal::dependentsOnMap["fresvehinv"] = new Array();
-            model_internal::dependentsOnMap["fresdriver"] = new Array();
 
             // collection base map
             model_internal::collectionBaseMap = new Object()
             model_internal::collectionBaseMap["fresvehicle"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicle";
             model_internal::collectionBaseMap["fresvehicledamage"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicledamage";
             model_internal::collectionBaseMap["fresaccs"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccs";
-            model_internal::collectionBaseMap["fresclientdriver"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver";
             model_internal::collectionBaseMap["fresaddcharge"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaddcharge";
+            model_internal::collectionBaseMap["fresclientdriver"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver";
+            model_internal::collectionBaseMap["fresdriver"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver";
             model_internal::collectionBaseMap["fresothsrv"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothsrv";
             model_internal::collectionBaseMap["fresvehinv"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehinv";
-            model_internal::collectionBaseMap["fresdriver"] = "com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver";
         }
 
         model_internal::_instance = value;
@@ -138,21 +138,16 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
         model_internal::_fresvehicledamageValidator.requiredFieldError = "fresvehicledamage is required";
         //model_internal::_fresvehicledamageValidator.source = model_internal::_instance;
         //model_internal::_fresvehicledamageValidator.property = "fresvehicledamage";
-        model_internal::_freservationValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFreservation);
-        model_internal::_freservationValidator.required = true;
-        model_internal::_freservationValidator.requiredFieldError = "freservation is required";
-        //model_internal::_freservationValidator.source = model_internal::_instance;
-        //model_internal::_freservationValidator.property = "freservation";
         model_internal::_fresaccsValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFresaccs);
         model_internal::_fresaccsValidator.required = true;
         model_internal::_fresaccsValidator.requiredFieldError = "fresaccs is required";
         //model_internal::_fresaccsValidator.source = model_internal::_instance;
         //model_internal::_fresaccsValidator.property = "fresaccs";
-        model_internal::_fresclientdriverValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFresclientdriver);
-        model_internal::_fresclientdriverValidator.required = true;
-        model_internal::_fresclientdriverValidator.requiredFieldError = "fresclientdriver is required";
-        //model_internal::_fresclientdriverValidator.source = model_internal::_instance;
-        //model_internal::_fresclientdriverValidator.property = "fresclientdriver";
+        model_internal::_freservationValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFreservation);
+        model_internal::_freservationValidator.required = true;
+        model_internal::_freservationValidator.requiredFieldError = "freservation is required";
+        //model_internal::_freservationValidator.source = model_internal::_instance;
+        //model_internal::_freservationValidator.property = "freservation";
         model_internal::_fresdriverrateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFresdriverrate);
         model_internal::_fresdriverrateValidator.required = true;
         model_internal::_fresdriverrateValidator.requiredFieldError = "fresdriverrate is required";
@@ -163,6 +158,16 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
         model_internal::_fresaddchargeValidator.requiredFieldError = "fresaddcharge is required";
         //model_internal::_fresaddchargeValidator.source = model_internal::_instance;
         //model_internal::_fresaddchargeValidator.property = "fresaddcharge";
+        model_internal::_fresclientdriverValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFresclientdriver);
+        model_internal::_fresclientdriverValidator.required = true;
+        model_internal::_fresclientdriverValidator.requiredFieldError = "fresclientdriver is required";
+        //model_internal::_fresclientdriverValidator.source = model_internal::_instance;
+        //model_internal::_fresclientdriverValidator.property = "fresclientdriver";
+        model_internal::_fresdriverValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFresdriver);
+        model_internal::_fresdriverValidator.required = true;
+        model_internal::_fresdriverValidator.requiredFieldError = "fresdriver is required";
+        //model_internal::_fresdriverValidator.source = model_internal::_instance;
+        //model_internal::_fresdriverValidator.property = "fresdriver";
         model_internal::_fresothsrvValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFresothsrv);
         model_internal::_fresothsrvValidator.required = true;
         model_internal::_fresothsrvValidator.requiredFieldError = "fresothsrv is required";
@@ -173,11 +178,6 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
         model_internal::_fresvehinvValidator.requiredFieldError = "fresvehinv is required";
         //model_internal::_fresvehinvValidator.source = model_internal::_instance;
         //model_internal::_fresvehinvValidator.property = "fresvehinv";
-        model_internal::_fresdriverValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForFresdriver);
-        model_internal::_fresdriverValidator.required = true;
-        model_internal::_fresdriverValidator.requiredFieldError = "fresdriver is required";
-        //model_internal::_fresdriverValidator.source = model_internal::_instance;
-        //model_internal::_fresdriverValidator.property = "fresdriver";
     }
 
     override public function getEntityName():String
@@ -399,19 +399,13 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
     }
 
     [Bindable(event="propertyChange")]
-    public function get isFreservationAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isFresaccsAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isFresclientdriverAvailable():Boolean
+    public function get isFreservationAvailable():Boolean
     {
         return true;
     }
@@ -429,6 +423,18 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
     }
 
     [Bindable(event="propertyChange")]
+    public function get isFresclientdriverAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isFresdriverAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isFresothsrvAvailable():Boolean
     {
         return true;
@@ -436,12 +442,6 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
 
     [Bindable(event="propertyChange")]
     public function get isFresvehinvAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get isFresdriverAvailable():Boolean
     {
         return true;
     }
@@ -466,14 +466,6 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
             model_internal::calculateFresvehicledamageIsValid();
         }
     }
-    public function invalidateDependentOnFreservation():void
-    {
-        if (model_internal::_freservationIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfFreservation = null;
-            model_internal::calculateFreservationIsValid();
-        }
-    }
     public function invalidateDependentOnFresaccs():void
     {
         if (model_internal::_fresaccsIsValidCacheInitialized )
@@ -482,12 +474,12 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
             model_internal::calculateFresaccsIsValid();
         }
     }
-    public function invalidateDependentOnFresclientdriver():void
+    public function invalidateDependentOnFreservation():void
     {
-        if (model_internal::_fresclientdriverIsValidCacheInitialized )
+        if (model_internal::_freservationIsValidCacheInitialized )
         {
-            model_internal::_instance.model_internal::_doValidationCacheOfFresclientdriver = null;
-            model_internal::calculateFresclientdriverIsValid();
+            model_internal::_instance.model_internal::_doValidationCacheOfFreservation = null;
+            model_internal::calculateFreservationIsValid();
         }
     }
     public function invalidateDependentOnFresdriverrate():void
@@ -506,6 +498,22 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
             model_internal::calculateFresaddchargeIsValid();
         }
     }
+    public function invalidateDependentOnFresclientdriver():void
+    {
+        if (model_internal::_fresclientdriverIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfFresclientdriver = null;
+            model_internal::calculateFresclientdriverIsValid();
+        }
+    }
+    public function invalidateDependentOnFresdriver():void
+    {
+        if (model_internal::_fresdriverIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfFresdriver = null;
+            model_internal::calculateFresdriverIsValid();
+        }
+    }
     public function invalidateDependentOnFresothsrv():void
     {
         if (model_internal::_fresothsrvIsValidCacheInitialized )
@@ -520,14 +528,6 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
         {
             model_internal::_instance.model_internal::_doValidationCacheOfFresvehinv = null;
             model_internal::calculateFresvehinvIsValid();
-        }
-    }
-    public function invalidateDependentOnFresdriver():void
-    {
-        if (model_internal::_fresdriverIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfFresdriver = null;
-            model_internal::calculateFresdriverIsValid();
         }
     }
 
@@ -737,106 +737,6 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
     }
 
     [Bindable(event="propertyChange")]   
-    public function get freservationStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get freservationValidator() : StyleValidator
-    {
-        return model_internal::_freservationValidator;
-    }
-
-    model_internal function set _freservationIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_freservationIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_freservationIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "freservationIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get freservationIsValid():Boolean
-    {
-        if (!model_internal::_freservationIsValidCacheInitialized)
-        {
-            model_internal::calculateFreservationIsValid();
-        }
-
-        return model_internal::_freservationIsValid;
-    }
-
-    model_internal function calculateFreservationIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_freservationValidator.validate(model_internal::_instance.freservation)
-        model_internal::_freservationIsValid_der = (valRes.results == null);
-        model_internal::_freservationIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::freservationValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::freservationValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get freservationValidationFailureMessages():Array
-    {
-        if (model_internal::_freservationValidationFailureMessages == null)
-            model_internal::calculateFreservationIsValid();
-
-        return _freservationValidationFailureMessages;
-    }
-
-    model_internal function set freservationValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_freservationValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_freservationValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "freservationValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get fresaccsStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -937,44 +837,44 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
     }
 
     [Bindable(event="propertyChange")]   
-    public function get fresclientdriverStyle():com.adobe.fiber.styles.Style
+    public function get freservationStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
-    public function get fresclientdriverValidator() : StyleValidator
+    public function get freservationValidator() : StyleValidator
     {
-        return model_internal::_fresclientdriverValidator;
+        return model_internal::_freservationValidator;
     }
 
-    model_internal function set _fresclientdriverIsValid_der(value:Boolean):void 
+    model_internal function set _freservationIsValid_der(value:Boolean):void 
     {
-        var oldValue:Boolean = model_internal::_fresclientdriverIsValid;         
+        var oldValue:Boolean = model_internal::_freservationIsValid;         
         if (oldValue !== value)
         {
-            model_internal::_fresclientdriverIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresclientdriverIsValid", oldValue, value));
+            model_internal::_freservationIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "freservationIsValid", oldValue, value));
         }                             
     }
 
     [Bindable(event="propertyChange")]
-    public function get fresclientdriverIsValid():Boolean
+    public function get freservationIsValid():Boolean
     {
-        if (!model_internal::_fresclientdriverIsValidCacheInitialized)
+        if (!model_internal::_freservationIsValidCacheInitialized)
         {
-            model_internal::calculateFresclientdriverIsValid();
+            model_internal::calculateFreservationIsValid();
         }
 
-        return model_internal::_fresclientdriverIsValid;
+        return model_internal::_freservationIsValid;
     }
 
-    model_internal function calculateFresclientdriverIsValid():void
+    model_internal function calculateFreservationIsValid():void
     {
-        var valRes:ValidationResultEvent = model_internal::_fresclientdriverValidator.validate(model_internal::_instance.fresclientdriver)
-        model_internal::_fresclientdriverIsValid_der = (valRes.results == null);
-        model_internal::_fresclientdriverIsValidCacheInitialized = true;
+        var valRes:ValidationResultEvent = model_internal::_freservationValidator.validate(model_internal::_instance.freservation)
+        model_internal::_freservationIsValid_der = (valRes.results == null);
+        model_internal::_freservationIsValidCacheInitialized = true;
         if (valRes.results == null)
-             model_internal::fresclientdriverValidationFailureMessages_der = emptyArray;
+             model_internal::freservationValidationFailureMessages_der = emptyArray;
         else
         {
             var _valFailures:Array = new Array();
@@ -982,22 +882,22 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
             {
                 _valFailures.push(valRes.results[a].errorMessage);
             }
-            model_internal::fresclientdriverValidationFailureMessages_der = _valFailures;
+            model_internal::freservationValidationFailureMessages_der = _valFailures;
         }
     }
 
     [Bindable(event="propertyChange")]
-    public function get fresclientdriverValidationFailureMessages():Array
+    public function get freservationValidationFailureMessages():Array
     {
-        if (model_internal::_fresclientdriverValidationFailureMessages == null)
-            model_internal::calculateFresclientdriverIsValid();
+        if (model_internal::_freservationValidationFailureMessages == null)
+            model_internal::calculateFreservationIsValid();
 
-        return _fresclientdriverValidationFailureMessages;
+        return _freservationValidationFailureMessages;
     }
 
-    model_internal function set fresclientdriverValidationFailureMessages_der(value:Array) : void
+    model_internal function set freservationValidationFailureMessages_der(value:Array) : void
     {
-        var oldValue:Array = model_internal::_fresclientdriverValidationFailureMessages;
+        var oldValue:Array = model_internal::_freservationValidationFailureMessages;
 
         var needUpdate : Boolean = false;
         if (oldValue == null)
@@ -1025,8 +925,8 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
 
         if (needUpdate)
         {
-            model_internal::_fresclientdriverValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresclientdriverValidationFailureMessages", oldValue, value));
+            model_internal::_freservationValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "freservationValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -1237,6 +1137,206 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
     }
 
     [Bindable(event="propertyChange")]   
+    public function get fresclientdriverStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get fresclientdriverValidator() : StyleValidator
+    {
+        return model_internal::_fresclientdriverValidator;
+    }
+
+    model_internal function set _fresclientdriverIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_fresclientdriverIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_fresclientdriverIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresclientdriverIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get fresclientdriverIsValid():Boolean
+    {
+        if (!model_internal::_fresclientdriverIsValidCacheInitialized)
+        {
+            model_internal::calculateFresclientdriverIsValid();
+        }
+
+        return model_internal::_fresclientdriverIsValid;
+    }
+
+    model_internal function calculateFresclientdriverIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_fresclientdriverValidator.validate(model_internal::_instance.fresclientdriver)
+        model_internal::_fresclientdriverIsValid_der = (valRes.results == null);
+        model_internal::_fresclientdriverIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::fresclientdriverValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::fresclientdriverValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get fresclientdriverValidationFailureMessages():Array
+    {
+        if (model_internal::_fresclientdriverValidationFailureMessages == null)
+            model_internal::calculateFresclientdriverIsValid();
+
+        return _fresclientdriverValidationFailureMessages;
+    }
+
+    model_internal function set fresclientdriverValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_fresclientdriverValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_fresclientdriverValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresclientdriverValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get fresdriverStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get fresdriverValidator() : StyleValidator
+    {
+        return model_internal::_fresdriverValidator;
+    }
+
+    model_internal function set _fresdriverIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_fresdriverIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_fresdriverIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresdriverIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get fresdriverIsValid():Boolean
+    {
+        if (!model_internal::_fresdriverIsValidCacheInitialized)
+        {
+            model_internal::calculateFresdriverIsValid();
+        }
+
+        return model_internal::_fresdriverIsValid;
+    }
+
+    model_internal function calculateFresdriverIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_fresdriverValidator.validate(model_internal::_instance.fresdriver)
+        model_internal::_fresdriverIsValid_der = (valRes.results == null);
+        model_internal::_fresdriverIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::fresdriverValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::fresdriverValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get fresdriverValidationFailureMessages():Array
+    {
+        if (model_internal::_fresdriverValidationFailureMessages == null)
+            model_internal::calculateFresdriverIsValid();
+
+        return _fresdriverValidationFailureMessages;
+    }
+
+    model_internal function set fresdriverValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_fresdriverValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_fresdriverValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresdriverValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get fresothsrvStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -1436,106 +1536,6 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
         }
     }
 
-    [Bindable(event="propertyChange")]   
-    public function get fresdriverStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get fresdriverValidator() : StyleValidator
-    {
-        return model_internal::_fresdriverValidator;
-    }
-
-    model_internal function set _fresdriverIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_fresdriverIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_fresdriverIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresdriverIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get fresdriverIsValid():Boolean
-    {
-        if (!model_internal::_fresdriverIsValidCacheInitialized)
-        {
-            model_internal::calculateFresdriverIsValid();
-        }
-
-        return model_internal::_fresdriverIsValid;
-    }
-
-    model_internal function calculateFresdriverIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_fresdriverValidator.validate(model_internal::_instance.fresdriver)
-        model_internal::_fresdriverIsValid_der = (valRes.results == null);
-        model_internal::_fresdriverIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::fresdriverValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::fresdriverValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get fresdriverValidationFailureMessages():Array
-    {
-        if (model_internal::_fresdriverValidationFailureMessages == null)
-            model_internal::calculateFresdriverIsValid();
-
-        return _fresdriverValidationFailureMessages;
-    }
-
-    model_internal function set fresdriverValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_fresdriverValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_fresdriverValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "fresdriverValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
 
      /**
      * 
@@ -1569,17 +1569,13 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
             {
                 return fresvehicledamageValidationFailureMessages;
             }
-            case("freservation"):
-            {
-                return freservationValidationFailureMessages;
-            }
             case("fresaccs"):
             {
                 return fresaccsValidationFailureMessages;
             }
-            case("fresclientdriver"):
+            case("freservation"):
             {
-                return fresclientdriverValidationFailureMessages;
+                return freservationValidationFailureMessages;
             }
             case("fresdriverrate"):
             {
@@ -1589,6 +1585,14 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
             {
                 return fresaddchargeValidationFailureMessages;
             }
+            case("fresclientdriver"):
+            {
+                return fresclientdriverValidationFailureMessages;
+            }
+            case("fresdriver"):
+            {
+                return fresdriverValidationFailureMessages;
+            }
             case("fresothsrv"):
             {
                 return fresothsrvValidationFailureMessages;
@@ -1596,10 +1600,6 @@ internal class _Com_dspl_malkey_report_ReservationEntityMetadata extends com.ado
             case("fresvehinv"):
             {
                 return fresvehinvValidationFailureMessages;
-            }
-            case("fresdriver"):
-            {
-                return fresdriverValidationFailureMessages;
             }
             default:
             {

@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("dto", "ratetype", "resno", "clienttype", "accid", "dfrom");
+    model_internal static var allProperties:Array = new Array("dto", "ratetype", "resno", "accid", "clienttype", "dfrom");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("dto", "ratetype", "resno", "clienttype", "accid", "dfrom");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("dto", "ratetype", "resno", "clienttype", "accid", "dfrom");
+    model_internal static var allRequiredProperties:Array = new Array("dto", "ratetype", "resno", "accid", "clienttype", "dfrom");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("dto", "ratetype", "resno", "accid", "clienttype", "dfrom");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("dto", "ratetype", "resno", "clienttype", "accid", "dfrom");
+    model_internal static var dataProperties:Array = new Array("dto", "ratetype", "resno", "accid", "clienttype", "dfrom");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -51,15 +51,15 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
     model_internal var _resnoIsValidCacheInitialized:Boolean = false;
     model_internal var _resnoValidationFailureMessages:Array;
     
-    model_internal var _clienttypeIsValid:Boolean;
-    model_internal var _clienttypeValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _clienttypeIsValidCacheInitialized:Boolean = false;
-    model_internal var _clienttypeValidationFailureMessages:Array;
-    
     model_internal var _accidIsValid:Boolean;
     model_internal var _accidValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _accidIsValidCacheInitialized:Boolean = false;
     model_internal var _accidValidationFailureMessages:Array;
+    
+    model_internal var _clienttypeIsValid:Boolean;
+    model_internal var _clienttypeValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _clienttypeIsValidCacheInitialized:Boolean = false;
+    model_internal var _clienttypeValidationFailureMessages:Array;
     
     model_internal var _dfromIsValid:Boolean;
     model_internal var _dfromValidator:com.adobe.fiber.styles.StyleValidator;
@@ -79,8 +79,8 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
             model_internal::dependentsOnMap["dto"] = new Array();
             model_internal::dependentsOnMap["ratetype"] = new Array();
             model_internal::dependentsOnMap["resno"] = new Array();
-            model_internal::dependentsOnMap["clienttype"] = new Array();
             model_internal::dependentsOnMap["accid"] = new Array();
+            model_internal::dependentsOnMap["clienttype"] = new Array();
             model_internal::dependentsOnMap["dfrom"] = new Array();
 
             // collection base map
@@ -103,16 +103,16 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
         model_internal::_resnoValidator.requiredFieldError = "resno is required";
         //model_internal::_resnoValidator.source = model_internal::_instance;
         //model_internal::_resnoValidator.property = "resno";
-        model_internal::_clienttypeValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForClienttype);
-        model_internal::_clienttypeValidator.required = true;
-        model_internal::_clienttypeValidator.requiredFieldError = "clienttype is required";
-        //model_internal::_clienttypeValidator.source = model_internal::_instance;
-        //model_internal::_clienttypeValidator.property = "clienttype";
         model_internal::_accidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAccid);
         model_internal::_accidValidator.required = true;
         model_internal::_accidValidator.requiredFieldError = "accid is required";
         //model_internal::_accidValidator.source = model_internal::_instance;
         //model_internal::_accidValidator.property = "accid";
+        model_internal::_clienttypeValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForClienttype);
+        model_internal::_clienttypeValidator.required = true;
+        model_internal::_clienttypeValidator.requiredFieldError = "clienttype is required";
+        //model_internal::_clienttypeValidator.source = model_internal::_instance;
+        //model_internal::_clienttypeValidator.property = "clienttype";
         model_internal::_dfromValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForDfrom);
         model_internal::_dfromValidator.required = true;
         model_internal::_dfromValidator.requiredFieldError = "dfrom is required";
@@ -345,13 +345,13 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
     }
 
     [Bindable(event="propertyChange")]
-    public function get isClienttypeAvailable():Boolean
+    public function get isAccidAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAccidAvailable():Boolean
+    public function get isClienttypeAvailable():Boolean
     {
         return true;
     }
@@ -390,20 +390,20 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
             model_internal::calculateResnoIsValid();
         }
     }
-    public function invalidateDependentOnClienttype():void
-    {
-        if (model_internal::_clienttypeIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfClienttype = null;
-            model_internal::calculateClienttypeIsValid();
-        }
-    }
     public function invalidateDependentOnAccid():void
     {
         if (model_internal::_accidIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfAccid = null;
             model_internal::calculateAccidIsValid();
+        }
+    }
+    public function invalidateDependentOnClienttype():void
+    {
+        if (model_internal::_clienttypeIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfClienttype = null;
+            model_internal::calculateClienttypeIsValid();
         }
     }
     public function invalidateDependentOnDfrom():void
@@ -721,106 +721,6 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
     }
 
     [Bindable(event="propertyChange")]   
-    public function get clienttypeStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get clienttypeValidator() : StyleValidator
-    {
-        return model_internal::_clienttypeValidator;
-    }
-
-    model_internal function set _clienttypeIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_clienttypeIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_clienttypeIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "clienttypeIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get clienttypeIsValid():Boolean
-    {
-        if (!model_internal::_clienttypeIsValidCacheInitialized)
-        {
-            model_internal::calculateClienttypeIsValid();
-        }
-
-        return model_internal::_clienttypeIsValid;
-    }
-
-    model_internal function calculateClienttypeIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_clienttypeValidator.validate(model_internal::_instance.clienttype)
-        model_internal::_clienttypeIsValid_der = (valRes.results == null);
-        model_internal::_clienttypeIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::clienttypeValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::clienttypeValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get clienttypeValidationFailureMessages():Array
-    {
-        if (model_internal::_clienttypeValidationFailureMessages == null)
-            model_internal::calculateClienttypeIsValid();
-
-        return _clienttypeValidationFailureMessages;
-    }
-
-    model_internal function set clienttypeValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_clienttypeValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_clienttypeValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "clienttypeValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get accidStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -911,6 +811,106 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
         {
             model_internal::_accidValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "accidValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get clienttypeStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get clienttypeValidator() : StyleValidator
+    {
+        return model_internal::_clienttypeValidator;
+    }
+
+    model_internal function set _clienttypeIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_clienttypeIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_clienttypeIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "clienttypeIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get clienttypeIsValid():Boolean
+    {
+        if (!model_internal::_clienttypeIsValidCacheInitialized)
+        {
+            model_internal::calculateClienttypeIsValid();
+        }
+
+        return model_internal::_clienttypeIsValid;
+    }
+
+    model_internal function calculateClienttypeIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_clienttypeValidator.validate(model_internal::_instance.clienttype)
+        model_internal::_clienttypeIsValid_der = (valRes.results == null);
+        model_internal::_clienttypeIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::clienttypeValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::clienttypeValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get clienttypeValidationFailureMessages():Array
+    {
+        if (model_internal::_clienttypeValidationFailureMessages == null)
+            model_internal::calculateClienttypeIsValid();
+
+        return _clienttypeValidationFailureMessages;
+    }
+
+    model_internal function set clienttypeValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_clienttypeValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_clienttypeValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "clienttypeValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -1057,13 +1057,13 @@ internal class _Com_dspl_malkey_domain_FresaccratePKEntityMetadata extends com.a
             {
                 return resnoValidationFailureMessages;
             }
-            case("clienttype"):
-            {
-                return clienttypeValidationFailureMessages;
-            }
             case("accid"):
             {
                 return accidValidationFailureMessages;
+            }
+            case("clienttype"):
+            {
+                return clienttypeValidationFailureMessages;
             }
             case("dfrom"):
             {

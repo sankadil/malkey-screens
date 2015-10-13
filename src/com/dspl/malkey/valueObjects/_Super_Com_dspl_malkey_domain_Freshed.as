@@ -58,8 +58,8 @@ public class _Super_Com_dspl_malkey_domain_Freshed extends flash.events.EventDis
     private var _internal_addmach : String;
     private var _internal_adddate : Date;
     private var _internal_adduser : String;
-    private var _internal_uuid : String;
     private var _internal_agrno : String;
+    private var _internal_uuid : String;
     private var _internal_recordid : int;
 
     private static var emptyArray:Array = new Array();
@@ -141,15 +141,15 @@ public class _Super_Com_dspl_malkey_domain_Freshed extends flash.events.EventDis
     }
 
     [Bindable(event="propertyChange")]
-    public function get uuid() : String
-    {
-        return _internal_uuid;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get agrno() : String
     {
         return _internal_agrno;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get uuid() : String
+    {
+        return _internal_uuid;
     }
 
     [Bindable(event="propertyChange")]
@@ -234,21 +234,21 @@ public class _Super_Com_dspl_malkey_domain_Freshed extends flash.events.EventDis
         }
     }
 
-    public function set uuid(value:String) : void
-    {
-        var oldValue:String = _internal_uuid;
-        if (oldValue !== value)
-        {
-            _internal_uuid = value;
-        }
-    }
-
     public function set agrno(value:String) : void
     {
         var oldValue:String = _internal_agrno;
         if (oldValue !== value)
         {
             _internal_agrno = value;
+        }
+    }
+
+    public function set uuid(value:String) : void
+    {
+        var oldValue:String = _internal_uuid;
+        if (oldValue !== value)
+        {
+            _internal_uuid = value;
         }
     }
 

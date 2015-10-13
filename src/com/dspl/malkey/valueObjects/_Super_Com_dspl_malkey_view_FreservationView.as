@@ -40,6 +40,7 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
 
     model_internal static function initRemoteClassAliasAllRelated() : void
     {
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_report_Reservation.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicle.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresvehiclePK.initRemoteClassAliasSingleChild();
@@ -48,23 +49,22 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehiclerate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicledamage.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresvehicledamage.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Freservation.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccs.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaccrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccratePK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaccsPK.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresclientdriverPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriverrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverratePK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresaddcharge.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresaddchargePK.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresclientdriverPK.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver.initRemoteClassAliasSingleChild();
+        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothsrv.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresothsrvPK.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresothersrvrate.initRemoteClassAliasSingleChild();
         com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresothersrvratePK.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver.initRemoteClassAliasSingleChild();
-        com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresdriverPK.initRemoteClassAliasSingleChild();
     }
 
     model_internal var _dminternal_model : _Com_dspl_malkey_view_FreservationViewEntityMetadata;
@@ -79,41 +79,41 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     private var _internal_cidamage : String;
     private var _internal_adddate : Date;
     private var _internal_agrno : String;
-    private var _internal_codate : Date;
     private var _internal_invoicedApplication : String;
+    private var _internal_codate : Date;
     private var _internal_completedate : Date;
     private var _internal_confirmed : String;
     private var _internal_gotime : String;
     private var _internal_chargdays : int;
     private var _internal_coLocation : String;
     private var _internal_cixsmileage : int;
-    private var _internal_taxcomcode : String;
     private var _internal_parentref : String;
+    private var _internal_taxcomcode : String;
     private var _internal_xhours : int;
-    private var _internal_checkoutdata : ByteArray;
     private var _internal_bookdate : Date;
+    private var _internal_checkoutdata : ByteArray;
     private var _internal_noofday : int;
     private var _internal_depositbal : String;
     private var _internal_regno : String;
-    private var _internal_cancelled : String;
     private var _internal_cohirestsid : String;
+    private var _internal_cancelled : String;
+    private var _internal_otherChargersDetails : String;
     private var _internal_checkindata : ByteArray;
     private var _internal_agrdout : Date;
-    private var _internal_otherChargersDetails : String;
     private var _internal_cidetenhrsrs : String;
     private var _internal_nettotal : String;
     private var _internal_invoiced : String;
-    private var _internal_checkin : String;
     private var _internal_ratetype : String;
+    private var _internal_checkin : String;
     private var _internal_cinightout : int;
     private var _internal_cidetenhrs : Number;
-    private var _internal_total_addcharges : String;
     private var _internal_returnaddress : String;
+    private var _internal_total_addcharges : String;
     private var _internal_uuid : String;
     private var _internal_cidate : Date;
     private var _internal_checkout : String;
-    private var _internal_dout : Date;
     private var _internal_recordid : int;
+    private var _internal_dout : Date;
     private var _internal_othernaration : String;
     private var _internal_discount_xhoursamt : String;
     private var _internal_childref : String;
@@ -122,8 +122,8 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     private var _internal_invoicedate : Date;
     private var _internal_total_accessories : String;
     private var _internal_cimileage : int;
-    private var _internal_coinspectby : String;
     private var _internal_totaltaxable : String;
+    private var _internal_coinspectby : String;
     private var _internal_remarks : String;
     private var _internal_timein : String;
     private var _internal_comileage : int;
@@ -131,27 +131,27 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     private var _internal_copyreason : String;
     private var _internal_paytypeid : String;
     private var _internal_din : Date;
-    private var _internal_agrdin : Date;
     private var _internal_selected : Boolean;
+    private var _internal_agrdin : Date;
     private var _internal_details : com.dspl.malkey.valueObjects.Com_dspl_malkey_report_Reservation;
     private var _internal_dateFormaterIn : String;
     private var _internal_ciother : String;
-    private var _internal_booked : String;
     private var _internal_hiretypeid : String;
     private var _internal_cofuellevel : int;
+    private var _internal_booked : String;
     private var _internal_discount_xmile : String;
     private var _internal_cidamagers : String;
     private var _internal_itinerary : String;
     private var _internal_advancebal : String;
     private var _internal_dateFormaterOut : String;
     private var _internal_completed : String;
-    private var _internal_cifuellevel : int;
     private var _internal_cifueldiff : String;
+    private var _internal_cifuellevel : int;
     private var _internal_customerType : String;
     private var _internal_debcode : String;
     private var _internal_cinightoutrs : String;
-    private var _internal_gdout : Date;
     private var _internal_total_discount : String;
+    private var _internal_gdout : Date;
     private var _internal_addmach : String;
     private var _internal_adduser : String;
     private var _internal_canceldate : Date;
@@ -161,8 +161,8 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     private var _internal_taxamt : String;
     private var _internal_cixsmileagers : String;
     private var _internal_quoteno : String;
-    private var _internal_timeout : String;
     private var _internal_advance : String;
+    private var _internal_timeout : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -231,15 +231,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get codate() : Date
-    {
-        return _internal_codate;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get invoicedApplication() : String
     {
         return _internal_invoicedApplication;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get codate() : Date
+    {
+        return _internal_codate;
     }
 
     [Bindable(event="propertyChange")]
@@ -279,15 +279,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get taxcomcode() : String
-    {
-        return _internal_taxcomcode;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get parentref() : String
     {
         return _internal_parentref;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get taxcomcode() : String
+    {
+        return _internal_taxcomcode;
     }
 
     [Bindable(event="propertyChange")]
@@ -297,15 +297,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get checkoutdata() : ByteArray
-    {
-        return _internal_checkoutdata;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get bookdate() : Date
     {
         return _internal_bookdate;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get checkoutdata() : ByteArray
+    {
+        return _internal_checkoutdata;
     }
 
     [Bindable(event="propertyChange")]
@@ -327,15 +327,21 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
+    public function get cohirestsid() : String
+    {
+        return _internal_cohirestsid;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get cancelled() : String
     {
         return _internal_cancelled;
     }
 
     [Bindable(event="propertyChange")]
-    public function get cohirestsid() : String
+    public function get otherChargersDetails() : String
     {
-        return _internal_cohirestsid;
+        return _internal_otherChargersDetails;
     }
 
     [Bindable(event="propertyChange")]
@@ -348,12 +354,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     public function get agrdout() : Date
     {
         return _internal_agrdout;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get otherChargersDetails() : String
-    {
-        return _internal_otherChargersDetails;
     }
 
     [Bindable(event="propertyChange")]
@@ -375,15 +375,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get checkin() : String
-    {
-        return _internal_checkin;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get ratetype() : String
     {
         return _internal_ratetype;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get checkin() : String
+    {
+        return _internal_checkin;
     }
 
     [Bindable(event="propertyChange")]
@@ -399,15 +399,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get total_addcharges() : String
-    {
-        return _internal_total_addcharges;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get returnaddress() : String
     {
         return _internal_returnaddress;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get total_addcharges() : String
+    {
+        return _internal_total_addcharges;
     }
 
     [Bindable(event="propertyChange")]
@@ -429,15 +429,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get dout() : Date
-    {
-        return _internal_dout;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get recordid() : int
     {
         return _internal_recordid;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get dout() : Date
+    {
+        return _internal_dout;
     }
 
     [Bindable(event="propertyChange")]
@@ -489,15 +489,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get coinspectby() : String
-    {
-        return _internal_coinspectby;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get totaltaxable() : String
     {
         return _internal_totaltaxable;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get coinspectby() : String
+    {
+        return _internal_coinspectby;
     }
 
     [Bindable(event="propertyChange")]
@@ -543,15 +543,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get agrdin() : Date
-    {
-        return _internal_agrdin;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get selected() : Boolean
     {
         return _internal_selected;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get agrdin() : Date
+    {
+        return _internal_agrdin;
     }
 
     [Bindable(event="propertyChange")]
@@ -573,12 +573,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get booked() : String
-    {
-        return _internal_booked;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get hiretypeid() : String
     {
         return _internal_hiretypeid;
@@ -588,6 +582,12 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     public function get cofuellevel() : int
     {
         return _internal_cofuellevel;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get booked() : String
+    {
+        return _internal_booked;
     }
 
     [Bindable(event="propertyChange")]
@@ -627,15 +627,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get cifuellevel() : int
-    {
-        return _internal_cifuellevel;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get cifueldiff() : String
     {
         return _internal_cifueldiff;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get cifuellevel() : int
+    {
+        return _internal_cifuellevel;
     }
 
     [Bindable(event="propertyChange")]
@@ -657,15 +657,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get gdout() : Date
-    {
-        return _internal_gdout;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get total_discount() : String
     {
         return _internal_total_discount;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get gdout() : Date
+    {
+        return _internal_gdout;
     }
 
     [Bindable(event="propertyChange")]
@@ -723,15 +723,15 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
-    public function get timeout() : String
-    {
-        return _internal_timeout;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get advance() : String
     {
         return _internal_advance;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get timeout() : String
+    {
+        return _internal_timeout;
     }
 
     /**
@@ -808,16 +808,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set codate(value:Date) : void
-    {
-        var oldValue:Date = _internal_codate;
-        if (oldValue !== value)
-        {
-            _internal_codate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "codate", oldValue, _internal_codate));
-        }
-    }
-
     public function set invoicedApplication(value:String) : void
     {
         var oldValue:String = _internal_invoicedApplication;
@@ -825,6 +815,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_invoicedApplication = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "invoicedApplication", oldValue, _internal_invoicedApplication));
+        }
+    }
+
+    public function set codate(value:Date) : void
+    {
+        var oldValue:Date = _internal_codate;
+        if (oldValue !== value)
+        {
+            _internal_codate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "codate", oldValue, _internal_codate));
         }
     }
 
@@ -888,16 +888,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set taxcomcode(value:String) : void
-    {
-        var oldValue:String = _internal_taxcomcode;
-        if (oldValue !== value)
-        {
-            _internal_taxcomcode = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "taxcomcode", oldValue, _internal_taxcomcode));
-        }
-    }
-
     public function set parentref(value:String) : void
     {
         var oldValue:String = _internal_parentref;
@@ -905,6 +895,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_parentref = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "parentref", oldValue, _internal_parentref));
+        }
+    }
+
+    public function set taxcomcode(value:String) : void
+    {
+        var oldValue:String = _internal_taxcomcode;
+        if (oldValue !== value)
+        {
+            _internal_taxcomcode = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "taxcomcode", oldValue, _internal_taxcomcode));
         }
     }
 
@@ -918,16 +918,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set checkoutdata(value:ByteArray) : void
-    {
-        var oldValue:ByteArray = _internal_checkoutdata;
-        if (oldValue !== value)
-        {
-            _internal_checkoutdata = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkoutdata", oldValue, _internal_checkoutdata));
-        }
-    }
-
     public function set bookdate(value:Date) : void
     {
         var oldValue:Date = _internal_bookdate;
@@ -935,6 +925,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_bookdate = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "bookdate", oldValue, _internal_bookdate));
+        }
+    }
+
+    public function set checkoutdata(value:ByteArray) : void
+    {
+        var oldValue:ByteArray = _internal_checkoutdata;
+        if (oldValue !== value)
+        {
+            _internal_checkoutdata = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkoutdata", oldValue, _internal_checkoutdata));
         }
     }
 
@@ -968,6 +968,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
+    public function set cohirestsid(value:String) : void
+    {
+        var oldValue:String = _internal_cohirestsid;
+        if (oldValue !== value)
+        {
+            _internal_cohirestsid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cohirestsid", oldValue, _internal_cohirestsid));
+        }
+    }
+
     public function set cancelled(value:String) : void
     {
         var oldValue:String = _internal_cancelled;
@@ -978,13 +988,13 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set cohirestsid(value:String) : void
+    public function set otherChargersDetails(value:String) : void
     {
-        var oldValue:String = _internal_cohirestsid;
+        var oldValue:String = _internal_otherChargersDetails;
         if (oldValue !== value)
         {
-            _internal_cohirestsid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cohirestsid", oldValue, _internal_cohirestsid));
+            _internal_otherChargersDetails = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "otherChargersDetails", oldValue, _internal_otherChargersDetails));
         }
     }
 
@@ -1005,16 +1015,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_agrdout = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "agrdout", oldValue, _internal_agrdout));
-        }
-    }
-
-    public function set otherChargersDetails(value:String) : void
-    {
-        var oldValue:String = _internal_otherChargersDetails;
-        if (oldValue !== value)
-        {
-            _internal_otherChargersDetails = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "otherChargersDetails", oldValue, _internal_otherChargersDetails));
         }
     }
 
@@ -1048,16 +1048,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set checkin(value:String) : void
-    {
-        var oldValue:String = _internal_checkin;
-        if (oldValue !== value)
-        {
-            _internal_checkin = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkin", oldValue, _internal_checkin));
-        }
-    }
-
     public function set ratetype(value:String) : void
     {
         var oldValue:String = _internal_ratetype;
@@ -1065,6 +1055,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_ratetype = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "ratetype", oldValue, _internal_ratetype));
+        }
+    }
+
+    public function set checkin(value:String) : void
+    {
+        var oldValue:String = _internal_checkin;
+        if (oldValue !== value)
+        {
+            _internal_checkin = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "checkin", oldValue, _internal_checkin));
         }
     }
 
@@ -1088,16 +1088,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set total_addcharges(value:String) : void
-    {
-        var oldValue:String = _internal_total_addcharges;
-        if (oldValue !== value)
-        {
-            _internal_total_addcharges = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_addcharges", oldValue, _internal_total_addcharges));
-        }
-    }
-
     public function set returnaddress(value:String) : void
     {
         var oldValue:String = _internal_returnaddress;
@@ -1105,6 +1095,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_returnaddress = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "returnaddress", oldValue, _internal_returnaddress));
+        }
+    }
+
+    public function set total_addcharges(value:String) : void
+    {
+        var oldValue:String = _internal_total_addcharges;
+        if (oldValue !== value)
+        {
+            _internal_total_addcharges = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_addcharges", oldValue, _internal_total_addcharges));
         }
     }
 
@@ -1138,16 +1138,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set dout(value:Date) : void
-    {
-        var oldValue:Date = _internal_dout;
-        if (oldValue !== value)
-        {
-            _internal_dout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dout", oldValue, _internal_dout));
-        }
-    }
-
     public function set recordid(value:int) : void
     {
         var oldValue:int = _internal_recordid;
@@ -1155,6 +1145,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_recordid = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "recordid", oldValue, _internal_recordid));
+        }
+    }
+
+    public function set dout(value:Date) : void
+    {
+        var oldValue:Date = _internal_dout;
+        if (oldValue !== value)
+        {
+            _internal_dout = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dout", oldValue, _internal_dout));
         }
     }
 
@@ -1238,16 +1238,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set coinspectby(value:String) : void
-    {
-        var oldValue:String = _internal_coinspectby;
-        if (oldValue !== value)
-        {
-            _internal_coinspectby = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coinspectby", oldValue, _internal_coinspectby));
-        }
-    }
-
     public function set totaltaxable(value:String) : void
     {
         var oldValue:String = _internal_totaltaxable;
@@ -1255,6 +1245,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_totaltaxable = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "totaltaxable", oldValue, _internal_totaltaxable));
+        }
+    }
+
+    public function set coinspectby(value:String) : void
+    {
+        var oldValue:String = _internal_coinspectby;
+        if (oldValue !== value)
+        {
+            _internal_coinspectby = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "coinspectby", oldValue, _internal_coinspectby));
         }
     }
 
@@ -1328,16 +1328,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set agrdin(value:Date) : void
-    {
-        var oldValue:Date = _internal_agrdin;
-        if (oldValue !== value)
-        {
-            _internal_agrdin = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "agrdin", oldValue, _internal_agrdin));
-        }
-    }
-
     public function set selected(value:Boolean) : void
     {
         var oldValue:Boolean = _internal_selected;
@@ -1345,6 +1335,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_selected = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "selected", oldValue, _internal_selected));
+        }
+    }
+
+    public function set agrdin(value:Date) : void
+    {
+        var oldValue:Date = _internal_agrdin;
+        if (oldValue !== value)
+        {
+            _internal_agrdin = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "agrdin", oldValue, _internal_agrdin));
         }
     }
 
@@ -1378,16 +1378,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set booked(value:String) : void
-    {
-        var oldValue:String = _internal_booked;
-        if (oldValue !== value)
-        {
-            _internal_booked = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "booked", oldValue, _internal_booked));
-        }
-    }
-
     public function set hiretypeid(value:String) : void
     {
         var oldValue:String = _internal_hiretypeid;
@@ -1405,6 +1395,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_cofuellevel = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cofuellevel", oldValue, _internal_cofuellevel));
+        }
+    }
+
+    public function set booked(value:String) : void
+    {
+        var oldValue:String = _internal_booked;
+        if (oldValue !== value)
+        {
+            _internal_booked = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "booked", oldValue, _internal_booked));
         }
     }
 
@@ -1468,16 +1468,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set cifuellevel(value:int) : void
-    {
-        var oldValue:int = _internal_cifuellevel;
-        if (oldValue !== value)
-        {
-            _internal_cifuellevel = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cifuellevel", oldValue, _internal_cifuellevel));
-        }
-    }
-
     public function set cifueldiff(value:String) : void
     {
         var oldValue:String = _internal_cifueldiff;
@@ -1485,6 +1475,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_cifueldiff = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cifueldiff", oldValue, _internal_cifueldiff));
+        }
+    }
+
+    public function set cifuellevel(value:int) : void
+    {
+        var oldValue:int = _internal_cifuellevel;
+        if (oldValue !== value)
+        {
+            _internal_cifuellevel = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cifuellevel", oldValue, _internal_cifuellevel));
         }
     }
 
@@ -1518,16 +1518,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set gdout(value:Date) : void
-    {
-        var oldValue:Date = _internal_gdout;
-        if (oldValue !== value)
-        {
-            _internal_gdout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gdout", oldValue, _internal_gdout));
-        }
-    }
-
     public function set total_discount(value:String) : void
     {
         var oldValue:String = _internal_total_discount;
@@ -1535,6 +1525,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_total_discount = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_discount", oldValue, _internal_total_discount));
+        }
+    }
+
+    public function set gdout(value:Date) : void
+    {
+        var oldValue:Date = _internal_gdout;
+        if (oldValue !== value)
+        {
+            _internal_gdout = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gdout", oldValue, _internal_gdout));
         }
     }
 
@@ -1628,16 +1628,6 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         }
     }
 
-    public function set timeout(value:String) : void
-    {
-        var oldValue:String = _internal_timeout;
-        if (oldValue !== value)
-        {
-            _internal_timeout = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "timeout", oldValue, _internal_timeout));
-        }
-    }
-
     public function set advance(value:String) : void
     {
         var oldValue:String = _internal_advance;
@@ -1645,6 +1635,16 @@ public class _Super_Com_dspl_malkey_view_FreservationView extends flash.events.E
         {
             _internal_advance = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "advance", oldValue, _internal_advance));
+        }
+    }
+
+    public function set timeout(value:String) : void
+    {
+        var oldValue:String = _internal_timeout;
+        if (oldValue !== value)
+        {
+            _internal_timeout = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "timeout", oldValue, _internal_timeout));
         }
     }
 

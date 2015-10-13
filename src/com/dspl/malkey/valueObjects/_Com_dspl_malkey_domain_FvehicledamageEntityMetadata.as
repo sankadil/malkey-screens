@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("xvalue", "regno", "yvalue", "seq", "adduser", "damagetype", "uuid", "recordid");
+    model_internal static var allProperties:Array = new Array("xvalue", "regno", "seq", "yvalue", "adduser", "damagetype", "uuid", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("xvalue", "regno", "yvalue", "seq", "adduser", "damagetype", "uuid", "recordid");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("xvalue", "regno", "yvalue", "seq", "adduser", "damagetype", "uuid", "recordid");
+    model_internal static var allRequiredProperties:Array = new Array("xvalue", "regno", "seq", "yvalue", "adduser", "damagetype", "uuid", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("xvalue", "regno", "seq", "yvalue", "adduser", "damagetype", "uuid", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("xvalue", "regno", "yvalue", "seq", "adduser", "damagetype", "uuid", "recordid");
+    model_internal static var dataProperties:Array = new Array("xvalue", "regno", "seq", "yvalue", "adduser", "damagetype", "uuid", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -73,8 +73,8 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["xvalue"] = new Array();
             model_internal::dependentsOnMap["regno"] = new Array();
-            model_internal::dependentsOnMap["yvalue"] = new Array();
             model_internal::dependentsOnMap["seq"] = new Array();
+            model_internal::dependentsOnMap["yvalue"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["damagetype"] = new Array();
             model_internal::dependentsOnMap["uuid"] = new Array();
@@ -331,13 +331,13 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
-    public function get isYvalueAvailable():Boolean
+    public function get isSeqAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isSeqAvailable():Boolean
+    public function get isYvalueAvailable():Boolean
     {
         return true;
     }
@@ -617,6 +617,12 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
+    public function get seqStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get yvalueStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -714,12 +720,6 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get seqStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   

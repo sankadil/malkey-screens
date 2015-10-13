@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FreshedEntityMetadata extends com.adobe.f
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("companyid", "debname", "debcode", "isNew", "company", "addmach", "adddate", "adduser", "uuid", "agrno", "recordid");
+    model_internal static var allProperties:Array = new Array("companyid", "debname", "debcode", "isNew", "company", "addmach", "adddate", "adduser", "agrno", "uuid", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("companyid", "debname", "debcode", "isNew", "company", "addmach", "adddate", "adduser", "uuid", "agrno", "recordid");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("companyid", "debname", "debcode", "isNew", "company", "addmach", "adddate", "adduser", "uuid", "agrno", "recordid");
+    model_internal static var allRequiredProperties:Array = new Array("companyid", "debname", "debcode", "isNew", "company", "addmach", "adddate", "adduser", "agrno", "uuid", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("companyid", "debname", "debcode", "isNew", "company", "addmach", "adddate", "adduser", "agrno", "uuid", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("companyid", "debname", "debcode", "isNew", "company", "addmach", "adddate", "adduser", "uuid", "agrno", "recordid");
+    model_internal static var dataProperties:Array = new Array("companyid", "debname", "debcode", "isNew", "company", "addmach", "adddate", "adduser", "agrno", "uuid", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -94,8 +94,8 @@ internal class _Com_dspl_malkey_domain_FreshedEntityMetadata extends com.adobe.f
             model_internal::dependentsOnMap["addmach"] = new Array();
             model_internal::dependentsOnMap["adddate"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
-            model_internal::dependentsOnMap["uuid"] = new Array();
             model_internal::dependentsOnMap["agrno"] = new Array();
+            model_internal::dependentsOnMap["uuid"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
 
             // collection base map
@@ -401,13 +401,13 @@ internal class _Com_dspl_malkey_domain_FreshedEntityMetadata extends com.adobe.f
     }
 
     [Bindable(event="propertyChange")]
-    public function get isUuidAvailable():Boolean
+    public function get isAgrnoAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAgrnoAvailable():Boolean
+    public function get isUuidAvailable():Boolean
     {
         return true;
     }
@@ -1199,6 +1199,12 @@ internal class _Com_dspl_malkey_domain_FreshedEntityMetadata extends com.adobe.f
     }
 
     [Bindable(event="propertyChange")]   
+    public function get agrnoStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get uuidStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -1296,12 +1302,6 @@ internal class _Com_dspl_malkey_domain_FreshedEntityMetadata extends com.adobe.f
                 model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
             }
         }
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get agrnoStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   

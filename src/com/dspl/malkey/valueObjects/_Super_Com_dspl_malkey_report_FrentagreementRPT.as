@@ -49,11 +49,11 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     private var _internal_dratediscount : String;
     private var _internal_resno : String;
     private var _internal_deposit : String;
-    private var _internal_xsmilerate : String;
     private var _internal_cidamage : String;
+    private var _internal_xsmilerate : String;
     private var _internal_empname : String;
-    private var _internal_dnightoutrate : String;
     private var _internal_gname : String;
+    private var _internal_dnightoutrate : String;
     private var _internal_debppno : String;
     private var _internal_agrno : String;
     private var _internal_debbillmob1 : String;
@@ -66,13 +66,13 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     private var _internal_chargdays : int;
     private var _internal_dotrate : String;
     private var _internal_mobilephone1 : String;
-    private var _internal_allotedhours : int;
     private var _internal_cixsmileage : String;
+    private var _internal_allotedhours : int;
     private var _internal_parentref : String;
     private var _internal_xhours : int;
     private var _internal_noofday : int;
-    private var _internal_debname : String;
     private var _internal_gofftele : String;
+    private var _internal_debname : String;
     private var _internal_ghomeadd : String;
     private var _internal_debnicno : String;
     private var _internal_daddcharges : String;
@@ -86,37 +86,37 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     private var _internal_cinightout : String;
     private var _internal_cidetenhrs : String;
     private var _internal_nightoutdiscount : String;
-    private var _internal_returnaddress : String;
     private var _internal_total_addcharges : String;
+    private var _internal_returnaddress : String;
     private var _internal_dout : Date;
-    private var _internal_discount_xhoursamt : String;
     private var _internal_drate : String;
+    private var _internal_discount_xhoursamt : String;
+    private var _internal_xhourrate : String;
     private var _internal_custdriverdlno : String;
     private var _internal_xhoursamt : String;
-    private var _internal_xhourrate : String;
     private var _internal_allotedkms : int;
-    private var _internal_discountxhourrate : String;
     private var _internal_total_accessories : String;
+    private var _internal_discountxhourrate : String;
     private var _internal_cimileage : int;
     private var _internal_standardrate : String;
     private var _internal_totaltaxable : String;
     private var _internal_remarks : String;
-    private var _internal_timein : String;
     private var _internal_comileage : int;
+    private var _internal_timein : String;
     private var _internal_din : Date;
     private var _internal_rate : String;
     private var _internal_vehimodelid : String;
     private var _internal_ciother : String;
-    private var _internal_cofuellevel : int;
     private var _internal_hiretypeid : String;
-    private var _internal_debvatno : String;
+    private var _internal_cofuellevel : int;
     private var _internal_cidamagers : String;
+    private var _internal_debvatno : String;
     private var _internal_discount_xmile : String;
     private var _internal_itinerary : String;
     private var _internal_advancebal : String;
     private var _internal_ghometele : String;
-    private var _internal_cifuellevel : int;
     private var _internal_empdlno : String;
+    private var _internal_cifuellevel : int;
     private var _internal_cifueldiff : String;
     private var _internal_debcode : String;
     private var _internal_total_discount : String;
@@ -125,8 +125,8 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     private var _internal_comname : String;
     private var _internal_goffadd : String;
     private var _internal_gmobileno : String;
-    private var _internal_codamage : String;
     private var _internal_remarks_customer : String;
+    private var _internal_codamage : String;
     private var _internal_vehimakeid : String;
     private var _internal_total_othersrv : String;
     private var _internal_taxamt : String;
@@ -181,15 +181,15 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get xsmilerate() : String
-    {
-        return _internal_xsmilerate;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get cidamage() : String
     {
         return _internal_cidamage;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get xsmilerate() : String
+    {
+        return _internal_xsmilerate;
     }
 
     [Bindable(event="propertyChange")]
@@ -199,15 +199,15 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get dnightoutrate() : String
-    {
-        return _internal_dnightoutrate;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get gname() : String
     {
         return _internal_gname;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get dnightoutrate() : String
+    {
+        return _internal_dnightoutrate;
     }
 
     [Bindable(event="propertyChange")]
@@ -283,15 +283,15 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get allotedhours() : int
-    {
-        return _internal_allotedhours;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get cixsmileage() : String
     {
         return _internal_cixsmileage;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get allotedhours() : int
+    {
+        return _internal_allotedhours;
     }
 
     [Bindable(event="propertyChange")]
@@ -313,15 +313,15 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get debname() : String
-    {
-        return _internal_debname;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get gofftele() : String
     {
         return _internal_gofftele;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get debname() : String
+    {
+        return _internal_debname;
     }
 
     [Bindable(event="propertyChange")]
@@ -403,15 +403,15 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get returnaddress() : String
-    {
-        return _internal_returnaddress;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get total_addcharges() : String
     {
         return _internal_total_addcharges;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get returnaddress() : String
+    {
+        return _internal_returnaddress;
     }
 
     [Bindable(event="propertyChange")]
@@ -421,15 +421,21 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
+    public function get drate() : String
+    {
+        return _internal_drate;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get discount_xhoursamt() : String
     {
         return _internal_discount_xhoursamt;
     }
 
     [Bindable(event="propertyChange")]
-    public function get drate() : String
+    public function get xhourrate() : String
     {
-        return _internal_drate;
+        return _internal_xhourrate;
     }
 
     [Bindable(event="propertyChange")]
@@ -445,27 +451,21 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get xhourrate() : String
-    {
-        return _internal_xhourrate;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get allotedkms() : int
     {
         return _internal_allotedkms;
     }
 
     [Bindable(event="propertyChange")]
-    public function get discountxhourrate() : String
-    {
-        return _internal_discountxhourrate;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get total_accessories() : String
     {
         return _internal_total_accessories;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get discountxhourrate() : String
+    {
+        return _internal_discountxhourrate;
     }
 
     [Bindable(event="propertyChange")]
@@ -493,15 +493,15 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get timein() : String
-    {
-        return _internal_timein;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get comileage() : int
     {
         return _internal_comileage;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get timein() : String
+    {
+        return _internal_timein;
     }
 
     [Bindable(event="propertyChange")]
@@ -529,27 +529,27 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get cofuellevel() : int
-    {
-        return _internal_cofuellevel;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get hiretypeid() : String
     {
         return _internal_hiretypeid;
     }
 
     [Bindable(event="propertyChange")]
-    public function get debvatno() : String
+    public function get cofuellevel() : int
     {
-        return _internal_debvatno;
+        return _internal_cofuellevel;
     }
 
     [Bindable(event="propertyChange")]
     public function get cidamagers() : String
     {
         return _internal_cidamagers;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get debvatno() : String
+    {
+        return _internal_debvatno;
     }
 
     [Bindable(event="propertyChange")]
@@ -577,15 +577,15 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get cifuellevel() : int
-    {
-        return _internal_cifuellevel;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get empdlno() : String
     {
         return _internal_empdlno;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get cifuellevel() : int
+    {
+        return _internal_cifuellevel;
     }
 
     [Bindable(event="propertyChange")]
@@ -637,15 +637,15 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
     }
 
     [Bindable(event="propertyChange")]
-    public function get codamage() : String
-    {
-        return _internal_codamage;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get remarks_customer() : String
     {
         return _internal_remarks_customer;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get codamage() : String
+    {
+        return _internal_codamage;
     }
 
     [Bindable(event="propertyChange")]
@@ -728,16 +728,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set xsmilerate(value:String) : void
-    {
-        var oldValue:String = _internal_xsmilerate;
-        if (oldValue !== value)
-        {
-            _internal_xsmilerate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "xsmilerate", oldValue, _internal_xsmilerate));
-        }
-    }
-
     public function set cidamage(value:String) : void
     {
         var oldValue:String = _internal_cidamage;
@@ -745,6 +735,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_cidamage = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cidamage", oldValue, _internal_cidamage));
+        }
+    }
+
+    public function set xsmilerate(value:String) : void
+    {
+        var oldValue:String = _internal_xsmilerate;
+        if (oldValue !== value)
+        {
+            _internal_xsmilerate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "xsmilerate", oldValue, _internal_xsmilerate));
         }
     }
 
@@ -758,16 +758,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set dnightoutrate(value:String) : void
-    {
-        var oldValue:String = _internal_dnightoutrate;
-        if (oldValue !== value)
-        {
-            _internal_dnightoutrate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dnightoutrate", oldValue, _internal_dnightoutrate));
-        }
-    }
-
     public function set gname(value:String) : void
     {
         var oldValue:String = _internal_gname;
@@ -775,6 +765,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_gname = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gname", oldValue, _internal_gname));
+        }
+    }
+
+    public function set dnightoutrate(value:String) : void
+    {
+        var oldValue:String = _internal_dnightoutrate;
+        if (oldValue !== value)
+        {
+            _internal_dnightoutrate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "dnightoutrate", oldValue, _internal_dnightoutrate));
         }
     }
 
@@ -898,16 +898,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set allotedhours(value:int) : void
-    {
-        var oldValue:int = _internal_allotedhours;
-        if (oldValue !== value)
-        {
-            _internal_allotedhours = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "allotedhours", oldValue, _internal_allotedhours));
-        }
-    }
-
     public function set cixsmileage(value:String) : void
     {
         var oldValue:String = _internal_cixsmileage;
@@ -915,6 +905,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_cixsmileage = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cixsmileage", oldValue, _internal_cixsmileage));
+        }
+    }
+
+    public function set allotedhours(value:int) : void
+    {
+        var oldValue:int = _internal_allotedhours;
+        if (oldValue !== value)
+        {
+            _internal_allotedhours = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "allotedhours", oldValue, _internal_allotedhours));
         }
     }
 
@@ -948,16 +948,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set debname(value:String) : void
-    {
-        var oldValue:String = _internal_debname;
-        if (oldValue !== value)
-        {
-            _internal_debname = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debname", oldValue, _internal_debname));
-        }
-    }
-
     public function set gofftele(value:String) : void
     {
         var oldValue:String = _internal_gofftele;
@@ -965,6 +955,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_gofftele = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "gofftele", oldValue, _internal_gofftele));
+        }
+    }
+
+    public function set debname(value:String) : void
+    {
+        var oldValue:String = _internal_debname;
+        if (oldValue !== value)
+        {
+            _internal_debname = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debname", oldValue, _internal_debname));
         }
     }
 
@@ -1098,16 +1098,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set returnaddress(value:String) : void
-    {
-        var oldValue:String = _internal_returnaddress;
-        if (oldValue !== value)
-        {
-            _internal_returnaddress = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "returnaddress", oldValue, _internal_returnaddress));
-        }
-    }
-
     public function set total_addcharges(value:String) : void
     {
         var oldValue:String = _internal_total_addcharges;
@@ -1115,6 +1105,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_total_addcharges = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_addcharges", oldValue, _internal_total_addcharges));
+        }
+    }
+
+    public function set returnaddress(value:String) : void
+    {
+        var oldValue:String = _internal_returnaddress;
+        if (oldValue !== value)
+        {
+            _internal_returnaddress = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "returnaddress", oldValue, _internal_returnaddress));
         }
     }
 
@@ -1128,6 +1128,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
+    public function set drate(value:String) : void
+    {
+        var oldValue:String = _internal_drate;
+        if (oldValue !== value)
+        {
+            _internal_drate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "drate", oldValue, _internal_drate));
+        }
+    }
+
     public function set discount_xhoursamt(value:String) : void
     {
         var oldValue:String = _internal_discount_xhoursamt;
@@ -1138,13 +1148,13 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set drate(value:String) : void
+    public function set xhourrate(value:String) : void
     {
-        var oldValue:String = _internal_drate;
+        var oldValue:String = _internal_xhourrate;
         if (oldValue !== value)
         {
-            _internal_drate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "drate", oldValue, _internal_drate));
+            _internal_xhourrate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "xhourrate", oldValue, _internal_xhourrate));
         }
     }
 
@@ -1168,16 +1178,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set xhourrate(value:String) : void
-    {
-        var oldValue:String = _internal_xhourrate;
-        if (oldValue !== value)
-        {
-            _internal_xhourrate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "xhourrate", oldValue, _internal_xhourrate));
-        }
-    }
-
     public function set allotedkms(value:int) : void
     {
         var oldValue:int = _internal_allotedkms;
@@ -1188,16 +1188,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set discountxhourrate(value:String) : void
-    {
-        var oldValue:String = _internal_discountxhourrate;
-        if (oldValue !== value)
-        {
-            _internal_discountxhourrate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "discountxhourrate", oldValue, _internal_discountxhourrate));
-        }
-    }
-
     public function set total_accessories(value:String) : void
     {
         var oldValue:String = _internal_total_accessories;
@@ -1205,6 +1195,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_total_accessories = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "total_accessories", oldValue, _internal_total_accessories));
+        }
+    }
+
+    public function set discountxhourrate(value:String) : void
+    {
+        var oldValue:String = _internal_discountxhourrate;
+        if (oldValue !== value)
+        {
+            _internal_discountxhourrate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "discountxhourrate", oldValue, _internal_discountxhourrate));
         }
     }
 
@@ -1248,16 +1248,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set timein(value:String) : void
-    {
-        var oldValue:String = _internal_timein;
-        if (oldValue !== value)
-        {
-            _internal_timein = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "timein", oldValue, _internal_timein));
-        }
-    }
-
     public function set comileage(value:int) : void
     {
         var oldValue:int = _internal_comileage;
@@ -1265,6 +1255,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_comileage = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "comileage", oldValue, _internal_comileage));
+        }
+    }
+
+    public function set timein(value:String) : void
+    {
+        var oldValue:String = _internal_timein;
+        if (oldValue !== value)
+        {
+            _internal_timein = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "timein", oldValue, _internal_timein));
         }
     }
 
@@ -1308,16 +1308,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set cofuellevel(value:int) : void
-    {
-        var oldValue:int = _internal_cofuellevel;
-        if (oldValue !== value)
-        {
-            _internal_cofuellevel = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cofuellevel", oldValue, _internal_cofuellevel));
-        }
-    }
-
     public function set hiretypeid(value:String) : void
     {
         var oldValue:String = _internal_hiretypeid;
@@ -1328,13 +1318,13 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set debvatno(value:String) : void
+    public function set cofuellevel(value:int) : void
     {
-        var oldValue:String = _internal_debvatno;
+        var oldValue:int = _internal_cofuellevel;
         if (oldValue !== value)
         {
-            _internal_debvatno = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debvatno", oldValue, _internal_debvatno));
+            _internal_cofuellevel = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cofuellevel", oldValue, _internal_cofuellevel));
         }
     }
 
@@ -1345,6 +1335,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_cidamagers = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cidamagers", oldValue, _internal_cidamagers));
+        }
+    }
+
+    public function set debvatno(value:String) : void
+    {
+        var oldValue:String = _internal_debvatno;
+        if (oldValue !== value)
+        {
+            _internal_debvatno = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "debvatno", oldValue, _internal_debvatno));
         }
     }
 
@@ -1388,16 +1388,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set cifuellevel(value:int) : void
-    {
-        var oldValue:int = _internal_cifuellevel;
-        if (oldValue !== value)
-        {
-            _internal_cifuellevel = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cifuellevel", oldValue, _internal_cifuellevel));
-        }
-    }
-
     public function set empdlno(value:String) : void
     {
         var oldValue:String = _internal_empdlno;
@@ -1405,6 +1395,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_empdlno = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "empdlno", oldValue, _internal_empdlno));
+        }
+    }
+
+    public function set cifuellevel(value:int) : void
+    {
+        var oldValue:int = _internal_cifuellevel;
+        if (oldValue !== value)
+        {
+            _internal_cifuellevel = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "cifuellevel", oldValue, _internal_cifuellevel));
         }
     }
 
@@ -1488,16 +1488,6 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         }
     }
 
-    public function set codamage(value:String) : void
-    {
-        var oldValue:String = _internal_codamage;
-        if (oldValue !== value)
-        {
-            _internal_codamage = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "codamage", oldValue, _internal_codamage));
-        }
-    }
-
     public function set remarks_customer(value:String) : void
     {
         var oldValue:String = _internal_remarks_customer;
@@ -1505,6 +1495,16 @@ public class _Super_Com_dspl_malkey_report_FrentagreementRPT extends flash.event
         {
             _internal_remarks_customer = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "remarks_customer", oldValue, _internal_remarks_customer));
+        }
+    }
+
+    public function set codamage(value:String) : void
+    {
+        var oldValue:String = _internal_codamage;
+        if (oldValue !== value)
+        {
+            _internal_codamage = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "codamage", oldValue, _internal_codamage));
         }
     }
 

@@ -56,8 +56,8 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
     private var _internal_allotedkms : int;
     private var _internal_discountxhourrate : String;
     private var _internal_addmach : String;
-    private var _internal_standardrate : String;
     private var _internal_adduser : String;
+    private var _internal_standardrate : String;
     private var _internal_adddate : Date;
     private var _internal_discount : String;
     private var _internal_ratetype : String;
@@ -91,8 +91,8 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "xsmilerate", model_internal::setterListenerXsmilerate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "discountxhourrate", model_internal::setterListenerDiscountxhourrate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "addmach", model_internal::setterListenerAddmach));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "standardrate", model_internal::setterListenerStandardrate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adduser", model_internal::setterListenerAdduser));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "standardrate", model_internal::setterListenerStandardrate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adddate", model_internal::setterListenerAdddate));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "discount", model_internal::setterListenerDiscount));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "ratetype", model_internal::setterListenerRatetype));
@@ -151,15 +151,15 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
     }
 
     [Bindable(event="propertyChange")]
-    public function get standardrate() : String
-    {
-        return _internal_standardrate;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get adduser() : String
     {
         return _internal_adduser;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get standardrate() : String
+    {
+        return _internal_standardrate;
     }
 
     [Bindable(event="propertyChange")]
@@ -296,16 +296,6 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
         }
     }
 
-    public function set standardrate(value:String) : void
-    {
-        var oldValue:String = _internal_standardrate;
-        if (oldValue !== value)
-        {
-            _internal_standardrate = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "standardrate", oldValue, _internal_standardrate));
-        }
-    }
-
     public function set adduser(value:String) : void
     {
         var oldValue:String = _internal_adduser;
@@ -313,6 +303,16 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
         {
             _internal_adduser = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduser", oldValue, _internal_adduser));
+        }
+    }
+
+    public function set standardrate(value:String) : void
+    {
+        var oldValue:String = _internal_standardrate;
+        if (oldValue !== value)
+        {
+            _internal_standardrate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "standardrate", oldValue, _internal_standardrate));
         }
     }
 
@@ -453,14 +453,14 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
         _model.invalidateDependentOnAddmach();
     }
 
-    model_internal function setterListenerStandardrate(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnStandardrate();
-    }
-
     model_internal function setterListenerAdduser(value:flash.events.Event):void
     {
         _model.invalidateDependentOnAdduser();
+    }
+
+    model_internal function setterListenerStandardrate(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnStandardrate();
     }
 
     model_internal function setterListenerAdddate(value:flash.events.Event):void
@@ -549,15 +549,15 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_addmachValidationFailureMessages);
         }
-        if (!_model.standardrateIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_standardrateValidationFailureMessages);
-        }
         if (!_model.adduserIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_adduserValidationFailureMessages);
+        }
+        if (!_model.standardrateIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_standardrateValidationFailureMessages);
         }
         if (!_model.adddateIsValid)
         {
@@ -813,33 +813,6 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfStandardrate : Array = null;
-    model_internal var _doValidationLastValOfStandardrate : String;
-
-    model_internal function _doValidationForStandardrate(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfStandardrate != null && model_internal::_doValidationLastValOfStandardrate == value)
-           return model_internal::_doValidationCacheOfStandardrate ;
-
-        _model.model_internal::_standardrateIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isStandardrateAvailable && _internal_standardrate == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "standardrate is required"));
-        }
-
-        model_internal::_doValidationCacheOfStandardrate = validationFailures;
-        model_internal::_doValidationLastValOfStandardrate = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfAdduser : Array = null;
     model_internal var _doValidationLastValOfAdduser : String;
 
@@ -863,6 +836,33 @@ public class _Super_Com_dspl_malkey_domain_Fresvehiclerate extends flash.events.
 
         model_internal::_doValidationCacheOfAdduser = validationFailures;
         model_internal::_doValidationLastValOfAdduser = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfStandardrate : Array = null;
+    model_internal var _doValidationLastValOfStandardrate : String;
+
+    model_internal function _doValidationForStandardrate(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfStandardrate != null && model_internal::_doValidationLastValOfStandardrate == value)
+           return model_internal::_doValidationCacheOfStandardrate ;
+
+        _model.model_internal::_standardrateIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isStandardrateAvailable && _internal_standardrate == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "standardrate is required"));
+        }
+
+        model_internal::_doValidationCacheOfStandardrate = validationFailures;
+        model_internal::_doValidationLastValOfStandardrate = value;
 
         return validationFailures;
     }

@@ -20,12 +20,12 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("outfromlocdes", "bcode", "adddate", "locationtype", "remarks", "outdate", "inmileage", "indate", "empid", "intoloc", "locationid", "tsoutdate", "vehimodelid", "name", "txndate", "outfromloc", "intime", "outtoloc", "outtime", "outfuellevel", "infromloc", "status", "infuellevel", "addmach", "regno", "adduser", "authorisedbyname", "outmileage", "vehimakeid", "authorisedby", "tsindate", "passno", "outtolocdes", "recordid");
+    model_internal static var allProperties:Array = new Array("outfromlocdes", "bcode", "locationtype", "adddate", "remarks", "outdate", "inmileage", "indate", "intoloc", "empid", "locationid", "tsoutdate", "vehimodelid", "intimeexpected", "indateexpected", "name", "txndate", "outfromloc", "intime", "outtoloc", "outtime", "outfuellevel", "infromloc", "infuellevel", "status", "addmach", "regno", "adduser", "authorisedbyname", "outmileage", "vehimakeid", "authorisedby", "tsindate", "passno", "outtolocdes", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("outfromlocdes", "bcode", "adddate", "locationtype", "remarks", "outdate", "inmileage", "indate", "empid", "intoloc", "locationid", "tsoutdate", "vehimodelid", "name", "txndate", "outfromloc", "intime", "outtoloc", "outtime", "outfuellevel", "infromloc", "status", "infuellevel", "addmach", "regno", "adduser", "authorisedbyname", "outmileage", "vehimakeid", "authorisedby", "tsindate", "passno", "outtolocdes", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("outfromlocdes", "bcode", "locationtype", "adddate", "remarks", "outdate", "inmileage", "indate", "intoloc", "empid", "locationid", "tsoutdate", "vehimodelid", "intimeexpected", "indateexpected", "name", "txndate", "outfromloc", "intime", "outtoloc", "outtime", "outfuellevel", "infromloc", "infuellevel", "status", "addmach", "regno", "adduser", "authorisedbyname", "outmileage", "vehimakeid", "authorisedby", "tsindate", "passno", "outtolocdes", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("outfromlocdes", "bcode", "adddate", "locationtype", "remarks", "outdate", "inmileage", "indate", "empid", "intoloc", "locationid", "tsoutdate", "vehimodelid", "name", "txndate", "outfromloc", "intime", "outtoloc", "outtime", "outfuellevel", "infromloc", "status", "infuellevel", "addmach", "regno", "adduser", "authorisedbyname", "outmileage", "vehimakeid", "authorisedby", "tsindate", "passno", "outtolocdes", "recordid");
+    model_internal static var dataProperties:Array = new Array("outfromlocdes", "bcode", "locationtype", "adddate", "remarks", "outdate", "inmileage", "indate", "intoloc", "empid", "locationid", "tsoutdate", "vehimodelid", "intimeexpected", "indateexpected", "name", "txndate", "outfromloc", "intime", "outtoloc", "outtime", "outfuellevel", "infromloc", "infuellevel", "status", "addmach", "regno", "adduser", "authorisedbyname", "outmileage", "vehimakeid", "authorisedby", "tsindate", "passno", "outtolocdes", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -46,17 +46,19 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["outfromlocdes"] = new Array();
             model_internal::dependentsOnMap["bcode"] = new Array();
-            model_internal::dependentsOnMap["adddate"] = new Array();
             model_internal::dependentsOnMap["locationtype"] = new Array();
+            model_internal::dependentsOnMap["adddate"] = new Array();
             model_internal::dependentsOnMap["remarks"] = new Array();
             model_internal::dependentsOnMap["outdate"] = new Array();
             model_internal::dependentsOnMap["inmileage"] = new Array();
             model_internal::dependentsOnMap["indate"] = new Array();
-            model_internal::dependentsOnMap["empid"] = new Array();
             model_internal::dependentsOnMap["intoloc"] = new Array();
+            model_internal::dependentsOnMap["empid"] = new Array();
             model_internal::dependentsOnMap["locationid"] = new Array();
             model_internal::dependentsOnMap["tsoutdate"] = new Array();
             model_internal::dependentsOnMap["vehimodelid"] = new Array();
+            model_internal::dependentsOnMap["intimeexpected"] = new Array();
+            model_internal::dependentsOnMap["indateexpected"] = new Array();
             model_internal::dependentsOnMap["name"] = new Array();
             model_internal::dependentsOnMap["txndate"] = new Array();
             model_internal::dependentsOnMap["outfromloc"] = new Array();
@@ -65,8 +67,8 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
             model_internal::dependentsOnMap["outtime"] = new Array();
             model_internal::dependentsOnMap["outfuellevel"] = new Array();
             model_internal::dependentsOnMap["infromloc"] = new Array();
-            model_internal::dependentsOnMap["status"] = new Array();
             model_internal::dependentsOnMap["infuellevel"] = new Array();
+            model_internal::dependentsOnMap["status"] = new Array();
             model_internal::dependentsOnMap["addmach"] = new Array();
             model_internal::dependentsOnMap["regno"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
@@ -305,13 +307,13 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAdddateAvailable():Boolean
+    public function get isLocationtypeAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isLocationtypeAvailable():Boolean
+    public function get isAdddateAvailable():Boolean
     {
         return true;
     }
@@ -341,13 +343,13 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]
-    public function get isEmpidAvailable():Boolean
+    public function get isIntolocAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isIntolocAvailable():Boolean
+    public function get isEmpidAvailable():Boolean
     {
         return true;
     }
@@ -366,6 +368,18 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
 
     [Bindable(event="propertyChange")]
     public function get isVehimodelidAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isIntimeexpectedAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isIndateexpectedAvailable():Boolean
     {
         return true;
     }
@@ -419,13 +433,13 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]
-    public function get isStatusAvailable():Boolean
+    public function get isInfuellevelAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isInfuellevelAvailable():Boolean
+    public function get isStatusAvailable():Boolean
     {
         return true;
     }
@@ -519,13 +533,13 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]   
-    public function get adddateStyle():com.adobe.fiber.styles.Style
+    public function get locationtypeStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get locationtypeStyle():com.adobe.fiber.styles.Style
+    public function get adddateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -555,13 +569,13 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]   
-    public function get empidStyle():com.adobe.fiber.styles.Style
+    public function get intolocStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get intolocStyle():com.adobe.fiber.styles.Style
+    public function get empidStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -580,6 +594,18 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
 
     [Bindable(event="propertyChange")]   
     public function get vehimodelidStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get intimeexpectedStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get indateexpectedStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -633,13 +659,13 @@ internal class _Com_dspl_malkey_domain_FgatepassEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]   
-    public function get statusStyle():com.adobe.fiber.styles.Style
+    public function get infuellevelStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get infuellevelStyle():com.adobe.fiber.styles.Style
+    public function get statusStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
