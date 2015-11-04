@@ -310,7 +310,8 @@
 				txtOutOwnOffTel.errorString="";
 				txtOutOwnOffAdd.errorString="";
 				txtOutOwnOffMob.errorString="";
- 				setModifiedByDet("");
+ 				setAddedByDet("",new Date());
+				setModifiedByDet("",new Date());
 			}
 			
 			//Display Popup Window 
@@ -509,11 +510,11 @@
 					txtOutOwnOffTel.text=obj["officetele"].toString();
 					txtOutOwnOffAdd.text=obj["officeadd"].toString();
 					txtOutOwnOffMob.text=obj["officemobile"].toString();
-					setModifiedByDet(obj["adduser"]/* .toString() */);
-					
+					setAddedByDet(obj["adduser"],obj["adddate"]);
+					setModifiedByDet(obj["modifieduser"],obj["modifieddate"]);
 					
 				}catch(error:Error){
-					Message.displayAlert(1,"setCtrlVal: " + error.message,"Error",null);
+					Message.displayAlert(1,"setCtrlVal: " + error.message+"\n"+error.getStackTrace(),"Error",null);
 				}
 			}
 			
@@ -524,10 +525,20 @@
 				event.currentTarget.setSelection(0,event.currentTarget.length);
 			}
 			
-			private function setModifiedByDet(val:String):void{
+			private function setAddedByDet(val:String,date:Date):void{
+				lblAddedBy.text="Added By: ";
+				lblAddedBy.text+=val;
+				if(date==null)
+					date=new Date();
+				lblAddedBy.text+=" on "+date.toDateString();
+			}
+  			private function setModifiedByDet(val:String,date:Date):void{
 				lblModifiedBy.text="Last Modified By: ";
 				lblModifiedBy.text+=val;
-			}
+				if(date==null)
+					date=new Date();
+				lblModifiedBy.text+=" on "+date.toDateString();
+			}  
 			
 			private function goFirst():void{
 				liCurIndex=0;
@@ -876,7 +887,8 @@
 	</mx:Form>
 
 	
-	<s:Label x="13" y="510"  text="Last Modified By:" id="lblModifiedBy"/>
+	<s:Label x="13" y="510"  text="Added By:" id="lblAddedBy"/>
+	<s:Label x="400" y="510" text="Last Modified By:" id="lblModifiedBy"/>
 	<mx:HRule x="0" y="50" width="706" width.Default="704"/>
 	
 	<fx:Style>

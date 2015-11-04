@@ -44,6 +44,12 @@
 			property="selectedItem"							
 			triggerEvent=""
 			/>
+		<mx:StringValidator
+			id="svIsDriverService"
+			source="{ddIsDriverService}"							
+			property="selectedItem"							
+			triggerEvent=""
+			/>
 		
 		<mx:StringValidator
 			id="svRateType"
@@ -222,6 +228,7 @@
 							obj["ratetype"]=o["id"]["ratetype"].toString();
 							obj["standardrate"]=Number(o["standardrate"].toString()).toFixed(2); 
 							obj["rate"]=o["rate"].toString();
+							//obj["isDriverService"]=o["isDriverService"].toString();
 							lacRates.addItem(obj);
 						}
 						crFothersrvrateFindBySrvId.token=null;
@@ -342,6 +349,7 @@
 				try{
 					txtSrvId.text=fothersrv.srvid;
 					txtDescription.text=fothersrv.description;
+					ddIsDriverService.selectedIndex=fothersrv.isDriverServiceFlag;
 					setModifiedByDet(fothersrv.adduser);
 				}catch(error:Error){
 					Message.displayAlert(1,"loadFacccDet: " + error.message,"Error",null);
@@ -438,12 +446,30 @@
 				try{
 					registerValidators();
 					liMLCnt=0;
+					setIsDriverService();
 					txtSrvId.addEventListener(KeyboardEvent.KEY_DOWN,textInputKeyDown,true,0,false);
 					txtSrvId.addEventListener(TextOperationEvent.CHANGE,textInputChange,true,0,false);
 					loadMasterFiles();
+					
 				}catch(error:Error){
 					Message.displayAlert(1,"initApp: " + error.message,"Error",errorCloseHandler);
 				}
+			}
+			[Bindable]
+			private var acIsDriverService:ArrayCollection=new ArrayCollection();
+			private function setIsDriverService():ArrayCollection 
+			{
+				//var acIsDriverService:ArrayCollection=new ArrayCollection();
+				var o:Object=new Object();
+				o["label"]="No";
+				o["value"]="0";
+				acIsDriverService.addItem(o);
+				var o2:Object=new Object();
+				o2["label"]="Yes";
+				o2["value"]="1";
+				acIsDriverService.addItem(o2);
+ 
+				return acIsDriverService;
 			}
 			
 			public var gsCurTabName:String="";
@@ -457,6 +483,7 @@
 					ErrorTipManager.showErrorTip(svAccCode.source);
 					ErrorTipManager.showErrorTip(svDescription.source);
 					ErrorTipManager.showErrorTip(svClientType.source);
+					ErrorTipManager.showErrorTip(svIsDriverService.source);
 					ErrorTipManager.showErrorTip(svRateType.source);
 					ErrorTipManager.showErrorTip(nvRate.source);
 				}
@@ -466,6 +493,7 @@
 				ErrorTipManager.removeErrorTip(svAccCode.source,true);
 				ErrorTipManager.removeErrorTip(svDescription.source,true);
 				ErrorTipManager.removeErrorTip(svClientType.source,true);
+				ErrorTipManager.removeErrorTip(svIsDriverService.source,true);
 				ErrorTipManager.removeErrorTip(svRateType.source,true);
 				ErrorTipManager.removeErrorTip(nvRate.source,true);
 			} 
@@ -474,6 +502,7 @@
 				ErrorTipManager.registerValidator(svAccCode);
 				ErrorTipManager.registerValidator(svDescription);
 				ErrorTipManager.registerValidator(svClientType);
+				ErrorTipManager.registerValidator(svIsDriverService);
 				ErrorTipManager.registerValidator(svRateType);
 				ErrorTipManager.registerValidator(nvRate);
 			}
@@ -561,6 +590,7 @@
 						
 						fothersrv.srvid=txtSrvId.text;
 						fothersrv.description=txtDescription.text;
+						fothersrv.isDriverServiceFlag=ddIsDriverService.selectedItem.value;
 											
 						var fothersrvrates:ArrayCollection=new ArrayCollection();
 						var fothersrvrate:Com_dspl_malkey_domain_Fothersrvrate;
@@ -738,6 +768,9 @@
 					txtSrvId.errorString="";
 					txtDescription.text="";
 					txtDescription.errorString="";
+
+					ddIsDriverService.selectedIndex=-1;
+					ddIsDriverService.errorString="";
 					
 					//Rate Details 
 					ddClientType.selectedIndex=-1;
@@ -1158,13 +1191,21 @@
 				id="txtSrvId" width="145"
 				maxChars="10" enabled.Add="true" enabled.Edit="false" enabled.Delete="false" enabled.Find="false"></s:TextInput>
 		</mx:FormItem>
-		<mx:FormItem label="Description" direction="horizontal" required="true" width="363">
+		<mx:FormItem label="Description" direction="horizontal" required="true" width="100%">
 			<s:TextInput id="txtDescription" width="250"
 						 restrict="A-Za-z "
 						 enabled="false"
 						 maxChars="254"
 			 enabled.Add="true" enabled.Edit="true" enabled.Delete="false" enabled.Find="false">
 			</s:TextInput>
+			
+			<mx:FormItem required="true" label="Is Driver service ?" direction="horizontal">
+				<s:DropDownList
+					dataProvider="{acIsDriverService}"
+					labelField="label"
+					id="ddIsDriverService" width="122" enabled="false" enabled.Add="true" enabled.Edit="true" enabled.Delete="false" enabled.Find="false"></s:DropDownList>
+			</mx:FormItem>
+			
 		</mx:FormItem>
 	</mx:Form>
 	<mx:Form height="319"

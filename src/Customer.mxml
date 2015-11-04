@@ -2440,8 +2440,16 @@
 				var request:URLRequest = new URLRequest(resourceManager.getString("resource","reportingURL",null,null).toString() + "/CAH.jsp");
 				request.data =new URLVariables();
 				request.data.debcode=txtDebCode.text;
-				request.method = URLRequestMethod.POST;
-				navigateToURL(request); 
+				if(txtStatus.selectedIndex==0 || txtStatus.selectedIndex==-1 || txtStatus.selectedItem ==null || txtStatus.selectedItem=='undefined')
+				{
+					//request.data.status='';
+				}
+				else
+				{
+					request.data.status=txtStatus.selectedItem;
+				}
+				request.method = URLRequestMethod.GET;
+				navigateToURL(request);
 			}			
 
 			/***
@@ -3365,6 +3373,29 @@
 					width="148"
 					maxChars="254"
 					/>
+				
+				<s:ComboBox id="txtStatus" width="148" > 
+					<s:dataProvider>
+						<mx:ArrayList>
+						<fx:String>ALL</fx:String>    
+						<fx:String>BOOKED</fx:String>    
+						<fx:String>CANCELLED</fx:String> 
+						<fx:String>CHECKIN</fx:String>   
+						<fx:String>CHECKOUT</fx:String>  
+						<fx:String>COMPLETED</fx:String> 
+						<fx:String>CONFIRMED</fx:String> 
+						<fx:String>COPY</fx:String>      
+						<fx:String>INQUIRY</fx:String>   
+						<fx:String>INVOICE</fx:String>   
+						<fx:String>NOSHOW</fx:String>    
+						<fx:String>PREPARED</fx:String>  
+						<fx:String>QUOTE</fx:String>     
+						<fx:String>UPGRADE</fx:String>   
+						<fx:String>VC</fx:String>        
+						</mx:ArrayList>
+					</s:dataProvider>
+				</s:ComboBox>
+				
 			
 			<mx:LinkButton x="27" y="420" label="Customer Agreement History Report" id="btnContinousHireDataReport3" click="btnContinousHireDataReport_clickHandler3(event)"  color="#2908F5"/>
 			</mx:FormItem>

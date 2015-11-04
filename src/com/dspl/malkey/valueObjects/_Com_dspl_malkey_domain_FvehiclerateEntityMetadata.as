@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("id", "rate", "xhourrate", "xsmilerate", "allotedkms", "addmach", "adddate", "adduser", "standardrate", "allotedhours", "uuid", "recordid");
+    model_internal static var allProperties:Array = new Array("id", "rate", "xhourrate", "xsmilerate", "allotedkms", "addmach", "adddate", "standardrate", "adduser", "allotedhours", "uuid", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("id", "rate", "xhourrate", "xsmilerate", "allotedkms", "addmach", "adddate", "adduser", "standardrate", "allotedhours", "uuid", "recordid");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "rate", "xhourrate", "xsmilerate", "allotedkms", "addmach", "adddate", "adduser", "standardrate", "allotedhours", "uuid", "recordid");
+    model_internal static var allRequiredProperties:Array = new Array("id", "rate", "xhourrate", "xsmilerate", "allotedkms", "addmach", "adddate", "standardrate", "adduser", "allotedhours", "uuid", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("id", "rate", "xhourrate", "xsmilerate", "allotedkms", "addmach", "adddate", "standardrate", "adduser", "allotedhours", "uuid", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("id", "rate", "xhourrate", "xsmilerate", "allotedkms", "addmach", "adddate", "adduser", "standardrate", "allotedhours", "uuid", "recordid");
+    model_internal static var dataProperties:Array = new Array("id", "rate", "xhourrate", "xsmilerate", "allotedkms", "addmach", "adddate", "standardrate", "adduser", "allotedhours", "uuid", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -66,15 +66,15 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
     model_internal var _adddateIsValidCacheInitialized:Boolean = false;
     model_internal var _adddateValidationFailureMessages:Array;
     
-    model_internal var _adduserIsValid:Boolean;
-    model_internal var _adduserValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _adduserIsValidCacheInitialized:Boolean = false;
-    model_internal var _adduserValidationFailureMessages:Array;
-    
     model_internal var _standardrateIsValid:Boolean;
     model_internal var _standardrateValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _standardrateIsValidCacheInitialized:Boolean = false;
     model_internal var _standardrateValidationFailureMessages:Array;
+    
+    model_internal var _adduserIsValid:Boolean;
+    model_internal var _adduserValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _adduserIsValidCacheInitialized:Boolean = false;
+    model_internal var _adduserValidationFailureMessages:Array;
     
     model_internal var _uuidIsValid:Boolean;
     model_internal var _uuidValidator:com.adobe.fiber.styles.StyleValidator;
@@ -98,8 +98,8 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
             model_internal::dependentsOnMap["allotedkms"] = new Array();
             model_internal::dependentsOnMap["addmach"] = new Array();
             model_internal::dependentsOnMap["adddate"] = new Array();
-            model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["standardrate"] = new Array();
+            model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["allotedhours"] = new Array();
             model_internal::dependentsOnMap["uuid"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
@@ -139,16 +139,16 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
         model_internal::_adddateValidator.requiredFieldError = "adddate is required";
         //model_internal::_adddateValidator.source = model_internal::_instance;
         //model_internal::_adddateValidator.property = "adddate";
-        model_internal::_adduserValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdduser);
-        model_internal::_adduserValidator.required = true;
-        model_internal::_adduserValidator.requiredFieldError = "adduser is required";
-        //model_internal::_adduserValidator.source = model_internal::_instance;
-        //model_internal::_adduserValidator.property = "adduser";
         model_internal::_standardrateValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForStandardrate);
         model_internal::_standardrateValidator.required = true;
         model_internal::_standardrateValidator.requiredFieldError = "standardrate is required";
         //model_internal::_standardrateValidator.source = model_internal::_instance;
         //model_internal::_standardrateValidator.property = "standardrate";
+        model_internal::_adduserValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdduser);
+        model_internal::_adduserValidator.required = true;
+        model_internal::_adduserValidator.requiredFieldError = "adduser is required";
+        //model_internal::_adduserValidator.source = model_internal::_instance;
+        //model_internal::_adduserValidator.property = "adduser";
         model_internal::_uuidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForUuid);
         model_internal::_uuidValidator.required = true;
         model_internal::_uuidValidator.requiredFieldError = "uuid is required";
@@ -405,13 +405,13 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]
-    public function get isAdduserAvailable():Boolean
+    public function get isStandardrateAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isStandardrateAvailable():Boolean
+    public function get isAdduserAvailable():Boolean
     {
         return true;
     }
@@ -486,20 +486,20 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
             model_internal::calculateAdddateIsValid();
         }
     }
-    public function invalidateDependentOnAdduser():void
-    {
-        if (model_internal::_adduserIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfAdduser = null;
-            model_internal::calculateAdduserIsValid();
-        }
-    }
     public function invalidateDependentOnStandardrate():void
     {
         if (model_internal::_standardrateIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfStandardrate = null;
             model_internal::calculateStandardrateIsValid();
+        }
+    }
+    public function invalidateDependentOnAdduser():void
+    {
+        if (model_internal::_adduserIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfAdduser = null;
+            model_internal::calculateAdduserIsValid();
         }
     }
     public function invalidateDependentOnUuid():void
@@ -1123,106 +1123,6 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
     }
 
     [Bindable(event="propertyChange")]   
-    public function get adduserStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get adduserValidator() : StyleValidator
-    {
-        return model_internal::_adduserValidator;
-    }
-
-    model_internal function set _adduserIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_adduserIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_adduserIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get adduserIsValid():Boolean
-    {
-        if (!model_internal::_adduserIsValidCacheInitialized)
-        {
-            model_internal::calculateAdduserIsValid();
-        }
-
-        return model_internal::_adduserIsValid;
-    }
-
-    model_internal function calculateAdduserIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_adduserValidator.validate(model_internal::_instance.adduser)
-        model_internal::_adduserIsValid_der = (valRes.results == null);
-        model_internal::_adduserIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::adduserValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::adduserValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get adduserValidationFailureMessages():Array
-    {
-        if (model_internal::_adduserValidationFailureMessages == null)
-            model_internal::calculateAdduserIsValid();
-
-        return _adduserValidationFailureMessages;
-    }
-
-    model_internal function set adduserValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_adduserValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_adduserValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get standardrateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -1313,6 +1213,106 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
         {
             model_internal::_standardrateValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "standardrateValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get adduserStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get adduserValidator() : StyleValidator
+    {
+        return model_internal::_adduserValidator;
+    }
+
+    model_internal function set _adduserIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_adduserIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_adduserIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adduserIsValid():Boolean
+    {
+        if (!model_internal::_adduserIsValidCacheInitialized)
+        {
+            model_internal::calculateAdduserIsValid();
+        }
+
+        return model_internal::_adduserIsValid;
+    }
+
+    model_internal function calculateAdduserIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_adduserValidator.validate(model_internal::_instance.adduser)
+        model_internal::_adduserIsValid_der = (valRes.results == null);
+        model_internal::_adduserIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::adduserValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::adduserValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adduserValidationFailureMessages():Array
+    {
+        if (model_internal::_adduserValidationFailureMessages == null)
+            model_internal::calculateAdduserIsValid();
+
+        return _adduserValidationFailureMessages;
+    }
+
+    model_internal function set adduserValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_adduserValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_adduserValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -1483,13 +1483,13 @@ internal class _Com_dspl_malkey_domain_FvehiclerateEntityMetadata extends com.ad
             {
                 return adddateValidationFailureMessages;
             }
-            case("adduser"):
-            {
-                return adduserValidationFailureMessages;
-            }
             case("standardrate"):
             {
                 return standardrateValidationFailureMessages;
+            }
+            case("adduser"):
+            {
+                return adduserValidationFailureMessages;
             }
             case("uuid"):
             {

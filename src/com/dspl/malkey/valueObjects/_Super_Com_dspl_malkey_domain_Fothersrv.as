@@ -50,6 +50,7 @@ public class _Super_Com_dspl_malkey_domain_Fothersrv extends flash.events.EventD
     private var _internal_addmach : String;
     private var _internal_adduser : String;
     private var _internal_adddate : Date;
+    private var _internal_isDriverServiceFlag : int;
     private var _internal_recordid : int;
 
     private static var emptyArray:Array = new Array();
@@ -102,6 +103,12 @@ public class _Super_Com_dspl_malkey_domain_Fothersrv extends flash.events.EventD
     public function get adddate() : Date
     {
         return _internal_adddate;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isDriverServiceFlag() : int
+    {
+        return _internal_isDriverServiceFlag;
     }
 
     [Bindable(event="propertyChange")]
@@ -161,6 +168,16 @@ public class _Super_Com_dspl_malkey_domain_Fothersrv extends flash.events.EventD
         {
             _internal_adddate = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adddate", oldValue, _internal_adddate));
+        }
+    }
+
+    public function set isDriverServiceFlag(value:int) : void
+    {
+        var oldValue:int = _internal_isDriverServiceFlag;
+        if (oldValue !== value)
+        {
+            _internal_isDriverServiceFlag = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "isDriverServiceFlag", oldValue, _internal_isDriverServiceFlag));
         }
     }
 

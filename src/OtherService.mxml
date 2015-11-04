@@ -362,6 +362,7 @@
 			[Bindable]public var toTimeIndex:int  =0;
 			[Bindable]public var fromTimeIndex:int  =0;
 			[Bindable]private var myValidators:Array;
+			//[Bindable]private var myValidatorsNonDriverServices:Array;
 			[Bindable]public var stCurrent:String;
 			[Bindable]public var formEnable:Boolean =true;
 			[Bindable]public var mode:String;
@@ -375,6 +376,7 @@
 			{
 				resetOtherServiceForm();
 				myValidators = [svTimeTo,svTimeFrom,dvFrom,svAccessoryId,nvNumDays];
+				//myValidatorsNonDriverServices = [svTimeTo,svTimeFrom,dvFrom,svAccessoryId];
 			}
 			//---------------------------------------------------------------------------------------	
 			

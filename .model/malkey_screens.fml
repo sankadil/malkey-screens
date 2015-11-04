@@ -581,112 +581,6 @@
       </annotation>
     </function>
   </service>
-  <service name="FothersrvSRV">
-    <annotation name="ActionScriptGeneration">
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">com.dspl.malkey.services</item>
-      <item name="Destination">fothersrvSRV</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
-      <item name="contextRoot">/malkey_server</item>
-      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
-      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">BlazeDS</item>
-    </annotation>
-    <function name="count" return-type="integer">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">integer</item>
-      </annotation>
-    </function>
-    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fothersrv">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fothersrv</item>
-      </annotation>
-    </function>
-    <function name="removeByID" arguments="arg0:string" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="listServices" return-type="Com_dspl_malkey_domain_Fothersrv[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fothersrv</item>
-      </annotation>
-    </function>
-    <function name="update" arguments="arg0:Com_dspl_malkey_domain_Fothersrv,arg1:Com_dspl_malkey_domain_Fothersrvrate[]" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">Com_dspl_malkey_domain_Fothersrv,Com_dspl_malkey_domain_Fothersrvrate</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="ListAll" return-type="Com_dspl_malkey_domain_Fothersrv[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fothersrv</item>
-      </annotation>
-    </function>
-    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fothersrv,arg1:Com_dspl_malkey_domain_Fothersrvrate[]" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">Com_dspl_malkey_domain_Fothersrv,Com_dspl_malkey_domain_Fothersrvrate</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="List" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fothersrv[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">integer,integer</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fothersrv</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="Com_dspl_malkey_domain_Fothersrv">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fothersrv</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fothersrv</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FothersrvSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="srvid" type="string"/>
-    <property name="description" type="string"/>
-    <property name="addmach" type="string"/>
-    <property name="adduser" type="string"/>
-    <property name="adddate" type="date"/>
-    <property name="recordid" type="integer"/>
-  </entity>
   <service name="FsmssentSRV">
     <annotation name="ActionScriptGeneration">
       <item name="ServiceType">RemoteObject</item>
@@ -3326,46 +3220,6 @@
       </annotation>
     </function>
   </service>
-  <entity name="Com_dspl_malkey_domain_FothersrvratePK">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_FothersrvratePK</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.FothersrvratePK</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FothersrvrateSRV,FothersrvSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="ratetype" type="string"/>
-    <property name="srvid" type="string"/>
-    <property name="clienttype" type="string"/>
-  </entity>
-  <entity name="Com_dspl_malkey_domain_Fothersrvrate">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fothersrvrate</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fothersrvrate</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FothersrvrateSRV,FothersrvSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="id" type="Com_dspl_malkey_domain_FothersrvratePK"/>
-    <property name="rate" type="string"/>
-    <property name="addmach" type="string"/>
-    <property name="adduser" type="string"/>
-    <property name="adddate" type="date"/>
-    <property name="standardrate" type="string"/>
-    <property name="recordid" type="integer"/>
-  </entity>
   <service name="FclienttypeSRV">
     <annotation name="ActionScriptGeneration">
       <item name="ServiceType">RemoteObject</item>
@@ -8212,141 +8066,6 @@
     <property name="supadd1" type="string" required="true"/>
     <property name="taxcode" type="string" required="true"/>
   </entity>
-  <service name="Fsupplier2SRV">
-    <annotation name="ActionScriptGeneration">
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">com.dspl.malkey.services</item>
-      <item name="Destination">fsupplier2SRV</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
-      <item name="contextRoot">/malkey_server</item>
-      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
-      <item name="LINKED_FILE"></item>
-      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">BlazeDS</item>
-    </annotation>
-    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fsupplier2" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">Com_dspl_malkey_domain_Fsupplier2</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="listAll" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
-      </annotation>
-    </function>
-    <function name="list" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">integer,integer</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
-      </annotation>
-    </function>
-    <function name="udpate" arguments="arg0:Com_dspl_malkey_domain_Fsupplier2" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">Com_dspl_malkey_domain_Fsupplier2</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fsupplier2">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
-      </annotation>
-    </function>
-    <function name="count" return-type="integer">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">integer</item>
-      </annotation>
-    </function>
-    <function name="listBySupType" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
-      </annotation>
-    </function>
-    <function name="removeByID" arguments="arg0:string" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="Com_dspl_malkey_domain_Fsupplier2">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fsupplier2</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fsupplier2</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">Fsupplier2SRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="supfax" type="string"/>
-    <property name="infavor" type="string"/>
-    <property name="adddate" type="date"/>
-    <property name="conflg" type="integer"/>
-    <property name="supflg" type="string"/>
-    <property name="contact" type="string"/>
-    <property name="vatregno" type="string"/>
-    <property name="suptele" type="string"/>
-    <property name="crperiod" type="string"/>
-    <property name="supmobile" type="string"/>
-    <property name="nbtstat" type="string"/>
-    <property name="crlimit" type="string"/>
-    <property name="officeadd" type="string"/>
-    <property name="supname" type="string"/>
-    <property name="supadd3" type="string"/>
-    <property name="supcode" type="string"/>
-    <property name="supemail" type="string"/>
-    <property name="conperson" type="string"/>
-    <property name="curcode" type="string"/>
-    <property name="vatstat" type="string"/>
-    <property name="addmach" type="string"/>
-    <property name="adduser" type="string"/>
-    <property name="suptyp" type="string"/>
-    <property name="isSelected" type="boolean"/>
-    <property name="company" type="string"/>
-    <property name="officetele" type="string"/>
-    <property name="officemobile" type="string"/>
-    <property name="typ" type="string"/>
-    <property name="supadd2" type="string"/>
-    <property name="recordid" type="integer"/>
-    <property name="supadd1" type="string"/>
-    <property name="taxcode" type="string"/>
-    <property name="supacc" type="string"/>
-  </entity>
   <service name="FdebtorSRV">
     <annotation name="ActionScriptGeneration">
       <item name="ServiceType">RemoteObject</item>
@@ -9901,277 +9620,6 @@
     <property name="timeout" type="string" required="true"/>
     <property name="dfrom" type="date" required="true"/>
   </entity>
-  <service name="FvehicleSRV">
-    <annotation name="ActionScriptGeneration">
-      <item name="ServiceType">RemoteObject</item>
-      <item name="Package">com.dspl.malkey.services</item>
-      <item name="Destination">fvehicleSRV</item>
-    </annotation>
-    <annotation name="ServiceConfig">
-      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
-      <item name="contextRoot">/malkey_server</item>
-      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
-      <item name="LINKED_FILE"></item>
-      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
-    </annotation>
-    <annotation name="ServiceTypeGroup">
-      <item name="ServiceBackendType">BlazeDS</item>
-    </annotation>
-    <function name="removeByID" arguments="arg0:string" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="getVehicleSummary" return-type="Com_dspl_malkey_domain_Fvehicle[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
-      </annotation>
-    </function>
-    <function name="update" arguments="arg0:Com_dspl_malkey_domain_Fvehicle,arg1:Com_dspl_malkey_domain_Fvehicledamage[],arg2:Com_dspl_malkey_domain_Fvehicleinventry[],arg3:Com_dspl_malkey_domain_Fvehiclerate[],arg4:Com_dspl_malkey_domain_Fvehiclepic[]" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">Com_dspl_malkey_domain_Fvehicle,Com_dspl_malkey_domain_Fvehicledamage,Com_dspl_malkey_domain_Fvehicleinventry,Com_dspl_malkey_domain_Fvehiclerate,Com_dspl_malkey_domain_Fvehiclepic</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="isVehicleRemovable" arguments="arg0:string" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fvehicle">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
-      </annotation>
-    </function>
-    <function name="count" return-type="integer">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">integer</item>
-      </annotation>
-    </function>
-    <function name="getVehicleList" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fvehicle[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
-      </annotation>
-    </function>
-    <function name="list" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fvehicle[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">integer,integer</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
-      </annotation>
-    </function>
-    <function name="getVehicleSummary2" arguments="arg0:string,arg1:string" return-type="Com_dspl_malkey_domain_Fvehicle[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string,string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
-      </annotation>
-    </function>
-    <function name="listAll" return-type="Com_dspl_malkey_domain_Fvehicle[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
-      </annotation>
-    </function>
-    <function name="getExpirationList" arguments="arg0:string,arg1:string,arg2:string" return-type="Com_dspl_malkey_domain_Fexpirationlistingrpt[]">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">string,string,string</item>
-        <item name="returnType">Com_dspl_malkey_domain_Fexpirationlistingrpt</item>
-      </annotation>
-    </function>
-    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fvehicle,arg1:Com_dspl_malkey_domain_Fvehicledamage[],arg2:Com_dspl_malkey_domain_Fvehicleinventry[],arg3:Com_dspl_malkey_domain_Fvehiclerate[],arg4:Com_dspl_malkey_domain_Fvehiclepic[]" return-type="boolean">
-      <annotation name="analyze group">
-        <item name="analyzed">true</item>
-      </annotation>
-      <annotation name="original signature">
-        <item name="inputParams">Com_dspl_malkey_domain_Fvehicle,Com_dspl_malkey_domain_Fvehicledamage,Com_dspl_malkey_domain_Fvehicleinventry,Com_dspl_malkey_domain_Fvehiclerate,Com_dspl_malkey_domain_Fvehiclepic</item>
-        <item name="returnType">boolean</item>
-      </annotation>
-    </function>
-  </service>
-  <entity name="Com_dspl_malkey_domain_Fvehiclerate">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehiclerate</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fvehiclerate</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FvehiclerateSRV,FvehicleSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="id" type="Com_dspl_malkey_domain_FvehicleratePK" required="true"/>
-    <property name="rate" type="string" required="true"/>
-    <property name="xhourrate" type="string" required="true"/>
-    <property name="xsmilerate" type="string" required="true"/>
-    <property name="allotedkms" type="integer" required="true"/>
-    <property name="addmach" type="string" required="true"/>
-    <property name="adddate" type="date" required="true"/>
-    <property name="adduser" type="string" required="true"/>
-    <property name="standardrate" type="string" required="true"/>
-    <property name="allotedhours" type="integer" required="true"/>
-    <property name="uuid" type="string" required="true"/>
-    <property name="recordid" type="integer" required="true"/>
-  </entity>
-  <entity name="Com_dspl_malkey_domain_Fexpirationlistingrpt">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fexpirationlistingrpt</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fexpirationlistingrpt</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FvehicleSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="rentstatus" type="string"/>
-    <property name="model" type="string"/>
-    <property name="ownership" type="string"/>
-    <property name="periodfrom" type="Java_sql_Timestamp"/>
-    <property name="regno" type="string"/>
-    <property name="periodto" type="Java_sql_Timestamp"/>
-    <property name="make" type="string"/>
-    <property name="daysleft" type="integer"/>
-  </entity>
-  <entity name="Com_dspl_malkey_domain_Fvehicleinventry">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehicleinventry</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fvehicleinventry</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FvehicleinventrySRV,FvehicleSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="id" type="Com_dspl_malkey_domain_FvehicleinventryPK" required="true"/>
-    <property name="adduser" type="string" required="true"/>
-    <property name="uuid" type="string" required="true"/>
-    <property name="recordid" type="integer" required="true"/>
-  </entity>
-  <entity name="Com_dspl_malkey_domain_FvehicleinventryPK">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_FvehicleinventryPK</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.FvehicleinventryPK</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FvehicleinventrySRV,FvehicleSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="invid" type="string" required="true"/>
-    <property name="regno" type="string" required="true"/>
-  </entity>
-  <entity name="Com_dspl_malkey_domain_Fvehicledamage">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehicledamage</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fvehicledamage</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FvehicleSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="xvalue" type="string" required="true"/>
-    <property name="regno" type="string" required="true"/>
-    <property name="seq" type="integer" required="true"/>
-    <property name="yvalue" type="string" required="true"/>
-    <property name="adduser" type="string" required="true"/>
-    <property name="damagetype" type="integer" required="true"/>
-    <property name="uuid" type="string" required="true"/>
-    <property name="recordid" type="integer" required="true"/>
-  </entity>
-  <entity name="Com_dspl_malkey_domain_FvehicleratePK">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_FvehicleratePK</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.FvehicleratePK</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FvehiclerateSRV,FvehicleSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="ratetype" type="string" required="true"/>
-    <property name="vehimodelid" type="string" required="true"/>
-    <property name="clienttype" type="string" required="true"/>
-    <property name="hiretypeid" type="string" required="true"/>
-  </entity>
-  <entity name="Com_dspl_malkey_domain_Fvehiclepic">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehiclepic</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fvehiclepic</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FvehiclepicSRV,FvehicleSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="regno" type="string" required="true"/>
-    <property name="imageurl" type="string" required="true"/>
-    <property name="recordid" type="integer" required="true"/>
-    <property name="defaultimage" type="integer" required="true"/>
-    <property name="imagedata" type="blob" required="true"/>
-    <property name="imagename" type="string" required="true"/>
-  </entity>
   <service name="FgatepassSRV">
     <annotation name="ActionScriptGeneration">
       <item name="ServiceType">RemoteObject</item>
@@ -10351,82 +9799,6 @@
     <property name="outtolocdes" type="string"/>
     <property name="recordid" type="integer"/>
   </entity>
-  <entity name="Com_dspl_malkey_domain_Fvehicle">
-    <annotation name="EntityProperties">
-      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehicle</item>
-    </annotation>
-    <annotation name="ServerProperties">
-      <item name="RemoteClass">com.dspl.malkey.domain.Fvehicle</item>
-      <item name="IncludeRemoteClass">nonempty</item>
-    </annotation>
-    <annotation name="service Group">
-      <item name="service">FgatepassSRV</item>
-    </annotation>
-    <annotation name="ActionScriptGeneration">
-      <item name="Package">com.dspl.malkey.valueObjects</item>
-    </annotation>
-    <property name="vintage" type="integer"/>
-    <property name="demission" type="date" required="true"/>
-    <property name="modifieddate" type="date" required="true"/>
-    <property name="seatingcapacity" type="string" required="true"/>
-    <property name="adddate" type="date" required="true"/>
-    <property name="inspolicyno" type="string" required="true"/>
-    <property name="fueltypeid" type="string" required="true"/>
-    <property name="chassisno" type="string" required="true"/>
-    <property name="mainseats" type="integer" required="true"/>
-    <property name="locationid" type="string" required="true"/>
-    <property name="description" type="string" required="true"/>
-    <property name="value" type="string" required="true"/>
-    <property name="engineno" type="string" required="true"/>
-    <property name="year" type="integer" required="true"/>
-    <property name="insncb" type="string" required="true"/>
-    <property name="ownertype" type="string" required="true"/>
-    <property name="status" type="string" required="true"/>
-    <property name="ownercompanyid" type="string" required="true"/>
-    <property name="regno" type="string" required="true"/>
-    <property name="leasemonthlyamt" type="string" required="true"/>
-    <property name="vehistsid" type="string" required="true"/>
-    <property name="image" type="string" required="true"/>
-    <property name="ownerid" type="string" required="true"/>
-    <property name="fleetid" type="string" required="true"/>
-    <property name="fuellevel" type="integer" required="true"/>
-    <property name="uuid" type="string" required="true"/>
-    <property name="make" type="string" required="true"/>
-    <property name="jumpseats" type="integer" required="true"/>
-    <property name="fuelconsump" type="string" required="true"/>
-    <property name="recordid" type="integer" required="true"/>
-    <property name="colourid" type="string" required="true"/>
-    <property name="tsdpurchase" type="Java_sql_Timestamp" required="true"/>
-    <property name="inscompany" type="string" required="true"/>
-    <property name="vehiclassid" type="string" required="true"/>
-    <property name="inspolexces" type="string" required="true"/>
-    <property name="leasedlastpay" type="date" required="true"/>
-    <property name="drevlicense" type="date" required="true"/>
-    <property name="modifiedmach" type="string" required="true"/>
-    <property name="leasecomid" type="string" required="true"/>
-    <property name="selected" type="boolean" required="true"/>
-    <property name="vehimodelid" type="string" required="true"/>
-    <property name="fueltankval" type="string" required="true"/>
-    <property name="dummyvehi" type="integer" required="true"/>
-    <property name="leasedstart" type="date" required="true"/>
-    <property name="curmileage" type="integer" required="true"/>
-    <property name="leaseamt" type="string" required="true"/>
-    <property name="insamount" type="string" required="true"/>
-    <property name="modifieduser" type="string" required="true"/>
-    <property name="insdexpiry" type="date" required="true"/>
-    <property name="vehitransid" type="string" required="true"/>
-    <property name="addmach" type="string" required="true"/>
-    <property name="adduser" type="string" required="true"/>
-    <property name="vehitypeid" type="string" required="true"/>
-    <property name="dfitness" type="date" required="true"/>
-    <property name="leasenoofmonth" type="integer" required="true"/>
-    <property name="vehimakeid" type="string" required="true"/>
-    <property name="orgmileage" type="integer" required="true"/>
-    <property name="dpurchase" type="date" required="true"/>
-    <property name="sparekeys" type="integer" required="true"/>
-    <property name="engsizeid" type="string" required="true"/>
-    <property name="policyid" type="string" required="true"/>
-  </entity>
   <entity name="Com_dspl_malkey_domain_Femployee">
     <annotation name="EntityProperties">
       <item name="EntityOriginalName">Com_dspl_malkey_domain_Femployee</item>
@@ -10483,6 +9855,627 @@
     <property name="recordid" type="integer" required="true"/>
     <property name="hometele" type="string" required="true"/>
   </entity>
+  <service name="FothersrvSRV">
+    <annotation name="ActionScriptGeneration">
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">com.dspl.malkey.services</item>
+      <item name="Destination">fothersrvSRV</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
+      <item name="contextRoot">/malkey_server</item>
+      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
+      <item name="LINKED_FILE"></item>
+      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">BlazeDS</item>
+    </annotation>
+    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fothersrv">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fothersrv</item>
+      </annotation>
+    </function>
+    <function name="count" return-type="integer">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">integer</item>
+      </annotation>
+    </function>
+    <function name="removeByID" arguments="arg0:string" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="listServices" return-type="Com_dspl_malkey_domain_Fothersrv[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fothersrv</item>
+      </annotation>
+    </function>
+    <function name="ListAll" return-type="Com_dspl_malkey_domain_Fothersrv[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fothersrv</item>
+      </annotation>
+    </function>
+    <function name="update" arguments="arg0:Com_dspl_malkey_domain_Fothersrv,arg1:Com_dspl_malkey_domain_Fothersrvrate[]" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fothersrv,Com_dspl_malkey_domain_Fothersrvrate</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fothersrv,arg1:Com_dspl_malkey_domain_Fothersrvrate[]" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fothersrv,Com_dspl_malkey_domain_Fothersrvrate</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="List" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fothersrv[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">integer,integer</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fothersrv</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Com_dspl_malkey_domain_FothersrvratePK">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_FothersrvratePK</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.FothersrvratePK</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FothersrvrateSRV,FothersrvSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="ratetype" type="string" required="true"/>
+    <property name="srvid" type="string" required="true"/>
+    <property name="clienttype" type="string" required="true"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_Fothersrvrate">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fothersrvrate</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fothersrvrate</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FothersrvrateSRV,FothersrvSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="id" type="Com_dspl_malkey_domain_FothersrvratePK" required="true"/>
+    <property name="rate" type="string" required="true"/>
+    <property name="addmach" type="string" required="true"/>
+    <property name="adddate" type="date" required="true"/>
+    <property name="adduser" type="string" required="true"/>
+    <property name="standardrate" type="string" required="true"/>
+    <property name="recordid" type="integer" required="true"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_Fothersrv">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fothersrv</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fothersrv</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FothersrvSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="srvid" type="string"/>
+    <property name="description" type="string"/>
+    <property name="addmach" type="string"/>
+    <property name="adduser" type="string"/>
+    <property name="adddate" type="date"/>
+    <property name="isDriverServiceFlag" type="integer"/>
+    <property name="recordid" type="integer"/>
+  </entity>
+  <service name="Fsupplier2SRV">
+    <annotation name="ActionScriptGeneration">
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">com.dspl.malkey.services</item>
+      <item name="Destination">fsupplier2SRV</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
+      <item name="contextRoot">/malkey_server</item>
+      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
+      <item name="LINKED_FILE"></item>
+      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">BlazeDS</item>
+    </annotation>
+    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fsupplier2" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fsupplier2</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="listAll" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
+      </annotation>
+    </function>
+    <function name="list" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">integer,integer</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
+      </annotation>
+    </function>
+    <function name="udpate" arguments="arg0:Com_dspl_malkey_domain_Fsupplier2" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fsupplier2</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fsupplier2">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
+      </annotation>
+    </function>
+    <function name="count" return-type="integer">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">integer</item>
+      </annotation>
+    </function>
+    <function name="listBySupType" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fsupplier2[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fsupplier2</item>
+      </annotation>
+    </function>
+    <function name="removeByID" arguments="arg0:string" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Com_dspl_malkey_domain_Fsupplier2">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fsupplier2</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fsupplier2</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">Fsupplier2SRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="infavor" type="string"/>
+    <property name="supfax" type="string"/>
+    <property name="modifieddate" type="date"/>
+    <property name="adddate" type="date"/>
+    <property name="conflg" type="integer"/>
+    <property name="supflg" type="string"/>
+    <property name="contact" type="string"/>
+    <property name="suptele" type="string"/>
+    <property name="vatregno" type="string"/>
+    <property name="crperiod" type="string"/>
+    <property name="modifiedmach" type="string"/>
+    <property name="supmobile" type="string"/>
+    <property name="nbtstat" type="string"/>
+    <property name="crlimit" type="string"/>
+    <property name="officeadd" type="string"/>
+    <property name="supname" type="string"/>
+    <property name="supadd3" type="string"/>
+    <property name="supcode" type="string"/>
+    <property name="supemail" type="string"/>
+    <property name="modifieduser" type="string"/>
+    <property name="curcode" type="string"/>
+    <property name="conperson" type="string"/>
+    <property name="addmach" type="string"/>
+    <property name="vatstat" type="string"/>
+    <property name="adduser" type="string"/>
+    <property name="suptyp" type="string"/>
+    <property name="isSelected" type="boolean"/>
+    <property name="company" type="string"/>
+    <property name="officetele" type="string"/>
+    <property name="officemobile" type="string"/>
+    <property name="typ" type="string"/>
+    <property name="recordid" type="integer"/>
+    <property name="supadd2" type="string"/>
+    <property name="supacc" type="string"/>
+    <property name="supadd1" type="string"/>
+    <property name="taxcode" type="string"/>
+  </entity>
+  <service name="FvehicleSRV">
+    <annotation name="ActionScriptGeneration">
+      <item name="ServiceType">RemoteObject</item>
+      <item name="Package">com.dspl.malkey.services</item>
+      <item name="Destination">fvehicleSRV</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">com.dspl.malkey.valueObjects</item>
+      <item name="contextRoot">/malkey_server</item>
+      <item name="rootUrl">http://localhost:8400/malkey_server/</item>
+      <item name="LINKED_FILE"></item>
+      <item name="ABSOLUTE_ENDPOINT">http://localhost:8400/malkey_server/messagebroker/amf</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">BlazeDS</item>
+    </annotation>
+    <function name="update" arguments="arg0:Com_dspl_malkey_domain_Fvehicle,arg1:Com_dspl_malkey_domain_Fvehicledamage[],arg2:Com_dspl_malkey_domain_Fvehicleinventry[],arg3:Com_dspl_malkey_domain_Fvehiclerate[],arg4:Com_dspl_malkey_domain_Fvehiclepic[]" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fvehicle,Com_dspl_malkey_domain_Fvehicledamage,Com_dspl_malkey_domain_Fvehicleinventry,Com_dspl_malkey_domain_Fvehiclerate,Com_dspl_malkey_domain_Fvehiclepic</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="isDupplicate" arguments="arg0:string" return-type="integer">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">integer</item>
+      </annotation>
+    </function>
+    <function name="count" return-type="integer">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">integer</item>
+      </annotation>
+    </function>
+    <function name="getVehicleList" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fvehicle[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
+      </annotation>
+    </function>
+    <function name="list" arguments="arg0:integer,arg1:integer" return-type="Com_dspl_malkey_domain_Fvehicle[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">integer,integer</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
+      </annotation>
+    </function>
+    <function name="listAll" return-type="Com_dspl_malkey_domain_Fvehicle[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
+      </annotation>
+    </function>
+    <function name="getExpirationList" arguments="arg0:string,arg1:string,arg2:string" return-type="Com_dspl_malkey_domain_Fexpirationlistingrpt[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string,string,string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fexpirationlistingrpt</item>
+      </annotation>
+    </function>
+    <function name="create" arguments="arg0:Com_dspl_malkey_domain_Fvehicle,arg1:Com_dspl_malkey_domain_Fvehicledamage[],arg2:Com_dspl_malkey_domain_Fvehicleinventry[],arg3:Com_dspl_malkey_domain_Fvehiclerate[],arg4:Com_dspl_malkey_domain_Fvehiclepic[]" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">Com_dspl_malkey_domain_Fvehicle,Com_dspl_malkey_domain_Fvehicledamage,Com_dspl_malkey_domain_Fvehicleinventry,Com_dspl_malkey_domain_Fvehiclerate,Com_dspl_malkey_domain_Fvehiclepic</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="removeByID" arguments="arg0:string" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="getVehicleSummary" return-type="Com_dspl_malkey_domain_Fvehicle[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
+      </annotation>
+    </function>
+    <function name="isVehicleRemovable" arguments="arg0:string" return-type="boolean">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">boolean</item>
+      </annotation>
+    </function>
+    <function name="findByID" arguments="arg0:string" return-type="Com_dspl_malkey_domain_Fvehicle">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
+      </annotation>
+    </function>
+    <function name="getVehicleSummary2" arguments="arg0:string,arg1:string" return-type="Com_dspl_malkey_domain_Fvehicle[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">string,string</item>
+        <item name="returnType">Com_dspl_malkey_domain_Fvehicle</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="Com_dspl_malkey_domain_Fvehiclerate">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehiclerate</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fvehiclerate</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FvehiclerateSRV,FvehicleSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="id" type="Com_dspl_malkey_domain_FvehicleratePK" required="true"/>
+    <property name="rate" type="string" required="true"/>
+    <property name="xhourrate" type="string" required="true"/>
+    <property name="xsmilerate" type="string" required="true"/>
+    <property name="allotedkms" type="integer" required="true"/>
+    <property name="addmach" type="string" required="true"/>
+    <property name="adddate" type="date" required="true"/>
+    <property name="standardrate" type="string" required="true"/>
+    <property name="adduser" type="string" required="true"/>
+    <property name="allotedhours" type="integer" required="true"/>
+    <property name="uuid" type="string" required="true"/>
+    <property name="recordid" type="integer" required="true"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_Fexpirationlistingrpt">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fexpirationlistingrpt</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fexpirationlistingrpt</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FvehicleSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="rentstatus" type="string"/>
+    <property name="model" type="string"/>
+    <property name="ownership" type="string"/>
+    <property name="periodfrom" type="Java_sql_Timestamp"/>
+    <property name="regno" type="string"/>
+    <property name="periodto" type="Java_sql_Timestamp"/>
+    <property name="make" type="string"/>
+    <property name="daysleft" type="integer"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_Fvehicleinventry">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehicleinventry</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fvehicleinventry</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FvehicleinventrySRV,FvehicleSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="id" type="Com_dspl_malkey_domain_FvehicleinventryPK" required="true"/>
+    <property name="adduser" type="string" required="true"/>
+    <property name="uuid" type="string" required="true"/>
+    <property name="recordid" type="integer" required="true"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_FvehicleinventryPK">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_FvehicleinventryPK</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.FvehicleinventryPK</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FvehicleinventrySRV,FvehicleSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="invid" type="string" required="true"/>
+    <property name="regno" type="string" required="true"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_Fvehicle">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehicle</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fvehicle</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FvehicleSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="vintage" type="integer"/>
+    <property name="demission" type="date" required="true"/>
+    <property name="seatingcapacity" type="string" required="true"/>
+    <property name="modifieddate" type="date" required="true"/>
+    <property name="adddate" type="date" required="true"/>
+    <property name="inspolicyno" type="string" required="true"/>
+    <property name="fueltypeid" type="string" required="true"/>
+    <property name="chassisno" type="string" required="true"/>
+    <property name="mainseats" type="integer" required="true"/>
+    <property name="locationid" type="string" required="true"/>
+    <property name="description" type="string" required="true"/>
+    <property name="value" type="string" required="true"/>
+    <property name="engineno" type="string" required="true"/>
+    <property name="insncb" type="string" required="true"/>
+    <property name="year" type="integer" required="true"/>
+    <property name="ownertype" type="string" required="true"/>
+    <property name="status" type="string" required="true"/>
+    <property name="ownercompanyid" type="string" required="true"/>
+    <property name="regno" type="string" required="true"/>
+    <property name="vehistsid" type="string" required="true"/>
+    <property name="leasemonthlyamt" type="string" required="true"/>
+    <property name="image" type="string" required="true"/>
+    <property name="ownerid" type="string" required="true"/>
+    <property name="fleetid" type="string" required="true"/>
+    <property name="fuellevel" type="integer" required="true"/>
+    <property name="uuid" type="string" required="true"/>
+    <property name="fuelconsump" type="string" required="true"/>
+    <property name="make" type="string" required="true"/>
+    <property name="jumpseats" type="integer" required="true"/>
+    <property name="recordid" type="integer" required="true"/>
+    <property name="colourid" type="string" required="true"/>
+    <property name="tsdpurchase" type="Java_sql_Timestamp" required="true"/>
+    <property name="vehiclassid" type="string" required="true"/>
+    <property name="inscompany" type="string" required="true"/>
+    <property name="inspolexces" type="string" required="true"/>
+    <property name="leasedlastpay" type="date" required="true"/>
+    <property name="drevlicense" type="date" required="true"/>
+    <property name="leasecomid" type="string" required="true"/>
+    <property name="modifiedmach" type="string" required="true"/>
+    <property name="selected" type="boolean" required="true"/>
+    <property name="vehimodelid" type="string" required="true"/>
+    <property name="fueltankval" type="string" required="true"/>
+    <property name="dummyvehi" type="integer" required="true"/>
+    <property name="leasedstart" type="date" required="true"/>
+    <property name="leaseamt" type="string" required="true"/>
+    <property name="curmileage" type="integer" required="true"/>
+    <property name="insamount" type="string" required="true"/>
+    <property name="modifieduser" type="string" required="true"/>
+    <property name="insdexpiry" type="date" required="true"/>
+    <property name="addmach" type="string" required="true"/>
+    <property name="vehitransid" type="string" required="true"/>
+    <property name="adduser" type="string" required="true"/>
+    <property name="vehitypeid" type="string" required="true"/>
+    <property name="leasenoofmonth" type="integer" required="true"/>
+    <property name="dfitness" type="date" required="true"/>
+    <property name="vehimakeid" type="string" required="true"/>
+    <property name="orgmileage" type="integer" required="true"/>
+    <property name="dpurchase" type="date" required="true"/>
+    <property name="sparekeys" type="integer" required="true"/>
+    <property name="engsizeid" type="string" required="true"/>
+    <property name="policyid" type="string" required="true"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_Fvehicledamage">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehicledamage</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fvehicledamage</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FvehicleSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="xvalue" type="string" required="true"/>
+    <property name="regno" type="string" required="true"/>
+    <property name="adduser" type="string" required="true"/>
+    <property name="seq" type="integer" required="true"/>
+    <property name="yvalue" type="string" required="true"/>
+    <property name="damagetype" type="integer" required="true"/>
+    <property name="uuid" type="string" required="true"/>
+    <property name="recordid" type="integer" required="true"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_FvehicleratePK">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_FvehicleratePK</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.FvehicleratePK</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FvehiclerateSRV,FvehicleSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="ratetype" type="string" required="true"/>
+    <property name="vehimodelid" type="string" required="true"/>
+    <property name="clienttype" type="string" required="true"/>
+    <property name="hiretypeid" type="string" required="true"/>
+  </entity>
   <entity name="Java_sql_Timestamp">
     <annotation name="EntityProperties">
       <item name="EntityOriginalName">Java_sql_Timestamp</item>
@@ -10492,7 +10485,7 @@
       <item name="IncludeRemoteClass">nonempty</item>
     </annotation>
     <annotation name="service Group">
-      <item name="service">FgatepassSRV</item>
+      <item name="service">FvehicleSRV</item>
     </annotation>
     <annotation name="ActionScriptGeneration">
       <item name="Package">com.dspl.malkey.valueObjects</item>
@@ -10507,5 +10500,26 @@
     <property name="year" type="integer" required="true"/>
     <property name="day" type="integer" required="true"/>
     <property name="date" type="integer" required="true"/>
+  </entity>
+  <entity name="Com_dspl_malkey_domain_Fvehiclepic">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Com_dspl_malkey_domain_Fvehiclepic</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="RemoteClass">com.dspl.malkey.domain.Fvehiclepic</item>
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">FvehiclepicSRV,FvehicleSRV</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">com.dspl.malkey.valueObjects</item>
+    </annotation>
+    <property name="regno" type="string" required="true"/>
+    <property name="imageurl" type="string" required="true"/>
+    <property name="recordid" type="integer" required="true"/>
+    <property name="defaultimage" type="integer" required="true"/>
+    <property name="imagename" type="string" required="true"/>
+    <property name="imagedata" type="blob" required="true"/>
   </entity>
 </model>

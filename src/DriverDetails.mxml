@@ -490,6 +490,7 @@ Author:		Sanka Senavirathna-Administrator
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fclientdriver;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fdriverrate;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Femployee;
+			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fothersrv;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresclientdriver;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FresclientdriverPK;
 			import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fresdriver;
@@ -1811,7 +1812,11 @@ Author:		Sanka Senavirathna-Administrator
 			}
 			//---------------------------------------------------------------------------------------
 			
-			
+			private function isDriverService(item:Com_dspl_malkey_domain_Fresothsrv):int
+			{
+				var acOtherService:ArrayCollection=session.getAttribute("acOtherSRV");
+				return (Com_dspl_malkey_domain_Fothersrv)(genericFunctions.getArrayCollection(acOtherService,"srvid",(item).id.srvid)).isDriverServiceFlag;
+			}
 			
 			//---------------------------------------------------------------------------------------
 			/***
@@ -1826,7 +1831,13 @@ Author:		Sanka Senavirathna-Administrator
 				var millisecondsPerDay:int = 1000 * 60 * 60 * 24;
 					for each(var tempFresOtherService:Com_dspl_malkey_domain_Fresothsrv in acResOtherService)//loop from dout to din
 					{		
-						
+						//tempFresOtherService.id.srvid
+						if(isDriverService(tempFresOtherService)==0){
+							//Alert.show("tempFresOtherService "+tempFresOtherService.description);
+							continue;
+							//Alert.show("tempFresOtherService "+tempFresOtherService.description);
+						}
+					
 						var timeInIndex:int=acTime.getItemIndex(tempFresOtherService.id.timeout);
 						var tmpOutDate:Date=new Date(tempFresOtherService.id.dfrom+millisecondsPerDay*(timeInIndex)*(1/48));
 						

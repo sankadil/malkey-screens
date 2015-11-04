@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("xvalue", "regno", "seq", "yvalue", "adduser", "damagetype", "uuid", "recordid");
+    model_internal static var allProperties:Array = new Array("xvalue", "regno", "adduser", "seq", "yvalue", "damagetype", "uuid", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("xvalue", "regno", "seq", "yvalue", "adduser", "damagetype", "uuid", "recordid");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("xvalue", "regno", "seq", "yvalue", "adduser", "damagetype", "uuid", "recordid");
+    model_internal static var allRequiredProperties:Array = new Array("xvalue", "regno", "adduser", "seq", "yvalue", "damagetype", "uuid", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("xvalue", "regno", "adduser", "seq", "yvalue", "damagetype", "uuid", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("xvalue", "regno", "seq", "yvalue", "adduser", "damagetype", "uuid", "recordid");
+    model_internal static var dataProperties:Array = new Array("xvalue", "regno", "adduser", "seq", "yvalue", "damagetype", "uuid", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -46,15 +46,15 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
     model_internal var _regnoIsValidCacheInitialized:Boolean = false;
     model_internal var _regnoValidationFailureMessages:Array;
     
-    model_internal var _yvalueIsValid:Boolean;
-    model_internal var _yvalueValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _yvalueIsValidCacheInitialized:Boolean = false;
-    model_internal var _yvalueValidationFailureMessages:Array;
-    
     model_internal var _adduserIsValid:Boolean;
     model_internal var _adduserValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _adduserIsValidCacheInitialized:Boolean = false;
     model_internal var _adduserValidationFailureMessages:Array;
+    
+    model_internal var _yvalueIsValid:Boolean;
+    model_internal var _yvalueValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _yvalueIsValidCacheInitialized:Boolean = false;
+    model_internal var _yvalueValidationFailureMessages:Array;
     
     model_internal var _uuidIsValid:Boolean;
     model_internal var _uuidValidator:com.adobe.fiber.styles.StyleValidator;
@@ -73,9 +73,9 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
             model_internal::dependentsOnMap = new Object();
             model_internal::dependentsOnMap["xvalue"] = new Array();
             model_internal::dependentsOnMap["regno"] = new Array();
+            model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["seq"] = new Array();
             model_internal::dependentsOnMap["yvalue"] = new Array();
-            model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["damagetype"] = new Array();
             model_internal::dependentsOnMap["uuid"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
@@ -95,16 +95,16 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
         model_internal::_regnoValidator.requiredFieldError = "regno is required";
         //model_internal::_regnoValidator.source = model_internal::_instance;
         //model_internal::_regnoValidator.property = "regno";
-        model_internal::_yvalueValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForYvalue);
-        model_internal::_yvalueValidator.required = true;
-        model_internal::_yvalueValidator.requiredFieldError = "yvalue is required";
-        //model_internal::_yvalueValidator.source = model_internal::_instance;
-        //model_internal::_yvalueValidator.property = "yvalue";
         model_internal::_adduserValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForAdduser);
         model_internal::_adduserValidator.required = true;
         model_internal::_adduserValidator.requiredFieldError = "adduser is required";
         //model_internal::_adduserValidator.source = model_internal::_instance;
         //model_internal::_adduserValidator.property = "adduser";
+        model_internal::_yvalueValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForYvalue);
+        model_internal::_yvalueValidator.required = true;
+        model_internal::_yvalueValidator.requiredFieldError = "yvalue is required";
+        //model_internal::_yvalueValidator.source = model_internal::_instance;
+        //model_internal::_yvalueValidator.property = "yvalue";
         model_internal::_uuidValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForUuid);
         model_internal::_uuidValidator.required = true;
         model_internal::_uuidValidator.requiredFieldError = "uuid is required";
@@ -331,6 +331,12 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]
+    public function get isAdduserAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isSeqAvailable():Boolean
     {
         return true;
@@ -338,12 +344,6 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
 
     [Bindable(event="propertyChange")]
     public function get isYvalueAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get isAdduserAvailable():Boolean
     {
         return true;
     }
@@ -386,20 +386,20 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
             model_internal::calculateRegnoIsValid();
         }
     }
-    public function invalidateDependentOnYvalue():void
-    {
-        if (model_internal::_yvalueIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfYvalue = null;
-            model_internal::calculateYvalueIsValid();
-        }
-    }
     public function invalidateDependentOnAdduser():void
     {
         if (model_internal::_adduserIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfAdduser = null;
             model_internal::calculateAdduserIsValid();
+        }
+    }
+    public function invalidateDependentOnYvalue():void
+    {
+        if (model_internal::_yvalueIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfYvalue = null;
+            model_internal::calculateYvalueIsValid();
         }
     }
     public function invalidateDependentOnUuid():void
@@ -617,6 +617,106 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
     }
 
     [Bindable(event="propertyChange")]   
+    public function get adduserStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get adduserValidator() : StyleValidator
+    {
+        return model_internal::_adduserValidator;
+    }
+
+    model_internal function set _adduserIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_adduserIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_adduserIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adduserIsValid():Boolean
+    {
+        if (!model_internal::_adduserIsValidCacheInitialized)
+        {
+            model_internal::calculateAdduserIsValid();
+        }
+
+        return model_internal::_adduserIsValid;
+    }
+
+    model_internal function calculateAdduserIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_adduserValidator.validate(model_internal::_instance.adduser)
+        model_internal::_adduserIsValid_der = (valRes.results == null);
+        model_internal::_adduserIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::adduserValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::adduserValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adduserValidationFailureMessages():Array
+    {
+        if (model_internal::_adduserValidationFailureMessages == null)
+            model_internal::calculateAdduserIsValid();
+
+        return _adduserValidationFailureMessages;
+    }
+
+    model_internal function set adduserValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_adduserValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_adduserValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get seqStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -713,106 +813,6 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
         {
             model_internal::_yvalueValidationFailureMessages = value;   
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "yvalueValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get adduserStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get adduserValidator() : StyleValidator
-    {
-        return model_internal::_adduserValidator;
-    }
-
-    model_internal function set _adduserIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_adduserIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_adduserIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get adduserIsValid():Boolean
-    {
-        if (!model_internal::_adduserIsValidCacheInitialized)
-        {
-            model_internal::calculateAdduserIsValid();
-        }
-
-        return model_internal::_adduserIsValid;
-    }
-
-    model_internal function calculateAdduserIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_adduserValidator.validate(model_internal::_instance.adduser)
-        model_internal::_adduserIsValid_der = (valRes.results == null);
-        model_internal::_adduserIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::adduserValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::adduserValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get adduserValidationFailureMessages():Array
-    {
-        if (model_internal::_adduserValidationFailureMessages == null)
-            model_internal::calculateAdduserIsValid();
-
-        return _adduserValidationFailureMessages;
-    }
-
-    model_internal function set adduserValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_adduserValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_adduserValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduserValidationFailureMessages", oldValue, value));
             // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
             // the entire entity.
             if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
@@ -967,13 +967,13 @@ internal class _Com_dspl_malkey_domain_FvehicledamageEntityMetadata extends com.
             {
                 return regnoValidationFailureMessages;
             }
-            case("yvalue"):
-            {
-                return yvalueValidationFailureMessages;
-            }
             case("adduser"):
             {
                 return adduserValidationFailureMessages;
+            }
+            case("yvalue"):
+            {
+                return yvalueValidationFailureMessages;
             }
             case("uuid"):
             {

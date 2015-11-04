@@ -20,12 +20,12 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("supfax", "infavor", "adddate", "conflg", "supflg", "contact", "vatregno", "suptele", "crperiod", "supmobile", "nbtstat", "crlimit", "officeadd", "supname", "supadd3", "supcode", "supemail", "conperson", "curcode", "vatstat", "addmach", "adduser", "suptyp", "isSelected", "company", "officetele", "officemobile", "typ", "supadd2", "recordid", "supadd1", "taxcode", "supacc");
+    model_internal static var allProperties:Array = new Array("infavor", "supfax", "modifieddate", "adddate", "conflg", "supflg", "contact", "suptele", "vatregno", "crperiod", "modifiedmach", "supmobile", "nbtstat", "crlimit", "officeadd", "supname", "supadd3", "supcode", "supemail", "modifieduser", "curcode", "conperson", "addmach", "vatstat", "adduser", "suptyp", "isSelected", "company", "officetele", "officemobile", "typ", "recordid", "supadd2", "supacc", "supadd1", "taxcode");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("supfax", "infavor", "adddate", "conflg", "supflg", "contact", "vatregno", "suptele", "crperiod", "supmobile", "nbtstat", "crlimit", "officeadd", "supname", "supadd3", "supcode", "supemail", "conperson", "curcode", "vatstat", "addmach", "adduser", "suptyp", "isSelected", "company", "officetele", "officemobile", "typ", "supadd2", "recordid", "supadd1", "taxcode", "supacc");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("infavor", "supfax", "modifieddate", "adddate", "conflg", "supflg", "contact", "suptele", "vatregno", "crperiod", "modifiedmach", "supmobile", "nbtstat", "crlimit", "officeadd", "supname", "supadd3", "supcode", "supemail", "modifieduser", "curcode", "conperson", "addmach", "vatstat", "adduser", "suptyp", "isSelected", "company", "officetele", "officemobile", "typ", "recordid", "supadd2", "supacc", "supadd1", "taxcode");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("supfax", "infavor", "adddate", "conflg", "supflg", "contact", "vatregno", "suptele", "crperiod", "supmobile", "nbtstat", "crlimit", "officeadd", "supname", "supadd3", "supcode", "supemail", "conperson", "curcode", "vatstat", "addmach", "adduser", "suptyp", "isSelected", "company", "officetele", "officemobile", "typ", "supadd2", "recordid", "supadd1", "taxcode", "supacc");
+    model_internal static var dataProperties:Array = new Array("infavor", "supfax", "modifieddate", "adddate", "conflg", "supflg", "contact", "suptele", "vatregno", "crperiod", "modifiedmach", "supmobile", "nbtstat", "crlimit", "officeadd", "supname", "supadd3", "supcode", "supemail", "modifieduser", "curcode", "conperson", "addmach", "vatstat", "adduser", "suptyp", "isSelected", "company", "officetele", "officemobile", "typ", "recordid", "supadd2", "supacc", "supadd1", "taxcode");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -44,15 +44,17 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
         {
             // depenents map
             model_internal::dependentsOnMap = new Object();
-            model_internal::dependentsOnMap["supfax"] = new Array();
             model_internal::dependentsOnMap["infavor"] = new Array();
+            model_internal::dependentsOnMap["supfax"] = new Array();
+            model_internal::dependentsOnMap["modifieddate"] = new Array();
             model_internal::dependentsOnMap["adddate"] = new Array();
             model_internal::dependentsOnMap["conflg"] = new Array();
             model_internal::dependentsOnMap["supflg"] = new Array();
             model_internal::dependentsOnMap["contact"] = new Array();
-            model_internal::dependentsOnMap["vatregno"] = new Array();
             model_internal::dependentsOnMap["suptele"] = new Array();
+            model_internal::dependentsOnMap["vatregno"] = new Array();
             model_internal::dependentsOnMap["crperiod"] = new Array();
+            model_internal::dependentsOnMap["modifiedmach"] = new Array();
             model_internal::dependentsOnMap["supmobile"] = new Array();
             model_internal::dependentsOnMap["nbtstat"] = new Array();
             model_internal::dependentsOnMap["crlimit"] = new Array();
@@ -61,10 +63,11 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
             model_internal::dependentsOnMap["supadd3"] = new Array();
             model_internal::dependentsOnMap["supcode"] = new Array();
             model_internal::dependentsOnMap["supemail"] = new Array();
-            model_internal::dependentsOnMap["conperson"] = new Array();
+            model_internal::dependentsOnMap["modifieduser"] = new Array();
             model_internal::dependentsOnMap["curcode"] = new Array();
-            model_internal::dependentsOnMap["vatstat"] = new Array();
+            model_internal::dependentsOnMap["conperson"] = new Array();
             model_internal::dependentsOnMap["addmach"] = new Array();
+            model_internal::dependentsOnMap["vatstat"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["suptyp"] = new Array();
             model_internal::dependentsOnMap["isSelected"] = new Array();
@@ -72,11 +75,11 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
             model_internal::dependentsOnMap["officetele"] = new Array();
             model_internal::dependentsOnMap["officemobile"] = new Array();
             model_internal::dependentsOnMap["typ"] = new Array();
-            model_internal::dependentsOnMap["supadd2"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
+            model_internal::dependentsOnMap["supadd2"] = new Array();
+            model_internal::dependentsOnMap["supacc"] = new Array();
             model_internal::dependentsOnMap["supadd1"] = new Array();
             model_internal::dependentsOnMap["taxcode"] = new Array();
-            model_internal::dependentsOnMap["supacc"] = new Array();
 
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -292,13 +295,19 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]
+    public function get isInfavorAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isSupfaxAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isInfavorAvailable():Boolean
+    public function get isModifieddateAvailable():Boolean
     {
         return true;
     }
@@ -328,19 +337,25 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get isVatregnoAvailable():Boolean
-    {
-        return true;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get isSupteleAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
+    public function get isVatregnoAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isCrperiodAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isModifiedmachAvailable():Boolean
     {
         return true;
     }
@@ -394,7 +409,7 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get isConpersonAvailable():Boolean
+    public function get isModifieduserAvailable():Boolean
     {
         return true;
     }
@@ -406,13 +421,19 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]
-    public function get isVatstatAvailable():Boolean
+    public function get isConpersonAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
     public function get isAddmachAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get isVatstatAvailable():Boolean
     {
         return true;
     }
@@ -460,13 +481,19 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]
+    public function get isRecordidAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isSupadd2Available():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isRecordidAvailable():Boolean
+    public function get isSupaccAvailable():Boolean
     {
         return true;
     }
@@ -483,12 +510,6 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
         return true;
     }
 
-    [Bindable(event="propertyChange")]
-    public function get isSupaccAvailable():Boolean
-    {
-        return true;
-    }
-
 
     /**
      * derived property recalculation
@@ -500,13 +521,19 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]   
+    public function get infavorStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get supfaxStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get infavorStyle():com.adobe.fiber.styles.Style
+    public function get modifieddateStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -536,19 +563,25 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]   
-    public function get vatregnoStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get supteleStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
+    public function get vatregnoStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get crperiodStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get modifiedmachStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -602,7 +635,7 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]   
-    public function get conpersonStyle():com.adobe.fiber.styles.Style
+    public function get modifieduserStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -614,13 +647,19 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]   
-    public function get vatstatStyle():com.adobe.fiber.styles.Style
+    public function get conpersonStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
     public function get addmachStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get vatstatStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -668,13 +707,19 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
     }
 
     [Bindable(event="propertyChange")]   
+    public function get recordidStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
     public function get supadd2Style():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
 
     [Bindable(event="propertyChange")]   
-    public function get recordidStyle():com.adobe.fiber.styles.Style
+    public function get supaccStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }
@@ -687,12 +732,6 @@ internal class _Com_dspl_malkey_domain_Fsupplier2EntityMetadata extends com.adob
 
     [Bindable(event="propertyChange")]   
     public function get taxcodeStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    [Bindable(event="propertyChange")]   
-    public function get supaccStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

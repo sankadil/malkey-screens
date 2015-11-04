@@ -35,21 +35,12 @@ internal class _Super_FvehicleSRV extends com.adobe.fiber.services.wrapper.Remot
         var operations:Object = new Object();
         var operation:mx.rpc.remoting.Operation;
 
-        operation = new mx.rpc.remoting.Operation(null, "removeByID");
-         operation.resultType = Boolean;
-        operations["removeByID"] = operation;
-        operation = new mx.rpc.remoting.Operation(null, "getVehicleSummary");
-         operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
-        operations["getVehicleSummary"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "update");
          operation.resultType = Boolean;
         operations["update"] = operation;
-        operation = new mx.rpc.remoting.Operation(null, "isVehicleRemovable");
-         operation.resultType = Boolean;
-        operations["isVehicleRemovable"] = operation;
-        operation = new mx.rpc.remoting.Operation(null, "findByID");
-         operation.resultType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
-        operations["findByID"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "isDupplicate");
+         operation.resultType = int;
+        operations["isDupplicate"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "count");
          operation.resultType = int;
         operations["count"] = operation;
@@ -59,9 +50,6 @@ internal class _Super_FvehicleSRV extends com.adobe.fiber.services.wrapper.Remot
         operation = new mx.rpc.remoting.Operation(null, "list");
          operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
         operations["list"] = operation;
-        operation = new mx.rpc.remoting.Operation(null, "getVehicleSummary2");
-         operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
-        operations["getVehicleSummary2"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "listAll");
          operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
         operations["listAll"] = operation;
@@ -71,6 +59,21 @@ internal class _Super_FvehicleSRV extends com.adobe.fiber.services.wrapper.Remot
         operation = new mx.rpc.remoting.Operation(null, "create");
          operation.resultType = Boolean;
         operations["create"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "removeByID");
+         operation.resultType = Boolean;
+        operations["removeByID"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "getVehicleSummary");
+         operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
+        operations["getVehicleSummary"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "isVehicleRemovable");
+         operation.resultType = Boolean;
+        operations["isVehicleRemovable"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "findByID");
+         operation.resultType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
+        operations["findByID"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "getVehicleSummary2");
+         operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fvehicle;
+        operations["getVehicleSummary2"] = operation;
 
         _serviceControl.operations = operations;
         _serviceControl.convertResultHandler = com.adobe.serializers.utility.TypeUtility.convertResultHandler;
@@ -81,44 +84,6 @@ internal class _Super_FvehicleSRV extends com.adobe.fiber.services.wrapper.Remot
          model_internal::initialize();
     }
 
-    /**
-      * This method is a generated wrapper used to call the 'removeByID' operation. It returns an mx.rpc.AsyncToken whose 
-      * result property will be populated with the result of the operation when the server response is received. 
-      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
-      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
-      *
-      * @see mx.rpc.AsyncToken
-      * @see mx.rpc.CallResponder 
-      *
-      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
-      */
-    public function removeByID(arg0:String) : mx.rpc.AsyncToken
-    {
-        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("removeByID");
-        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0) ;
-
-        return _internal_token;
-    }
-     
-    /**
-      * This method is a generated wrapper used to call the 'getVehicleSummary' operation. It returns an mx.rpc.AsyncToken whose 
-      * result property will be populated with the result of the operation when the server response is received. 
-      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
-      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
-      *
-      * @see mx.rpc.AsyncToken
-      * @see mx.rpc.CallResponder 
-      *
-      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
-      */
-    public function getVehicleSummary() : mx.rpc.AsyncToken
-    {
-        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("getVehicleSummary");
-        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
-
-        return _internal_token;
-    }
-     
     /**
       * This method is a generated wrapper used to call the 'update' operation. It returns an mx.rpc.AsyncToken whose 
       * result property will be populated with the result of the operation when the server response is received. 
@@ -139,7 +104,7 @@ internal class _Super_FvehicleSRV extends com.adobe.fiber.services.wrapper.Remot
     }
      
     /**
-      * This method is a generated wrapper used to call the 'isVehicleRemovable' operation. It returns an mx.rpc.AsyncToken whose 
+      * This method is a generated wrapper used to call the 'isDupplicate' operation. It returns an mx.rpc.AsyncToken whose 
       * result property will be populated with the result of the operation when the server response is received. 
       * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
       * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
@@ -149,28 +114,9 @@ internal class _Super_FvehicleSRV extends com.adobe.fiber.services.wrapper.Remot
       *
       * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
       */
-    public function isVehicleRemovable(arg0:String) : mx.rpc.AsyncToken
+    public function isDupplicate(arg0:String) : mx.rpc.AsyncToken
     {
-        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("isVehicleRemovable");
-        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0) ;
-
-        return _internal_token;
-    }
-     
-    /**
-      * This method is a generated wrapper used to call the 'findByID' operation. It returns an mx.rpc.AsyncToken whose 
-      * result property will be populated with the result of the operation when the server response is received. 
-      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
-      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
-      *
-      * @see mx.rpc.AsyncToken
-      * @see mx.rpc.CallResponder 
-      *
-      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
-      */
-    public function findByID(arg0:String) : mx.rpc.AsyncToken
-    {
-        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("findByID");
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("isDupplicate");
         var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0) ;
 
         return _internal_token;
@@ -234,25 +180,6 @@ internal class _Super_FvehicleSRV extends com.adobe.fiber.services.wrapper.Remot
     }
      
     /**
-      * This method is a generated wrapper used to call the 'getVehicleSummary2' operation. It returns an mx.rpc.AsyncToken whose 
-      * result property will be populated with the result of the operation when the server response is received. 
-      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
-      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
-      *
-      * @see mx.rpc.AsyncToken
-      * @see mx.rpc.CallResponder 
-      *
-      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
-      */
-    public function getVehicleSummary2(arg0:String, arg1:String) : mx.rpc.AsyncToken
-    {
-        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("getVehicleSummary2");
-        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0,arg1) ;
-
-        return _internal_token;
-    }
-     
-    /**
       * This method is a generated wrapper used to call the 'listAll' operation. It returns an mx.rpc.AsyncToken whose 
       * result property will be populated with the result of the operation when the server response is received. 
       * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
@@ -305,6 +232,101 @@ internal class _Super_FvehicleSRV extends com.adobe.fiber.services.wrapper.Remot
     {
         var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("create");
         var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0,arg1,arg2,arg3,arg4) ;
+
+        return _internal_token;
+    }
+     
+    /**
+      * This method is a generated wrapper used to call the 'removeByID' operation. It returns an mx.rpc.AsyncToken whose 
+      * result property will be populated with the result of the operation when the server response is received. 
+      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+      */
+    public function removeByID(arg0:String) : mx.rpc.AsyncToken
+    {
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("removeByID");
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0) ;
+
+        return _internal_token;
+    }
+     
+    /**
+      * This method is a generated wrapper used to call the 'getVehicleSummary' operation. It returns an mx.rpc.AsyncToken whose 
+      * result property will be populated with the result of the operation when the server response is received. 
+      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+      */
+    public function getVehicleSummary() : mx.rpc.AsyncToken
+    {
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("getVehicleSummary");
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
+
+        return _internal_token;
+    }
+     
+    /**
+      * This method is a generated wrapper used to call the 'isVehicleRemovable' operation. It returns an mx.rpc.AsyncToken whose 
+      * result property will be populated with the result of the operation when the server response is received. 
+      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+      */
+    public function isVehicleRemovable(arg0:String) : mx.rpc.AsyncToken
+    {
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("isVehicleRemovable");
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0) ;
+
+        return _internal_token;
+    }
+     
+    /**
+      * This method is a generated wrapper used to call the 'findByID' operation. It returns an mx.rpc.AsyncToken whose 
+      * result property will be populated with the result of the operation when the server response is received. 
+      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+      */
+    public function findByID(arg0:String) : mx.rpc.AsyncToken
+    {
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("findByID");
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0) ;
+
+        return _internal_token;
+    }
+     
+    /**
+      * This method is a generated wrapper used to call the 'getVehicleSummary2' operation. It returns an mx.rpc.AsyncToken whose 
+      * result property will be populated with the result of the operation when the server response is received. 
+      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+      */
+    public function getVehicleSummary2(arg0:String, arg1:String) : mx.rpc.AsyncToken
+    {
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("getVehicleSummary2");
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0,arg1) ;
 
         return _internal_token;
     }

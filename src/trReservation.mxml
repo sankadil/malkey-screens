@@ -4023,6 +4023,7 @@
 						com_dspl_malkey_domain_Freservation.totaltaxable=totalTaxableAmt.toFixed(resourceManager.getInt("resource","noofdecimals.reservation"));
 						com_dspl_malkey_domain_Freservation.total=txtTotalPayable.text;
 						com_dspl_malkey_domain_Freservation.nettotal=(new Number(com_dspl_malkey_domain_Freservation.total)+new Number(com_dspl_malkey_domain_Freservation.taxamt)).toFixed(resourceManager.getInt("resource","noofdecimals.reservation"));
+						setAdvanceValueFromNetTotal();
 					}
 					catch(e:Error)
 					{
@@ -4034,6 +4035,12 @@
 			}
 	//--------------------------------------------------------------------------------------------------------------------------------
 	
+			private function setAdvanceValueFromNetTotal():void
+			{
+				if(com_dspl_malkey_domain_Freservation.cohirestsid=='BOOKED'){
+					com_dspl_malkey_domain_Freservation.advance=com_dspl_malkey_domain_Freservation.nettotal;
+				}
+			}
 			
 	/*Calculate Total Tax */
 	//--------------------------------------------------------------------------------------------------------------------------------

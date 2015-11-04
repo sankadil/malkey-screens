@@ -45,15 +45,17 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
     /**
      * properties
      */
-    private var _internal_supfax : String;
     private var _internal_infavor : String;
+    private var _internal_supfax : String;
+    private var _internal_modifieddate : Date;
     private var _internal_adddate : Date;
     private var _internal_conflg : int;
     private var _internal_supflg : String;
     private var _internal_contact : String;
-    private var _internal_vatregno : String;
     private var _internal_suptele : String;
+    private var _internal_vatregno : String;
     private var _internal_crperiod : String;
+    private var _internal_modifiedmach : String;
     private var _internal_supmobile : String;
     private var _internal_nbtstat : String;
     private var _internal_crlimit : String;
@@ -62,10 +64,11 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
     private var _internal_supadd3 : String;
     private var _internal_supcode : String;
     private var _internal_supemail : String;
-    private var _internal_conperson : String;
+    private var _internal_modifieduser : String;
     private var _internal_curcode : String;
-    private var _internal_vatstat : String;
+    private var _internal_conperson : String;
     private var _internal_addmach : String;
+    private var _internal_vatstat : String;
     private var _internal_adduser : String;
     private var _internal_suptyp : String;
     private var _internal_isSelected : Boolean;
@@ -73,11 +76,11 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
     private var _internal_officetele : String;
     private var _internal_officemobile : String;
     private var _internal_typ : String;
-    private var _internal_supadd2 : String;
     private var _internal_recordid : int;
+    private var _internal_supadd2 : String;
+    private var _internal_supacc : String;
     private var _internal_supadd1 : String;
     private var _internal_taxcode : String;
-    private var _internal_supacc : String;
 
     private static var emptyArray:Array = new Array();
 
@@ -102,15 +105,21 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
      */
 
     [Bindable(event="propertyChange")]
+    public function get infavor() : String
+    {
+        return _internal_infavor;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get supfax() : String
     {
         return _internal_supfax;
     }
 
     [Bindable(event="propertyChange")]
-    public function get infavor() : String
+    public function get modifieddate() : Date
     {
-        return _internal_infavor;
+        return _internal_modifieddate;
     }
 
     [Bindable(event="propertyChange")]
@@ -138,21 +147,27 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
     }
 
     [Bindable(event="propertyChange")]
-    public function get vatregno() : String
-    {
-        return _internal_vatregno;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get suptele() : String
     {
         return _internal_suptele;
     }
 
     [Bindable(event="propertyChange")]
+    public function get vatregno() : String
+    {
+        return _internal_vatregno;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get crperiod() : String
     {
         return _internal_crperiod;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get modifiedmach() : String
+    {
+        return _internal_modifiedmach;
     }
 
     [Bindable(event="propertyChange")]
@@ -204,9 +219,9 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
     }
 
     [Bindable(event="propertyChange")]
-    public function get conperson() : String
+    public function get modifieduser() : String
     {
-        return _internal_conperson;
+        return _internal_modifieduser;
     }
 
     [Bindable(event="propertyChange")]
@@ -216,15 +231,21 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
     }
 
     [Bindable(event="propertyChange")]
-    public function get vatstat() : String
+    public function get conperson() : String
     {
-        return _internal_vatstat;
+        return _internal_conperson;
     }
 
     [Bindable(event="propertyChange")]
     public function get addmach() : String
     {
         return _internal_addmach;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get vatstat() : String
+    {
+        return _internal_vatstat;
     }
 
     [Bindable(event="propertyChange")]
@@ -270,15 +291,21 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
     }
 
     [Bindable(event="propertyChange")]
+    public function get recordid() : int
+    {
+        return _internal_recordid;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get supadd2() : String
     {
         return _internal_supadd2;
     }
 
     [Bindable(event="propertyChange")]
-    public function get recordid() : int
+    public function get supacc() : String
     {
-        return _internal_recordid;
+        return _internal_supacc;
     }
 
     [Bindable(event="propertyChange")]
@@ -293,15 +320,19 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         return _internal_taxcode;
     }
 
-    [Bindable(event="propertyChange")]
-    public function get supacc() : String
-    {
-        return _internal_supacc;
-    }
-
     /**
      * data property setters
      */
+
+    public function set infavor(value:String) : void
+    {
+        var oldValue:String = _internal_infavor;
+        if (oldValue !== value)
+        {
+            _internal_infavor = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "infavor", oldValue, _internal_infavor));
+        }
+    }
 
     public function set supfax(value:String) : void
     {
@@ -313,13 +344,13 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         }
     }
 
-    public function set infavor(value:String) : void
+    public function set modifieddate(value:Date) : void
     {
-        var oldValue:String = _internal_infavor;
+        var oldValue:Date = _internal_modifieddate;
         if (oldValue !== value)
         {
-            _internal_infavor = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "infavor", oldValue, _internal_infavor));
+            _internal_modifieddate = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifieddate", oldValue, _internal_modifieddate));
         }
     }
 
@@ -363,16 +394,6 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         }
     }
 
-    public function set vatregno(value:String) : void
-    {
-        var oldValue:String = _internal_vatregno;
-        if (oldValue !== value)
-        {
-            _internal_vatregno = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vatregno", oldValue, _internal_vatregno));
-        }
-    }
-
     public function set suptele(value:String) : void
     {
         var oldValue:String = _internal_suptele;
@@ -383,6 +404,16 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         }
     }
 
+    public function set vatregno(value:String) : void
+    {
+        var oldValue:String = _internal_vatregno;
+        if (oldValue !== value)
+        {
+            _internal_vatregno = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vatregno", oldValue, _internal_vatregno));
+        }
+    }
+
     public function set crperiod(value:String) : void
     {
         var oldValue:String = _internal_crperiod;
@@ -390,6 +421,16 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         {
             _internal_crperiod = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "crperiod", oldValue, _internal_crperiod));
+        }
+    }
+
+    public function set modifiedmach(value:String) : void
+    {
+        var oldValue:String = _internal_modifiedmach;
+        if (oldValue !== value)
+        {
+            _internal_modifiedmach = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifiedmach", oldValue, _internal_modifiedmach));
         }
     }
 
@@ -473,13 +514,13 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         }
     }
 
-    public function set conperson(value:String) : void
+    public function set modifieduser(value:String) : void
     {
-        var oldValue:String = _internal_conperson;
+        var oldValue:String = _internal_modifieduser;
         if (oldValue !== value)
         {
-            _internal_conperson = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "conperson", oldValue, _internal_conperson));
+            _internal_modifieduser = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "modifieduser", oldValue, _internal_modifieduser));
         }
     }
 
@@ -493,13 +534,13 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         }
     }
 
-    public function set vatstat(value:String) : void
+    public function set conperson(value:String) : void
     {
-        var oldValue:String = _internal_vatstat;
+        var oldValue:String = _internal_conperson;
         if (oldValue !== value)
         {
-            _internal_vatstat = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vatstat", oldValue, _internal_vatstat));
+            _internal_conperson = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "conperson", oldValue, _internal_conperson));
         }
     }
 
@@ -510,6 +551,16 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         {
             _internal_addmach = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "addmach", oldValue, _internal_addmach));
+        }
+    }
+
+    public function set vatstat(value:String) : void
+    {
+        var oldValue:String = _internal_vatstat;
+        if (oldValue !== value)
+        {
+            _internal_vatstat = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "vatstat", oldValue, _internal_vatstat));
         }
     }
 
@@ -583,6 +634,16 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         }
     }
 
+    public function set recordid(value:int) : void
+    {
+        var oldValue:int = _internal_recordid;
+        if (oldValue !== value)
+        {
+            _internal_recordid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "recordid", oldValue, _internal_recordid));
+        }
+    }
+
     public function set supadd2(value:String) : void
     {
         var oldValue:String = _internal_supadd2;
@@ -593,13 +654,13 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         }
     }
 
-    public function set recordid(value:int) : void
+    public function set supacc(value:String) : void
     {
-        var oldValue:int = _internal_recordid;
+        var oldValue:String = _internal_supacc;
         if (oldValue !== value)
         {
-            _internal_recordid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "recordid", oldValue, _internal_recordid));
+            _internal_supacc = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "supacc", oldValue, _internal_supacc));
         }
     }
 
@@ -620,16 +681,6 @@ public class _Super_Com_dspl_malkey_domain_Fsupplier2 extends flash.events.Event
         {
             _internal_taxcode = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "taxcode", oldValue, _internal_taxcode));
-        }
-    }
-
-    public function set supacc(value:String) : void
-    {
-        var oldValue:String = _internal_supacc;
-        if (oldValue !== value)
-        {
-            _internal_supacc = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "supacc", oldValue, _internal_supacc));
         }
     }
 

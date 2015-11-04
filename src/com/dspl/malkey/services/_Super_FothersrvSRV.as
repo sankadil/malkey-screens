@@ -33,24 +33,24 @@ internal class _Super_FothersrvSRV extends com.adobe.fiber.services.wrapper.Remo
         var operations:Object = new Object();
         var operation:mx.rpc.remoting.Operation;
 
-        operation = new mx.rpc.remoting.Operation(null, "count");
-         operation.resultType = int;
-        operations["count"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "findByID");
          operation.resultType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fothersrv;
         operations["findByID"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "count");
+         operation.resultType = int;
+        operations["count"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "removeByID");
          operation.resultType = Boolean;
         operations["removeByID"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "listServices");
          operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fothersrv;
         operations["listServices"] = operation;
-        operation = new mx.rpc.remoting.Operation(null, "update");
-         operation.resultType = Boolean;
-        operations["update"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "ListAll");
          operation.resultElementType = com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fothersrv;
         operations["ListAll"] = operation;
+        operation = new mx.rpc.remoting.Operation(null, "update");
+         operation.resultType = Boolean;
+        operations["update"] = operation;
         operation = new mx.rpc.remoting.Operation(null, "create");
          operation.resultType = Boolean;
         operations["create"] = operation;
@@ -68,25 +68,6 @@ internal class _Super_FothersrvSRV extends com.adobe.fiber.services.wrapper.Remo
     }
 
     /**
-      * This method is a generated wrapper used to call the 'count' operation. It returns an mx.rpc.AsyncToken whose 
-      * result property will be populated with the result of the operation when the server response is received. 
-      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
-      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
-      *
-      * @see mx.rpc.AsyncToken
-      * @see mx.rpc.CallResponder 
-      *
-      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
-      */
-    public function count() : mx.rpc.AsyncToken
-    {
-        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("count");
-        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
-
-        return _internal_token;
-    }
-     
-    /**
       * This method is a generated wrapper used to call the 'findByID' operation. It returns an mx.rpc.AsyncToken whose 
       * result property will be populated with the result of the operation when the server response is received. 
       * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
@@ -101,6 +82,25 @@ internal class _Super_FothersrvSRV extends com.adobe.fiber.services.wrapper.Remo
     {
         var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("findByID");
         var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0) ;
+
+        return _internal_token;
+    }
+     
+    /**
+      * This method is a generated wrapper used to call the 'count' operation. It returns an mx.rpc.AsyncToken whose 
+      * result property will be populated with the result of the operation when the server response is received. 
+      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+      */
+    public function count() : mx.rpc.AsyncToken
+    {
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("count");
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
 
         return _internal_token;
     }
@@ -144,25 +144,6 @@ internal class _Super_FothersrvSRV extends com.adobe.fiber.services.wrapper.Remo
     }
      
     /**
-      * This method is a generated wrapper used to call the 'update' operation. It returns an mx.rpc.AsyncToken whose 
-      * result property will be populated with the result of the operation when the server response is received. 
-      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
-      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
-      *
-      * @see mx.rpc.AsyncToken
-      * @see mx.rpc.CallResponder 
-      *
-      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
-      */
-    public function update(arg0:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fothersrv, arg1:ArrayCollection) : mx.rpc.AsyncToken
-    {
-        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("update");
-        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0,arg1) ;
-
-        return _internal_token;
-    }
-     
-    /**
       * This method is a generated wrapper used to call the 'ListAll' operation. It returns an mx.rpc.AsyncToken whose 
       * result property will be populated with the result of the operation when the server response is received. 
       * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
@@ -177,6 +158,25 @@ internal class _Super_FothersrvSRV extends com.adobe.fiber.services.wrapper.Remo
     {
         var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("ListAll");
         var _internal_token:mx.rpc.AsyncToken = _internal_operation.send() ;
+
+        return _internal_token;
+    }
+     
+    /**
+      * This method is a generated wrapper used to call the 'update' operation. It returns an mx.rpc.AsyncToken whose 
+      * result property will be populated with the result of the operation when the server response is received. 
+      * To use this result from MXML code, define a CallResponder component and assign its token property to this method's return value. 
+      * You can then bind to CallResponder.lastResult or listen for the CallResponder.result or fault events.
+      *
+      * @see mx.rpc.AsyncToken
+      * @see mx.rpc.CallResponder 
+      *
+      * @return an mx.rpc.AsyncToken whose result property will be populated with the result of the operation when the server response is received.
+      */
+    public function update(arg0:com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_Fothersrv, arg1:ArrayCollection) : mx.rpc.AsyncToken
+    {
+        var _internal_operation:mx.rpc.AbstractOperation = _serviceControl.getOperation("update");
+        var _internal_token:mx.rpc.AsyncToken = _internal_operation.send(arg0,arg1) ;
 
         return _internal_token;
     }

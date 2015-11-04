@@ -20,12 +20,12 @@ internal class _Com_dspl_malkey_domain_FothersrvEntityMetadata extends com.adobe
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("srvid", "description", "addmach", "adduser", "adddate", "recordid");
+    model_internal static var allProperties:Array = new Array("srvid", "description", "addmach", "adduser", "adddate", "isDriverServiceFlag", "recordid");
     model_internal static var allAssociationProperties:Array = new Array();
     model_internal static var allRequiredProperties:Array = new Array();
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("srvid", "description", "addmach", "adduser", "adddate", "recordid");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("srvid", "description", "addmach", "adduser", "adddate", "isDriverServiceFlag", "recordid");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("srvid", "description", "addmach", "adduser", "adddate", "recordid");
+    model_internal static var dataProperties:Array = new Array("srvid", "description", "addmach", "adduser", "adddate", "isDriverServiceFlag", "recordid");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -49,6 +49,7 @@ internal class _Com_dspl_malkey_domain_FothersrvEntityMetadata extends com.adobe
             model_internal::dependentsOnMap["addmach"] = new Array();
             model_internal::dependentsOnMap["adduser"] = new Array();
             model_internal::dependentsOnMap["adddate"] = new Array();
+            model_internal::dependentsOnMap["isDriverServiceFlag"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
 
             // collection base map
@@ -295,6 +296,12 @@ internal class _Com_dspl_malkey_domain_FothersrvEntityMetadata extends com.adobe
     }
 
     [Bindable(event="propertyChange")]
+    public function get isIsDriverServiceFlagAvailable():Boolean
+    {
+        return true;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get isRecordidAvailable():Boolean
     {
         return true;
@@ -336,6 +343,12 @@ internal class _Com_dspl_malkey_domain_FothersrvEntityMetadata extends com.adobe
 
     [Bindable(event="propertyChange")]   
     public function get adddateStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    [Bindable(event="propertyChange")]   
+    public function get isDriverServiceFlagStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
     }

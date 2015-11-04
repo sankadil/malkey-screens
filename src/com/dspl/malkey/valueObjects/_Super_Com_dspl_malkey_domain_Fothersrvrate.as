@@ -6,10 +6,14 @@
 package com.dspl.malkey.valueObjects
 {
 import com.adobe.fiber.services.IFiberManagingService;
+import com.adobe.fiber.util.FiberUtils;
 import com.adobe.fiber.valueobjects.IValueObject;
 import com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FothersrvratePK;
+import flash.events.Event;
 import flash.events.EventDispatcher;
+import mx.binding.utils.ChangeWatcher;
 import mx.events.PropertyChangeEvent;
+import mx.validators.ValidationResult;
 
 import flash.net.registerClassAlias;
 import flash.net.getClassByAlias;
@@ -50,8 +54,8 @@ public class _Super_Com_dspl_malkey_domain_Fothersrvrate extends flash.events.Ev
     private var _internal_id : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FothersrvratePK;
     private var _internal_rate : String;
     private var _internal_addmach : String;
-    private var _internal_adduser : String;
     private var _internal_adddate : Date;
+    private var _internal_adduser : String;
     private var _internal_standardrate : String;
     private var _internal_recordid : int;
 
@@ -70,6 +74,12 @@ public class _Super_Com_dspl_malkey_domain_Fothersrvrate extends flash.events.Ev
         _model = new _Com_dspl_malkey_domain_FothersrvrateEntityMetadata(this);
 
         // Bind to own data properties for cache invalidation triggering
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "id", model_internal::setterListenerId));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "rate", model_internal::setterListenerRate));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "addmach", model_internal::setterListenerAddmach));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adddate", model_internal::setterListenerAdddate));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adduser", model_internal::setterListenerAdduser));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "standardrate", model_internal::setterListenerStandardrate));
 
     }
 
@@ -96,15 +106,15 @@ public class _Super_Com_dspl_malkey_domain_Fothersrvrate extends flash.events.Ev
     }
 
     [Bindable(event="propertyChange")]
-    public function get adduser() : String
-    {
-        return _internal_adduser;
-    }
-
-    [Bindable(event="propertyChange")]
     public function get adddate() : Date
     {
         return _internal_adddate;
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get adduser() : String
+    {
+        return _internal_adduser;
     }
 
     [Bindable(event="propertyChange")]
@@ -153,16 +163,6 @@ public class _Super_Com_dspl_malkey_domain_Fothersrvrate extends flash.events.Ev
         }
     }
 
-    public function set adduser(value:String) : void
-    {
-        var oldValue:String = _internal_adduser;
-        if (oldValue !== value)
-        {
-            _internal_adduser = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduser", oldValue, _internal_adduser));
-        }
-    }
-
     public function set adddate(value:Date) : void
     {
         var oldValue:Date = _internal_adddate;
@@ -170,6 +170,16 @@ public class _Super_Com_dspl_malkey_domain_Fothersrvrate extends flash.events.Ev
         {
             _internal_adddate = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adddate", oldValue, _internal_adddate));
+        }
+    }
+
+    public function set adduser(value:String) : void
+    {
+        var oldValue:String = _internal_adduser;
+        if (oldValue !== value)
+        {
+            _internal_adduser = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduser", oldValue, _internal_adduser));
         }
     }
 
@@ -205,6 +215,36 @@ public class _Super_Com_dspl_malkey_domain_Fothersrvrate extends flash.events.Ev
      *  - the validity of the property (and the containing entity) if the given data property is required.
      */
 
+    model_internal function setterListenerId(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnId();
+    }
+
+    model_internal function setterListenerRate(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnRate();
+    }
+
+    model_internal function setterListenerAddmach(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnAddmach();
+    }
+
+    model_internal function setterListenerAdddate(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnAdddate();
+    }
+
+    model_internal function setterListenerAdduser(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnAdduser();
+    }
+
+    model_internal function setterListenerStandardrate(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnStandardrate();
+    }
+
 
     /**
      * valid related derived properties
@@ -226,6 +266,36 @@ public class _Super_Com_dspl_malkey_domain_Fothersrvrate extends flash.events.Ev
         var validationFailureMessages:Array = new Array();
 
         var propertyValidity:Boolean = true;
+        if (!_model.idIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_idValidationFailureMessages);
+        }
+        if (!_model.rateIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_rateValidationFailureMessages);
+        }
+        if (!_model.addmachIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_addmachValidationFailureMessages);
+        }
+        if (!_model.adddateIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_adddateValidationFailureMessages);
+        }
+        if (!_model.adduserIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_adduserValidationFailureMessages);
+        }
+        if (!_model.standardrateIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_standardrateValidationFailureMessages);
+        }
 
         model_internal::_cacheInitialized_isValid = true;
         model_internal::invalidConstraints_der = violatedConsts;
@@ -305,6 +375,168 @@ public class _Super_Com_dspl_malkey_domain_Fothersrvrate extends flash.events.Ev
         }
     }
 
+    model_internal var _doValidationCacheOfId : Array = null;
+    model_internal var _doValidationLastValOfId : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FothersrvratePK;
+
+    model_internal function _doValidationForId(valueIn:Object):Array
+    {
+        var value : com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FothersrvratePK = valueIn as com.dspl.malkey.valueObjects.Com_dspl_malkey_domain_FothersrvratePK;
+
+        if (model_internal::_doValidationCacheOfId != null && model_internal::_doValidationLastValOfId == value)
+           return model_internal::_doValidationCacheOfId ;
+
+        _model.model_internal::_idIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isIdAvailable && _internal_id == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "id is required"));
+        }
+
+        model_internal::_doValidationCacheOfId = validationFailures;
+        model_internal::_doValidationLastValOfId = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfRate : Array = null;
+    model_internal var _doValidationLastValOfRate : String;
+
+    model_internal function _doValidationForRate(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfRate != null && model_internal::_doValidationLastValOfRate == value)
+           return model_internal::_doValidationCacheOfRate ;
+
+        _model.model_internal::_rateIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isRateAvailable && _internal_rate == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "rate is required"));
+        }
+
+        model_internal::_doValidationCacheOfRate = validationFailures;
+        model_internal::_doValidationLastValOfRate = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfAddmach : Array = null;
+    model_internal var _doValidationLastValOfAddmach : String;
+
+    model_internal function _doValidationForAddmach(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfAddmach != null && model_internal::_doValidationLastValOfAddmach == value)
+           return model_internal::_doValidationCacheOfAddmach ;
+
+        _model.model_internal::_addmachIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isAddmachAvailable && _internal_addmach == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "addmach is required"));
+        }
+
+        model_internal::_doValidationCacheOfAddmach = validationFailures;
+        model_internal::_doValidationLastValOfAddmach = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfAdddate : Array = null;
+    model_internal var _doValidationLastValOfAdddate : Date;
+
+    model_internal function _doValidationForAdddate(valueIn:Object):Array
+    {
+        var value : Date = valueIn as Date;
+
+        if (model_internal::_doValidationCacheOfAdddate != null && model_internal::_doValidationLastValOfAdddate == value)
+           return model_internal::_doValidationCacheOfAdddate ;
+
+        _model.model_internal::_adddateIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isAdddateAvailable && _internal_adddate == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "adddate is required"));
+        }
+
+        model_internal::_doValidationCacheOfAdddate = validationFailures;
+        model_internal::_doValidationLastValOfAdddate = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfAdduser : Array = null;
+    model_internal var _doValidationLastValOfAdduser : String;
+
+    model_internal function _doValidationForAdduser(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfAdduser != null && model_internal::_doValidationLastValOfAdduser == value)
+           return model_internal::_doValidationCacheOfAdduser ;
+
+        _model.model_internal::_adduserIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isAdduserAvailable && _internal_adduser == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "adduser is required"));
+        }
+
+        model_internal::_doValidationCacheOfAdduser = validationFailures;
+        model_internal::_doValidationLastValOfAdduser = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfStandardrate : Array = null;
+    model_internal var _doValidationLastValOfStandardrate : String;
+
+    model_internal function _doValidationForStandardrate(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfStandardrate != null && model_internal::_doValidationLastValOfStandardrate == value)
+           return model_internal::_doValidationCacheOfStandardrate ;
+
+        _model.model_internal::_standardrateIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isStandardrateAvailable && _internal_standardrate == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "standardrate is required"));
+        }
+
+        model_internal::_doValidationCacheOfStandardrate = validationFailures;
+        model_internal::_doValidationLastValOfStandardrate = value;
+
+        return validationFailures;
+    }
+    
 
 }
 

@@ -6,9 +6,13 @@
 package com.dspl.malkey.valueObjects
 {
 import com.adobe.fiber.services.IFiberManagingService;
+import com.adobe.fiber.util.FiberUtils;
 import com.adobe.fiber.valueobjects.IValueObject;
+import flash.events.Event;
 import flash.events.EventDispatcher;
+import mx.binding.utils.ChangeWatcher;
 import mx.events.PropertyChangeEvent;
+import mx.validators.ValidationResult;
 
 import flash.net.registerClassAlias;
 import flash.net.getClassByAlias;
@@ -64,6 +68,9 @@ public class _Super_Com_dspl_malkey_domain_FothersrvratePK extends flash.events.
         _model = new _Com_dspl_malkey_domain_FothersrvratePKEntityMetadata(this);
 
         // Bind to own data properties for cache invalidation triggering
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "ratetype", model_internal::setterListenerRatetype));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "srvid", model_internal::setterListenerSrvid));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "clienttype", model_internal::setterListenerClienttype));
 
     }
 
@@ -135,6 +142,21 @@ public class _Super_Com_dspl_malkey_domain_FothersrvratePK extends flash.events.
      *  - the validity of the property (and the containing entity) if the given data property is required.
      */
 
+    model_internal function setterListenerRatetype(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnRatetype();
+    }
+
+    model_internal function setterListenerSrvid(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnSrvid();
+    }
+
+    model_internal function setterListenerClienttype(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnClienttype();
+    }
+
 
     /**
      * valid related derived properties
@@ -156,6 +178,21 @@ public class _Super_Com_dspl_malkey_domain_FothersrvratePK extends flash.events.
         var validationFailureMessages:Array = new Array();
 
         var propertyValidity:Boolean = true;
+        if (!_model.ratetypeIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_ratetypeValidationFailureMessages);
+        }
+        if (!_model.srvidIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_srvidValidationFailureMessages);
+        }
+        if (!_model.clienttypeIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_clienttypeValidationFailureMessages);
+        }
 
         model_internal::_cacheInitialized_isValid = true;
         model_internal::invalidConstraints_der = violatedConsts;
@@ -235,6 +272,87 @@ public class _Super_Com_dspl_malkey_domain_FothersrvratePK extends flash.events.
         }
     }
 
+    model_internal var _doValidationCacheOfRatetype : Array = null;
+    model_internal var _doValidationLastValOfRatetype : String;
+
+    model_internal function _doValidationForRatetype(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfRatetype != null && model_internal::_doValidationLastValOfRatetype == value)
+           return model_internal::_doValidationCacheOfRatetype ;
+
+        _model.model_internal::_ratetypeIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isRatetypeAvailable && _internal_ratetype == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "ratetype is required"));
+        }
+
+        model_internal::_doValidationCacheOfRatetype = validationFailures;
+        model_internal::_doValidationLastValOfRatetype = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfSrvid : Array = null;
+    model_internal var _doValidationLastValOfSrvid : String;
+
+    model_internal function _doValidationForSrvid(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfSrvid != null && model_internal::_doValidationLastValOfSrvid == value)
+           return model_internal::_doValidationCacheOfSrvid ;
+
+        _model.model_internal::_srvidIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isSrvidAvailable && _internal_srvid == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "srvid is required"));
+        }
+
+        model_internal::_doValidationCacheOfSrvid = validationFailures;
+        model_internal::_doValidationLastValOfSrvid = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfClienttype : Array = null;
+    model_internal var _doValidationLastValOfClienttype : String;
+
+    model_internal function _doValidationForClienttype(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfClienttype != null && model_internal::_doValidationLastValOfClienttype == value)
+           return model_internal::_doValidationCacheOfClienttype ;
+
+        _model.model_internal::_clienttypeIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isClienttypeAvailable && _internal_clienttype == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "clienttype is required"));
+        }
+
+        model_internal::_doValidationCacheOfClienttype = validationFailures;
+        model_internal::_doValidationLastValOfClienttype = value;
+
+        return validationFailures;
+    }
+    
 
 }
 

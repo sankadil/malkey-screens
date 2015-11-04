@@ -51,9 +51,9 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
      */
     private var _internal_xvalue : String;
     private var _internal_regno : String;
+    private var _internal_adduser : String;
     private var _internal_seq : int;
     private var _internal_yvalue : String;
-    private var _internal_adduser : String;
     private var _internal_damagetype : int;
     private var _internal_uuid : String;
     private var _internal_recordid : int;
@@ -75,8 +75,8 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
         // Bind to own data properties for cache invalidation triggering
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "xvalue", model_internal::setterListenerXvalue));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "regno", model_internal::setterListenerRegno));
-        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "yvalue", model_internal::setterListenerYvalue));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "adduser", model_internal::setterListenerAdduser));
+        model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "yvalue", model_internal::setterListenerYvalue));
         model_internal::_changeWatcherArray.push(mx.binding.utils.ChangeWatcher.watch(this, "uuid", model_internal::setterListenerUuid));
 
     }
@@ -98,6 +98,12 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
     }
 
     [Bindable(event="propertyChange")]
+    public function get adduser() : String
+    {
+        return _internal_adduser;
+    }
+
+    [Bindable(event="propertyChange")]
     public function get seq() : int
     {
         return _internal_seq;
@@ -107,12 +113,6 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
     public function get yvalue() : String
     {
         return _internal_yvalue;
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get adduser() : String
-    {
-        return _internal_adduser;
     }
 
     [Bindable(event="propertyChange")]
@@ -157,6 +157,16 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
         }
     }
 
+    public function set adduser(value:String) : void
+    {
+        var oldValue:String = _internal_adduser;
+        if (oldValue !== value)
+        {
+            _internal_adduser = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduser", oldValue, _internal_adduser));
+        }
+    }
+
     public function set seq(value:int) : void
     {
         var oldValue:int = _internal_seq;
@@ -174,16 +184,6 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
         {
             _internal_yvalue = value;
             this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "yvalue", oldValue, _internal_yvalue));
-        }
-    }
-
-    public function set adduser(value:String) : void
-    {
-        var oldValue:String = _internal_adduser;
-        if (oldValue !== value)
-        {
-            _internal_adduser = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "adduser", oldValue, _internal_adduser));
         }
     }
 
@@ -239,14 +239,14 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
         _model.invalidateDependentOnRegno();
     }
 
-    model_internal function setterListenerYvalue(value:flash.events.Event):void
-    {
-        _model.invalidateDependentOnYvalue();
-    }
-
     model_internal function setterListenerAdduser(value:flash.events.Event):void
     {
         _model.invalidateDependentOnAdduser();
+    }
+
+    model_internal function setterListenerYvalue(value:flash.events.Event):void
+    {
+        _model.invalidateDependentOnYvalue();
     }
 
     model_internal function setterListenerUuid(value:flash.events.Event):void
@@ -285,15 +285,15 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_regnoValidationFailureMessages);
         }
-        if (!_model.yvalueIsValid)
-        {
-            propertyValidity = false;
-            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_yvalueValidationFailureMessages);
-        }
         if (!_model.adduserIsValid)
         {
             propertyValidity = false;
             com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_adduserValidationFailureMessages);
+        }
+        if (!_model.yvalueIsValid)
+        {
+            propertyValidity = false;
+            com.adobe.fiber.util.FiberUtils.arrayAdd(validationFailureMessages, _model.model_internal::_yvalueValidationFailureMessages);
         }
         if (!_model.uuidIsValid)
         {
@@ -433,33 +433,6 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
         return validationFailures;
     }
     
-    model_internal var _doValidationCacheOfYvalue : Array = null;
-    model_internal var _doValidationLastValOfYvalue : String;
-
-    model_internal function _doValidationForYvalue(valueIn:Object):Array
-    {
-        var value : String = valueIn as String;
-
-        if (model_internal::_doValidationCacheOfYvalue != null && model_internal::_doValidationLastValOfYvalue == value)
-           return model_internal::_doValidationCacheOfYvalue ;
-
-        _model.model_internal::_yvalueIsValidCacheInitialized = true;
-        var validationFailures:Array = new Array();
-        var errorMessage:String;
-        var failure:Boolean;
-
-        var valRes:ValidationResult;
-        if (_model.isYvalueAvailable && _internal_yvalue == null)
-        {
-            validationFailures.push(new ValidationResult(true, "", "", "yvalue is required"));
-        }
-
-        model_internal::_doValidationCacheOfYvalue = validationFailures;
-        model_internal::_doValidationLastValOfYvalue = value;
-
-        return validationFailures;
-    }
-    
     model_internal var _doValidationCacheOfAdduser : Array = null;
     model_internal var _doValidationLastValOfAdduser : String;
 
@@ -483,6 +456,33 @@ public class _Super_Com_dspl_malkey_domain_Fvehicledamage extends flash.events.E
 
         model_internal::_doValidationCacheOfAdduser = validationFailures;
         model_internal::_doValidationLastValOfAdduser = value;
+
+        return validationFailures;
+    }
+    
+    model_internal var _doValidationCacheOfYvalue : Array = null;
+    model_internal var _doValidationLastValOfYvalue : String;
+
+    model_internal function _doValidationForYvalue(valueIn:Object):Array
+    {
+        var value : String = valueIn as String;
+
+        if (model_internal::_doValidationCacheOfYvalue != null && model_internal::_doValidationLastValOfYvalue == value)
+           return model_internal::_doValidationCacheOfYvalue ;
+
+        _model.model_internal::_yvalueIsValidCacheInitialized = true;
+        var validationFailures:Array = new Array();
+        var errorMessage:String;
+        var failure:Boolean;
+
+        var valRes:ValidationResult;
+        if (_model.isYvalueAvailable && _internal_yvalue == null)
+        {
+            validationFailures.push(new ValidationResult(true, "", "", "yvalue is required"));
+        }
+
+        model_internal::_doValidationCacheOfYvalue = validationFailures;
+        model_internal::_doValidationLastValOfYvalue = value;
 
         return validationFailures;
     }

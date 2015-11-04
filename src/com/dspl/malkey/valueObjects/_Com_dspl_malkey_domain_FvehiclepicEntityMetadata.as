@@ -22,12 +22,12 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
 {
     private static var emptyArray:Array = new Array();
 
-    model_internal static var allProperties:Array = new Array("regno", "imageurl", "recordid", "defaultimage", "imagedata", "imagename");
+    model_internal static var allProperties:Array = new Array("regno", "imageurl", "recordid", "defaultimage", "imagename", "imagedata");
     model_internal static var allAssociationProperties:Array = new Array();
-    model_internal static var allRequiredProperties:Array = new Array("regno", "imageurl", "recordid", "defaultimage", "imagedata", "imagename");
-    model_internal static var allAlwaysAvailableProperties:Array = new Array("regno", "imageurl", "recordid", "defaultimage", "imagedata", "imagename");
+    model_internal static var allRequiredProperties:Array = new Array("regno", "imageurl", "recordid", "defaultimage", "imagename", "imagedata");
+    model_internal static var allAlwaysAvailableProperties:Array = new Array("regno", "imageurl", "recordid", "defaultimage", "imagename", "imagedata");
     model_internal static var guardedProperties:Array = new Array();
-    model_internal static var dataProperties:Array = new Array("regno", "imageurl", "recordid", "defaultimage", "imagedata", "imagename");
+    model_internal static var dataProperties:Array = new Array("regno", "imageurl", "recordid", "defaultimage", "imagename", "imagedata");
     model_internal static var derivedProperties:Array = new Array();
     model_internal static var collectionProperties:Array = new Array();
     model_internal static var collectionBaseMap:Object;
@@ -46,15 +46,15 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
     model_internal var _imageurlIsValidCacheInitialized:Boolean = false;
     model_internal var _imageurlValidationFailureMessages:Array;
     
-    model_internal var _imagedataIsValid:Boolean;
-    model_internal var _imagedataValidator:com.adobe.fiber.styles.StyleValidator;
-    model_internal var _imagedataIsValidCacheInitialized:Boolean = false;
-    model_internal var _imagedataValidationFailureMessages:Array;
-    
     model_internal var _imagenameIsValid:Boolean;
     model_internal var _imagenameValidator:com.adobe.fiber.styles.StyleValidator;
     model_internal var _imagenameIsValidCacheInitialized:Boolean = false;
     model_internal var _imagenameValidationFailureMessages:Array;
+    
+    model_internal var _imagedataIsValid:Boolean;
+    model_internal var _imagedataValidator:com.adobe.fiber.styles.StyleValidator;
+    model_internal var _imagedataIsValidCacheInitialized:Boolean = false;
+    model_internal var _imagedataValidationFailureMessages:Array;
 
     model_internal var _instance:_Super_Com_dspl_malkey_domain_Fvehiclepic;
     model_internal static var _nullStyle:com.adobe.fiber.styles.Style = new com.adobe.fiber.styles.Style();
@@ -70,8 +70,8 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
             model_internal::dependentsOnMap["imageurl"] = new Array();
             model_internal::dependentsOnMap["recordid"] = new Array();
             model_internal::dependentsOnMap["defaultimage"] = new Array();
-            model_internal::dependentsOnMap["imagedata"] = new Array();
             model_internal::dependentsOnMap["imagename"] = new Array();
+            model_internal::dependentsOnMap["imagedata"] = new Array();
 
             // collection base map
             model_internal::collectionBaseMap = new Object()
@@ -88,16 +88,16 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
         model_internal::_imageurlValidator.requiredFieldError = "imageurl is required";
         //model_internal::_imageurlValidator.source = model_internal::_instance;
         //model_internal::_imageurlValidator.property = "imageurl";
-        model_internal::_imagedataValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForImagedata);
-        model_internal::_imagedataValidator.required = true;
-        model_internal::_imagedataValidator.requiredFieldError = "imagedata is required";
-        //model_internal::_imagedataValidator.source = model_internal::_instance;
-        //model_internal::_imagedataValidator.property = "imagedata";
         model_internal::_imagenameValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForImagename);
         model_internal::_imagenameValidator.required = true;
         model_internal::_imagenameValidator.requiredFieldError = "imagename is required";
         //model_internal::_imagenameValidator.source = model_internal::_instance;
         //model_internal::_imagenameValidator.property = "imagename";
+        model_internal::_imagedataValidator = new StyleValidator(model_internal::_instance.model_internal::_doValidationForImagedata);
+        model_internal::_imagedataValidator.required = true;
+        model_internal::_imagedataValidator.requiredFieldError = "imagedata is required";
+        //model_internal::_imagedataValidator.source = model_internal::_instance;
+        //model_internal::_imagedataValidator.property = "imagedata";
     }
 
     override public function getEntityName():String
@@ -331,13 +331,13 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
     }
 
     [Bindable(event="propertyChange")]
-    public function get isImagedataAvailable():Boolean
+    public function get isImagenameAvailable():Boolean
     {
         return true;
     }
 
     [Bindable(event="propertyChange")]
-    public function get isImagenameAvailable():Boolean
+    public function get isImagedataAvailable():Boolean
     {
         return true;
     }
@@ -362,20 +362,20 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
             model_internal::calculateImageurlIsValid();
         }
     }
-    public function invalidateDependentOnImagedata():void
-    {
-        if (model_internal::_imagedataIsValidCacheInitialized )
-        {
-            model_internal::_instance.model_internal::_doValidationCacheOfImagedata = null;
-            model_internal::calculateImagedataIsValid();
-        }
-    }
     public function invalidateDependentOnImagename():void
     {
         if (model_internal::_imagenameIsValidCacheInitialized )
         {
             model_internal::_instance.model_internal::_doValidationCacheOfImagename = null;
             model_internal::calculateImagenameIsValid();
+        }
+    }
+    public function invalidateDependentOnImagedata():void
+    {
+        if (model_internal::_imagedataIsValidCacheInitialized )
+        {
+            model_internal::_instance.model_internal::_doValidationCacheOfImagedata = null;
+            model_internal::calculateImagedataIsValid();
         }
     }
 
@@ -597,106 +597,6 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
     }
 
     [Bindable(event="propertyChange")]   
-    public function get imagedataStyle():com.adobe.fiber.styles.Style
-    {
-        return model_internal::_nullStyle;
-    }
-
-    public function get imagedataValidator() : StyleValidator
-    {
-        return model_internal::_imagedataValidator;
-    }
-
-    model_internal function set _imagedataIsValid_der(value:Boolean):void 
-    {
-        var oldValue:Boolean = model_internal::_imagedataIsValid;         
-        if (oldValue !== value)
-        {
-            model_internal::_imagedataIsValid = value;
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "imagedataIsValid", oldValue, value));
-        }                             
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get imagedataIsValid():Boolean
-    {
-        if (!model_internal::_imagedataIsValidCacheInitialized)
-        {
-            model_internal::calculateImagedataIsValid();
-        }
-
-        return model_internal::_imagedataIsValid;
-    }
-
-    model_internal function calculateImagedataIsValid():void
-    {
-        var valRes:ValidationResultEvent = model_internal::_imagedataValidator.validate(model_internal::_instance.imagedata)
-        model_internal::_imagedataIsValid_der = (valRes.results == null);
-        model_internal::_imagedataIsValidCacheInitialized = true;
-        if (valRes.results == null)
-             model_internal::imagedataValidationFailureMessages_der = emptyArray;
-        else
-        {
-            var _valFailures:Array = new Array();
-            for (var a:int = 0 ; a<valRes.results.length ; a++)
-            {
-                _valFailures.push(valRes.results[a].errorMessage);
-            }
-            model_internal::imagedataValidationFailureMessages_der = _valFailures;
-        }
-    }
-
-    [Bindable(event="propertyChange")]
-    public function get imagedataValidationFailureMessages():Array
-    {
-        if (model_internal::_imagedataValidationFailureMessages == null)
-            model_internal::calculateImagedataIsValid();
-
-        return _imagedataValidationFailureMessages;
-    }
-
-    model_internal function set imagedataValidationFailureMessages_der(value:Array) : void
-    {
-        var oldValue:Array = model_internal::_imagedataValidationFailureMessages;
-
-        var needUpdate : Boolean = false;
-        if (oldValue == null)
-            needUpdate = true;
-    
-        // avoid firing the event when old and new value are different empty arrays
-        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
-        {
-            if (oldValue.length == value.length)
-            {
-                for (var a:int=0; a < oldValue.length; a++)
-                {
-                    if (oldValue[a] !== value[a])
-                    {
-                        needUpdate = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                needUpdate = true;
-            }
-        }
-
-        if (needUpdate)
-        {
-            model_internal::_imagedataValidationFailureMessages = value;   
-            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "imagedataValidationFailureMessages", oldValue, value));
-            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
-            // the entire entity.
-            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
-            {
-                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
-            }
-        }
-    }
-
-    [Bindable(event="propertyChange")]   
     public function get imagenameStyle():com.adobe.fiber.styles.Style
     {
         return model_internal::_nullStyle;
@@ -796,6 +696,106 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
         }
     }
 
+    [Bindable(event="propertyChange")]   
+    public function get imagedataStyle():com.adobe.fiber.styles.Style
+    {
+        return model_internal::_nullStyle;
+    }
+
+    public function get imagedataValidator() : StyleValidator
+    {
+        return model_internal::_imagedataValidator;
+    }
+
+    model_internal function set _imagedataIsValid_der(value:Boolean):void 
+    {
+        var oldValue:Boolean = model_internal::_imagedataIsValid;         
+        if (oldValue !== value)
+        {
+            model_internal::_imagedataIsValid = value;
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "imagedataIsValid", oldValue, value));
+        }                             
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get imagedataIsValid():Boolean
+    {
+        if (!model_internal::_imagedataIsValidCacheInitialized)
+        {
+            model_internal::calculateImagedataIsValid();
+        }
+
+        return model_internal::_imagedataIsValid;
+    }
+
+    model_internal function calculateImagedataIsValid():void
+    {
+        var valRes:ValidationResultEvent = model_internal::_imagedataValidator.validate(model_internal::_instance.imagedata)
+        model_internal::_imagedataIsValid_der = (valRes.results == null);
+        model_internal::_imagedataIsValidCacheInitialized = true;
+        if (valRes.results == null)
+             model_internal::imagedataValidationFailureMessages_der = emptyArray;
+        else
+        {
+            var _valFailures:Array = new Array();
+            for (var a:int = 0 ; a<valRes.results.length ; a++)
+            {
+                _valFailures.push(valRes.results[a].errorMessage);
+            }
+            model_internal::imagedataValidationFailureMessages_der = _valFailures;
+        }
+    }
+
+    [Bindable(event="propertyChange")]
+    public function get imagedataValidationFailureMessages():Array
+    {
+        if (model_internal::_imagedataValidationFailureMessages == null)
+            model_internal::calculateImagedataIsValid();
+
+        return _imagedataValidationFailureMessages;
+    }
+
+    model_internal function set imagedataValidationFailureMessages_der(value:Array) : void
+    {
+        var oldValue:Array = model_internal::_imagedataValidationFailureMessages;
+
+        var needUpdate : Boolean = false;
+        if (oldValue == null)
+            needUpdate = true;
+    
+        // avoid firing the event when old and new value are different empty arrays
+        if (!needUpdate && (oldValue !== value && (oldValue.length > 0 || value.length > 0)))
+        {
+            if (oldValue.length == value.length)
+            {
+                for (var a:int=0; a < oldValue.length; a++)
+                {
+                    if (oldValue[a] !== value[a])
+                    {
+                        needUpdate = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                needUpdate = true;
+            }
+        }
+
+        if (needUpdate)
+        {
+            model_internal::_imagedataValidationFailureMessages = value;   
+            this.dispatchEvent(mx.events.PropertyChangeEvent.createUpdateEvent(this, "imagedataValidationFailureMessages", oldValue, value));
+            // Only execute calculateIsValid if it has been called before, to update the validationFailureMessages for
+            // the entire entity.
+            if (model_internal::_instance.model_internal::_cacheInitialized_isValid)
+            {
+                model_internal::_instance.model_internal::isValid_der = model_internal::_instance.model_internal::calculateIsValid();
+            }
+        }
+    }
+
 
      /**
      * 
@@ -829,13 +829,13 @@ internal class _Com_dspl_malkey_domain_FvehiclepicEntityMetadata extends com.ado
             {
                 return imageurlValidationFailureMessages;
             }
-            case("imagedata"):
-            {
-                return imagedataValidationFailureMessages;
-            }
             case("imagename"):
             {
                 return imagenameValidationFailureMessages;
+            }
+            case("imagedata"):
+            {
+                return imagedataValidationFailureMessages;
             }
             default:
             {
